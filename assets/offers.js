@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           document.getElementById("header-placeholder").innerHTML = await headerRes.text();
           }
   
-          const chatRes = await fetch("partials/chat.html");
+          const chatRes = await fetch("./partials/chat.html");
           if (chatRes.ok) {
             document.body.insertAdjacentHTML("beforeend", await chatRes.text());
           }
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   
     // 🔥 LOAD CHAT.JS *AFTER* CHAT HTML EXISTS
     const chatScript = document.createElement("script");
-    chatScript.src = "/assets/chat.js";
+    chatScript.src = "./assets/chat.js";
     document.body.appendChild(chatScript);
   
   });
