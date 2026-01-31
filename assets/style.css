@@ -1312,7 +1312,7 @@ nav a:hover {
   box-shadow: 0 8px 22px rgba(12,74,60,0.35);
 }
 .footer-logo {
-  background-image: url("/images/logolines.png"); /* your black-line PNG/SVG */
+  background-image: url("./images/logolines.png"); /* your black-line PNG/SVG */
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -1480,3 +1480,4 @@ nav a:hover {
 #pchoiceModal.show {
   display: block;
 }
+
