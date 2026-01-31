@@ -153,7 +153,7 @@ document.addEventListener("click", e => {
       "user"
     );
 
-    fetch("/api/chat", {
+    fetch("https://dealett-backend.onrender.com/api/chat", {
       method: "POST",
       headers: {
   "Content-Type": "application/json",
@@ -232,5 +232,6 @@ window.addEventListener("beforeunload", () => {
 
 
 }
+
 
 
