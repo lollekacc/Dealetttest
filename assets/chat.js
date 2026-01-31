@@ -179,9 +179,6 @@ document.addEventListener("click", e => {
     quizState.data = null;
   }
 });
-
-
-
 form.onsubmit = async e => {
   e.preventDefault();
 
@@ -191,48 +188,41 @@ form.onsubmit = async e => {
   addMessage(text, "user");
   input.value = "";
 
-try {
-  const response = await fetch("https://dealett-backend.onrender.com/api/chat", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Chat-Session": localStorage.getItem("chat_sid")
-    },
-    body: JSON.stringify(data)
-  });
+  try {
+    const response = await fetch("https://dealett-backend.onrender.com/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Chat-Session": localStorage.getItem("chat_sid")
+      },
+      body: JSON.stringify({ message: text })
+    });
 
-  const result = await response.json();
-
-} catch (error) {
-  console.error("Chat request failed:", error);
-}
-
-
-
-    if (!res.ok) {
+    if (!response.ok) {
       addMessage("Server error. Try again.", "ai");
       return;
     }
 
-    const data = await res.json();
-if (data.type === "offer") {
-  renderOfferInChat(data.payload);
-  return;
-}
+    const data = await response.json();
 
-if (typeof data.reply === "string") {
-  addMessage(data.reply, "ai");
-  return;
-}
+    if (data.type === "offer") {
+      renderOfferInChat(data.payload);
+      return;
+    }
 
-addMessage("No AI response.", "ai");
+    if (typeof data.reply === "string") {
+      addMessage(data.reply, "ai");
+      return;
+    }
 
+    addMessage("No AI response.", "ai");
 
   } catch (err) {
     console.error("Chat fetch failed:", err);
     addMessage("Connection error.", "ai");
   }
 };
+
 window.addEventListener("beforeunload", () => {
   localStorage.setItem(
     CHAT_OPEN_KEY,
@@ -242,4 +232,5 @@ window.addEventListener("beforeunload", () => {
 
 
 }
+
 
