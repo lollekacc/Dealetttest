@@ -126,17 +126,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const chatScript = document.createElement("script");
     chatScript.src = "./assets/chat.js";
     document.body.appendChild(chatScript);
-  const showMoreBtn = document.getElementById("showMorePersons");
-const personsExtra = document.getElementById("personsExtra");
-
-if (showMoreBtn && personsExtra) {
-  showMoreBtn.addEventListener("click", () => {
-    personsExtra.classList.toggle("hidden");
-    showMoreBtn.textContent =
-      personsExtra.classList.contains("hidden") ? "Visa fler" : "Visa färre";
-  });
-}
-
   });
   
   const abonState = {
