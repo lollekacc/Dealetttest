@@ -160,13 +160,13 @@ document.addEventListener("click", e => {
       "user"
     );
 
-    fetch("https://dealett-backend.onrender.com/api/chat", {
-      method: "POST",
-      headers: {
-  "Content-Type": "application/json",
-  "X-Chat-Session": localStorage.getItem("chat_sid")
-},
+    const sid = localStorage.getItem("chat_sid");
+const headers = { "Content-Type": "application/json" };
+if (sid) headers["X-Chat-Session"] = sid;
 
+fetch("https://dealett-backend.onrender.com/api/chat", {
+  method: "POST",
+  headers,
       body: JSON.stringify({ message: msg })
       
     })
@@ -197,15 +197,14 @@ form.onsubmit = async e => {
 
   try {
     const sid = localStorage.getItem("chat_sid");
-const headers = { "Content-Type": "application/json" };
-if (sid) headers["X-Chat-Session"] = sid;
+    const headers = { "Content-Type": "application/json" };
+    if (sid) headers["X-Chat-Session"] = sid;
 
-fetch("https://dealett-backend.onrender.com/api/chat", {
-  method: "POST",
-  headers,
-  body: JSON.stringify({ message: msg })
-})
-
+    const response = await fetch("https://dealett-backend.onrender.com/api/chat", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ message: text })
+    });
 
     if (!response.ok) {
       addMessage("Server error. Try again.", "ai");
@@ -241,6 +240,7 @@ window.addEventListener("beforeunload", () => {
 
 
 }
+
 
 
 
