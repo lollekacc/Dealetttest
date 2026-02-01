@@ -69,17 +69,31 @@
   <section id="abonnemangQuizSection" class="mt-20 px-10 pb-20">  
     <div class="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-[1600px] mx-auto">
   
-      <!-- Q1: Persons -->
-      <div class="quiz-card">
-        <p class="quiz-title">Hur många personer?</p>
-        <div class="flex flex-col gap-4">
-          <button class="quiz-option abon-opt" data-persons="1">1 person</button>
-          <button class="quiz-option abon-opt" data-persons="2">2 personer</button>
-          <button class="quiz-option abon-opt" data-persons="3">3 personer</button>
-          <button class="quiz-option abon-opt" data-persons="4">4 personer</button>
-          <button class="quiz-option abon-opt" data-persons="5">5 personer</button>
-        </div>
-      </div>
+<div class="quiz-card">
+  <p class="quiz-title">Hur många personer?</p>
+
+  <div id="personsMain" class="flex flex-col gap-4">
+    <button class="quiz-option abon-opt" data-persons="1">1 person</button>
+    <button class="quiz-option abon-opt" data-persons="2">2 personer</button>
+    <button class="quiz-option abon-opt" data-persons="3">3 personer</button>
+    <button class="quiz-option abon-opt" data-persons="4">4 personer</button>
+    <button class="quiz-option abon-opt" data-persons="5">5 personer</button>
+  </div>
+
+  <button id="showMorePersons"
+          class="mt-4 text-[#004C9E] font-semibold hover:underline">
+    Visa fler
+  </button>
+
+  <div id="personsExtra" class="hidden flex flex-col gap-4 mt-4">
+    <button class="quiz-option abon-opt" data-persons="6">6 personer</button>
+    <button class="quiz-option abon-opt" data-persons="7">7 personer</button>
+    <button class="quiz-option abon-opt" data-persons="8">8 personer</button>
+    <button class="quiz-option abon-opt" data-persons="9">9 personer</button>
+    <button class="quiz-option abon-opt" data-persons="10">10 personer</button>
+  </div>
+</div>
+
   
       <!-- Q2: Data -->
       <div class="quiz-card">
@@ -325,6 +339,7 @@ setInterval(nextSlide, AUTO_INTERVAL);
 
 </body>
 </html>
+
 
 
 
