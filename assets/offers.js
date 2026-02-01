@@ -105,6 +105,32 @@ function updateDataAvailability() {
  LOAD HEADER + FOOTER
 ******************************/
 document.addEventListener("DOMContentLoaded", async () => {
+// Binding logic
+const bindingYesBtn = document.getElementById("bindingYesBtn");
+const bindingNoBtn = document.querySelector('[data-binding="no"]');
+const bindingWrapper = document.getElementById("bindingDateWrapper");
+const bindingInput = document.getElementById("bindingEndDate");
+
+if (bindingYesBtn && bindingWrapper) {
+  bindingYesBtn.addEventListener("click", () => {
+    abonState.binding = "yes";
+    bindingWrapper.classList.remove("hidden");
+  });
+}
+
+if (bindingNoBtn) {
+  bindingNoBtn.addEventListener("click", () => {
+    abonState.binding = "no";
+    abonState.bindingEndDate = null;
+    bindingWrapper.classList.add("hidden");
+  });
+}
+
+if (bindingInput) {
+  bindingInput.addEventListener("change", () => {
+    abonState.bindingEndDate = bindingInput.value;
+  });
+}
 
     const headerRes = await fetch("partials/header.html");
         if (headerRes.ok) {
@@ -128,11 +154,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.body.appendChild(chatScript);
   });
   
-  const abonState = {
-    persons: null,
-    data: null,
-    operator: null
-  };
+const abonState = {
+  persons: null,
+  data: null,
+  operator: null,
+  binding: null,
+  bindingEndDate: null
+};
+
 function updateOperatorAvailability() {
   if (!ALL_PLANS.length) return;
 
