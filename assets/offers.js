@@ -658,6 +658,18 @@ window.renderSingleOfferCard = function (plan, payload = {}) {
     fakeState
   );
 };
+// Show more persons (6–10) toggle
+document.addEventListener("DOMContentLoaded", () => {
+  const showMoreBtn = document.getElementById("showMorePersons");
+  const personsExtra = document.getElementById("personsExtra");
+  if (!showMoreBtn || !personsExtra) return;
+
+  showMoreBtn.addEventListener("click", () => {
+    personsExtra.classList.toggle("hidden");
+    showMoreBtn.textContent =
+      personsExtra.classList.contains("hidden") ? "Visa fler" : "Visa färre";
+  });
+});
 
 
   
