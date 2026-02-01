@@ -95,29 +95,39 @@
 </div>
       
 <!-- Q0: Binding -->
-<div class="quiz-card">
-  <p class="quiz-title">Har du bindningstid idag?</p>
+<!-- Binding small row -->
+<div class="max-w-[1600px] mx-auto mb-10 px-4">
+  <div class="flex flex-wrap items-center gap-6 text-lg">
 
-  <div class="flex items-center gap-6 flex-wrap">
-    <button class="quiz-option abon-opt" data-binding="no">
+    <span class="font-semibold text-[#0C4A3C]">
+      Har du bindningstid idag?
+    </span>
+
+    <button class="quiz-option abon-opt px-6 py-2"
+            data-binding="no">
       Nej
     </button>
 
-    <div class="flex items-center gap-3">
-      <button class="quiz-option" id="bindingYesBtn" type="button">
-        Ja
-      </button>
+    <button id="bindingYesBtn"
+            class="quiz-option px-6 py-2"
+            type="button">
+      Ja
+    </button>
 
-      <div id="bindingDateWrapper" class="hidden flex items-center gap-2">
-        <input
-          type="date"
-          id="bindingEndDate"
-          class="border p-2 rounded-lg"
-        />
-      </div>
+    <div id="bindingDateWrapper"
+         class="hidden flex items-center gap-2">
+      <span class="text-gray-600 text-sm">
+        När slutar den?
+      </span>
+
+      <input type="date"
+             id="bindingEndDate"
+             class="border p-2 rounded-lg text-sm" />
     </div>
+
   </div>
 </div>
+
 
       <!-- Q2: Data -->
       <div class="quiz-card">
@@ -370,6 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
 
