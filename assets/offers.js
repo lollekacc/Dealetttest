@@ -594,9 +594,20 @@ const offerPrice = priceEl ? priceEl.textContent.trim() : "";
         );
     
         btn.classList.add("active");
-        startChoice = btn.dataset.start;
-    
-        localStorage.setItem("startDateChoice", startChoice);
+      startChoice = btn.dataset.start;
+
+let actualStartDate;
+
+if (startChoice === "now") {
+  actualStartDate = new Date().toISOString().split("T")[0];
+} else {
+  const future = new Date();
+  future.setDate(future.getDate() + Number(startChoice));
+  actualStartDate = future.toISOString().split("T")[0];
+}
+
+localStorage.setItem("startDateChoice", actualStartDate);
+
       });
     });
     
