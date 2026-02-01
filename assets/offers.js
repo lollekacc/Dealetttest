@@ -572,7 +572,9 @@ const offerPrice = priceEl ? priceEl.textContent.trim() : "";
         </button>
       </div>
     </div>
-
+<p class="mt-4 text-sm text-gray-600">
+  Startdatum: <strong>${actualStartDate}</strong>
+</p>
     <button id="goToCheckout"
       class="w-full adeala-btn mt-8 py-4 text-lg rounded-xl">
       Fortsätt till signering
