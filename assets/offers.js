@@ -572,9 +572,10 @@ const offerPrice = priceEl ? priceEl.textContent.trim() : "";
         </button>
       </div>
     </div>
-<p class="mt-4 text-sm text-gray-600">
-  Startdatum: <strong>${actualStartDate}</strong>
+<p id="startDateText" class="mt-4 text-sm text-gray-600 hidden">
+  Startdatum: <strong id="startDateValue"></strong>
 </p>
+
     <button id="goToCheckout"
       class="w-full adeala-btn mt-8 py-4 text-lg rounded-xl">
       Fortsätt till signering
@@ -585,6 +586,11 @@ const offerPrice = priceEl ? priceEl.textContent.trim() : "";
   
     phoneInputs.innerHTML = summaryHTML;
     smoothScrollTo(sectionPort);
+const saved = localStorage.getItem("startDateChoice");
+if (saved) {
+  document.getElementById("startDateValue").textContent = saved;
+  document.getElementById("startDateText").classList.remove("hidden");
+}
 
     btnConfirm.classList.add("hidden");
     let startChoice = null;
@@ -610,6 +616,8 @@ if (startChoice === "now") {
 
 localStorage.setItem("startDateChoice", actualStartDate);
 
+document.getElementById("startDateValue").textContent = actualStartDate;
+document.getElementById("startDateText").classList.remove("hidden");
       });
     });
     
