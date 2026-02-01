@@ -594,33 +594,37 @@ if (saved) {
 
     btnConfirm.classList.add("hidden");
     let startChoice = null;
-
-    document.querySelectorAll(".start-option").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".start-option").forEach(b =>
-          b.classList.remove("active")
-        );
     
-        btn.classList.add("active");
-      startChoice = btn.dataset.start;
+document.querySelectorAll(".start-option").forEach(btn => {
+  btn.addEventListener("click", () => {
 
-let actualStartDate;
+    document.querySelectorAll(".start-option")
+      .forEach(b => b.classList.remove("active"));
 
-if (startChoice === "now") {
-  actualStartDate = new Date().toISOString().split("T")[0];
-} else {
-  const future = new Date();
-  future.setDate(future.getDate() + Number(startChoice));
-  actualStartDate = future.toISOString().split("T")[0];
-}
+    btn.classList.add("active");
 
-localStorage.setItem("startDateChoice", actualStartDate);
+    const startChoice = btn.dataset.start;
+    let actualStartDate;
 
-document.getElementById("startDateValue").textContent = actualStartDate;
-document.getElementById("startDateText").classList.remove("hidden");
-      });
-    });
-    
+    if (startChoice === "now") {
+      actualStartDate = new Date().toISOString().split("T")[0];
+    } else {
+      const future = new Date();
+      future.setDate(future.getDate() + Number(startChoice));
+      actualStartDate = future.toISOString().split("T")[0];
+
+      btn.textContent = `Fr.o.m ${actualStartDate}`;
+    }
+
+    localStorage.setItem("startDateChoice", actualStartDate);
+
+    document.getElementById("startDateValue").textContent = actualStartDate;
+    document.getElementById("startDateText").classList.remove("hidden");
+  });
+});
+
+
+
     // Click → next page
     document.getElementById("goToCheckout").onclick = () => {
       if (!startChoice) {
