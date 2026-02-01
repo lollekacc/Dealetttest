@@ -93,10 +93,32 @@
     <button class="quiz-option abon-opt" data-persons="10">10 personer</button>
   </div>
 </div>
-
-    
-
       
+<!-- Q0: Binding -->
+<div class="quiz-card">
+  <p class="quiz-title">Har du bindningstid idag?</p>
+
+  <div class="flex items-center gap-6 flex-wrap">
+    <button class="quiz-option abon-opt" data-binding="no">
+      Nej
+    </button>
+
+    <div class="flex items-center gap-3">
+      <button class="quiz-option" id="bindingYesBtn" type="button">
+        Ja
+      </button>
+
+      <div id="bindingDateWrapper" class="hidden flex items-center gap-2">
+        <input
+          type="date"
+          id="bindingEndDate"
+          class="border p-2 rounded-lg"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
       <!-- Q2: Data -->
       <div class="quiz-card">
         <p class="quiz-title">Hur mycket surf behövs per person?</p>
@@ -348,6 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 </body>
 </html>
+
 
 
 
