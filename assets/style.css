@@ -899,7 +899,6 @@ nav a:hover {
   right: 24px;
   z-index: 9999;
 }
-
 #chat-toggle {
   position: fixed;
   right: -292px;
@@ -912,19 +911,30 @@ nav a:hover {
   border-radius: 999px;
   padding: 24px 270px;
   font-size: 1.6rem;
-  font-style:oblique ;
- 
+  font-style: oblique;
 
   font-weight: 700;
   letter-spacing: 0.6px;
+
   box-shadow:
     0 16px 36px rgba(0,0,0,0.35),
     inset 0 0 0 1px rgba(255,255,255,0.25);
-  cursor: pointer;
 
+  cursor: pointer;
   z-index: 9999;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    opacity 0.2s ease;
 }
 
+#chat-toggle:hover {
+  transform: translateY(-50%) rotate(-90deg) scale(1.04);
+  box-shadow:
+    0 22px 50px rgba(0,0,0,0.45),
+    inset 0 0 0 1px rgba(255,255,255,0.35);
+}
 #chat-panel {
   position: fixed;
   top: 50%;
@@ -1449,5 +1459,6 @@ nav a:hover {
 .chat-panel {
   max-height: 80vh;
 }
+
 
 
