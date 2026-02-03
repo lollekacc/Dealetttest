@@ -34,7 +34,6 @@ img, video {
   --adeala-beige: #F5EEDF;
   --adeala-dark:  #0F2D24;
 }
-
 /* GLOBAL RESETS */
 body {
   color: var(--adeala-dark);
@@ -1459,6 +1458,7 @@ nav a:hover {
 .chat-panel {
   max-height: 80vh;
 }
+
 
 
 
