@@ -539,18 +539,29 @@ nav a:hover {
 
 /* Make the question cards match Adeala style more closely */
 .quiz-card {
-  background: white;
-  border: 1px solid rgba(0,0,0,0.07);
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-  transition: all 0.25s ease;
+  background: linear-gradient(180deg, #ffffff 0%, #f9fafb 100%);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 20px;
+
+  padding: 1.75rem;
+
+  box-shadow:
+    0 8px 24px rgba(0,0,0,0.06),
+    inset 0 0 0 1px rgba(255,255,255,0.4);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
 }
 
 .quiz-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+  transform: translateY(-6px);
+  box-shadow:
+    0 18px 40px rgba(0,0,0,0.10);
+  border-color: rgba(0,76,158,0.25);
 }
+
 
 /* Make submit buttons use Adeala button styles */
 #submitMobil,
@@ -1452,4 +1463,14 @@ nav a:hover {
 .animate-heroGlow {
   animation: heroGlow 6s ease-in-out infinite;
   will-change: opacity;
+}
+.fade-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all .6s ease;
+}
+
+.fade-section.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
