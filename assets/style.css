@@ -37,7 +37,6 @@ img, video {
 
 /* GLOBAL RESETS */
 body {
-  background-color: var(--adeala-beige);
   color: var(--adeala-dark);
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
@@ -638,18 +637,23 @@ nav a:hover {
   display: flex !important;
   z-index: 999999 !important;
 }
-
 .partner-wrapper {
-  height: 80px !important;
-  transition: height 0.3s ease;
-  display: flex;                  /* important */
-  align-items: center;            /* keeps logos centered */
+  height: 80px;
+  display: flex;
+  align-items: center;
+
+  transition:
+    height 0.3s ease,
+    transform 0.3s ease;
 }
 
 .partner-wrapper.shrink {
-  height: 64px !important;
+  height: 64px;
 }
 
+.partner-wrapper:hover {
+  transform: translateY(-3px);
+}
 @keyframes scaleIn {
   0% { transform: scale(0.8); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
@@ -709,28 +713,21 @@ nav a:hover {
   position: absolute;
   top: 12px;
   right: 12px;
-  background: #004A6E; /* or your brand blue */
-  color: white !important;
-  padding: 6px 14px;
-  border-radius: 16px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  z-index: 50; /* stays above gradient */
-  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-}
-.offer-bubble {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+
   background: #004A6E;
   color: white !important;
+
   padding: 6px 14px;
   border-radius: 20px;
+
   font-weight: 700;
   font-size: 0.85rem;
+
   border: none;
   cursor: pointer;
+
   z-index: 50;
+
   box-shadow: 0 4px 10px rgba(0,0,0,0.25);
   transition: transform .15s ease, background .2s ease;
 }
@@ -808,6 +805,7 @@ nav a:hover {
    REWARD SPLIT INPUT (Adeala)
 ================================ */
 .reward-input {
+  width: 100%;
   background: #f7f7f7;
   border: 2px solid #e5e7eb;
   border-radius: 14px;
@@ -961,25 +959,33 @@ nav a:hover {
 }
 
 .chat-header {
-  padding: 20px 22px;
-  background: linear-gradient(305deg, #004C9E, #0C4A3C);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px 20px;
+
+  background: linear-gradient(to right, #0f766e, #065f46);
   color: white;
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
   border-radius: 26px 0 0 0;
+
   box-shadow:
     0 10px 26px rgba(0,0,0,0.35),
     inset 0 -1px 0 rgba(255,255,255,0.2);
 }
 
-
 .chat-header strong {
   font-size: 1.35rem;
   letter-spacing: 0.2px;
 }
+
+.chat-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 
 #chat-close {
   width: 34px;
@@ -1166,16 +1172,6 @@ nav a:hover {
     padding: 16px 160px;
   }
 }
-.partner-wrapper {
-  height: 80px;
-  transition: height 0.3s ease;
-}
-
-.partner-wrapper.shrink {
-  height: 64px;
-}
-
-
 .offer-choice.faded {
   opacity: 0.35;
 }
@@ -1246,12 +1242,15 @@ nav a:hover {
 /* Single reward row */
 .reward-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
-  background: #ffffff;
+
+  background: #f9fafb;
   border: 1px solid #e5e7eb;
+
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -1260,13 +1259,15 @@ nav a:hover {
   box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
 
-/* Company name */
+.reward-row img {
+  max-width: 90px;
+}
+
 .reward-company {
   font-weight: 600;
   color: #0C4A3C;
 }
 
-/* Amount badge */
 .reward-amount-badge {
   background: #0C4A3C;
   color: white;
@@ -1274,29 +1275,6 @@ nav a:hover {
   padding: 0.35rem 0.75rem;
   border-radius: 999px;
   font-size: 0.9rem;
-}
-.reward-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #f9fafb;
-  padding: 10px 14px;
-  border-radius: 10px;
-}
-
-.reward-row img {
-  max-width: 90px;
-}
-.start-option {
-  padding: 16px;
-  border-radius: 14px;
-  border: 2px solid #e5e7eb;
-  background: #ffffff;
-  font-weight: 600;
-  font-size: 1.05rem;
-  color: #0C4A3C;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .start-option:hover {
@@ -1320,9 +1298,6 @@ nav a:hover {
   padding: 3rem 4rem; /* controls logo size */
   display: inline-block;
 }
-.reward-input {
-  width: 100%;
-}
 /* FIX: prevent 🚫 cursor on disabled reward cards without breaking logic */
 .offer-choice.disabled-option {
   cursor: default;
@@ -1343,12 +1318,6 @@ nav a:hover {
 .operator-btn:hover {
   border-color: #0C4A3C;
 }
-
-.operator-btn.active {
-  border-color: #0C4A3C;
-  background: #f0fdf9;
-}
-
 .operator-btn.active {
   background: linear-gradient(180deg, #ffffff, #f8fafc);
   border-color: var(--adeala-green);
@@ -1420,27 +1389,7 @@ nav a:hover {
   background: #0f766e;
   color: white;
 }
-
-/* ===== CHAT MESSAGES ===== */
-
-#chat-messages {
-  overflow-x: hidden;
-}
-
 /* ===== CHAT HEADER ===== */
-
-.chat-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.chat-header-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
 .chat-reset-btn-header {
   background: none;
   border: none;
@@ -1497,18 +1446,8 @@ nav a:hover {
   animation: heroGlow 6s ease-in-out infinite;
   will-change: opacity;
 }
-.partner-wrapper {
-  transition: transform .3s ease;
-}
-.partner-wrapper:hover {
-  transform: translateY(-3px);
-}
-.chat-header {
-  background: linear-gradient(to right, #0f766e, #065f46);
-  color: white;
-  padding: 12px 16px;
-}
 .chat-panel {
   max-height: 80vh;
 }
+
 
