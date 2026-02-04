@@ -448,7 +448,11 @@
       document.body.appendChild(chatScript);
     });
     document.addEventListener("click", e => {
-  if (e.target.classList.contains("business-size")) {
+  const btn = e.target.closest(".business-size");
+if (btn) {
+  const size = btn.dataset.size;
+  localStorage.setItem("business_size", size);
+} {
     const size = e.target.dataset.size;
     localStorage.setItem("business_size", size);
     console.log("Selected:", size);
@@ -458,5 +462,6 @@
 
 </body>
 </html>
+
 
 
