@@ -74,6 +74,25 @@ toggle.onclick = () => {
     !panel.classList.contains("closed")
   );
 };
+let lastScrollY = window.scrollY;
+
+window.addEventListener("scroll", () => {
+  const currentScroll = window.scrollY;
+
+  // If user scrolls down more than 150px → minimize
+  if (currentScroll > 150) {
+    panel.classList.add("closed");
+    localStorage.setItem(CHAT_OPEN_KEY, "false");
+  }
+
+  // If user scrolls back to top → open again
+  if (currentScroll < 80) {
+    panel.classList.remove("closed");
+    localStorage.setItem(CHAT_OPEN_KEY, "true");
+  }
+
+  lastScrollY = currentScroll;
+});
 
 close.onclick = () => {
   panel.classList.add("closed");
@@ -234,6 +253,7 @@ window.addEventListener("beforeunload", () => {
 
 
 }
+
 
 
 
