@@ -69,7 +69,7 @@
   <div id="header-placeholder"></div>
   
 <!-- HERO SECTION -->
-<section 
+<section
   class="relative w-full bg-cover bg-center bg-no-repeat py-36 px-6"
   style="background-image: url('images/herologo.png');"
 >
@@ -115,6 +115,7 @@
       </a>
 
     </div>
+      <div id="hero-chat-anchor" class="hidden lg:block"></div>
   </div>
 </section>
 <section class="bg-white py-8 border-b border-gray-100">
@@ -322,16 +323,26 @@ document.addEventListener("DOMContentLoaded", () => {
    }
 });
 </script>
+<script>
+setTimeout(() => {
+  const chat = document.getElementById("dealett-chat");
+  const panel = document.getElementById("chat-panel");
+  const hero = document.querySelector("[style*='herologo']");
 
+  if (!chat || !panel || !hero) return;
+
+  // Force open
+  panel.classList.remove("closed");
+
+  // Position fixed relative to hero
+  const heroRight = hero.offsetLeft + hero.offsetWidth;
+
+  chat.style.position = "fixed";
+  chat.style.top = hero.offsetTop + 40 + "px";
+  chat.style.left = heroRight - 420 + "px";
+
+}, 700);
+</script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
