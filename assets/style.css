@@ -1491,3 +1491,48 @@ nav a:hover {
   height: 0;
   overflow: hidden;
 }
+#hero-chat-fixed {
+  position: absolute;
+  top: 120px;
+  right: 80px;
+  z-index: 20;
+}
+
+.hero-chat-panel {
+  width: 380px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 20px;
+  color: white;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.hero-chat-panel .chat-header {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.chat-messages-preview {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 16px;
+}
+
+.hero-chat-btn {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #0A7C66, #0B4E9A);
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.hero-chat-btn:hover {
+  transform: translateY(-2px);
+}
+
