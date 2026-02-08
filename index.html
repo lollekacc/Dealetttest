@@ -73,18 +73,7 @@
   class="relative w-full bg-cover bg-center bg-no-repeat py-36 px-6"
   style="background-image: url('images/herologo.png');"
 >
-  <div id="hero-chat-fixed" class="hidden lg:block">
-  <div class="hero-chat-panel">
-    <div class="chat-header">
-      <strong>Dealett-AI</strong>
-    </div>
-    <div class="chat-messages-preview">
-      Hej 👋 Vad kan jag hjälpa dig med?
-    </div>
-    <a href="abonnemang.html" class="hero-chat-btn">
-      Starta AI-guiden
-    </a>
-  </div>
+  <div id="hero-chat-container">
 </div>
 
 
@@ -336,8 +325,36 @@ document.addEventListener("DOMContentLoaded", () => {
    }
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
 
+  const heroContainer = document.getElementById("hero-chat-container");
 
+  if (!heroContainer) return;
+
+  setTimeout(() => {
+    const chatPanel = document.getElementById("chat-panel");
+    const chatToggle = document.getElementById("chat-toggle");
+
+    if (!chatPanel) return;
+
+    // Hide floating toggle on index
+    if (chatToggle) chatToggle.style.display = "none";
+
+    // Make panel visible
+    chatPanel.classList.remove("closed");
+
+    // Override positioning
+    chatPanel.style.position = "absolute";
+    chatPanel.style.top = "120px";
+    chatPanel.style.right = "80px";
+    chatPanel.style.transform = "none";
+
+    heroContainer.appendChild(chatPanel);
+
+  }, 300);
+
+});
+</script>
 </body>
 </html>
-
