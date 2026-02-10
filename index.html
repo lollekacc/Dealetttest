@@ -229,10 +229,42 @@ Snabbt och enkelt</h2>
           document.body.insertAdjacentHTML("beforeend", await footerRes.text());
         }
 
-      const script = document.createElement("script");
-      script.src = "./assets/chat.js";
-      script.defer = true;
-      document.body.appendChild(script);
+const script = document.createElement("script");
+script.src = "./assets/chat.js";
+script.defer = true;
+script.onload = () => {
+  initHeroChatMovement();
+};
+document.body.appendChild(script);
+      function initHeroChatMovement() {
+  const panel = document.getElementById("chat-panel");
+  const anchor = document.getElementById("hero-chat-anchor");
+
+  if (!panel || !anchor) return;
+
+  const hero = anchor.closest("section");
+
+  function updateChatPosition() {
+    const heroRect = hero.getBoundingClientRect();
+    const heroVisible = heroRect.bottom > 120;
+
+    if (heroVisible) {
+      if (!panel.classList.contains("hero-mode")) {
+        anchor.appendChild(panel);
+        panel.classList.add("hero-mode");
+      }
+    } else {
+      if (panel.classList.contains("hero-mode")) {
+        document.body.appendChild(panel);
+        panel.classList.remove("hero-mode");
+      }
+    }
+  }
+
+  window.addEventListener("scroll", updateChatPosition);
+  updateChatPosition();
+}
+
     });
     
   </script>
@@ -336,40 +368,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 });
-  document.addEventListener("DOMContentLoaded", () => {
 
-  const panel = document.getElementById("chat-panel");
-  const anchor = document.getElementById("hero-chat-anchor");
-
-  if (!panel || !anchor) return;
-
-  const hero = anchor.closest("section");
-
-  function updateChatPosition() {
-    const heroRect = hero.getBoundingClientRect();
-    const heroVisible = heroRect.bottom > 120;
-
-    if (heroVisible) {
-      // HERO MODE
-      if (!panel.classList.contains("hero-mode")) {
-        anchor.appendChild(panel);
-        panel.classList.add("hero-mode");
-      }
-    } else {
-      // FLOAT MODE
-      if (panel.classList.contains("hero-mode")) {
-        document.body.appendChild(panel);
-        panel.classList.remove("hero-mode");
-      }
-    }
-  }
-
-  window.addEventListener("scroll", updateChatPosition);
-  updateChatPosition();
-
-});
 
 </script>
 </body>
 </html>
+
 
