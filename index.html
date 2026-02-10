@@ -208,62 +208,68 @@ Snabbt och enkelt</h2>
     
 
   <!-- Load shared header/footer/chat -->
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const headerRes = await fetch("partials/header.html");
-      if (headerRes.ok) {
-        document.getElementById("header-placeholder").innerHTML = await headerRes.text();
-        }
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
 
-        const chatRes = await fetch("partials/chat.html");
-        if (chatRes.ok) {
-          document.body.insertAdjacentHTML("beforeend", await chatRes.text());
-        }
-
-        const footerRes = await fetch("partials/footer.html");
-        if (footerRes.ok) {
-          document.body.insertAdjacentHTML("beforeend", await footerRes.text());
-        }
-
-const script = document.createElement("script");
-script.src = "./assets/chat.js";
-script.defer = true;
-script.onload = () => {
-  initHeroChatMovement();
-};
-document.body.appendChild(script);
-      function initHeroChatMovement() {
-  const panel = document.getElementById("chat-panel");
-  const anchor = document.getElementById("hero-chat-anchor");
-
-  if (!panel || !anchor) return;
-
-  const hero = anchor.closest("section");
-
-  function updateChatPosition() {
-    const heroRect = hero.getBoundingClientRect();
-    const heroVisible = heroRect.bottom > 120;
-
-    if (heroVisible) {
-      if (!panel.classList.contains("hero-mode")) {
-        anchor.appendChild(panel);
-        panel.classList.add("hero-mode");
-      }
-    } else {
-      if (panel.classList.contains("hero-mode")) {
-        document.body.appendChild(panel);
-        panel.classList.remove("hero-mode");
-      }
-    }
+  const headerRes = await fetch("partials/header.html");
+  if (headerRes.ok) {
+    document.getElementById("header-placeholder").innerHTML = await headerRes.text();
   }
 
-  window.addEventListener("scroll", updateChatPosition);
-  updateChatPosition();
-}
+  const chatRes = await fetch("partials/chat.html");
+  if (chatRes.ok) {
+    document.body.insertAdjacentHTML("beforeend", await chatRes.text());
+  }
 
-    });
-    
-  </script>
+  const footerRes = await fetch("partials/footer.html");
+  if (footerRes.ok) {
+    document.body.insertAdjacentHTML("beforeend", await footerRes.text());
+  }
+
+  const script = document.createElement("script");
+  script.src = "./assets/chat.js";
+  script.defer = true;
+  script.onload = () => {
+    initHeroChatMovement();
+  };
+  document.body.appendChild(script);
+
+  function initHeroChatMovement() {
+
+    const chatRoot = document.getElementById("dealett-chat"); // MOVE THIS
+    const anchor = document.getElementById("hero-chat-anchor");
+
+    if (!chatRoot || !anchor) return;
+
+    const hero = anchor.closest("section");
+    if (!hero) return;
+
+    function updateChatPosition() {
+
+      const heroRect = hero.getBoundingClientRect();
+      const heroVisible = heroRect.top < 150 && heroRect.bottom > 200;
+
+      if (heroVisible) {
+        if (!chatRoot.classList.contains("hero-mode")) {
+          anchor.appendChild(chatRoot);
+          chatRoot.classList.add("hero-mode");
+        }
+      } else {
+        if (chatRoot.classList.contains("hero-mode")) {
+          document.body.appendChild(chatRoot);
+          chatRoot.classList.remove("hero-mode");
+        }
+      }
+    }
+
+    window.addEventListener("scroll", updateChatPosition, { passive: true });
+    window.addEventListener("resize", updateChatPosition);
+    updateChatPosition();
+  }
+
+});
+</script>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const quizOptions = document.querySelectorAll(".quiz-option");
@@ -369,6 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
 
