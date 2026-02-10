@@ -921,8 +921,12 @@ nav a:hover {
 
   transform: scale(0.96);
 }
-
-
+#chat-panel.hero-mode:not(.closed) {
+  transform: scale(0.96);
+}
+#chat-panel.hero-mode.closed {
+  transform: translateX(100%) scale(0.96);
+}
 #chat-toggle {
   position: fixed;
   bottom: 28px;
@@ -1498,6 +1502,7 @@ transition:
   opacity: 1;
   transform: translateY(0);
 }
+
 
 
 
