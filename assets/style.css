@@ -909,6 +909,22 @@ nav a:hover {
   right: 24px;
   z-index: 9999;
 }
+/* index hero placement */
+#dealett-chat.hero-mode {
+  position: absolute;
+  bottom: auto;
+  right: 80px;
+  top: 120px;
+  z-index: 9999;
+}
+
+/* in hero-mode, the panel should not slide in/out from the right */
+#dealett-chat.hero-mode #chat-panel {
+  position: static;
+  transform: none !important;
+  height: min(780px, 92vh);
+}
+
 #chat-toggle {
   position: fixed;
   bottom: 28px;
@@ -1481,4 +1497,5 @@ nav a:hover {
   opacity: 1;
   transform: translateY(0);
 }
+
 
