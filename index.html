@@ -234,45 +234,48 @@ document.addEventListener("DOMContentLoaded", async () => {
   };
   document.body.appendChild(script);
 
-  function initHeroChatMovement() {
+function initHeroChatMovement() {
 
-    const chatRoot = document.getElementById("dealett-chat"); // MOVE THIS
-    const anchor = document.getElementById("hero-chat-anchor");
+  const chatRoot = document.getElementById("dealett-chat");
+  const anchor = document.getElementById("hero-chat-anchor");
 
-    if (!chatRoot || !anchor) return;
+  if (!chatRoot || !anchor) return;
 
-    const hero = anchor.closest("section");
-    if (!hero) return;
+  const hero = anchor.closest("section");
+  if (!hero) return;
 
-let inHero = true;
+  let inHero = false;
 
-function updateChatPosition() {
+  function updateChatPosition() {
 
-  const heroRect = hero.getBoundingClientRect();
-  const chatHeight = chatRoot.offsetHeight;
+    const heroBottom = hero.offsetTop + hero.offsetHeight;
+    const scrollY = window.scrollY;
 
-  const leavePoint = chatHeight + 120;
-  const enterPoint = chatHeight + 220; // buffer zone
+    // If user has not scrolled past hero bottom minus chat height
+    if (scrollY < heroBottom - chatRoot.offsetHeight - 40) {
 
-  if (inHero && heroRect.bottom <= leavePoint) {
-    // leave hero
-    document.body.appendChild(chatRoot);
-    chatRoot.classList.remove("hero-mode");
-    inHero = false;
+      if (!inHero) {
+        anchor.appendChild(chatRoot);
+        chatRoot.classList.add("hero-mode");
+        inHero = true;
+      }
+
+    } else {
+
+      if (inHero) {
+        document.body.appendChild(chatRoot);
+        chatRoot.classList.remove("hero-mode");
+        inHero = false;
+      }
+
+    }
   }
 
-  if (!inHero && heroRect.bottom > enterPoint) {
-    // re-enter hero
-    anchor.appendChild(chatRoot);
-    chatRoot.classList.add("hero-mode");
-    inHero = true;
-  }
+  window.addEventListener("scroll", updateChatPosition, { passive: true });
+  window.addEventListener("resize", updateChatPosition);
+
+  updateChatPosition();
 }
-
-    window.addEventListener("scroll", updateChatPosition, { passive: true });
-    window.addEventListener("resize", updateChatPosition);
-    updateChatPosition();
-  }
 
 });
 </script>
@@ -382,6 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
 
