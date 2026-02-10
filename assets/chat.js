@@ -96,7 +96,7 @@ close.onclick = () => {
   panel.classList.add("closed");
 
   if (!isIndexPage) {
-    localStorage.setItem("false");
+    localStorage.setItem(CHAT_OPEN_KEY, "false");
   }
 };
 restoreMessages();
@@ -245,21 +245,4 @@ form.onsubmit = async e => {
   }
 };
 
-window.addEventListener("beforeunload", () => {
-  localStorage.setItem(
-    CHAT_OPEN_KEY,
-    !panel.classList.contains("closed")
-  );
-});
-
-
 }
-
-
-
-
-
-
-
-
-
