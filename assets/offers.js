@@ -369,12 +369,8 @@ if (rewardBtn) {
   /******************************
    STEP-BY-STEP NUMBER FLOW
   ******************************/
-  const sectionNumbers = document.getElementById("numberSection");
-  const sectionPort = document.getElementById("portNumberSection");
-  const questionTitle = document.querySelector("#portNumberSection h2");
   const phoneInputs = document.getElementById("phoneInputsContainer");
-  const btnConfirm = document.getElementById("confirmNumbersBtn");
-  
+
   let totalPeople = 1;
   let currentPerson = 1;
   let collectedNumbers = {};

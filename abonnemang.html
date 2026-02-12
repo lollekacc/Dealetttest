@@ -390,8 +390,9 @@
       Leverans och bekräftelse
     </h2>
 
-    <div class="space-y-6">
+    <div class="space-y-8">
 
+      <!-- Email -->
       <div>
         <label class="block text-sm font-semibold mb-2">
           Mejladress
@@ -402,9 +403,10 @@
                placeholder="din@email.se" />
       </div>
 
+      <!-- SMS number -->
       <div>
         <label class="block text-sm font-semibold mb-2">
-          Mobilnummer
+          Mobilnummer (för avisering)
         </label>
         <input type="tel"
                id="contactPhone"
@@ -412,42 +414,32 @@
                placeholder="07XXXXXXXX" />
       </div>
 
-      <p class="text-sm text-gray-500">
-        Mejladress används för orderbekräftelse och mobilnummer för avisering via sms.
-      </p>
+      <!-- PORT NUMBER SECTION -->
+      <div>
+        <h3 class="text-xl font-bold text-[#0C4A3C] mb-4">
+          Flytta hit nummer
+        </h3>
 
-      <button id="contactContinueBtn"
+        <div id="phoneInputsContainer"
+             class="flex flex-col gap-4">
+        </div>
+
+        <p class="text-sm text-gray-500 mt-2">
+          Ange de nummer som ska flyttas till det nya abonnemanget.
+        </p>
+      </div>
+
+      <!-- Submit -->
+      <button id="submitOrderBtn"
               class="adeala-btn w-full py-4 rounded-xl text-lg">
-        Gå vidare
+        Slutför beställning
       </button>
 
     </div>
+
   </div>
 
 </section>
-
-
-<!-- =======================
-     NUMBER FLOW SECTION
-======================= -->
-<section id="numberSection" class="hidden mt-20 px-10 pb-20">
-
-  <div id="portNumberSection" class="hidden mt-20 px-10 pb-20">
-    <h2 class="text-center text-3xl font-bold text-[#0C4A3C] mb-10">
-      Fyll i numren som ska flyttas
-    </h2>
-
-    <div id="phoneInputsContainer"
-         class="max-w-xl mx-auto flex flex-col gap-6"></div>
-
-    <button id="confirmNumbersBtn"
-            class="mt-10 adeala-btn w-full py-4 rounded-xl text-lg">
-      Bekräfta nummer
-    </button>
-  </div>
-
-</section>
-
 
 <!-- FULL PAGE POPUP -->
 <div id="pchoiceModal"

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dealett – Dashboard</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body class="min-h-screen bg-[#F8FAFC] font-[Inter] text-gray-900">
+
+<div id="header-placeholder"></div>
+
+<section class="px-6 py-14">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-[#0C4A3C]">
+          Välkommen, <span id="userName">–</span>
+        </h1>
+        <p class="text-gray-500 mt-2 text-sm">
+          Här hanterar du dina abonnemang och belöningar.
+        </p>
+      </div>
+
+      <button id="logoutBtn"
+        class="mt-6 md:mt-0 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl">
+        Logga ut
+      </button>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6 mb-10">
+      <div class="bg-white rounded-2xl shadow p-6">
+        <p class="text-sm text-gray-500">Aktivt abonnemang</p>
+        <h2 id="activePlan" class="text-xl font-bold mt-2">Inget aktivt</h2>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-6">
+        <p class="text-sm text-gray-500">Månadskostnad</p>
+        <h2 id="monthlyCost" class="text-xl font-bold mt-2">0 kr</h2>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-6">
+        <p class="text-sm text-gray-500">Belöning</p>
+        <h2 id="rewardStatus" class="text-xl font-bold mt-2">Ingen vald</h2>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+
+      <div class="md:col-span-2 bg-white rounded-2xl shadow p-8">
+        <h2 class="text-xl font-bold text-[#0C4A3C] mb-6">
+          Mitt abonnemang
+        </h2>
+
+        <div id="subscriptionDetails" class="text-sm text-gray-700 space-y-2">
+          Inget abonnemang kopplat till kontot.
+        </div>
+
+        <div class="mt-6 flex gap-4">
+          <a href="offers.html"
+             class="bg-[#0C4A3C] text-white px-6 py-3 rounded-xl">
+            Byt abonnemang
+          </a>
+
+          <button id="cancelPlan"
+            class="border border-red-500 text-red-600 px-6 py-3 rounded-xl">
+            Avsluta
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-8">
+        <h2 class="text-xl font-bold text-[#0C4A3C] mb-6">
+          Snabbval
+        </h2>
+
+        <div class="space-y-4 text-sm">
+          <a href="support.html" class="block p-3 border rounded-xl hover:bg-gray-50">
+            Kontakta support
+          </a>
+
+          <a href="profile.html" class="block p-3 border rounded-xl hover:bg-gray-50">
+            Uppdatera uppgifter
+          </a>
+
+          <button id="deleteAccount"
+            class="block w-full p-3 border border-red-500 text-red-600 rounded-xl">
+            Radera konto
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+
+  /* LOAD HEADER */
+  try {
+    const headerRes = await fetch("partials/header.html");
+    if (headerRes.ok) {
+      document.getElementById("header-placeholder").innerHTML =
+        await headerRes.text();
+    }
+  } catch (e) {}
+
+  /* LOAD FOOTER */
+  try {
+    const footerRes = await fetch("partials/footer.html");
+    if (footerRes.ok) {
+      document.body.insertAdjacentHTML("beforeend", await footerRes.text());
+    }
+  } catch (e) {}
+
+  /* USER LOGIC */
+  const user = JSON.parse(localStorage.getItem("dealett_user"));
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  document.getElementById("userName").textContent = user.name || "Kund";
+
+  const plan = JSON.parse(localStorage.getItem("dealett_plan"));
+  const reward = JSON.parse(localStorage.getItem("dealett_reward"));
+
+  if (plan) {
+    document.getElementById("activePlan").textContent = plan.name;
+    document.getElementById("monthlyCost").textContent = plan.price + " kr";
+    document.getElementById("subscriptionDetails").innerHTML = `
+      <p><strong>Operatör:</strong> ${plan.operator}</p>
+      <p><strong>Data:</strong> ${plan.data}</p>
+      <p><strong>Startdatum:</strong> ${plan.startDate || "-"}</p>
+    `;
+  }
+
+  if (reward) {
+    document.getElementById("rewardStatus").textContent = reward.name;
+  }
+
+  document.getElementById("logoutBtn").onclick = () => {
+    localStorage.removeItem("dealett_user");
+    window.location.href = "index.html";
+  };
+
+  document.getElementById("cancelPlan").onclick = () => {
+    localStorage.removeItem("dealett_plan");
+    location.reload();
+  };
+
+  document.getElementById("deleteAccount").onclick = () => {
+    localStorage.clear();
+    window.location.href = "index.html";
+  };
+
+});
+</script>
+
+</body>
+</html>

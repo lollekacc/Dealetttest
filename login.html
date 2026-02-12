@@ -1,104 +1,125 @@
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dealett – Logga in</title>
+  <!DOCTYPE html>
+  <html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dealett – Logga in</title>
 
-  <!-- Frameworks & Global Styles -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="assets/header.js" defer></script>
+    <!-- Frameworks & Global Styles -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        crossorigin="anonymous" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          crossorigin="anonymous" />
 
-  <link rel="stylesheet" href="./assets/style.css">
-</head>
+    <link rel="stylesheet" href="./assets/style.css">
+  </head>
 
-<body class="min-h-screen font-[Inter] bg-white text-gray-900">
+  <body class="min-h-screen font-[Inter] bg-white text-gray-900">
 
-  <!-- Header -->
-  <div id="header-placeholder"></div>
+    <!-- Header -->
+    <div id="header-placeholder"></div>
 
-  <!-- LOGIN SECTION -->
-  <section class="min-h-[80vh] flex items-center justify-center px-6">
-    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
+    <!-- LOGIN SECTION -->
+    <section class="min-h-[80vh] flex items-center justify-center px-6">
+      <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
 
-      <!-- Optional watermark SVG background -->
-      <div class="absolute inset-0 opacity-10 pointer-events-none"
-           style="background: url('images/logo-watermark.svg') center / contain no-repeat;">
-      </div>
-
-      <h1 class="text-3xl font-extrabold text-center mb-6 relative z-10">
-        Logga in
-      </h1>
-
-      <form class="space-y-5 relative z-10">
-        <div>
-          <label class="block text-sm font-medium mb-1">E-post</label>
-          <input
-            type="email"
-            required
-            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="namn@email.se"
-          />
+        <!-- Optional watermark SVG background -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none"
+            style="background: url('images/logo-watermark.svg') center / contain no-repeat;">
         </div>
 
-        <div>
-          <label class="block text-sm font-medium mb-1">Lösenord</label>
-          <input
-            type="password"
-            required
-            class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="••••••••"
-          />
-        </div>
-
-        <button
-          type="submit"
-          class="w-full adeala-btn py-3 rounded-xl text-lg font-semibold">
+        <h1 class="text-3xl font-extrabold text-center mb-6 relative z-10">
           Logga in
-        </button>
-      </form>
+        </h1>
 
-      <div class="mt-6 text-center text-sm text-gray-600 relative z-10">
-        Har du inget konto?
-        <a href="#" class="text-blue-600 font-semibold hover:underline">
-          Registrera dig
-        </a>
+        <form id="loginForm" class="space-y-5 relative z-10">
+          <div>
+            <label class="block text-sm font-medium mb-1">E-post</label>
+            <input
+              id="loginEmail"
+              type="email"
+              required
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="namn@email.se"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium mb-1">Lösenord</label>
+            <input
+            id="loginPassword"
+              type="password"
+              required
+              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              placeholder="••••••••"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full adeala-btn py-3 rounded-xl text-lg font-semibold">
+            Logga in
+          </button>
+        </form>
+
+        <div class="mt-6 text-center text-sm text-gray-600 relative z-10">
+          Har du inget konto?
+          <a href="#" class="text-blue-600 font-semibold hover:underline">
+            Registrera dig
+          </a>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Load shared footer + chat -->
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const headerRes = await fetch("partials/header.html");
-      if (headerRes.ok) {
-        document.getElementById("header-placeholder").innerHTML =
-          await headerRes.text();
-      }
+    <!-- Load shared footer + chat -->
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const headerRes = await fetch("partials/header.html");
+        if (headerRes.ok) {
+          document.getElementById("header-placeholder").innerHTML =
+            await headerRes.text();
+        }
 
-      const chatRes = await fetch("partials/chat.html");
-      if (chatRes.ok) {
-        document.body.insertAdjacentHTML("beforeend", await chatRes.text());
-      }
+        const chatRes = await fetch("partials/chat.html");
+        if (chatRes.ok) {
+          document.body.insertAdjacentHTML("beforeend", await chatRes.text());
+        }
 
-      const footerRes = await fetch("partials/footer.html");
-      if (footerRes.ok) {
-        document.body.insertAdjacentHTML("beforeend", await footerRes.text());
-      }
+        const footerRes = await fetch("partials/footer.html");
+        if (footerRes.ok) {
+          document.body.insertAdjacentHTML("beforeend", await footerRes.text());
+        }
 
-      const script = document.createElement("script");
-      script.src = "assets/chat.js";
-      script.defer = true;
-      document.body.appendChild(script);
-    });
-  </script>
+        const script = document.createElement("script");
+        script.src = "assets/chat.js";
+        script.defer = true;
+        document.body.appendChild(script);
+      });
+    </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
-</body>
-</html>
+  document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    if (email && password) {
+      localStorage.setItem("dealett_user", JSON.stringify({
+        name: email.split("@")[0],
+        email: email
+      }));
+
+      window.location.href = "account.html";
+    }
+  });
+
+});
+</script>
+  </body>
+  </html>
