@@ -99,7 +99,8 @@ function updateDataAvailability() {
 }
 
 
-
+let offersSection;
+let offersContainer;
 
 /******************************
  LOAD HEADER + FOOTER
@@ -110,6 +111,8 @@ const bindingYesBtn = document.getElementById("bindingYesBtn");
 const bindingNoBtn = document.querySelector('[data-binding="no"]');
 const bindingWrapper = document.getElementById("bindingDateWrapper");
 const bindingInput = document.getElementById("bindingEndDate");
+offersSection = document.getElementById("offersSection");
+offersContainer = document.getElementById("offers-container");
 
 if (bindingYesBtn && bindingWrapper) {
   bindingYesBtn.addEventListener("click", () => {
@@ -152,7 +155,36 @@ if (bindingInput) {
     const chatScript = document.createElement("script");
     chatScript.src = "./assets/chat.js";
     document.body.appendChild(chatScript);
-  });
+if (abonState.persons !== null && abonState.data !== null) {
+  offersSection.classList.remove("hidden");
+  await filterOffers();
+  smoothScrollTo(offersSection);
+  localStorage.removeItem("dealettState");
+}
+
+  const contactBtn = document.getElementById("contactContinueBtn");
+
+  if (contactBtn) {
+    contactBtn.addEventListener("click", () => {
+
+      const email = document.getElementById("contactEmail").value.trim();
+      const phone = document.getElementById("contactPhone").value.trim();
+
+      if (!email || !phone) {
+        alert("Fyll i både mejl och mobilnummer.");
+        return;
+      }
+
+      localStorage.setItem("contactEmail", email);
+      localStorage.setItem("contactPhone", phone);
+
+      document.getElementById("contactSection").classList.add("hidden");
+
+      startNumberFlow();
+    });
+  }
+
+});
   
 const abonState = {
   persons: null,
@@ -161,7 +193,12 @@ const abonState = {
   binding: null,
   bindingEndDate: null
 };
+const savedState = localStorage.getItem("dealettState");
 
+if (savedState) {
+  const parsed = JSON.parse(savedState);
+  Object.assign(abonState, parsed);
+}
 function updateOperatorAvailability() {
   if (!ALL_PLANS.length) return;
 
@@ -215,8 +252,6 @@ if (isQuizComplete()) {
   /******************************
    QUIZ SECTIONS
   ******************************/
-  const offersSection = document.getElementById("offersSection");
-  const offersContainer = document.getElementById("offers-container");
   function buildOfferCard(o, stateOverride = null) {
   const state = stateOverride || abonState;
   const reward = calculateReward(o.finalPrice);
@@ -286,9 +321,9 @@ card.addEventListener("click", () => {
 
   window.offerChosen = true;
   window.selectedOfferId = o.id;
+
+
 });
-
-
 
 const rewardBtn = card.querySelector(".gift-btn");
 
@@ -296,9 +331,15 @@ if (rewardBtn) {
   rewardBtn.addEventListener("click", (e) => {
     e.stopPropagation();
 
+    // ✅ FORCE-SELECT OFFER WHEN CLICKING REWARD
+    document.querySelectorAll(".offer-choice")
+      .forEach(c => c.classList.remove("active"));
+    card.classList.add("active");
+    window.offerChosen = true;
+    window.selectedOfferId = o.id;
+
     const rewardValue = Number(rewardBtn.dataset.reward);
     const offerId = rewardBtn.dataset.offerId || "";
-
     openPchoicePopup(rewardValue, offerId);
   });
 }
@@ -642,15 +683,23 @@ document.getElementById("startDateText").classList.remove("hidden");
    CHECK IF READY FOR NUMBERS
   ******************************/
 function checkGoToNumberStep() {
-  if (!window.offerChosen) return;
+  console.log("checkGoToNumberStep()", {
+    offerChosen: window.offerChosen,
+    beloningChosen: window.beloningChosen,
+    contactExists: !!document.getElementById("contactSection"),
+    contactHidden: document.getElementById("contactSection")?.classList.contains("hidden")
+  });
 
-  // allow number flow even without reward
-  startNumberFlow();
+  if (!window.offerChosen) return;
+  if (!window.beloningChosen) return;
+  const contactSection = document.getElementById("contactSection");
+  if (!contactSection) return;
+
+  contactSection.classList.remove("hidden");
+  contactSection.style.display = "block"; // force if CSS conflicts
+  smoothScrollTo(contactSection);
 }
 
-
-  
-  
   function calculateReward(price) {
     if (price < 299) return 2000;
     if (price < 399) return 3000;
@@ -659,6 +708,22 @@ function checkGoToNumberStep() {
     return 1000;
   }
 function openPchoicePopup(rewardValue, offerId) {
+
+  // 🔥 FORCE SELECT OFFER
+  const card = [...document.querySelectorAll(".offer-choice")]
+    .find(c =>
+      c.querySelector(".gift-btn")?.dataset.offerId === offerId
+    );
+
+  if (card) {
+    document.querySelectorAll(".offer-choice")
+      .forEach(c => c.classList.remove("active"));
+
+    card.classList.add("active");
+    window.offerChosen = true;
+    window.selectedOfferId = offerId;
+  }
+
   localStorage.setItem(
     "rewardChoice",
     JSON.stringify({ reward: rewardValue, offerId })
@@ -668,12 +733,12 @@ function openPchoicePopup(rewardValue, offerId) {
   const frame = document.getElementById("pchoiceFrame");
 
   frame.src = "pchoice.html";
-  modal.style.display = "block";   // 👈 REQUIRED
-  modal.offsetHeight;              // force reflow
+  modal.style.display = "block";
+  modal.offsetHeight;
   modal.classList.add("show");
 }
 
-window.addEventListener("message", e => {
+window.addEventListener("message", (e) => {
   if (e.data !== "rewardDone") return;
 
   window.beloningChosen = true;
@@ -681,14 +746,19 @@ window.addEventListener("message", e => {
   const modal = document.getElementById("pchoiceModal");
   const frame = document.getElementById("pchoiceFrame");
 
-  modal.classList.remove("show");
-  modal.style.display = "none";
+  if (modal) {
+    modal.classList.remove("show");
+    modal.style.display = "none";
+  }
 
+  if (frame) frame.src = "";
+
+  // Delay until DOM ready
   setTimeout(() => {
-    frame.src = "";
     checkGoToNumberStep();
-  }, 300);
+  }, 0);
 });
+
 
   function smoothScrollTo(element) {
     if (!element) return;

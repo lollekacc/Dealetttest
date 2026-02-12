@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Adeala – Abonnemang</title>
-  <script type="module" src="assets/offers.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/style.css">
@@ -101,37 +100,86 @@
  
 <!-- Q0: Binding -->
 <!-- Binding small row -->
-<div class="max-w-[1600px] mx-auto mb-10 px-4">
-  <div class="quiz-card flex flex-wrap items-center gap-6 text-lg">
+<div class="max-w-[1600px] mx-auto mb-16 px-4">
 
-    <span class="font-semibold text-[#0C4A3C]">
-      Har du bindningstid idag?
-    </span>
+  <div class="quiz-card flex items-start gap-16">
 
-    <button class="quiz-option abon-opt px-6 py-2"
-            data-binding="no">
-      Nej
-    </button>
+    <!-- LEFT: BINDING -->
+    <div class="flex flex-col gap-6 flex-1 min-w-0">
 
-    <button id="bindingYesBtn"
-            class="quiz-option px-6 py-2"
-            type="button">
-      Ja
-    </button>
-
-    <div id="bindingDateWrapper"
-         class="hidden flex items-center gap-2">
-      <span class="text-gray-600 text-sm">
-        När slutar den?
+      <span class="font-semibold text-[#0C4A3C]">
+        Har du bindningstid idag?
       </span>
 
-      <input type="date"
-             id="bindingEndDate"
-             class="border p-2 rounded-lg text-sm" />
+      <div class="flex flex-wrap items-center gap-4">
+
+        <button class="quiz-option abon-opt px-6 py-2"
+                data-binding="no">
+          Nej
+        </button>
+
+        <button id="bindingYesBtn"
+                class="quiz-option px-6 py-2"
+                type="button">
+          Ja
+        </button>
+
+        <div id="bindingDateWrapper"
+             class="hidden flex items-center gap-2">
+          <span class="text-gray-600 text-sm">
+            När slutar den?
+          </span>
+
+          <input type="date"
+                 id="bindingEndDate"
+                 class="border p-2 rounded-lg text-sm" />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: OPERATOR -->
+    <div class="flex flex-col gap-6 flex-1 min-w-0">
+
+      <p class="quiz-title">
+        Vad har du för operatör idag?
+      </p>
+
+      <div class="flex flex-wrap gap-3">
+
+        <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
+          <img src="images/tele2.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tele2">
+        </button>
+
+        <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
+          <img src="images/telia.png" class="partner-logo h-10 hover:scale-105 transition" alt="Telia">
+        </button>
+
+        <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
+          <img src="images/telenor.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Telenor">
+        </button>
+
+        <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
+          <img src="images/tre.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tre">
+        </button>
+
+        <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
+          <img src="images/halebop.webp" class="partner-logo h-10 hover:scale-105 transition" alt="Halebop">
+        </button>
+
+        <button type="button"
+                class="quiz-option familj-opt px-4 py-2 whitespace-nowrap"
+                data-operator="Other">
+          Andra
+        </button>
+
+      </div>
     </div>
 
   </div>
+
 </div>
+
 <div class="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-[1600px] mx-auto">
 <div class="quiz-card">
   <p class="quiz-title">Hur många personer?</p>
@@ -331,6 +379,52 @@
 
   </div>
 </section>
+<!-- =======================
+     CONTACT FORM SECTION
+======================= -->
+<section id="contactSection" class="hidden mt-20 px-10 pb-20">
+
+  <div class="max-w-3xl mx-auto bg-white border rounded-2xl p-10 shadow-sm">
+
+    <h2 class="text-3xl font-bold text-[#0C4A3C] mb-8">
+      Leverans och bekräftelse
+    </h2>
+
+    <div class="space-y-6">
+
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Mejladress
+        </label>
+        <input type="email"
+               id="contactEmail"
+               class="w-full border rounded-xl p-3"
+               placeholder="din@email.se" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Mobilnummer
+        </label>
+        <input type="tel"
+               id="contactPhone"
+               class="w-full border rounded-xl p-3"
+               placeholder="07XXXXXXXX" />
+      </div>
+
+      <p class="text-sm text-gray-500">
+        Mejladress används för orderbekräftelse och mobilnummer för avisering via sms.
+      </p>
+
+      <button id="contactContinueBtn"
+              class="adeala-btn w-full py-4 rounded-xl text-lg">
+        Gå vidare
+      </button>
+
+    </div>
+  </div>
+
+</section>
 
 
 <!-- =======================
@@ -404,26 +498,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 </script>
-
-
-
+<script type="module" src="assets/offers.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

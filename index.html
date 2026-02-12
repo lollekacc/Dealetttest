@@ -20,51 +20,63 @@
   
 <!-- HERO SECTION -->
 <section 
-  class="relative w-full bg-cover bg-center bg-no-repeat py-36 px-6"
+  class="relative w-full bg-cover bg-center bg-no-repeat py-24 px-6"
   style="background-image: url('images/herologo.png');"
 >
   <div id="hero-chat-anchor"></div>
   <!-- Dark gradient overlay for premium depth -->
   <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40 animate-heroGlow"></div>
+  <div class="relative max-w-4xl ml-4 md:ml-20 lg:ml-40 
+            bg-black/55 backdrop-blur-xl 
+            border border-white/10 
+            shadow-[0_20px_60px_rgba(0,0,0,0.6)]
+            py-16 px-8 rounded-3xl">
 
+    <!-- SLIDER -->
+    <ul id="heroSlider"
+        class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide">
 
-  <div class="relative max-w-3xl 
-              bg-black/55 backdrop-blur-xl 
-              border border-white/10 
-              shadow-[0_20px_60px_rgba(0,0,0,0.6)]
-              py-24 px-12 rounded-3xl">
+      <!-- Slide 1 -->
+      <li class="min-w-full snap-start relative h-[580px]">
+        <img src="https://images.ctfassets.net/wnyreqeg7zsz/6QnqlXszeR8PTYtoTDBGax/aa1932112dc7c83fab22d2c9fbf6dc37/ViaplayWinterSport26_visuals_Horizontal_platform_AW_NoCTA.jpg"
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+      </li>
 
-    <h1 class="text-5xl md:text-6xl font-extrabold text-white leading-tight tracking-tight">
-      Hitta rätt abonnemang –  
-      <span class="text-white/80">till bästa pris.</span>
-    </h1>
+      <!-- Slide 2 -->
+      <li class="min-w-full snap-start relative h-[580px]">
+        <img src="https://www.dif.se/_next/image?url=https%3A%2F%2Fwww.dif.se%2Fmedia%2Fikhldpq4%2Fdiscovery-1920x1080.jpg&w=3840&q=75"
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+      </li>
+      <!-- Slide 3 -->
+      <li class="min-w-full snap-start relative h-[580px]">
+        <img src="https://cdn1-photos.shl.se/photos/24/06/f8e987d9-376f-4452-bb0a-17793a01f53aTV4216x9.jpg?ixlib=js-3.8.0&w=1920&h=1080&auto=format&fp-debug=0&fp-y=0.5&fp-x=0.5&crop=focalpoint&fit=crop&s=9e4a4b6a9060e7cd81aa553c88886206"
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+      </li>
+    </ul>
 
-    <p class="mt-8 text-xl text-gray-200 leading-relaxed">
-      Vi jämför alla våra partner-operatörer och skapar ett skräddarsytt abonnemang efter dina behov.
-      Dessutom får du en 
-      <span class="font-semibold text-blue-400">generös bonuscheck</span>
-      när du tecknar via 
-      <span class="font-extrabold text-white">Dealett</span>.
-    </p>
+    <!-- ARROWS -->
+    <button onclick="scrollHero(-1)"
+      class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2
+             bg-white/70 hover:bg-white w-12 h-12 items-center justify-center rounded-full">
+      ‹
+    </button>
 
-    <div class="mt-10 flex flex-col sm:flex-row gap-5">
+    <button onclick="scrollHero(1)"
+      class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2
+             bg-white/70 hover:bg-white w-12 h-12 items-center justify-center rounded-full">
+      ›
+    </button>
 
-      <a href="abonnemang.html"
-         class="adeala-btn px-10 py-4 text-white rounded-2xl text-lg font-semibold 
-                shadow-xl hover:scale-[1.04] hover:shadow-2xl transition duration-200">
-        Se dina erbjudanden
-      </a>
-
-      <a href="abonnemang.html"
-         class="adeala-btn-secondary 
-                px-10 py-4 bg-white/15 
-                border border-white/30
-                text-white rounded-2xl text-lg font-semibold 
-                hover:bg-white/25 hover:scale-[1.04] transition duration-200">
-        Starta snabb-guiden
-      </a>
-
+    <!-- DOTS -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
+      <button onclick="goToSlide(0)" class="w-3 h-3 bg-white rounded-full"></button>
+      <button onclick="goToSlide(1)" class="w-3 h-3 bg-white/60 rounded-full"></button>
+      <button onclick="goToSlide(2)" class="w-3 h-3 bg-white/60 rounded-full"></button>
     </div>
+
   </div>
 </section>
   
@@ -106,38 +118,104 @@ Snabbt och enkelt</h2>
   </section>
 <!-- Mini Quiz -->
 <section class="w-full max-w-5xl mx-auto mt-24 mb-32 p-20 bg-white/80 backdrop-blur-sm border border-gray-100 rounded-3xl shadow-xl">
-  <h2 class="text-3xl text-center font-bold mb-8 text-gray-800">Vad är viktigast för dig?</h2>
+  <h2 class="text-3xl text-center font-bold mb-12 text-gray-800">Behovsanalys</h2>
 
-<div id="quiz-step-1">
-  <div class="grid sm:grid-cols-2 gap-4"> 
-    <a href="abonnemang.html?filter=pris" 
-       data-answer="pris"
-       class="quiz-option adeala-btn-secondary text-center block">💸 Billigast pris</a>
+  <div class="flex flex-col gap-20">
 
-    <a href="abonnemang.html?filter=surf" 
-       data-answer="surf"
-       class="quiz-option adeala-btn-secondary text-center block">📶 Mycket surf</a>
+    <!-- QUESTION 1 -->
+<div id="step1" class="transition-opacity duration-500">
+  <div class="quiz-card flex flex-col">
+    <p class="quiz-title">Vad har du för operatör idag?</p>
 
-    <a href="abonnemang.html?filter=familj" 
-       data-answer="familj"
-       class="quiz-option adeala-btn-secondary text-center block">👨‍👩‍👧‍👦 Familjeabonnemang</a>
+    <div class="flex flex-wrap gap-3 mt-6">
 
-    <a href="abonnemang.html?filter=presentkort" 
-       data-answer="presentkort"
-       class="quiz-option adeala-btn-secondary text-center block">🎁 Bonusar & presentkort</a>
+      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
+        <img src="images/tele2.jpg" class="partner-logo h-12 hover:scale-105 transition" alt="Tele2">
+      </button>
+
+      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
+        <img src="images/telia.png" class="partner-logo h-12 hover:scale-105 transition" alt="Telia">
+      </button>
+
+      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
+        <img src="images/telenor.jpg" class="partner-logo h-12 hover:scale-105 transition" alt="Telenor">
+      </button>
+
+      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
+        <img src="images/tre.jpg" class="partner-logo h-12 hover:scale-105 transition" alt="Tre">
+      </button>
+
+      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
+        <img src="images/halebop.webp" class="partner-logo h-12 hover:scale-105 transition" alt="Halebop">
+      </button>
+
+      <button type="button" class="quiz-option familj-opt" data-operator="Other">
+        Andra
+      </button>
+
+    </div>
   </div>
 </div>
 
 
-  <div id="quiz-result" class="hidden mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
-    <h3 class="text-xl font-semibold mb-2">Din rekommendation:</h3>
-    <p id="quiz-text" class="text-gray-800 mb-4"></p>
+    <!-- QUESTION 2 -->
+  <div id="step2" class="hidden opacity-0 transition-opacity duration-500">
+    <div class="quiz-card flex flex-col">
+      <p class="quiz-title">Har du bindningstid?</p>
+      <div class="flex flex-wrap justify-center gap-16 mt-6">
+        <button class="quiz-option familj-opt">Ingen Bidningstid</button>
+        <button class="quiz-option familj-opt">1–3 månader</button>
+        <button class="quiz-option familj-opt">3–6 månader</button>
+        <button class="quiz-option familj-opt">6 Månader&lt;</button>
+      </div>
+    </div>
+  </div>
+    <!-- QUESTION 3,4,5 -->
+  <div id="step3" class="hidden opacity-0 transition-opacity duration-500">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
 
-    <a id="quiz-link" href="#" class="adeala-btn-secondary">
-      Visa rekommenderade abonnemang
-    </a>
+      <!-- Q3 -->
+     
+      <div class="quiz-card flex flex-col">
+        <p class="quiz-title">Hur många personer i familjen?</p>
+        <div class="flex flex-col gap-4 mt-6">
+          <button class="quiz-option" data-persons="2">1 personer</button>
+          <button class="quiz-option" data-persons="2">2 personer</button>
+          <button class="quiz-option" data-persons="3">3 personer</button>
+          <button class="quiz-option" data-persons="4">4 personer</button>
+          <button class="quiz-option" data-persons="5">5 personer</button>
+          <button class="quiz-option" data-persons="6">6+ personer</button>
+        </div>
+      </div>
+    
+
+      <!-- Q4 -->
+      <div class="quiz-card flex flex-col">
+        <p class="quiz-title">Hur mycket surf per person?</p>
+        <div class="flex flex-col gap-4 mt-6">
+          <button class="quiz-option" data-data="low">Lite (10 GB)</button>
+          <button class="quiz-option" data-data="medium">Lagom (30 GB)</button>
+          <button class="quiz-option" data-data="high">Mycket (Obegränsat)</button>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="quiz-card flex flex-col">
+        <p class="quiz-title">Ungefärlig månadsbudget</p>
+        <div class="flex flex-col gap-4 mt-6">
+          <button class="quiz-option">Upp till 500 kr</button>
+          <button class="quiz-option">Upp till 1000 kr</button>
+          <button class="quiz-option">Upp till 1500 kr</button>
+          <button class="quiz-option">Upp till 2000 kr</button>
+          <button class="quiz-option">Spelar ingen roll</button>
+        </div>
+      </div>
+
+    </div>
+    </div>
   </div>
 </section>
+
 
   <!-- Fade animations -->
   <script>
@@ -228,66 +306,6 @@ function initHeroChatMovement() {
 
 });
 </script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const quizOptions = document.querySelectorAll(".quiz-option");
-    const quizResult = document.getElementById("quiz-result");
-    const quizText = document.getElementById("quiz-text");
-    const quizLink = document.getElementById("quiz-link");
-  
-    quizOptions.forEach(option => {
-      option.addEventListener("click", (e) => {
-        e.preventDefault();
-        const answer = option.dataset.answer;
-  
-        let text = "";
-        let link = "";
-  
-        switch (answer) {
-          case "pris":
-            text = `
-              Du prioriterar lägsta pris 💸<br>
-              <ul class='list-disc ml-6 mt-2'>
-                <li>Tre 5GB – från 99 kr/mån</li>
-                <li>Hallon 8GB – från 119 kr/mån</li>
-                <li>Fello 8GB – från 125 kr/mån</li>
-              </ul>
-            `;
-            link = "abonnemang.html?filter=cheap";
-            break;
-  
-          case "surf":
-            text = `
-              Du vill ha mycket surf 📶<br>
-              <ul class='list-disc ml-6 mt-2'>
-                <li>Tele2 Obegränsad</li>
-                <li>Telenor Obegränsad</li>
-                <li>Halebop 50GB</li>
-              </ul>
-            `;
-            link = "abonnemang.html?filter=surf";
-            break;
-  
-          case "familj":
-            text = `Familjeabonnemang 👨‍👩‍👧‍👦`;
-            link = "abonnemang.html";
-            break;
-  
-          case "presentkort":
-            text = `Bonusar & presentkort 🎁`;
-            link = "belöning.html";
-            break;
-        }
-  
-        quizText.innerHTML = text;
-        quizLink.href = link;
-        quizResult.classList.remove("hidden");
-        quizResult.scrollIntoView({ behavior: "smooth" });
-      });
-    });
-  });
-  </script>  
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -296,5 +314,38 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!heroContainer) return;
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const slider = document.getElementById("heroSlider");
+  if (!slider) return;
+
+  let currentSlide = 0;
+  const totalSlides = slider.children.length;
+  const AUTO_INTERVAL = 6000;
+
+  function goToSlide(i) {
+    currentSlide = i;
+    slider.scrollTo({
+      left: slider.clientWidth * currentSlide,
+      behavior: "smooth"
+    });
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    goToSlide(currentSlide);
+  }
+
+  window.scrollHero = function(dir) {
+    currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
+    goToSlide(currentSlide);
+  };
+
+  setInterval(nextSlide, AUTO_INTERVAL);
+
+});
+</script>
+<script src="assets/indexbehovsanalys.js"></script>
 </body>
 </html>
