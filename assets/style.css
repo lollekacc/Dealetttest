@@ -1239,6 +1239,17 @@ section[style*="herologo.png"] {
 .offer-choice.faded {
   opacity: 0.35;
 }
+@media (max-width: 900px) {
+  #heroSlider li {
+    height: 420px;
+  }
+}
+
+@media (max-width: 600px) {
+  #heroSlider li {
+    height: 340px;
+  }
+}
 .reward-circle.reward-selected {
   background: radial-gradient(
     circle at top left,
@@ -1520,6 +1531,7 @@ section[style*="herologo.png"] {
   opacity: 1;
   transform: translateY(0);
 }
+
 
 
 
