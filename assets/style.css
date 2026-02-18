@@ -1196,7 +1196,17 @@ transition:
 section[style*="herologo.png"] {
   padding-bottom: 6rem;
 }
+@media (max-width: 900px) {
+  #heroSlider li {
+    height: 420px;
+  }
+}
 
+@media (max-width: 600px) {
+  #heroSlider li {
+    height: 340px;
+  }
+}
 @media (max-width: 900px) {
   section[style*="herologo.png"] {
     padding-bottom: 3rem;
@@ -1510,6 +1520,7 @@ section[style*="herologo.png"] {
   opacity: 1;
   transform: translateY(0);
 }
+
 
 
 
