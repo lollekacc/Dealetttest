@@ -914,7 +914,7 @@ nav a:hover {
 #chat-panel.hero-mode {
   position: absolute;
   top: 120px;
-  right: 80px;
+  right: 30px;
 
   width: 640px;
   height: 620px;
@@ -1182,7 +1182,7 @@ transition:
    #chat-panel.hero-mode {
   position: absolute;
   top: 120px;
-  right: 80px;
+  right: 30px;
   transform: none !important;
   height: 600px;
 }
@@ -1531,6 +1531,7 @@ section[style*="herologo.png"] {
   opacity: 1;
   transform: translateY(0);
 }
+
 
 
 
