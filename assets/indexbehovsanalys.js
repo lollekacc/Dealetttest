@@ -1,80 +1,45 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const steps = ["step1", "step2", "step3", "step4", "step5"];
+  let current = 0;
 
-  const step1 = document.getElementById("step1");
-  const step2 = document.getElementById("step2");
-  const step3 = document.getElementById("step3");
+  const state = {};
 
-  if (!step1) return;
+  function showStep(i) {
+    steps.forEach((id, idx) => {
+      const el = document.getElementById(id);
+      if (!el) return;
 
-  const abonState = window.abonState || {
-    persons: null,
-    data: null,
-    operator: null,
-    binding: null,
-    bindingEndDate: null
-  };
-
-  window.abonState = abonState;
-
-  function showStep(current, next) {
-    current.classList.add("opacity-0");
-
-    setTimeout(() => {
-      current.classList.add("hidden");
-      next.classList.remove("hidden");
-
-      setTimeout(() => {
-        next.classList.remove("opacity-0");
-      }, 20);
-
-    }, 500);
+      if (idx === i) {
+        el.classList.remove("hidden", "opacity-0");
+      } else {
+        el.classList.add("hidden", "opacity-0");
+      }
+    });
   }
 
-  /* STEP 1 – OPERATOR */
-  step1.querySelectorAll("[data-operator]").forEach(btn => {
+  // CTA → start quiz
+  const startBtn = document.querySelector("button.adeala-btn");
+  if (startBtn) {
+    startBtn.addEventListener("click", () => {
+      showStep(0);
+      window.scrollBy({ top: 200, behavior: "smooth" });
+    });
+  }
+
+  // Handle all quiz clicks
+  document.querySelectorAll(".quiz-option").forEach(btn => {
     btn.addEventListener("click", () => {
-      abonState.operator = btn.dataset.operator || null;
-      showStep(step1, step2);
+      const data = btn.dataset;
+      Object.assign(state, data);
+
+      current++;
+
+      if (current < steps.length) {
+        showStep(current);
+      }
     });
   });
 
-  /* STEP 2 – BINDING */
-  step2.querySelectorAll("button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      abonState.binding = btn.textContent.trim();
-      showStep(step2, step3);
-    });
-  });
-let personsChosen = false;
-let dataChosen = false;
-
-function redirectToOffers() {
-  localStorage.setItem("dealettState", JSON.stringify(abonState));
-  window.location.href = "abonnemang.html";
-}
-
-function checkReady() {
-  if (personsChosen && dataChosen) {
-    redirectToOffers();
-  }
-}
-
-  /* STEP 3 – PERSONS */
-step3.querySelectorAll("[data-persons]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    abonState.persons = Number(btn.dataset.persons);
-    personsChosen = true;
-    checkReady();
-  });
-});
-
-  /* STEP 3 – DATA */
-step3.querySelectorAll("[data-data]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    abonState.data = btn.dataset.data;
-    dataChosen = true;
-    checkReady();
-  });
-});
-
+  // Start hidden
+  showStep(-1);
 });
