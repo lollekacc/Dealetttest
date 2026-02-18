@@ -1193,7 +1193,15 @@ transition:
     grid-template-columns: 1fr;
   }
 }
+section[style*="herologo.png"] {
+  padding-bottom: 6rem;
+}
 
+@media (max-width: 900px) {
+  section[style*="herologo.png"] {
+    padding-bottom: 3rem;
+  }
+}
 @media (max-width: 768px) {
   .ad-container {
     flex-direction: column;
@@ -1502,6 +1510,7 @@ transition:
   opacity: 1;
   transform: translateY(0);
 }
+
 
 
 
