@@ -121,103 +121,131 @@ Snabbt och enkelt</h2>
   </section>
 <!-- Mini Quiz -->
 <section class="w-full max-w-5xl mx-auto mt-24 mb-32 p-20 bg-white/80 backdrop-blur-sm border border-gray-100 rounded-3xl shadow-xl">
-  <h2 class="text-3xl text-center font-bold mb-12 text-gray-800">Har du problem med ditt abonnemang idag?</h2>
+  
+  <!-- STEP 1 – HERO QUESTION -->
+  <h2 class="text-3xl text-center font-bold mb-4 text-gray-800">
+    Betalar du mer än du behöver för ditt mobilabonnemang?
+  </h2>
+  <p class="text-center text-gray-600 mb-10">
+    Vi analyserar ditt nuvarande abonnemang och visar om du kan få mer värde – utan att byta telefon.
+  </p>
+
+  <div class="text-center mb-12">
+    <button class="adeala-btn px-8 py-4 text-lg">
+      👉 Se min analys
+    </button>
+  </div>
+
+  <!-- TRUST -->
+  <div class="flex flex-wrap justify-center gap-6 mb-20 text-sm font-semibold text-gray-700">
+    <span>✔️ Ingen bindning</span>
+    <span>✔️ Ingen brytavgift utan godkännande</span>
+    <span>✔️ Gratis analys</span>
+  </div>
 
   <div class="flex flex-col gap-20">
 
     <!-- QUESTION 1 -->
-<div id="step1" class="transition-opacity duration-500">
-  <div class="quiz-card flex flex-col">
-    <p class="quiz-title">Vad har du för operatör idag?</p>
-
-    <div class="flex flex-wrap gap-3 mt-6">
-
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
-        <img src="images/tele2.jpg" class="partner-logo h-12 hover:scale-105 transition" alt="Tele2">
-      </button>
-
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
-        <img src="images/telia.png" class="partner-logo h-12 hover:scale-105 transition" alt="Telia">
-      </button>
-
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
-        <img src="images/telenor.jpg" class="partner-logo h-12 hover:scale-105 transition" alt="Telenor">
-      </button>
-
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
-        <img src="images/tre.jpg" class="partner-logo h-12 hover:scale-105 transition" alt="Tre">
-      </button>
-
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
-        <img src="images/halebop.webp" class="partner-logo h-12 hover:scale-105 transition" alt="Halebop">
-      </button>
-
-      <button type="button" class="quiz-option familj-opt" data-operator="Other">
-        Andra
-      </button>
-
+    <div id="step1" class="transition-opacity duration-500">
+      <div class="quiz-card flex flex-col">
+        <p class="quiz-title">Hur många personer gäller det?</p>
+        <div class="flex flex-wrap justify-center gap-4 mt-6">
+          <button class="quiz-option" data-persons="1">1</button>
+          <button class="quiz-option" data-persons="2">2</button>
+          <button class="quiz-option" data-persons="3">3+</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
 
     <!-- QUESTION 2 -->
-  <div id="step2" class="hidden opacity-0 transition-opacity duration-500">
-    <div class="quiz-card flex flex-col">
-      <p class="quiz-title">Har du bindningstid?</p>
-      <div class="flex flex-wrap justify-center gap-16 mt-6">
-        <button class="quiz-option familj-opt">Ingen Bidningstid</button>
-        <button class="quiz-option familj-opt">1–3 månader</button>
-        <button class="quiz-option familj-opt">3–6 månader</button>
-        <button class="quiz-option familj-opt">6 Månader&lt;</button>
-      </div>
-    </div>
-  </div>
-    <!-- QUESTION 3,4,5 -->
-  <div id="step3" class="hidden opacity-0 transition-opacity duration-500">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
-
-      <!-- Q3 -->
-     
+    <div id="step2" class="hidden opacity-0 transition-opacity duration-500">
       <div class="quiz-card flex flex-col">
-        <p class="quiz-title">Hur många personer i familjen?</p>
+        <p class="quiz-title">Hur använder ni mobilen mest?</p>
         <div class="flex flex-col gap-4 mt-6">
-          <button class="quiz-option" data-persons="2">1 personer</button>
-          <button class="quiz-option" data-persons="2">2 personer</button>
-          <button class="quiz-option" data-persons="3">3 personer</button>
-          <button class="quiz-option" data-persons="4">4 personer</button>
-          <button class="quiz-option" data-persons="5">5 personer</button>
-          <button class="quiz-option" data-persons="6">6+ personer</button>
+          <button class="quiz-option" data-usage="wifi">Mest wifi & sociala medier</button>
+          <button class="quiz-option" data-usage="stream">Streaming & video</button>
+          <button class="quiz-option" data-usage="work">Jobb & hotspot</button>
+          <button class="quiz-option" data-usage="unlimited">Vill aldrig tänka på surf</button>
         </div>
       </div>
-    
+    </div>
 
-      <!-- Q4 -->
+    <!-- QUESTION 3 -->
+    <div id="step3" class="hidden opacity-0 transition-opacity duration-500">
       <div class="quiz-card flex flex-col">
-        <p class="quiz-title">Hur mycket surf per person?</p>
+        <p class="quiz-title">Vad betalar du ungefär idag per abonnemang?</p>
         <div class="flex flex-col gap-4 mt-6">
-          <button class="quiz-option" data-data="low">Lite (10 GB)</button>
-          <button class="quiz-option" data-data="medium">Lagom (30 GB)</button>
-          <button class="quiz-option" data-data="high">Mycket (Obegränsat)</button>
+          <button class="quiz-option" data-price="under300">Under 300 kr</button>
+          <button class="quiz-option" data-price="300-400">300–400 kr</button>
+          <button class="quiz-option" data-price="400-500">400–500 kr</button>
+          <button class="quiz-option" data-price="500plus">500+ kr</button>
         </div>
       </div>
+    </div>
 
-      <!-- Q5 -->
+    <!-- QUESTION 4 -->
+    <div id="step4" class="hidden opacity-0 transition-opacity duration-500">
       <div class="quiz-card flex flex-col">
-        <p class="quiz-title">Ungefärlig månadsbudget</p>
+        <p class="quiz-title">Har du bindningstid kvar?</p>
         <div class="flex flex-col gap-4 mt-6">
-          <button class="quiz-option">Upp till 500 kr</button>
-          <button class="quiz-option">Upp till 1000 kr</button>
-          <button class="quiz-option">Upp till 1500 kr</button>
-          <button class="quiz-option">Upp till 2000 kr</button>
-          <button class="quiz-option">Spelar ingen roll</button>
+          <button class="quiz-option" data-binding="no">Nej</button>
+          <button class="quiz-option" data-binding="yes">Ja</button>
+          <button class="quiz-option" data-binding="unknown">Vet inte</button>
         </div>
       </div>
+    </div>
 
+    <!-- RESULT STEP -->
+    <div id="step5" class="hidden opacity-0 transition-opacity duration-500">
+      <div class="quiz-card flex flex-col text-center">
+        <h3 class="text-2xl font-bold mb-4 text-gray-800">
+          Din analys är klar
+        </h3>
+        <p class="text-gray-600 mb-10">
+          Baserat på dina svar tror vi att du kan optimera ditt abonnemang och få mer värde varje månad.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+          <!-- OPTION 1 -->
+          <div class="offer-choice">
+            <h4 class="font-bold mb-2">Mest prisvärd</h4>
+            <p class="text-2xl font-extrabold mb-2">399 kr/mån</p>
+            <ul class="text-sm mb-6">
+              <li>20 GB</li>
+              <li>Fri surf inom EU</li>
+              <li>1 000 kr ICA-presentkort</li>
+            </ul>
+            <button class="adeala-btn w-full">
+              👉 Välj detta abonnemang
+            </button>
+          </div>
+
+          <!-- OPTION 2 -->
+          <div class="offer-choice">
+            <h4 class="font-bold mb-2">Mest surf</h4>
+            <p class="text-2xl font-extrabold mb-2">449 kr/mån</p>
+            <ul class="text-sm mb-6">
+              <li>50 GB</li>
+              <li>5G & fri roaming</li>
+              <li>1 000 kr ICA-presentkort</li>
+            </ul>
+            <button class="adeala-btn w-full">
+              👉 Välj detta abonnemang
+            </button>
+          </div>
+
+        </div>
+
+        <p class="mt-8 text-sm text-gray-600">
+          Vi rekommenderar alternativ 1 baserat på ditt användningsmönster.
+        </p>
+      </div>
     </div>
-    </div>
+
   </div>
 </section>
+
 
 
   <!-- Fade animations -->
@@ -352,6 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <script src="assets/indexbehovsanalys.js"></script>
 </body>
 </html>
+
 
 
 
