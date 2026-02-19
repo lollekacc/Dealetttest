@@ -1,54 +1,59 @@
 <!-- FOOTER -->
-<footer class="w-full bg-[#0f172a] text-gray-300 backdrop-blur-sm border-t border-white/10 mt-20">
-  
-  <div class="max-w-7xl mx-auto px-9 py-16 flex flex-col md:flex-row items-center justify-between gap-6">
+<footer class="relative w-full mt-20 text-gray-300 overflow-hidden">
 
-    <!-- Logo -->
-   <a href="index.html">
-  <img src="./images/logo.png"
-       class="h-12 w-auto opacity-80 hover:opacity-100 transition duration-300">
-</a>
-
-
-    <!-- Footer Navigation -->
-    <nav class="flex flex-wrap justify-center gap-6 text-gray-700 text-sm font-medium">
-      <a href="abonnemang.html" class="text-gray-400 hover:text-white transition duration-300">Abonnemang</a>
-      <a href="bredband.html" class="text-gray-400 hover:text-white transition duration-300">5G Bredband</a>
-      <a href="partner.html" class="text-gray-400 hover:text-white transition duration-300">Partner</a>
-      <a href="belöning.html" class="text-gray-400 hover:text-white transition duration-300">Belöning</a>
-      <a href="om-oss.html" class="text-gray-400 hover:text-white transition duration-300">Om oss</a>
-      <a href="kundservice.html" class="text-gray-400 hover:text-white transition duration-300">Kundservice</a>
-    </nav>
-
-<!-- Social Icons -->
-<div class="flex items-center gap-5 text-gray-700 text-2xl">
-  <a href="#" class="hover:text-green-400 transition">
-    <i class="fab fa-facebook-f"></i>
-  </a>
-  <a href="#" class="hover:text-green-400 transition">
-    <i class="fab fa-instagram"></i>
-  </a>
-  <a href="#" class="hover:text-green-400 transition">
-    <i class="fab fa-tiktok"></i>
-  </a>
-  <a href="#" class="hover:text-green-400 transition">
-    <i class="fab fa-twitter"></i>
-  </a>
-  <a href="#" class="hover:text-green-400 transition">
-    <i class="fab fa-youtube"></i>
-  </a>
-</div>
-
-
+  <!-- BACKGROUND IMAGE LAYER -->
+  <div class="absolute inset-0">
+    <img
+      src="https://static.vecteezy.com/system/resources/thumbnails/028/708/675/original/abstract-luxury-background-with-turquoise-lines-on-navy-blue-background-green-moving-rectangle-shape-premium-minimal-animated-screensaver-modern-seamless-looped-backdrop-dark-royal-bg-4k-60fps-video.jpg"
+      alt=""
+      class="w-full h-full object-cover object-center"
+    />
   </div>
 
-  <!-- Copyright Line -->
-  <div class="border-t border-gray-300 py-4 text-center text-xs text-gray-600">
+  <!-- DARK GRADIENT MASK (prevents cut look) -->
+  <div class="absolute inset-0 bg-gradient-to-b
+              from-[#020617]/90
+              via-[#020617]/70
+              to-[#020617]/95">
+  </div>
+  <!-- CONTENT -->
+  <div class="relative z-10 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-9 py-16
+                flex flex-col md:flex-row
+                items-center justify-between gap-6">
+
+      <!-- Logo -->
+      <a href="index.html">
+        <img src="./images/laga.png"
+             class="h-12 w-auto opacity-80 hover:opacity-100 transition">
+      </a>
+
+      <!-- Navigation -->
+      <nav class="flex flex-wrap justify-center gap-6 text-sm font-medium">
+        <a href="abonnemang.html" class="text-gray-400 hover:text-white transition">Abonnemang</a>
+        <a href="bredband.html" class="text-gray-400 hover:text-white transition">5G Bredband</a>
+        <a href="partner.html" class="text-gray-400 hover:text-white transition">Partner</a>
+        <a href="belöning.html" class="text-gray-400 hover:text-white transition">Belöning</a>
+        <a href="om-oss.html" class="text-gray-400 hover:text-white transition">Om oss</a>
+        <a href="kundservice.html" class="text-gray-400 hover:text-white transition">Kundservice</a>
+      </nav>
+
+      <!-- Social -->
+      <div class="flex items-center gap-5 text-2xl text-gray-400">
+        <a href="#" class="hover:text-green-400 transition"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="hover:text-green-400 transition"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="hover:text-green-400 transition"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="hover:text-green-400 transition"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="hover:text-green-400 transition"><i class="fab fa-youtube"></i></a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COPYRIGHT -->
+  <div class="relative z-10 border-t border-white/10 py-4
+              text-center text-xs text-gray-400">
     © 2025 Dealett – Alla rättigheter reserverade
   </div>
 
 </footer>
-
-
-
-

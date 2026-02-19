@@ -20,7 +20,7 @@
   
 <!-- HERO SECTION -->
 <section
-  class="relative w-full bg-cover bg-center bg-no-repeat min-h-screen px-6"
+  class="relative w-full bg-cover bg-center bg-no-repeat px-6"
   style="background-image: url('images/herologo.png');"
 >
 
@@ -102,9 +102,9 @@
     </div>
 
     <div class="flex flex-wrap justify-center gap-6 mb-4 text-sm font-semibold text-gray-700">
-      <span>✔️ Ingen bindning</span>
-      <span>✔️ Ingen brytavgift utan godkännande</span>
-      <span>✔️ Gratis analys</span>
+      <span>✔️ Free 1 text</span>
+      <span>✔️ Free 2 text</span>
+      <span>✔️Free 3 text</span>
     </div>
   </div>
 
@@ -263,19 +263,32 @@
   
 <section class="bg-white py-2 border-b border-gray-100">
   <div class="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-center gap-10 opacity-60 hover:opacity-100 transition duration-300">
+    <a href="abonnemang.html?op=Tele2">
+      <img src="images/tele2.jpg" class="h-7 grayscale hover:grayscale-0 transition cursor-pointer">
+    </a>
 
-    <img src="images/tele2.jpg" class="h-7 grayscale hover:grayscale-0 transition">
-    <img src="images/telia.png" class="h-7 grayscale hover:grayscale-0 transition">
-    <img src="images/telenor.jpg" class="h-7 grayscale hover:grayscale-0 transition">
-    <img src="images/tre.jpg" class="h-7 grayscale hover:grayscale-0 transition">
-    <img src="images/halebop.webp" class="h-7 grayscale hover:grayscale-0 transition">
+    <a href="abonnemang.html?op=Telia">
+      <img src="images/telia.png" class="h-7 grayscale hover:grayscale-0 transition cursor-pointer">
+    </a>
+
+    <a href="abonnemang.html?op=Telenor">
+      <img src="images/telenor.jpg" class="h-7 grayscale hover:grayscale-0 transition cursor-pointer">
+    </a>
+
+    <a href="abonnemang.html?op=Tre">
+      <img src="images/tre.jpg" class="h-7 grayscale hover:grayscale-0 transition cursor-pointer">
+    </a>
+
+    <a href="abonnemang.html?op=Halebop">
+      <img src="images/halebop.webp" class="h-7 grayscale hover:grayscale-0 transition cursor-pointer">
+    </a>
 
   </div>
 </section>
 <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
 
   <!-- Scroll Ads -->
- <section class="scroll-ads bg-gradient-to-b from-white to-gray-50 py-24">
+ <section class="scroll-ads bg-gradient-to-b from-white to-gray-50 py-24 pb-48">
     <div class="ad-container fade-in">
       <img src="images/dealett-ai.png" alt="Mobilabonnemang" class="ad-image">
       <div class="ad-text">
@@ -297,8 +310,107 @@ Snabbt och enkelt</h2>
       <img src="images/p3.jpg" alt="5G-nät" class="ad-image">
     </div>
   </section>
+<!-- PARTNERS + COVERAGE SECTION -->
+<!-- PARTNERS + COVERAGE SECTION -->
+<section class="bg-gradient-to-b from-white to-gray-50 py-24">
+  <div class="max-w-10xl mx-auto px-6">
 
-  
+    <div class="bg-white/80 backdrop-blur-sm border border-gray-100
+                rounded-3xl shadow-lg p-10">
+
+      <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-4">
+        I samarbete med ledande operatörer
+      </h2>
+      <p class="text-center text-gray-600 mb-12">
+        Jämför operatörer och se täckning direkt.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
+
+        <!-- LEFT: VERTICAL LOGOS -->
+        <div class="md:col-span-1 flex flex-col gap-4">
+          <button class="operator-btn active" data-operator="telia">
+            <img src="images/telia.png" class="h-10 mx-auto">
+          </button>
+
+          <button class="operator-btn" data-operator="tele2">
+            <img src="images/tele2.jpg" class="h-10 mx-auto">
+          </button>
+
+          <button class="operator-btn" data-operator="telenor">
+            <img src="images/telenor.jpg" class="h-10 mx-auto">
+          </button>
+
+          <button class="operator-btn" data-operator="tre">
+            <img src="images/tre.jpg" class="h-10 mx-auto">
+          </button>
+
+          <button class="operator-btn" data-operator="halebop">
+            <img src="images/halebop.webp" class="h-10 mx-auto">
+          </button>
+        </div>
+
+        <!-- RIGHT: MAP -->
+        <div
+          id="coverage-map"
+          class="md:col-span-3 h-[600px] rounded-2xl overflow-hidden border">
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+const map = L.map("coverage-map", {
+  zoomControl: true,
+  attributionControl: false
+}).setView([62.0, 15.0], 5);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 18
+}).addTo(map);
+
+let activeOverlay;
+
+const overlays = {
+  tele2: L.tileLayer("https://mim.tele2.com/MIMCore/api/Tile/GetOverlay?x={x}&y={y}&z={z}&viewType=1&countryCode=SWE"),
+  telia: L.tileLayer.wms("https://coverage.ddc.teliasonera.net/coverageportal_se/map/tile", {
+    format: "image/png",
+    transparent: true
+  }),
+  tre: L.tileLayer("https://coverage.tre.se/MIMCore/api/Tile/GetOverlay?z={z}&x={x}&y={y}"),
+  telenor: L.tileLayer.wms("https://mboss.telenor.se/coverageportal/map/tile", {
+    format: "image/png",
+    transparent: true
+  })
+};
+</script>
+<script>
+document.querySelectorAll(".operator-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+
+    document.querySelectorAll(".operator-btn")
+      .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    if (activeOverlay) map.removeLayer(activeOverlay);
+
+    const key = btn.dataset.operator;
+    if (!overlays[key]) return;
+
+    activeOverlay = overlays[key];
+    activeOverlay.addTo(map);
+  });
+});
+</script>
+
+
+
   <!-- Load shared header/footer/chat -->
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
