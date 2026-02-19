@@ -76,8 +76,12 @@ if (!isIndexPage) {
     panel.classList.add("closed");
   }
 } else {
-  // Index hero mode
-  panel.classList.remove("closed");
+  const saved = localStorage.getItem(CHAT_OPEN_KEY);
+  if (saved === "false") {
+    panel.classList.add("closed");
+  } else {
+    panel.classList.remove("closed");
+  }
 }
 
 toggle.onclick = () => {

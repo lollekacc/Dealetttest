@@ -9,38 +9,140 @@ class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gr
 
 
     <!-- LEFT: viewport edge -->
-    <div class="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-1 text-sm font-semibold">
-      <a href="index.html" class="text-gray-600 hover:text-black transition duration-300 ease-out">Privat</a>
-      <span>|</span>
-      <a href="företag.html" class="text-gray-600 hover:text-black transition duration-300 ease-out">Företag</a>
-    </div>
+<div class="absolute left-6 top-1/2 -translate-y-1/2 flex items-center gap-2 text-sm font-semibold">
 
-    <!-- RIGHT: viewport edge -->
-    <div class="absolute right-6 top-1/2 -translate-y-1/2">
-      <a href="login.html" class="text-gray-600 hover:text-black transition duration-300 ease-out">
-        <i class="fas fa-user text-2xl"></i>
-      </a>
-    </div>
+  <a href="index.html"
+     class="relative px-8 py-9 rounded-md
+            text-gray-600 hover:text-black
+            hover:bg-emerald-100
+            transition duration-200 ease-out
+            after:absolute after:left-2 after:-bottom-1
+            after:h-[2px] after:w-0 after:bg-green-800
+            after:transition-all after:duration-300 hover:after:w-[calc(100%-1rem)]">
+    Privat
+  </a>
+
+  <span class="text-gray-400">|</span>
+
+  <a href="företag.html"
+     class="relative px-8 py-9 rounded-md
+            text-gray-600 hover:text-black
+            hover:bg-emerald-100
+            transition duration-200 ease-out
+            after:absolute after:left-2 after:-bottom-1
+            after:h-[2px] after:w-0 after:bg-green-800
+            after:transition-all after:duration-300 hover:after:w-[calc(100%-1rem)]">
+    Företag
+  </a>
+
+</div>
+
+<div class="absolute right-6 top-1/2 -translate-y-1/2 flex items-center gap-8 text-center">
+
+  <a href="varukorg.html"
+     class="relative flex flex-col items-center
+            px-6 py-5 rounded-md
+            text-gray-600 hover:text-black
+            hover:bg-emerald-100
+            transition duration-200 ease-out
+            after:absolute after:left-2 after:-bottom-1
+            after:h-[2px] after:w-0 after:bg-green-800
+            after:transition-all after:duration-300 hover:after:w-[calc(100%-1rem)]">
+    <i class="fas fa-shopping-cart text-2xl"></i>
+    <span class="text-[11px] mt-1">Varukorg</span>
+  </a>
+
+  <a href="login.html"
+     class="relative flex flex-col items-center
+            px-6 py-5 rounded-md
+            text-gray-600 hover:text-black
+            hover:bg-emerald-100
+            transition duration-200 ease-out
+            after:absolute after:left-2 after:-bottom-1
+            after:h-[2px] after:w-0 after:bg-green-800
+            after:transition-all after:duration-300 hover:after:w-[calc(100%-1rem)]">
+    <i class="fas fa-user text-2xl"></i>
+    <span class="text-[11px] mt-1">Logga in</span>
+  </a>
+
+</div>
 
     <!-- CENTER: constrained + perfectly centered -->
-    <div class="flex-1 flex items-center justify-center gap-12">
-      <a href="index.html" class="hover:opacity-80 transition duration-300 ease-out mb-2">
-       <img src="./images/laga.png" alt="Dealett Logo"
-class="h-20 w-auto drop-shadow-sm hover:scale-105 transition duration-300 ease-out">
+<div class="flex-1 flex items-center justify-center gap-12">
 
-      </a>
+  <!-- Logo -->
+  <a href="index.html"
+     class="relative px-1 py-1 rounded-md
+            hover:bg-emerald-100
+            transition duration-200 ease-out mb-2">
+    <img src="./images/laga.png"
+         alt="Dealett Logo"
+         class="h-20 w-auto drop-shadow-sm hover:scale-105 transition duration-300 ease-out">
+  </a>
 
-      <nav class="hidden md:flex items-center tracking-wide space-x-12 text-base font-medium">
-        <a href="abonnemang.html" class="relative text-gray-600 hover:text-black transition duration-300 ease-out after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-green-800 after:transition-all after:duration-300 hover:after:w-full">Abonnemang</a>
-        <a href="bredband.html" class="relative text-gray-600 hover:text-black transition duration-300 ease-out after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-green-800 after:transition-all after:duration-300 hover:after:w-full">5G Bredband</a>
-        <a href="jamfor.html" class="relative text-gray-600 hover:text-black transition duration-300 ease-out after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-green-800 after:transition-all after:duration-300 hover:after:w-full">Jämför täckning</a>
+  <!-- Navigation -->
+  <nav class="relative z-[100] hidden md:flex items-center space-x-8 text-base font-medium pointer-events-auto">
+
+    <a href="abonnemang.html"
+       class="relative px-3 py-3 rounded-md
+              text-gray-600 hover:text-black
+              hover:bg-emerald-100
+              transition duration-200 ease-out
+              after:absolute after:left-2 after:-bottom-1
+              after:h-[2px] after:w-0 after:bg-green-800
+              after:transition-all after:duration-300 hover:after:w-[calc(100%-1rem)]">
+      Abonnemang
+    </a>
+
+    <a href="bredband.html"
+       class="relative px-3 py-3 rounded-md
+              text-gray-600 hover:text-black
+              hover:bg-emerald-100
+              transition duration-200 ease-out
+              after:absolute after:left-2 after:-bottom-1
+              after:h-[2px] after:w-0 after:bg-green-800
+              after:transition-all after:duration-300 hover:after:w-[calc(100%-1rem)]">
+      5G Bredband
+    </a>
+
+    <a href="jamfor.html"
+       class="relative px-3 py-3 rounded-md
+              text-gray-600 hover:text-black
+              hover:bg-emerald-100
+              transition duration-200 ease-out
+              after:absolute after:left-2 after:-bottom-1
+              after:h-[2px] after:w-0 after:bg-green-800
+              after:transition-all after:duration-300 hover:after:w-[calc(100%-1rem)]">
+      Jämför täckning
+    </a>
+
+    <a href="om-oss.html"
+       class="relative px-3 py-3 rounded-md
+              text-gray-600 hover:text-black
+              hover:bg-emerald-100
+              transition duration-200 ease-out
+              after:absolute after:left-2 after:-bottom-1
+              after:h-[2px] after:w-0 after:bg-green-800
+              after:transition-all after:duration-300 hover:after:w-[calc(100%-1rem)]">
+      Om oss
+    </a>
+
+    <a href="kundservice.html"
+       class="relative px-3 py-3 rounded-md
+              text-gray-600 hover:text-black
+              hover:bg-emerald-100
+              transition duration-200 ease-out
+              after:absolute after:left-2 after:-bottom-1
+              after:h-[2px] after:w-0 after:bg-green-800
+              after:transition-all after:duration-300 hover:after:w-[calc(100%-1rem)]">
+      Kundservice
+    </a>
         <!-- <a href="bredband.html" class="text-gray-600 hover:text-black transition duration-300 ease-out">Produkter</a> -->
         <!-- <a href="partner.html" class="text-gray-600 hover:text-black transition duration-300 ease-out">Partner</a> -->
         <!-- <a href="belöning.html" class="text-gray-600 hover:text-black transition duration-300 ease-out">Belöning</a> -->
-        <a href="om-oss.html" class="relative text-gray-600 hover:text-black transition duration-300 ease-out after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-green-800 after:transition-all after:duration-300 hover:after:w-full">Om oss</a>
-        <a href="kundservice.html" class="relative text-gray-600 hover:text-black transition duration-300 ease-out after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-green-800 after:transition-all after:duration-300 hover:after:w-full">Kundservice</a>
-      </nav>
-    </div>
+  </nav>
+</div>
+
   </div>
   <div class="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
 </header>
