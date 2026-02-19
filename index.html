@@ -446,6 +446,7 @@ const overlays = {
     transparent: true
   })
 };
+let chatInModal = false;
 </script>
 <script>
 document.querySelectorAll(".operator-btn").forEach(btn => {
@@ -468,7 +469,12 @@ document.querySelectorAll(".operator-btn").forEach(btn => {
 </script>
 
 
-
+<div id="chat-modal" class="fixed inset-0 hidden items-center justify-center bg-black/50 z-[9999]">
+  <div class="bg-white rounded-2xl w-[95%] max-w-lg h-[80vh] relative">
+    <button id="close-chat" class="absolute top-3 right-3">✕</button>
+    <div id="chat-modal-body" class="h-full"></div>
+  </div>
+</div>
   <!-- Load shared header/footer/chat -->
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
@@ -482,6 +488,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (chatRes.ok) {
     document.body.insertAdjacentHTML("beforeend", await chatRes.text());
   }
+
+  const footerRes = await fetch("partials/footer.html");
+  if (footerRes.ok) {
+    document.body.insertAdjacentHTML("beforeend", await footerRes.text());
+  }
 const openBtn = document.getElementById("open-chat");
 const modal = document.getElementById("chat-modal");
 const closeBtn = document.getElementById("close-chat");
@@ -490,6 +501,7 @@ const modalBody = document.getElementById("chat-modal-body");
 
 if (openBtn && modal && closeBtn && chatPanel && modalBody) {
   openBtn.onclick = () => {
+    chatInModal = true;
     modal.classList.remove("hidden");
     modal.classList.add("flex");
     modalBody.appendChild(chatPanel);
@@ -497,17 +509,12 @@ if (openBtn && modal && closeBtn && chatPanel && modalBody) {
   };
 
   closeBtn.onclick = () => {
+    chatInModal = false;
     modal.classList.add("hidden");
     modal.classList.remove("flex");
     document.body.appendChild(chatPanel);
   };
 }
-
-  const footerRes = await fetch("partials/footer.html");
-  if (footerRes.ok) {
-    document.body.insertAdjacentHTML("beforeend", await footerRes.text());
-  }
-
   const script = document.createElement("script");
   script.src = "./assets/chat.js";
   script.defer = true;
@@ -529,7 +536,7 @@ function initHeroChatMovement() {
   let inHero = false;
 
   function updateChatPosition() {
-
+if (chatInModal) return;
     const heroBottom = hero.offsetTop + hero.offsetHeight;
     const scrollY = window.scrollY;
 
@@ -601,12 +608,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 <script src="assets/indexbehovsanalys.js"></script>
-<div id="chat-modal" class="fixed inset-0 hidden items-center justify-center bg-black/50 z-[9999]">
-  <div class="bg-white rounded-2xl w-[95%] max-w-lg h-[80vh] relative">
-    <button id="close-chat" class="absolute top-3 right-3">✕</button>
-    <div id="chat-modal-body" class="h-full"></div>
-  </div>
-</div>
-
 </body>
 </html>
