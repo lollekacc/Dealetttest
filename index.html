@@ -19,41 +19,39 @@
   <div id="header-placeholder"></div>
   
 <!-- HERO SECTION -->
-<section 
-  class="relative w-full bg-cover bg-center bg-no-repeat py-24 px-6"
+<section
+  class="relative w-full bg-cover bg-center bg-no-repeat min-h-screen px-6"
   style="background-image: url('images/herologo.png');"
 >
 
   <div id="hero-chat-anchor"></div>
   <!-- Dark gradient overlay for premium depth -->
   <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40 animate-heroGlow"></div>
-  <div class="relative max-w-4xl ml-4 md:ml-20 lg:ml-0 
-            bg-black/55 backdrop-blur-xl 
-            border border-white/10 
+<div class="relative max-w-8xl mx-auto
+            bg-black/55 backdrop-blur-xl
+            border border-white/10
             shadow-[0_20px_60px_rgba(0,0,0,0.6)]
-            py-16 px-8 rounded-3xl">
-    <p class="relative z-20 text-white text-xl md:text-2xl font-semibold mb-6">
-  Betalar du mer än du behöver för ditt mobilabonnemang?
-</p>
+            py-1 px-1 rounded-xl">
+
     <!-- SLIDER -->
     <ul id="heroSlider"
         class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide">
 
       <!-- Slide 1 -->
-      <li class="min-w-full snap-start relative h-[580px]">
+      <li class="min-w-full snap-start relative h-[480px] rounded-2xl overflow-hidden">
         <img src="https://images.ctfassets.net/wnyreqeg7zsz/6QnqlXszeR8PTYtoTDBGax/aa1932112dc7c83fab22d2c9fbf6dc37/ViaplayWinterSport26_visuals_Horizontal_platform_AW_NoCTA.jpg"
              class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
       </li>
 
       <!-- Slide 2 -->
-      <li class="min-w-full snap-start relative h-[580px]">
+      <li class="min-w-full snap-start relative h-[480px] rounded-2xl overflow-hidden">
         <img src="https://www.dif.se/_next/image?url=https%3A%2F%2Fwww.dif.se%2Fmedia%2Fikhldpq4%2Fdiscovery-1920x1080.jpg&w=3840&q=75"
              class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
       </li>
       <!-- Slide 3 -->
-      <li class="min-w-full snap-start relative h-[580px]">
+      <li class="min-w-full snap-start relative h-[480px] rounded-2xl overflow-hidden">
         <img src="https://cdn1-photos.shl.se/photos/24/06/f8e987d9-376f-4452-bb0a-17793a01f53aTV4216x9.jpg?ixlib=js-3.8.0&w=1920&h=1080&auto=format&fp-debug=0&fp-y=0.5&fp-x=0.5&crop=focalpoint&fit=crop&s=9e4a4b6a9060e7cd81aa553c88886206"
              class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
@@ -81,46 +79,10 @@
     </div>
 
   </div>
-</section>
-  
-<section class="bg-white py-8 border-b border-gray-100">
-  <div class="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-center gap-10 opacity-60 hover:opacity-100 transition duration-300">
-
-    <img src="images/tele2.jpg" class="h-7 grayscale hover:grayscale-0 transition">
-    <img src="images/telia.png" class="h-7 grayscale hover:grayscale-0 transition">
-    <img src="images/telenor.jpg" class="h-7 grayscale hover:grayscale-0 transition">
-    <img src="images/tre.jpg" class="h-7 grayscale hover:grayscale-0 transition">
-    <img src="images/halebop.webp" class="h-7 grayscale hover:grayscale-0 transition">
-
-  </div>
-</section>
-<div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
-
-  <!-- Scroll Ads -->
- <section class="scroll-ads bg-gradient-to-b from-white to-gray-50 py-24">
-    <div class="ad-container fade-in">
-      <img src="images/dealett-ai.png" alt="Mobilabonnemang" class="ad-image">
-      <div class="ad-text">
-        <span class="ad-tag">Dealett-AI Chatt</span>
-        <h2>Vår smarta AI-guide analyserar dina behov och matchar dig direkt med det bästa abonnemanget.
-Snabbt och enkelt</h2>
-        <p>Dealett-AI hittar – du sparar.</p>
-        <a href="abonnemang.html" class="ad-btn adeala-btn">Chatta Med Dealett-AI</a> 
-      </div>
-    </div>
-
-    <div class="ad-container fade-in">
-      <div class="ad-text">
-        <span class="ad-tag">Bonus på alla köp</span>
-        <h2>Få presentkort när du tecknar abonnemang</h2>
-        <p>Hos oss lönar det sig alltid att välja smart. Varje köp ger dig en exklusiv belöning som tack för ditt förtroende.</p>
-        <a href="belöning.html" class="ad-btn adeala-btn">Utforska bonusar</a>
-      </div>
-      <img src="images/p3.jpg" alt="5G-nät" class="ad-image">
-    </div>
-  </section>
-<!-- Mini Quiz -->
-<section class="w-full max-w-5xl mx-auto mt-24 mb-32 p-20 bg-white/80 backdrop-blur-sm border border-gray-100 rounded-3xl shadow-xl">
+  <!-- Mini Quiz -->
+<div class="w-full max-w-7xl mx-auto mt-4 mb-4 p-1 md:p-2
+            bg-white/80 backdrop-blur-sm border border-gray-100
+            rounded-xl shadow-lg">
   
   <!-- STEP 1 – HERO QUESTION -->
   <h2 class="text-3xl text-center font-bold mb-4 text-gray-800">
@@ -129,21 +91,27 @@ Snabbt och enkelt</h2>
   <p class="text-center text-gray-600 mb-10">
     Vi analyserar ditt nuvarande abonnemang och visar om du kan få mer värde – utan att byta telefon.
   </p>
+<div id="quiz-slot" class="relative overflow-hidden transition-[height] duration-500">
 
-  <div class="text-center mb-12">
-    <button class="adeala-btn px-8 py-4 text-lg">
-      👉 Se min analys
-    </button>
+  <!-- INTRO -->
+  <div id="quiz-intro" class="transition-opacity duration-300">
+    <div class="text-center mb-12">
+      <button id="quiz-start" class="adeala-btn px-8 py-4 text-lg">
+        👉 Se min analys
+      </button>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-6 mb-4 text-sm font-semibold text-gray-700">
+      <span>✔️ Ingen bindning</span>
+      <span>✔️ Ingen brytavgift utan godkännande</span>
+      <span>✔️ Gratis analys</span>
+    </div>
   </div>
 
-  <!-- TRUST -->
-  <div class="flex flex-wrap justify-center gap-6 mb-20 text-sm font-semibold text-gray-700">
-    <span>✔️ Ingen bindning</span>
-    <span>✔️ Ingen brytavgift utan godkännande</span>
-    <span>✔️ Gratis analys</span>
-  </div>
-
-  <div class="flex flex-col gap-20">
+  <!-- QUIZ (REPLACES INTRO) -->
+  <div id="quiz-steps-wrapper"
+       class="absolute inset-0 z-10 hidden opacity-0 transition-opacity duration-500">
+    <div class="flex flex-col gap-8">
 
     <!-- QUESTION 1 -->
     <div id="step1" class="transition-opacity duration-500">
@@ -244,28 +212,93 @@ Snabbt och enkelt</h2>
     </div>
 
   </div>
+  </div>
+   </div>
+</div>
+<!-- HERO IMAGE GRID (clickable) -->
+<div class="max-w-8xl mx-auto mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+
+  <button type="button"
+    class="relative h-[250px] rounded-2xl overflow-hidden group focus:outline-none"
+    onclick="onHeroImageClick(1)">
+    <img src="https://media.istockphoto.com/id/1416797815/photo/golden-number-one.jpg?s=612x612&w=0&k=20&c=A1AOP7RZK8Rkk2yxEumTlWmhQE-0nGfxVz3Ef39Dzxc="
+         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+  </button>
+
+  <button type="button"
+    class="relative h-[250px] rounded-2xl overflow-hidden group focus:outline-none"
+    onclick="onHeroImageClick(2)">
+    <img src="https://media.istockphoto.com/id/1416797822/sv/foto/metal-numbers-1-2-3.jpg?s=612x612&w=0&k=20&c=Voz-nNVV_YvrpixRlSKmRrDduu-RE-fRXp9vsKkKcLw="
+         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+  </button>
+
+  <button type="button"
+    class="relative h-[250px] rounded-2xl overflow-hidden group focus:outline-none"
+    onclick="onHeroImageClick(3)">
+    <img src="https://media.istockphoto.com/id/1416797816/sv/foto/golden-number-one-hundred.jpg?s=612x612&w=0&k=20&c=zmDM4ThukzXfnsGxWtjyOOTCJ_rwskZTtKUo2Lnxwyk="
+         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+  </button>
+
+  <button type="button"
+    class="relative h-[250px] rounded-2xl overflow-hidden group focus:outline-none"
+    onclick="onHeroImageClick(4)">
+    <img src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
+         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+  </button>
+
+  <button type="button"
+    class="relative h-[250px] rounded-2xl overflow-hidden group focus:outline-none"
+    onclick="onHeroImageClick(5)">
+    <img src="https://www.shutterstock.com/shutterstock/photos/2015739206/display_1500/stock-photo--d-render-number-four-digital-symbol-pink-blue-gradient-neon-light-glowing-in-the-dark-2015739206.jpg"
+         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+  </button>
+
+</div>
 </section>
+  
+<section class="bg-white py-2 border-b border-gray-100">
+  <div class="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-center gap-10 opacity-60 hover:opacity-100 transition duration-300">
 
+    <img src="images/tele2.jpg" class="h-7 grayscale hover:grayscale-0 transition">
+    <img src="images/telia.png" class="h-7 grayscale hover:grayscale-0 transition">
+    <img src="images/telenor.jpg" class="h-7 grayscale hover:grayscale-0 transition">
+    <img src="images/tre.jpg" class="h-7 grayscale hover:grayscale-0 transition">
+    <img src="images/halebop.webp" class="h-7 grayscale hover:grayscale-0 transition">
 
+  </div>
+</section>
+<div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
 
-  <!-- Fade animations -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const faders = document.querySelectorAll('.fade-in');
-    
-      const observer = new IntersectionObserver((entries, obs) => {
-        entries.forEach(e => {
-          if (!e.isIntersecting) return;
-          e.target.classList.add('visible');
-          obs.unobserve(e.target);
-        });
-      }, { threshold: 0.2 });
-    
-      faders.forEach(f => observer.observe(f));
-    });
-    </script>
-    
+  <!-- Scroll Ads -->
+ <section class="scroll-ads bg-gradient-to-b from-white to-gray-50 py-24">
+    <div class="ad-container fade-in">
+      <img src="images/dealett-ai.png" alt="Mobilabonnemang" class="ad-image">
+      <div class="ad-text">
+        <span class="ad-tag">Dealett-AI Chatt</span>
+        <h2>Vår smarta AI-guide analyserar dina behov och matchar dig direkt med det bästa abonnemanget.
+Snabbt och enkelt</h2>
+        <p>Dealett-AI hittar – du sparar.</p>
+        <a href="abonnemang.html" class="ad-btn adeala-btn">Chatta Med Dealett-AI</a> 
+      </div>
+    </div>
 
+    <div class="ad-container fade-in">
+      <div class="ad-text">
+        <span class="ad-tag">Bonus på alla köp</span>
+        <h2>Få presentkort när du tecknar abonnemang</h2>
+        <p>Hos oss lönar det sig alltid att välja smart. Varje köp ger dig en exklusiv belöning som tack för ditt förtroende.</p>
+        <a href="belöning.html" class="ad-btn adeala-btn">Utforska bonusar</a>
+      </div>
+      <img src="images/p3.jpg" alt="5G-nät" class="ad-image">
+    </div>
+  </section>
+
+  
   <!-- Load shared header/footer/chat -->
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
@@ -380,12 +413,3 @@ document.addEventListener("DOMContentLoaded", () => {
 <script src="assets/indexbehovsanalys.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-

@@ -1531,23 +1531,9 @@ section[style*="herologo.png"] {
   opacity: 1;
   transform: translateY(0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.quiz-steps {
+  margin-top: 2rem;
+}
+#quiz-slot {
+  min-height: 260px; /* prevents height collapse during swap */
+}
