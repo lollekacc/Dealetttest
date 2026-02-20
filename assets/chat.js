@@ -1,4 +1,6 @@
 console.log("chat.js EXECUTED");
+const chatMode = document.body.dataset.chat || "default";
+document.body.classList.add(`chat-${chatMode}`);
 const toggle = document.getElementById("chat-toggle");
 const panel = document.getElementById("chat-panel");
 const close = document.getElementById("chat-close");
