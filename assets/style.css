@@ -910,8 +910,8 @@ nav a:hover {
   z-index: 9999;
 }
 
-/* Hero placement + resize */
-#chat-panel.hero-mode {
+/* INDEX (hero-style chat) */
+.chat-index #chat-panel {
   position: absolute;
   top: 120px;
   right: 30px;
@@ -921,10 +921,20 @@ nav a:hover {
 
   transform: scale(0.96);
 }
+/* ABONNEMANG (compact sidebar chat) */
+.chat-abonnemang #chat-panel {
+  width: 420px;
+  height: 720px;
+
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
 #chat-panel.hero-mode:not(.closed) {
   transform: scale(0.96);
 }
-#chat-panel.hero-mode.closed {
+.chat-index #chat-panel.closed {
   transform: translateX(100%) scale(0.96);
 }
 #chat-toggle {
