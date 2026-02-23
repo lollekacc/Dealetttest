@@ -311,21 +311,29 @@
 
   <!-- Scroll Ads -->
  <section class="scroll-ads bg-gradient-to-b from-white to-gray-50 py-32 pb-48">
-<div class="ad-container fade-in">
+<div class="ad-container fade-in relative overflow-hidden">
+<div class="absolute top-3 -right-16 rotate-45">
+  <div class="bg-red-700 text-white shadow-lg
+              w-[260px] h-[36px]
+              flex items-center justify-center
+              whitespace-nowrap
+              text-xs font-semibold
+              relative
+              left-[20px] top-[6px]">
+    Rekommenderas
+  </div>
+</div>
+
   <img src="images/dealett-ai.png" alt="Mobilabonnemang" class="ad-image">
 
   <div class="ad-text">
     <span class="ad-tag">Dealett-AI Chatt</span>
-
     <h2>
       Vår smarta AI-guide analyserar dina behov och matchar dig direkt med det bästa abonnemanget.
       Snabbt och enkelt
     </h2>
-
     <p>Dealett-AI hittar – du sparar.</p>
-
-    <button id="open-chat"
-            class="ad-btn adeala-btn">
+    <button id="open-chat" class="ad-btn adeala-btn">
       Chatta Med Dealett-AI
     </button>
   </div>
@@ -369,7 +377,7 @@
           hover:bg-black
           hover:scale-105
           transition">
-  Aktuell
+  →
 </a>
           </button>
 
@@ -383,7 +391,7 @@
           hover:bg-black
           hover:scale-105
           transition">
-  Aktuell
+  ➤
 </a>
           </button>
 
@@ -397,7 +405,7 @@
           hover:bg-black
           hover:scale-105
           transition">
-  Aktuell
+  ➝
 </a>
           </button>
 
@@ -411,7 +419,7 @@
           hover:bg-black
           hover:scale-105
           transition">
-  Aktuell
+  ➔
 </a>
           </button>
 
@@ -425,7 +433,7 @@
           hover:bg-black
           hover:scale-105
           transition">
-  Aktuell
+  ➞
 </a>
           </button>
         </div>
@@ -443,13 +451,28 @@
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 <script>
 const map = L.map("coverage-map", {
   zoomControl: true,
   attributionControl: false
 }).setView([62.0, 15.0], 5);
+let searchMarker;
 
+L.Control.geocoder({
+  defaultMarkGeocode: false
+})
+.on("markgeocode", function(e) {
+  const c = e.geocode.center;
+
+  if (searchMarker) map.removeLayer(searchMarker);
+  searchMarker = L.marker(c).addTo(map);
+
+  map.setView(c, 14);
+})
+.addTo(map);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 18
 }).addTo(map);
