@@ -1547,3 +1547,23 @@ section[style*="herologo.png"] {
 #quiz-slot {
   min-height: 260px; /* prevents height collapse during swap */
 }
+/* Quiz nav polish */
+#quiz-steps-wrapper { padding-top: 6px; }
+.quiz-card { padding-top: 18px; }
+
+/* Make the nav feel aligned with the card */
+#quiz-steps-wrapper .sticky { margin-left: 0; margin-right: 0; }
+
+/* Better option buttons (if you want) */
+.quiz-option{
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(10px);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+}
+.quiz-option:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(2,6,23,0.10);
+  background: rgba(255,255,255,0.95);
+}
