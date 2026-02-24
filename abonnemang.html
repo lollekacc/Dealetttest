@@ -102,6 +102,98 @@
 <!-- Binding small row -->
 <div class="max-w-[1600px] mx-auto mb-16 px-4">
 
+<div class="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-[1600px] mx-auto">
+<div class="quiz-card">
+  <p class="quiz-title">Hur många personer?</p>
+
+  <div id="personsMain" class="flex flex-col gap-4">
+    <button class="quiz-option abon-opt" data-persons="1">1 person</button>
+    <button class="quiz-option abon-opt" data-persons="2">2 personer</button>
+    <button class="quiz-option abon-opt" data-persons="3">3 personer</button>
+    <button class="quiz-option abon-opt" data-persons="4">4 personer</button>
+    <button class="quiz-option abon-opt" data-persons="5">5 personer</button>
+  </div>
+
+  <button id="showMorePersons"
+          class="mt-4 text-[#004C9E] font-semibold hover:underline">
+    Visa fler
+  </button>
+
+  <div id="personsExtra" class="hidden flex flex-col gap-4 mt-4">
+    <button class="quiz-option abon-opt" data-persons="6">6 personer</button>
+    <button class="quiz-option abon-opt" data-persons="7">7 personer</button>
+    <button class="quiz-option abon-opt" data-persons="8">8 personer</button>
+    <button class="quiz-option abon-opt" data-persons="9">9 personer</button>
+    <button class="quiz-option abon-opt" data-persons="10">10 personer</button>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <p class="quiz-title">Vad är viktigast för dig?</p>
+
+  <!-- Search-like free text input -->
+  <input
+    id="pref-input"
+    type="text"
+    placeholder="Skriv själv eller välj ett förslag…"
+    class="w-full quiz-option px-4 py-3"
+  />
+
+  <!-- Suggestions -->
+  <div class="flex flex-col gap-2 mt-3">
+    <button class="quiz-option suggestion">Jag vill ha bäst täckning</button>
+    <button class="quiz-option suggestion">Jag vill kunna använda utomlands</button>
+  </div>
+
+  <!-- Entered items -->
+  <div id="pref-list" class="mt-3 flex flex-col gap-2"></div>
+</div>
+
+<script>
+  const input = document.getElementById("pref-input");
+  const list = document.getElementById("pref-list");
+
+  function addItem(text) {
+    if (!text.trim()) return;
+    const div = document.createElement("div");
+    div.className = "quiz-option text-left";
+    div.textContent = text;
+    list.appendChild(div);
+    input.value = "";
+  }
+
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addItem(input.value);
+    }
+  });
+
+  document.querySelectorAll(".suggestion").forEach(btn => {
+    btn.addEventListener("click", () => addItem(btn.textContent));
+  });
+</script>
+      <div class="quiz-card">
+  <p class="quiz-title">Vad är viktigast för dig?</p>
+
+  <!-- Free-text style input with ready answers -->
+  <div class="flex flex-col gap-3">
+    <button
+      class="quiz-option abon-opt text-left"
+      data-preference="coverage">
+      Jag vill ha bäst täckning
+    </button>
+
+    <button
+      class="quiz-option abon-opt text-left"
+      data-preference="abroad">
+      Jag vill kunna använda utomlands
+    </button>
+  </div>
+</div>
+  
+  
+    </div>
   <div class="quiz-card flex items-start gap-16">
 
     <!-- LEFT: BINDING -->
@@ -179,57 +271,6 @@
   </div>
 
 </div>
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-[1600px] mx-auto">
-<div class="quiz-card">
-  <p class="quiz-title">Hur många personer?</p>
-
-  <div id="personsMain" class="flex flex-col gap-4">
-    <button class="quiz-option abon-opt" data-persons="1">1 person</button>
-    <button class="quiz-option abon-opt" data-persons="2">2 personer</button>
-    <button class="quiz-option abon-opt" data-persons="3">3 personer</button>
-    <button class="quiz-option abon-opt" data-persons="4">4 personer</button>
-    <button class="quiz-option abon-opt" data-persons="5">5 personer</button>
-  </div>
-
-  <button id="showMorePersons"
-          class="mt-4 text-[#004C9E] font-semibold hover:underline">
-    Visa fler
-  </button>
-
-  <div id="personsExtra" class="hidden flex flex-col gap-4 mt-4">
-    <button class="quiz-option abon-opt" data-persons="6">6 personer</button>
-    <button class="quiz-option abon-opt" data-persons="7">7 personer</button>
-    <button class="quiz-option abon-opt" data-persons="8">8 personer</button>
-    <button class="quiz-option abon-opt" data-persons="9">9 personer</button>
-    <button class="quiz-option abon-opt" data-persons="10">10 personer</button>
-  </div>
-</div>
-
-      <!-- Q2: Data -->
-      <div class="quiz-card">
-        <p class="quiz-title">Hur mycket surf behövs per person?</p>
-        <div class="flex flex-col gap-4">
-          <button class="quiz-option abon-opt" data-data="low">Lite (10 GB)</button>
-          <button class="quiz-option abon-opt" data-data="medium">Lagom (30–50 GB)</button>
-          <button class="quiz-option abon-opt" data-data="high">Mycket (obegränsat)</button>
-        </div>
-      </div>
-  
-      <!-- Q3: Operator -->
-      <div class="quiz-card">
-        <p class="quiz-title">Vilken operatör föredrar du?</p>
-        <div class="flex flex-col gap-4">
-          <button class="quiz-option abon-opt" data-operator="">Alla Öperatorer</button>
-          <button class="quiz-option abon-opt" data-operator="Telia">Telia</button>
-          <button class="quiz-option abon-opt" data-operator="Tele2">Tele2</button>
-          <button class="quiz-option abon-opt" data-operator="Telenor">Telenor</button>
-          <button class="quiz-option abon-opt" data-operator="Tre">Tre</button>
-          <button class="quiz-option abon-opt" data-operator="Halebop">Halebop</button>
-        </div>
-      </div>
-  
-    </div>
   </section>
   
 
@@ -489,6 +530,37 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(nextSlide, AUTO_INTERVAL);
 
 });
+</script>
+<script>
+  const input = document.getElementById("pref-input");
+  const list = document.getElementById("pref-list");
+  const selected = new Set();
+
+  function addItem(text) {
+    const value = text.trim();
+    if (!value || selected.has(value)) return;
+
+    selected.add(value);
+
+    const div = document.createElement("div");
+    div.className = "quiz-option quiz-chosen text-left";
+    div.textContent = value;
+    list.appendChild(div);
+
+    input.value = "";
+  }
+
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addItem(input.value);
+    }
+  });
+
+  document.querySelectorAll(".suggestion").forEach(btn => {
+    btn.classList.add("quiz-suggestion");
+    btn.addEventListener("click", () => addItem(btn.textContent));
+  });
 </script>
 <script type="module" src="assets/offers.js"></script>
 </body>
