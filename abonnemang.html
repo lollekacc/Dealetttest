@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Adeala – Abonnemang</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/header.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />  
@@ -129,71 +130,23 @@
 </div>
 
 <div class="quiz-card">
-  <p class="quiz-title">Vad är viktigast för dig?</p>
+  <p class="quiz-title">Beskriv fritt vad ni önskar?</p>
 
-  <!-- Search-like free text input -->
   <input
     id="pref-input"
     type="text"
     placeholder="Skriv själv eller välj ett förslag…"
-    class="w-full quiz-option px-4 py-3"
+    class="w-full pref-input"
   />
 
-  <!-- Suggestions -->
   <div class="flex flex-col gap-2 mt-3">
-    <button class="quiz-option suggestion">Jag vill ha bäst täckning</button>
-    <button class="quiz-option suggestion">Jag vill kunna använda utomlands</button>
+    <button class="pref-suggestion">Jag vill ha bäst täckning</button>
+    <button class="pref-suggestion">Jag vill kunna använda utomlands</button>
   </div>
 
-  <!-- Entered items -->
   <div id="pref-list" class="mt-3 flex flex-col gap-2"></div>
 </div>
 
-<script>
-  const input = document.getElementById("pref-input");
-  const list = document.getElementById("pref-list");
-
-  function addItem(text) {
-    if (!text.trim()) return;
-    const div = document.createElement("div");
-    div.className = "quiz-option text-left";
-    div.textContent = text;
-    list.appendChild(div);
-    input.value = "";
-  }
-
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addItem(input.value);
-    }
-  });
-
-  document.querySelectorAll(".suggestion").forEach(btn => {
-    btn.addEventListener("click", () => addItem(btn.textContent));
-  });
-</script>
-      <div class="quiz-card">
-  <p class="quiz-title">Vad är viktigast för dig?</p>
-
-  <!-- Free-text style input with ready answers -->
-  <div class="flex flex-col gap-3">
-    <button
-      class="quiz-option abon-opt text-left"
-      data-preference="coverage">
-      Jag vill ha bäst täckning
-    </button>
-
-    <button
-      class="quiz-option abon-opt text-left"
-      data-preference="abroad">
-      Jag vill kunna använda utomlands
-    </button>
-  </div>
-</div>
-  
-  
-    </div>
   <div class="quiz-card flex items-start gap-16">
 
     <!-- LEFT: BINDING -->
@@ -271,13 +224,6 @@
   </div>
 
 </div>
-  </section>
-  
-
-  <!-- =======================
-       MOBIL QUIZ
-  ======================= -->
-  <section id="mobilQuizSection" class="hidden mt-20 px-10 pb-20">
 
     <h2 class="text-center text-4xl font-bold text-[#0C4A3C] mb-14">
       Hitta rätt mobilabonnemang
@@ -318,108 +264,6 @@
     </div>
   </section>
 
-  <!-- =======================
-       FAMILJ QUIZ
-  ======================= -->
-  <section id="familjQuizSection" class="hidden mt-20 px-10 pb-20">
-
-    <h2 class="text-center text-4xl font-bold text-[#0C4A3C] mb-14">
-      Hitta rätt familjeabonnemang
-    </h2>
-
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-16 max-w-[1800px] mx-auto">
-
-      <div id="qFam1" class="quiz-card flex flex-col">
-        <p class="quiz-title">Hur många personer i familjen?</p>
-        <div class="flex flex-col gap-4">
-          <button class="quiz-option familj-opt family-size" data-answer="2">2 personer</button>
-          <button class="quiz-option familj-opt family-size" data-answer="3">3 personer</button>
-          <button class="quiz-option familj-opt family-size" data-answer="4">4 personer</button>
-          <button class="quiz-option familj-opt family-size" data-answer="5">5 personer</button>
-          <button class="quiz-option familj-opt family-size" data-answer="6">6+ personer</button>
-        </div>
-      </div>
-
-      <div id="qFam2" class="quiz-card flex flex-col">
-        <p class="quiz-title">Hur mycket surf behövs per person?</p>
-        <div class="flex flex-col gap-4">
-          <button class="quiz-option familj-opt data-need" data-answer="low">Lite (10 GB)</button>
-          <button class="quiz-option familj-opt data-need" data-answer="medium">Lagom (30 GB)</button>
-          <button class="quiz-option familj-opt data-need" data-answer="high">Mycket (obegränsat)</button>
-        </div>
-      </div>
-
-      <div id="qFam3" class="quiz-card flex flex-col">
-        <p class="quiz-title">Ungefärlig månadsbudget</p>
-        <div class="flex flex-col gap-4">
-          <button class="quiz-option familj-opt price" data-answer="499">Upp till 500 kr</button>
-          <button class="quiz-option familj-opt price" data-answer="999">Upp till 1000 kr</button>
-          <button class="quiz-option familj-opt price" data-answer="1499">Upp till 1500 kr</button>
-          <button class="quiz-option familj-opt price" data-answer="1999">Upp till 2000 kr</button>
-          <button class="quiz-option familj-opt price" data-answer="99999">Spelar ingen roll</button>
-        </div>
-      </div>
-
-      <div id="qFam4" class="quiz-card flex flex-col">
-        <p class="quiz-title">Vilken operatör föredrar du?</p>
-        <div class="flex flex-col gap-4">
-          <button class="quiz-option familj-opt operator" data-answer="">Ingen speciell</button>
-          <button class="quiz-option familj-opt operator" data-answer="Telia">Telia</button>
-          <button class="quiz-option familj-opt operator" data-answer="Tele2">Tele2</button>
-          <button class="quiz-option familj-opt operator" data-answer="Telenor">Telenor</button>
-          <button class="quiz-option familj-opt operator" data-answer="Tre">Tre</button>
-          <button class="quiz-option familj-opt operator" data-answer="Halebop">Halebop</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- =======================
-       OFFERS SECTION
-  ======================= -->
-
-<section id="offersSection" class="hidden mt-20 px-10 pb-20">
-  <h2 class="text-center text-4xl font-bold text-[#0C4A3C] mb-14">
-    Aktuella erbjudanden
-  </h2>
-
-<div class="max-w-[1800px] mx-auto">
-  <div class="flex justify-center">
-    <div id="offers-container"
-     class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-12 max-w-[1800px] mx-auto">
-</div>
-
-  </div>  
-     <!-- ADD-ON REKLAMBOX -->
-<div class="max-w-[1800px] mx-auto mt-16">
-  <div class="flex flex-col md:flex-row items-center justify-between gap-6
-              border rounded-2xl p-8 bg-gradient-to-r from-[#004C9E] to-[#0C4A3C]
-              text-white shadow-lg">
-
-    <div>
-      <h3 class="text-2xl font-bold mb-2">
-        Lägg till 5G-bredband
-      </h3>
-      <p class="text-white/90 text-lg">
-        Kombinera ditt abonnemang med 5G-bredband för endast
-        <strong>199 kr/mån</strong>
-      </p>
-    </div>
-
-<a href="bredband.html#offers"
-   onclick="sessionStorage.setItem('fromAbonnemang','1')"
-   class="adeala-btn">
-  Lägg till 5G bredband
-</a>
-
-
-  </div>
-</div>
-
-
-
-  </div>
-</section>
 <!-- =======================
      CONTACT FORM SECTION
 ======================= -->
@@ -484,7 +328,7 @@
 
 <!-- FULL PAGE POPUP -->
 <div id="pchoiceModal"
-     class="popup-overlay fixed inset-0 bg-black/70 z-[9999]">
+     class="popup-overlay hidden fixed inset-0 bg-black/70 z-[9999]">
 
   <div class="popup-content absolute inset-4 bg-white rounded-2xl overflow-hidden">
     <button id="closePchoice"
@@ -509,13 +353,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalSlides = slider.children.length;
   const AUTO_INTERVAL = 6000;
 
-  function goToSlide(i) {
-    currentSlide = i;
-    slider.scrollTo({
-      left: slider.clientWidth * currentSlide,
-      behavior: "smooth"
-    });
-  }
+function goToSlide(i) {
+  currentSlide = i;
+  slider.scrollTo({
+    left: slider.clientWidth * currentSlide,
+    behavior: "smooth"
+  });
+}
+
+window.goToSlide = goToSlide;
 
   function nextSlide() {
     currentSlide = (currentSlide + 1) % totalSlides;
@@ -532,8 +378,11 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 <script>
+document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("pref-input");
   const list = document.getElementById("pref-list");
+  if (!input || !list) return;
+
   const selected = new Set();
 
   function addItem(text) {
@@ -557,10 +406,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.querySelectorAll(".suggestion").forEach(btn => {
+  document.querySelectorAll(".pref-suggestion").forEach(btn => {
     btn.classList.add("quiz-suggestion");
     btn.addEventListener("click", () => addItem(btn.textContent));
   });
+});
 </script>
 <script type="module" src="assets/offers.js"></script>
 </body>
