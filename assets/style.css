@@ -1567,3 +1567,16 @@ section[style*="herologo.png"] {
   box-shadow: 0 10px 25px rgba(2,6,23,0.10);
   background: rgba(255,255,255,0.95);
 }
+/* suggestions */
+.quiz-suggestion {
+  font-size: 0.875rem;
+  padding: 0.6rem 0.9rem;
+  opacity: 0.75;
+}
+
+/* chosen items */
+.quiz-chosen {
+  font-size: 1rem;
+  padding: 0.9rem 1rem;
+  border: 2px solid #000;
+}

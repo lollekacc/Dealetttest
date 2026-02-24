@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const steps = ["step1", "step2", "step3", "step4", "step5"];
+  const steps = ["step0", "step1", "step2", "step3", "step4", "step5"];
   let current = 0;
   const state = {};
 
