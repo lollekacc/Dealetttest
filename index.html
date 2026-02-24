@@ -111,6 +111,7 @@
   <!-- QUIZ (REPLACES INTRO) -->
 <div id="quiz-steps-wrapper" class="absolute inset-0 z-10 hidden opacity-0 transition-opacity duration-500 px-2 md:px-4">
     <div class="flex flex-col gap-8">
+
 <!-- QUIZ NAV (counter + back) -->
 <div class="sticky top-0 z-20 -mx-2 -mt-3 mb-2 px-4 py-3
             bg-white/70 backdrop-blur-md border border-gray-200/70
@@ -135,27 +136,65 @@
   </div>
 </div>
 
+
     <!-- QUESTION 1 -->
-    <div id="step1" class="transition-opacity duration-500">
+    <div id="step0" class="transition-opacity duration-500">
       <div class="quiz-card flex flex-col">
         <p class="quiz-title">Hur många personer gäller det?</p>
         <div class="flex flex-wrap justify-center gap-4 mt-6">
           <button class="quiz-option" data-persons="1">1</button>
           <button class="quiz-option" data-persons="2">2</button>
-          <button class="quiz-option" data-persons="3">3+</button>
+          <button class="quiz-option" data-persons="3">3</button>
+          <button class="quiz-option" data-persons="4">4</button>
+          <button class="quiz-option" data-persons="5">5+</button>
         </div>
       </div>
     </div>
 
+    <div id="step1" class="transition-opacity duration-500">
+      <div class="quiz-card flex flex-col">
+        <p class="quiz-title">Vad har du för operatör idag?</p>
+        <div class="flex flex-wrap justify-center gap-4 mt-6">
+          <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
+            <img src="images/tele2.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tele2">
+          </button>
+  
+          <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
+            <img src="images/telia.png" class="partner-logo h-10 hover:scale-105 transition" alt="Telia">
+          </button>
+  
+          <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
+            <img src="images/telenor.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Telenor">
+          </button>
+  
+          <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
+            <img src="images/tre.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tre">
+          </button>
+  
+          <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
+            <img src="images/halebop.webp" class="partner-logo h-10 hover:scale-105 transition" alt="Halebop">
+          </button>
+  
+          <button type="button"
+                  class="quiz-option familj-opt px-4 py-2 whitespace-nowrap"
+                  data-operator="Other">
+            Andra
+          </button>
+        </div>
+      </div>
+    </div>
     <!-- QUESTION 2 -->
     <div id="step2" class="hidden opacity-0 transition-opacity duration-500">
       <div class="quiz-card flex flex-col">
         <p class="quiz-title">Hur använder ni mobilen mest?</p>
         <div class="flex flex-col gap-4 mt-6">
-          <button class="quiz-option" data-usage="wifi">Mest wifi & sociala medier</button>
-          <button class="quiz-option" data-usage="stream">Streaming & video</button>
-          <button class="quiz-option" data-usage="work">Jobb & hotspot</button>
-          <button class="quiz-option" data-usage="unlimited">Vill aldrig tänka på surf</button>
+          <button class="quiz-option" data-usage="wifi">Mest wifi & sociala medier  
+            <p>5 GB - 15 GB</p>
+          </button>
+          <button class="quiz-option" data-usage="stream">Streaming & video 
+            <p>20 GB - 40 GB</p></button>
+          <button class="quiz-option" data-usage="unlimited">Vill aldrig tänka på surf 
+            <p>50 GB - Obegränsad </p> </button>
         </div>
       </div>
     </div>
@@ -167,8 +206,7 @@
         <div class="flex flex-col gap-4 mt-6">
           <button class="quiz-option" data-price="under300">Under 300 kr</button>
           <button class="quiz-option" data-price="300-400">300–400 kr</button>
-          <button class="quiz-option" data-price="400-500">400–500 kr</button>
-          <button class="quiz-option" data-price="500plus">500+ kr</button>
+          <button class="quiz-option" data-price="400-500">400–500+ kr</button>
         </div>
       </div>
     </div>
@@ -282,7 +320,7 @@
 
 </div>
 </section>
-  
+<!--
 <section class="bg-white py-2 border-b border-gray-100">
   <div class="max-w-6xl mx-auto px-6 flex flex-wrap items-center justify-center gap-10 opacity-60 hover:opacity-100 transition duration-300">
     <a href="abonnemang.html?op=Tele2">
@@ -308,7 +346,7 @@
   </div>
 </section>
 <div class="h-px bg-gradient-to-r from-transparent via-gray-320 to-transparent"></div>
-
+-->
   <!-- Scroll Ads -->
  <section class="scroll-ads bg-gradient-to-b from-white to-gray-50 py-32 pb-48">
 <div class="ad-container fade-in relative overflow-hidden">
