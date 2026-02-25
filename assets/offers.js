@@ -8,6 +8,19 @@ function getFamilyAddonForOperator(operator) {
     p.familyPriceType === "addon"
   );
 }
+function showAllOffersInitial() {
+  const offers = ALL_PLANS
+    .filter(p => !p.isFamilyPlan) // base plans only
+    .map(p => ({
+      ...p,
+      finalPrice: p.price,
+      pricePerPerson: p.price
+    }))
+    .sort((a, b) => a.finalPrice - b.finalPrice); // show all (no slice)
+
+  offersSection.classList.remove("hidden");
+  renderOffers(offers); // note: your renderOffers currently slices to 6
+}
 async function filterOffers() {
   if (!ALL_PLANS.length) {
     await loadPlans();
@@ -101,7 +114,14 @@ function updateDataAvailability() {
 
 let offersSection;
 let offersContainer;
-
+  
+const abonState = {
+  persons: null,
+  data: null,
+  operator: null,
+  binding: null,
+  bindingEndDate: null
+};
 /******************************
  LOAD HEADER + FOOTER
 ******************************/
@@ -113,6 +133,8 @@ const bindingWrapper = document.getElementById("bindingDateWrapper");
 const bindingInput = document.getElementById("bindingEndDate");
 offersSection = document.getElementById("offersSection");
 offersContainer = document.getElementById("offers-container");
+await loadPlans();
+showAllOffersInitial();
 
 if (bindingYesBtn && bindingWrapper) {
   bindingYesBtn.addEventListener("click", () => {
@@ -185,14 +207,7 @@ if (abonState.persons !== null && abonState.data !== null) {
   }
 
 });
-  
-const abonState = {
-  persons: null,
-  data: null,
-  operator: null,
-  binding: null,
-  bindingEndDate: null
-};
+
 const savedState = localStorage.getItem("dealettState");
 
 if (savedState) {
@@ -792,6 +807,3 @@ document.addEventListener("DOMContentLoaded", () => {
       personsExtra.classList.contains("hidden") ? "Visa fler" : "Visa färre";
   });
 });
-
-
-  

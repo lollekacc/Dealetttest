@@ -98,8 +98,7 @@ function updateMobilAvailability() {
   ******************************/
   const mobilSection = document.getElementById("mobilQuizSection");
   const familjSection = document.getElementById("familjQuizSection");
-  const offersSection = document.getElementById("offersSection");
-  const offersContainer = document.getElementById("offers-container");
+
   
   
   document.addEventListener("DOMContentLoaded", () => {
@@ -242,6 +241,16 @@ if (rewardBtn) {
       offersContainer.appendChild(card);
     });
   }
+async function renderAllOffersAtBottom() {
+  await loadPlans();
+
+  const offers = ALL_PLANS
+    .filter(p => p.category === "mobil" && !p.isFamilyPlan)
+    .map(p => ({ ...p, finalPrice: p.price }));
+
+  renderOffers(offers);
+  offersSection.classList.remove("hidden");
+}  
 function renderFamilyOffers(offers) {
   offersContainer.innerHTML = "";
   
@@ -1012,5 +1021,24 @@ document.querySelectorAll(".start-option").forEach(btn => {
       block: "start"
     });
   }
-  
-  
+document.addEventListener("DOMContentLoaded", async () => {
+  await renderAllOffersAtBottom();
+});
+document.addEventListener("DOMContentLoaded", async () => {
+  const offersSection = document.getElementById("offersSection");
+  const offersContainer = document.getElementById("offers-container");
+
+  if (!offersSection || !offersContainer) {
+    console.error("Offers DOM not found");
+    return;
+  }
+
+  await loadPlans();
+
+  const offers = ALL_PLANS
+    .filter(p => p.category === "mobil" && !p.isFamilyPlan)
+    .map(p => ({ ...p, finalPrice: p.price }));
+
+  offersSection.classList.remove("hidden");
+  renderOffers(offers);
+});
