@@ -240,3 +240,426 @@
 
 </body>
 </html>
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adeala – Abonnemang</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="assets/header.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />  
+</head>
+
+<body class="min-h-screen font-[Inter] bg-white text-gray-900" data-chat="abonnemang">
+
+  <!-- HEADER -->
+  <div id="header-placeholder"></div>
+  <!-- HERO -->
+<section class="relative w-full overflow-hidden">
+  <div class="relative">
+
+    <!-- SLIDER -->
+    <ul id="heroSlider"
+        class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide">
+
+      <!-- Slide 1 -->
+      <li class="min-w-full snap-start relative h-[380px]">
+        <img src="https://images.ctfassets.net/wnyreqeg7zsz/6QnqlXszeR8PTYtoTDBGax/aa1932112dc7c83fab22d2c9fbf6dc37/ViaplayWinterSport26_visuals_Horizontal_platform_AW_NoCTA.jpg"
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+
+<div class="absolute left-16 top-1/2 -translate-y-1/2 text-white max-w-xl">
+  <h2 class="text-center text-5xl font-extrabold tracking-tight text-[#0C4A3C] mb-16">
+    Streama sport i världsklass
+  </h2>
+  <p class="mt-4 text-lg text-white/90">
+    Kombinera mobilabonnemang med exklusiva streamingerbjudanden.
+  </p>
+</div>
+      </li>
+
+      <!-- Slide 2 -->
+      <li class="min-w-full snap-start relative h-[380px]">
+        <img src="https://www.dif.se/_next/image?url=https%3A%2F%2Fwww.dif.se%2Fmedia%2Fikhldpq4%2Fdiscovery-1920x1080.jpg&w=3840&q=75"
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+
+<div class="absolute left-16 top-1/2 -translate-y-1/2 text-white max-w-xl">
+ <h2 class="text-center text-5xl font-extrabold tracking-tight text-[#0C4A3C] mb-16">
+    Streama sport i världsklass
+  </h2>
+  <p class="mt-4 text-lg text-white/90">
+    Kombinera mobilabonnemang med exklusiva streamingerbjudanden.
+  </p>
+</div>
+      </li>
+
+      <!-- Slide 3 -->
+      <li class="min-w-full snap-start relative h-[380px]">
+        <img src="https://cdn1-photos.shl.se/photos/24/06/f8e987d9-376f-4452-bb0a-17793a01f53aTV4216x9.jpg?ixlib=js-3.8.0&w=1920&h=1080&auto=format&fp-debug=0&fp-y=0.5&fp-x=0.5&crop=focalpoint&fit=crop&s=9e4a4b6a9060e7cd81aa553c88886206"
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+
+<div class="absolute left-16 top-1/2 -translate-y-1/2 text-white max-w-xl">
+  <h2 class="text-center text-5xl font-extrabold tracking-tight text-[#0C4A3C] mb-16">
+    Streama sport i världsklass
+  </h2>
+  <p class="mt-4 text-lg text-white/90">
+    Kombinera mobilabonnemang med exklusiva streamingerbjudanden.
+  </p>
+</div>
+      </li>
+
+    </ul>
+
+    <!-- ARROWS -->
+    <button onclick="scrollHero(-1)"
+      class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2
+             bg-white/70 hover:bg-white w-12 h-12 items-center justify-center rounded-full">
+      ‹
+    </button>
+
+    <button onclick="scrollHero(1)"
+      class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2
+             bg-white/70 hover:bg-white w-12 h-12 items-center justify-center rounded-full">
+      ›
+    </button>
+
+    <!-- DOTS -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
+      <button onclick="goToSlide(0)" class="w-3 h-3 bg-white rounded-full"></button>
+      <button onclick="goToSlide(1)" class="w-3 h-3 bg-white/60 rounded-full"></button>
+      <button onclick="goToSlide(2)" class="w-3 h-3 bg-white/60 rounded-full"></button>
+    </div>
+
+  </div>
+</section>
+  
+ <section id="abonnemangQuizSection"
+         class="mt-20 px-10 pb-20 bg-gradient-to-b from-gray-50 to-white rounded-3xl">
+ 
+<!-- Q0: Binding -->
+<!-- Binding small row -->
+<div class="max-w-[1600px] mx-auto mb-16 px-4">
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-[1600px] mx-auto">
+<div class="quiz-card">
+  <p class="quiz-title">Hur många personer?</p>
+
+  <div id="personsMain" class="flex flex-col gap-4">
+    <button class="quiz-option abon-opt" data-persons="1">1 person</button>
+    <button class="quiz-option abon-opt" data-persons="2">2 personer</button>
+    <button class="quiz-option abon-opt" data-persons="3">3 personer</button>
+    <button class="quiz-option abon-opt" data-persons="4">4 personer</button>
+    <button class="quiz-option abon-opt" data-persons="5">5 personer</button>
+  </div>
+
+  <button id="showMorePersons"
+          class="mt-4 text-[#004C9E] font-semibold hover:underline">
+    Visa fler
+  </button>
+
+  <div id="personsExtra" class="hidden flex flex-col gap-4 mt-4">
+    <button class="quiz-option abon-opt" data-persons="6">6 personer</button>
+    <button class="quiz-option abon-opt" data-persons="7">7 personer</button>
+    <button class="quiz-option abon-opt" data-persons="8">8 personer</button>
+    <button class="quiz-option abon-opt" data-persons="9">9 personer</button>
+    <button class="quiz-option abon-opt" data-persons="10">10 personer</button>
+  </div>
+</div>
+
+<div class="quiz-card">
+  <p class="quiz-title">Beskriv fritt vad ni önskar?</p>
+
+  <input
+    id="pref-input"
+    type="text"
+    placeholder="Skriv själv eller välj ett förslag…"
+    class="w-full pref-input"
+  />
+
+  <div class="flex flex-col gap-2 mt-3">
+    <button class="pref-suggestion">Jag vill ha bäst täckning</button>
+    <button class="pref-suggestion">Jag vill kunna använda utomlands</button>
+  </div>
+
+  <div id="pref-list" class="mt-3 flex flex-col gap-2"></div>
+</div>
+
+  <div class="quiz-card flex items-start gap-16">
+
+    <!-- LEFT: BINDING -->
+    <div class="flex flex-col gap-6 flex-1 min-w-0">
+
+      <span class="font-semibold text-[#0C4A3C]">
+        Har du bindningstid idag?
+      </span>
+
+      <div class="flex flex-wrap items-center gap-4">
+
+        <button class="quiz-option abon-opt px-6 py-2"
+                data-binding="no">
+          Nej
+        </button>
+
+        <button id="bindingYesBtn"
+                class="quiz-option px-6 py-2"
+                type="button">
+          Ja
+        </button>
+
+        <div id="bindingDateWrapper"
+             class="hidden flex items-center gap-2">
+          <span class="text-gray-600 text-sm">
+            När slutar den?
+          </span>
+
+          <input type="date"
+                 id="bindingEndDate"
+                 class="border p-2 rounded-lg text-sm" />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: OPERATOR -->
+    <div class="flex flex-col gap-6 flex-1 min-w-0">
+
+      <p class="quiz-title">
+        Vad har du för operatör idag?
+      </p>
+
+      <div class="flex flex-wrap gap-3">
+
+        <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
+          <img src="images/tele2.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tele2">
+        </button>
+
+        <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
+          <img src="images/telia.png" class="partner-logo h-10 hover:scale-105 transition" alt="Telia">
+        </button>
+
+        <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
+          <img src="images/telenor.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Telenor">
+        </button>
+
+        <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
+          <img src="images/tre.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tre">
+        </button>
+
+        <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
+          <img src="images/halebop.webp" class="partner-logo h-10 hover:scale-105 transition" alt="Halebop">
+        </button>
+
+        <button type="button"
+                class="quiz-option familj-opt px-4 py-2 whitespace-nowrap"
+                data-operator="Other">
+          Andra
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+    <h2 class="text-center text-4xl font-bold text-[#0C4A3C] mb-14">
+      Hitta rätt mobilabonnemang
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-[1800px] mx-auto">
+
+      <div id="qMobil1" class="quiz-card flex flex-col">
+        <p class="quiz-title">Hur mycket surfar du per månad?</p>
+        <div class="flex flex-col gap-4">
+          <button class="quiz-option mobil-opt" data-answer="low">Lite (upp till 10 GB)</button>
+          <button class="quiz-option mobil-opt" data-answer="medium">Medel (10–50 GB)</button>
+          <button class="quiz-option mobil-opt" data-answer="high">Mycket (obegränsat)</button>
+        </div>
+      </div>
+
+      <div id="qMobil2" class="quiz-card flex flex-col">
+        <p class="quiz-title">Hur mycket vill du betala per månad?</p>
+        <div class="flex flex-col gap-4">
+          <button class="quiz-option mobil-opt" data-answer="249">Under 250 kr</button>
+          <button class="quiz-option mobil-opt" data-answer="349">Upp till 350 kr</button>
+          <button class="quiz-option mobil-opt" data-answer="449">Upp till 450 kr</button>
+          <button class="quiz-option mobil-opt" data-answer="999">Spelar ingen roll</button>
+        </div>
+      </div>
+
+      <div id="qMobil3" class="quiz-card flex flex-col">
+        <p class="quiz-title">Vilken operatör föredrar du?</p>
+        <div class="flex flex-col gap-4">
+          <button class="quiz-option mobil-opt" data-answer="">Ingen speciell</button>
+          <button class="quiz-option mobil-opt" data-answer="Telia">Telia</button>
+          <button class="quiz-option mobil-opt" data-answer="Tele2">Tele2</button>
+          <button class="quiz-option mobil-opt" data-answer="Telenor">Telenor</button>
+          <button class="quiz-option mobil-opt" data-answer="Tre">Tre</button>
+          <button class="quiz-option mobil-opt" data-answer="Halebop">Halebop</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- =======================
+     CONTACT FORM SECTION
+======================= -->
+<section id="contactSection" class="hidden mt-20 px-10 pb-20">
+
+  <div class="max-w-3xl mx-auto bg-white border rounded-2xl p-10 shadow-sm">
+
+    <h2 class="text-3xl font-bold text-[#0C4A3C] mb-8">
+      Leverans och bekräftelse
+    </h2>
+
+    <div class="space-y-8">
+
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Mejladress
+        </label>
+        <input type="email"
+               id="contactEmail"
+               class="w-full border rounded-xl p-3"
+               placeholder="din@email.se" />
+      </div>
+
+      <!-- SMS number -->
+      <div>
+        <label class="block text-sm font-semibold mb-2">
+          Mobilnummer (för avisering)
+        </label>
+        <input type="tel"
+               id="contactPhone"
+               class="w-full border rounded-xl p-3"
+               placeholder="07XXXXXXXX" />
+      </div>
+
+      <!-- PORT NUMBER SECTION -->
+      <div>
+        <h3 class="text-xl font-bold text-[#0C4A3C] mb-4">
+          Flytta hit nummer
+        </h3>
+
+        <div id="phoneInputsContainer"
+             class="flex flex-col gap-4">
+        </div>
+
+        <p class="text-sm text-gray-500 mt-2">
+          Ange de nummer som ska flyttas till det nya abonnemanget.
+        </p>
+      </div>
+
+      <!-- Submit -->
+      <button id="submitOrderBtn"
+              class="adeala-btn w-full py-4 rounded-xl text-lg">
+        Slutför beställning
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- FULL PAGE POPUP -->
+<div id="pchoiceModal"
+     class="popup-overlay hidden fixed inset-0 bg-black/70 z-[9999]">
+
+  <div class="popup-content absolute inset-4 bg-white rounded-2xl overflow-hidden">
+    <button id="closePchoice"
+            class="absolute top-4 right-4 z-10 text-xl font-bold">
+      ✕
+    </button>
+
+    <iframe
+      id="pchoiceFrame"
+      src=""
+      class="w-full h-full border-0">
+    </iframe>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const slider = document.getElementById("heroSlider");
+  if (!slider) return;
+
+  let currentSlide = 0;
+  const totalSlides = slider.children.length;
+  const AUTO_INTERVAL = 6000;
+
+function goToSlide(i) {
+  currentSlide = i;
+  slider.scrollTo({
+    left: slider.clientWidth * currentSlide,
+    behavior: "smooth"
+  });
+}
+
+window.goToSlide = goToSlide;
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % totalSlides;
+    goToSlide(currentSlide);
+  }
+
+  window.scrollHero = function(dir) {
+    currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
+    goToSlide(currentSlide);
+  };
+
+  setInterval(nextSlide, AUTO_INTERVAL);
+
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("pref-input");
+  const list = document.getElementById("pref-list");
+  if (!input || !list) return;
+
+  const selected = new Set();
+
+  function addItem(text) {
+    const value = text.trim();
+    if (!value || selected.has(value)) return;
+
+    selected.add(value);
+
+    const div = document.createElement("div");
+    div.className = "quiz-option quiz-chosen text-left";
+    div.textContent = value;
+    list.appendChild(div);
+
+    input.value = "";
+  }
+
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addItem(input.value);
+    }
+  });
+
+  document.querySelectorAll(".pref-suggestion").forEach(btn => {
+    btn.classList.add("quiz-suggestion");
+    btn.addEventListener("click", () => addItem(btn.textContent));
+  });
+});
+</script>
+<script type="module" src="assets/offers.js"></script>
+</body>
+</html>
