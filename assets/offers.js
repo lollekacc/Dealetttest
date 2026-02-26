@@ -8,6 +8,23 @@ function getFamilyAddonForOperator(operator) {
     p.familyPriceType === "addon"
   );
 }
+/*
+function stopOffersScroll() {
+  const track = document.getElementById("offersTrack");
+  if (!track) return;
+  track.style.animation = "none";
+  track.style.transform = "translateX(0)";
+}
+*/
+function stopOffersScroll() {
+  const track = document.getElementById("offersTrack");
+  const strip = document.querySelector(".offers-strip");
+  if (!track) return;
+  track.style.animation = "none";
+  track.style.transform = "translateX(0)";
+    track.classList.add("no-scroll");
+  if (strip) strip.classList.add("no-fade");
+}
 function showAllOffersInitial() {
   const offers = ALL_PLANS
     .filter(p => !p.isFamilyPlan) // base plans only
@@ -17,11 +34,26 @@ function showAllOffersInitial() {
       pricePerPerson: p.price
     }))
     .sort((a, b) => a.finalPrice - b.finalPrice); // show all (no slice)
+function showAllOffersInitial() {
+  stopOffersScroll(); // ⛔ STOP SHIFT EFFECT HERE
 
+  const offers = ALL_PLANS
+    .filter(p => !p.isFamilyPlan)
+    .map(p => ({
+      ...p,
+      finalPrice: p.price,
+      pricePerPerson: p.price
+    }))
+    .sort((a, b) => a.finalPrice - b.finalPrice);
+
+  offersSection.classList.remove("hidden");
+  renderOffers(offers);
+}
   offersSection.classList.remove("hidden");
   renderOffers(offers); // note: your renderOffers currently slices to 6
 }
 async function filterOffers() {
+  stopOffersScroll();
   if (!ALL_PLANS.length) {
     await loadPlans();
   }
@@ -61,8 +93,6 @@ async function filterOffers() {
 
   renderOffers(offers);
 }
-
-
 
 async function loadPlans() {
   if (ALL_PLANS.length) return ALL_PLANS;
@@ -229,8 +259,6 @@ function updateOperatorAvailability() {
   });
 }
 
-
-
 document.querySelectorAll(".abon-opt").forEach(btn => {
   btn.addEventListener("click", async () => {
     if (!ALL_PLANS.length) {
@@ -294,7 +322,7 @@ if (isQuizComplete()) {
       <p class="text-sm text-gray-500 mb-1">${o.operator}</p>
       <h3 class="text-xl font-semibold mb-1 text-[#0C4A3C]">${o.title}</h3>
       <p class="text-gray-600 text-sm mb-3">${o.text || ""}</p>
-      <p class="font-medium mb-1">${o.data}</p>
+
     </div>
 
     <div>
@@ -323,7 +351,7 @@ if (isQuizComplete()) {
   ******************************/
   function renderOffers(offers) {
     offersContainer.innerHTML = "";
-    const limited = offers.slice(0, 6);
+    const limited = offers;
   
     limited.forEach(o => {
   
@@ -361,7 +389,7 @@ if (rewardBtn) {
       offersContainer.appendChild(card);
     });
   }
-
+  
   document.getElementById("closePchoice").addEventListener("click", () => {
     const modal = document.getElementById("pchoiceModal");
     const frame = document.getElementById("pchoiceFrame");

@@ -1613,3 +1613,59 @@ section[style*="herologo.png"] {
 .operator-logos .quiz-option:hover {
   transform: scale(1.05);
 }
+.offers-strip {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0,0,0,.3) 25%,
+    black 50%,
+    rgba(0,0,0,.3) 75%,
+    transparent 100%
+  );
+
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0,0,0,.3) 25%,
+    black 50%,
+    rgba(0,0,0,.3) 75%,
+    transparent 100%
+  );
+}
+
+/* moving track */
+#offersTrack {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  animation: scrollOffers 40s linear infinite;
+}
+
+/* card row */
+#offers-container {
+  display: flex;
+  gap: 3rem;
+}
+
+/* cards */
+.offer-card {
+  flex: 0 0 auto;
+  transition: opacity .4s, transform .4s;
+}
+
+@keyframes scrollOffers {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.no-scroll {
+  animation: none !important;
+  transform: translateX(0) !important;
+}
+.no-fade {
+  -webkit-mask-image: linear-gradient(black, black) !important;
+  mask-image: linear-gradient(black, black) !important;
+}
