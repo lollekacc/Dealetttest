@@ -1582,3 +1582,34 @@ section[style*="herologo.png"] {
   border: 2px solid #000;
   border-radius: 14px;
 }
+/* Isolate operator logo area from quiz styles */
+.operator-logos {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Neutralize quiz-option effects */
+.operator-logos .quiz-option {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform .25s;
+}
+
+/* Logo */
+.operator-logos img {
+  height: 1.75rem;
+  pointer-events: none; /* prevent hover flicker */
+}
+
+/* Hover only on button */
+.operator-logos .quiz-option:hover {
+  transform: scale(1.05);
+}

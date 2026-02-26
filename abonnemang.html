@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Adeala – Abonnemang</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="assets/header.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />  
 </head>
 
-<body class="min-h-screen font-[Inter] bg-white text-gray-900" data-chat="abonnemang">
+<body class="min-h-screen font-[Inter] bg-white text-gray-900">
 
   <!-- HEADER -->
   <div id="header-placeholder"></div>
@@ -96,193 +95,164 @@
   </div>
 </section>
   
-<section id="abonnemangQuizSection"
-  class="mt-20 px-10 pb-20 bg-gradient-to-b from-gray-50 to-white rounded-3xl">
+ <section id="abonnemangQuizSection"
+         class="mt-20 px-10 pb-20 bg-gradient-to-b from-gray-50 to-white rounded-3xl">
 
-  <div class="max-w-[1600px] mx-auto mb-16 px-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-[1600px] mx-auto mb-4 px-4">
+<div class="quiz-card">
+  <p class="quiz-title">Hur många personer?</p>
 
-    <!-- 1) HUR MÅNGA PERSONER -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-[1600px] mx-auto">
+  <div id="personsMain" class="flex flex-col gap-4">
+    <button class="quiz-option abon-opt" data-persons="1">1 person</button>
+    <button class="quiz-option abon-opt" data-persons="2">2 personer</button>
+    <button class="quiz-option abon-opt" data-persons="3">3 personer</button>
+    <button class="quiz-option abon-opt" data-persons="4">4 personer</button>
+    <button class="quiz-option abon-opt" data-persons="5">5 personer</button>
+  </div>
 
-      <div class="quiz-card">
-        <p class="quiz-title">Hur många personer?</p>
-
-        <div id="personsMain" class="flex flex-col gap-4">
-          <button class="quiz-option abon-opt" data-persons="1">1 person</button>
-          <button class="quiz-option abon-opt" data-persons="2">2 personer</button>
-          <button class="quiz-option abon-opt" data-persons="3">3 personer</button>
-          <button class="quiz-option abon-opt" data-persons="4">4 personer</button>
-          <button class="quiz-option abon-opt" data-persons="5">5 personer</button>
-        </div>
-
-        <button id="showMorePersons"
+  <button id="showMorePersons"
           class="mt-4 text-[#004C9E] font-semibold hover:underline">
-          Visa fler
-        </button>
+    Visa fler
+  </button>
 
-        <div id="personsExtra" class="hidden flex flex-col gap-4 mt-4">
-          <button class="quiz-option abon-opt" data-persons="6">6 personer</button>
-          <button class="quiz-option abon-opt" data-persons="7">7 personer</button>
-          <button class="quiz-option abon-opt" data-persons="8">8 personer</button>
-          <button class="quiz-option abon-opt" data-persons="9">9 personer</button>
-          <button class="quiz-option abon-opt" data-persons="10">10 personer</button>
+  <div id="personsExtra" class="hidden flex flex-col gap-4 mt-4">
+    <button class="quiz-option abon-opt" data-persons="6">6 personer</button>
+    <button class="quiz-option abon-opt" data-persons="7">7 personer</button>
+    <button class="quiz-option abon-opt" data-persons="8">8 personer</button>
+    <button class="quiz-option abon-opt" data-persons="9">9 personer</button>
+    <button class="quiz-option abon-opt" data-persons="10">10 personer</button>
+  </div>
+</div>
+
+      <!-- Q2: Data -->
+      <div class="quiz-card">
+        <p class="quiz-title">Hur mycket surf behövs per person?</p>
+        <div class="flex flex-col gap-4">
+          <button class="quiz-option abon-opt" data-data="low">Lite (10 GB)</button>
+          <button class="quiz-option abon-opt" data-data="medium">Lagom (30–50 GB)</button>
+          <button class="quiz-option abon-opt" data-data="high">Mycket (obegränsat)</button>
         </div>
       </div>
-<!-- OPERATOR PER PERSON (dynamic) -->
-<div id="operatorPersons" class="mt-10 flex flex-col gap-8"></div>
+  
+      <!-- Q3: Operator -->
+      <div class="quiz-card">
+        <p class="quiz-title">Vilken operatör föredrar du?</p>
+        <div class="flex flex-col gap-4">
+          <button class="quiz-option abon-opt" data-operator="">Alla Öperatorer</button>
+          <button class="quiz-option abon-opt" data-operator="Telia">Telia</button>
+          <button class="quiz-option abon-opt" data-operator="Tele2">Tele2</button>
+          <button class="quiz-option abon-opt" data-operator="Telenor">Telenor</button>
+          <button class="quiz-option abon-opt" data-operator="Tre">Tre</button>
+          <button class="quiz-option abon-opt" data-operator="Halebop">Halebop</button>
+        </div>
+      </div>
+  
+    </div>
+    <!-- Q0: Binding -->
+<!-- Binding small row -->
+<div class="max-w-[1600px] mx-auto mb-16 px-4">
 
-<template id="operatorPersonTpl">
-  <div class="quiz-card">
-    <p class="quiz-title">
-      Person <span class="op-person-nr"></span>: Vilken operatör?
+  <div class="quiz-card flex items-start gap-16">
+
+    <!-- LEFT: BINDING -->
+    <div class="flex flex-col gap-6 flex-1 min-w-0">
+
+      <span class="font-semibold text-[#0C4A3C]">
+        Har du bindningstid idag?
+      </span>
+
+      <div class="flex flex-wrap items-center gap-4">
+
+        <button class="quiz-option abon-opt px-6 py-2"
+                data-binding="no">
+          Nej
+        </button>
+
+        <button id="bindingYesBtn"
+                class="quiz-option px-6 py-2"
+                type="button">
+          Ja
+        </button>
+
+        <div id="bindingDateWrapper"
+             class="hidden flex items-center gap-2">
+          <span class="text-gray-600 text-sm">
+            När slutar den?
+          </span>
+
+          <input type="date"
+                 id="bindingEndDate"
+                 class="border p-2 rounded-lg text-sm" />
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: OPERATOR -->
+     
+<div id="operatorWrapper" class="flex flex-col gap-6 flex-1 min-w-0">
+
+  <div id="operatorBase">
+    <p class="quiz-title text-center">
+      Vad har du för operatör idag? (Person 1)
     </p>
 
-    <div class="flex flex-wrap gap-3">
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
-        <img src="images/tele2.jpg" class="partner-logo h-10" alt="Tele2">
+    <div class="max-w-6xl mx-auto px-6
+                flex flex-wrap items-center justify-center
+                gap-10 transition duration-300">
+      <div class="operator-logos">
+      <button type="button" class="quiz-option familj-opt" data-operator="Tele2">
+        <img src="images/tele2.jpg" class="h-7 transition" alt="Tele2">
       </button>
 
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
-        <img src="images/telia.png" class="partner-logo h-10" alt="Telia">
+      <button type="button" class="quiz-option familj-opt" data-operator="Telia">
+        <img src="images/telia.png" class="h-7 transition" alt="Telia">
       </button>
 
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
-        <img src="images/telenor.jpg" class="partner-logo h-10" alt="Telenor">
+      <button type="button" class="quiz-option familj-opt" data-operator="Telenor">
+        <img src="images/telenor.jpg" class="h-7 transition" alt="Telenor">
       </button>
 
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
-        <img src="images/tre.jpg" class="partner-logo h-10" alt="Tre">
+      <button type="button" class="quiz-option familj-opt" data-operator="Tre">
+        <img src="images/tre.jpg" class="h-7 transition" alt="Tre">
       </button>
 
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
-        <img src="images/halebop.webp" class="partner-logo h-10" alt="Halebop">
+      <button type="button" class="quiz-option familj-opt" data-operator="Halebop">
+        <img src="images/halebop.webp" class="h-7 transition" alt="Halebop">
       </button>
 
       <button type="button"
-        class="quiz-option familj-opt px-4 py-2 whitespace-nowrap"
-        data-operator="Other">
-        Andra
+              class="quiz-option familj-opt px-4 py-2 text-sm whitespace-nowrap">
+        Andra / Ingen
       </button>
-    </div>
-  </div>
-</template>
-      <!-- 2) OPERATÖR + BINDNING -->
-      <div class="quiz-card flex items-start gap-16 md:col-span-2">
-
-        <!-- LEFT: BINDNING -->
-        <div class="flex flex-col gap-6 flex-1 min-w-0">
-          <span class="font-semibold text-[#0C4A3C]">
-            Har du bindningstid idag?
-          </span>
-
-          <div class="flex flex-wrap items-center gap-4">
-            <button class="quiz-option abon-opt px-6 py-2" data-binding="no">
-              Nej
-            </button>
-
-            <button id="bindingYesBtn"
-              class="quiz-option px-6 py-2"
-              type="button">
-              Ja
-            </button>
-
-            <div id="bindingDateWrapper"
-              class="hidden flex items-center gap-2">
-              <span class="text-gray-600 text-sm">
-                När slutar den?
-              </span>
-
-              <input type="date"
-                id="bindingEndDate"
-                class="border p-2 rounded-lg text-sm" />
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT: OPERATOR -->
-        <div class="flex flex-col gap-6 flex-1 min-w-0">
-          <p class="quiz-title">Vad har du för operatör idag?</p>
-
-          <div class="flex flex-wrap gap-3">
-            <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
-              <img src="images/tele2.jpg" class="partner-logo h-10 hover:scale-105 transition">
-            </button>
-
-            <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
-              <img src="images/telia.png" class="partner-logo h-10 hover:scale-105 transition">
-            </button>
-
-            <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
-              <img src="images/telenor.jpg" class="partner-logo h-10 hover:scale-105 transition">
-            </button>
-
-            <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
-              <img src="images/tre.jpg" class="partner-logo h-10 hover:scale-105 transition">
-            </button>
-
-            <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
-              <img src="images/halebop.webp" class="partner-logo h-10 hover:scale-105 transition">
-            </button>
-
-            <button type="button"
-              class="quiz-option familj-opt px-4 py-2 whitespace-nowrap"
-              data-operator="Other">
-              Andra
-            </button>
-          </div>
-        </div>
       </div>
-
     </div>
   </div>
 
-  <!-- 3) SURF + PRIS + FRI TEXT -->
+</div>
+
+</div>
+  </section>
+  
+  <!-- =======================
+       OFFERS SECTION
+  ======================= -->
+
+<section id="offersSection" class="hidden mt-20 px-10 pb-20">
   <h2 class="text-center text-4xl font-bold text-[#0C4A3C] mb-14">
-    Hitta rätt mobilabonnemang
+    Aktuella erbjudanden
   </h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-[1800px] mx-auto">
+<div class="max-w-[1800px] mx-auto">
+  <div class="flex justify-center">
+    <div id="offers-container"
+     class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-12 max-w-[1800px] mx-auto">
+</div>
 
-    <div id="qMobil1" class="quiz-card flex flex-col">
-      <p class="quiz-title">Hur mycket surfar du per månad?</p>
-      <div class="flex flex-col gap-4">
-        <button class="quiz-option mobil-opt" data-answer="low">Lite (upp till 10 GB)</button>
-        <button class="quiz-option mobil-opt" data-answer="medium">Medel (10–50 GB)</button>
-        <button class="quiz-option mobil-opt" data-answer="high">Mycket (obegränsat)</button>
-      </div>
-    </div>
-
-    <div id="qMobil2" class="quiz-card flex flex-col">
-      <p class="quiz-title">Hur mycket vill du betala per månad?</p>
-      <div class="flex flex-col gap-4">
-        <button class="quiz-option mobil-opt" data-answer="249">Under 250 kr</button>
-        <button class="quiz-option mobil-opt" data-answer="349">Upp till 350 kr</button>
-        <button class="quiz-option mobil-opt" data-answer="449">Upp till 450 kr</button>
-        <button class="quiz-option mobil-opt" data-answer="999">Spelar ingen roll</button>
-      </div>
-    </div>
-
-    <div class="quiz-card">
-      <p class="quiz-title">Beskriv fritt vad ni önskar?</p>
-
-      <input
-        id="pref-input"
-        type="text"
-        placeholder="Skriv själv eller välj ett förslag…"
-        class="w-full pref-input"
-      />
-
-      <div class="flex flex-col gap-2 mt-3">
-        <button class="pref-suggestion">Jag vill ha bäst täckning</button>
-        <button class="pref-suggestion">Jag vill kunna använda utomlands</button>
-      </div>  
-
-      <div id="pref-list" class="mt-3 flex flex-col gap-2"></div>
-    </div>
+  </div>  
 
   </div>
 </section>
-
 <!-- =======================
      CONTACT FORM SECTION
 ======================= -->
@@ -294,9 +264,8 @@
       Leverans och bekräftelse
     </h2>
 
-    <div class="space-y-8">
-      
-      <!-- Email -->
+    <div class="space-y-6">
+
       <div>
         <label class="block text-sm font-semibold mb-2">
           Mejladress
@@ -307,10 +276,9 @@
                placeholder="din@email.se" />
       </div>
 
-      <!-- SMS number -->
       <div>
         <label class="block text-sm font-semibold mb-2">
-          Mobilnummer (för avisering)
+          Mobilnummer
         </label>
         <input type="tel"
                id="contactPhone"
@@ -318,36 +286,46 @@
                placeholder="07XXXXXXXX" />
       </div>
 
-      <!-- PORT NUMBER SECTION -->
-      <div>
-        <h3 class="text-xl font-bold text-[#0C4A3C] mb-4">
-          Flytta hit nummer
-        </h3>
+      <p class="text-sm text-gray-500">
+        Mejladress används för orderbekräftelse och mobilnummer för avisering via sms.
+      </p>
 
-        <div id="phoneInputsContainer"
-             class="flex flex-col gap-4">
-        </div>
-
-        <p class="text-sm text-gray-500 mt-2">
-          Ange de nummer som ska flyttas till det nya abonnemanget.
-        </p>
-      </div>
-
-      <!-- Submit -->
-      <button id="submitOrderBtn"
+      <button id="contactContinueBtn"
               class="adeala-btn w-full py-4 rounded-xl text-lg">
-        Slutför beställning
+        Gå vidare
       </button>
 
     </div>
-
   </div>
 
 </section>
 
+
+<!-- =======================
+     NUMBER FLOW SECTION
+======================= -->
+<section id="numberSection" class="hidden mt-20 px-10 pb-20">
+
+  <div id="portNumberSection" class="hidden mt-20 px-10 pb-20">
+    <h2 class="text-center text-3xl font-bold text-[#0C4A3C] mb-10">
+      Fyll i numren som ska flyttas
+    </h2>
+
+    <div id="phoneInputsContainer"
+         class="max-w-xl mx-auto flex flex-col gap-6"></div>
+
+    <button id="confirmNumbersBtn"
+            class="mt-10 adeala-btn w-full py-4 rounded-xl text-lg">
+      Bekräfta nummer
+    </button>
+  </div>
+
+</section>
+
+
 <!-- FULL PAGE POPUP -->
 <div id="pchoiceModal"
-     class="popup-overlay hidden fixed inset-0 bg-black/70 z-[9999]">
+     class="popup-overlay fixed inset-0 bg-black/70 z-[9999]">
 
   <div class="popup-content absolute inset-4 bg-white rounded-2xl overflow-hidden">
     <button id="closePchoice"
@@ -362,57 +340,6 @@
     </iframe>
   </div>
 </div>
-<script>// state
-window.abonState = window.abonState || {};
-abonState.persons = abonState.persons ?? null;
-abonState.operators = abonState.operators || []; // index 0 => person 1
-
-function renderOperatorPerPerson(n) {
-  const host = document.getElementById("operatorPersons");
-  const tpl = document.getElementById("operatorPersonTpl");
-  if (!host || !tpl) return;
-
-  host.innerHTML = "";
-  abonState.operators = Array.from({ length: n }, (_, i) => abonState.operators[i] ?? null);
-
-  for (let i = 1; i <= n; i++) {
-    const frag = tpl.content.cloneNode(true);
-    frag.querySelector(".op-person-nr").textContent = i;
-
-    frag.querySelectorAll("[data-operator]").forEach(btn => {
-      btn.dataset.personIndex = String(i - 1);
-
-      // optional: pre-highlight if already chosen
-      if (abonState.operators[i - 1] === btn.dataset.operator) {
-        btn.classList.add("is-selected");
-      }
-
-      btn.addEventListener("click", () => {
-        const idx = Number(btn.dataset.personIndex);
-        const op = btn.dataset.operator || null;
-        abonState.operators[idx] = op;
-
-        // clear selection in this person card only
-        const card = btn.closest(".quiz-card");
-        card.querySelectorAll("[data-operator]").forEach(b => b.classList.remove("is-selected"));
-        btn.classList.add("is-selected");
-      });
-    });
-
-    host.appendChild(frag);
-  }
-}
-
-// hook into persons buttons (your existing ones)
-document.querySelectorAll("[data-persons]").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const n = Number(btn.dataset.persons);
-    if (!Number.isFinite(n) || n < 1) return;
-    abonState.persons = n;
-    renderOperatorPerPerson(n);
-  });
-});
-</script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -423,15 +350,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalSlides = slider.children.length;
   const AUTO_INTERVAL = 6000;
 
-function goToSlide(i) {
-  currentSlide = i;
-  slider.scrollTo({
-    left: slider.clientWidth * currentSlide,
-    behavior: "smooth"
-  });
-}
-
-window.goToSlide = goToSlide;
+  function goToSlide(i) {
+    currentSlide = i;
+    slider.scrollTo({
+      left: slider.clientWidth * currentSlide,
+      behavior: "smooth"
+    });
+  }
 
   function nextSlide() {
     currentSlide = (currentSlide + 1) % totalSlides;
@@ -449,36 +374,23 @@ window.goToSlide = goToSlide;
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const input = document.getElementById("pref-input");
-  const list = document.getElementById("pref-list");
-  if (!input || !list) return;
+  const wrapper = document.getElementById("operatorWrapper");
+  const base = document.getElementById("operatorBase");
 
-  const selected = new Set();
-
-  function addItem(text) {
-    const value = text.trim();
-    if (!value || selected.has(value)) return;
-
-    selected.add(value);
-
-    const div = document.createElement("div");
-    div.className = "quiz-option quiz-chosen text-left";
-    div.textContent = value;
-    list.appendChild(div);
-
-    input.value = "";
+  function renderOperators(count) {
+    wrapper.innerHTML = "";
+    for (let i = 1; i <= count; i++) {
+      const clone = base.cloneNode(true);
+      clone.querySelector(".quiz-title").textContent =
+        `Vad har du för operatör idag? (Person ${i})`;
+      wrapper.appendChild(clone);
+    }
   }
 
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      addItem(input.value);
-    }
-  });
-
-  document.querySelectorAll(".pref-suggestion").forEach(btn => {
-    btn.classList.add("quiz-suggestion");
-    btn.addEventListener("click", () => addItem(btn.textContent));
+  document.querySelectorAll("[data-persons]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      renderOperators(Number(btn.dataset.persons));
+    });
   });
 });
 </script>
