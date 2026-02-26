@@ -134,18 +134,47 @@
         </div>
       </div>
   
-      <!-- Q3: Operator -->
-      <div class="quiz-card">
-        <p class="quiz-title">Vilken operatör föredrar du?</p>
-        <div class="flex flex-col gap-4">
-          <button class="quiz-option abon-opt" data-operator="">Alla Öperatorer</button>
-          <button class="quiz-option abon-opt" data-operator="Telia">Telia</button>
-          <button class="quiz-option abon-opt" data-operator="Tele2">Tele2</button>
-          <button class="quiz-option abon-opt" data-operator="Telenor">Telenor</button>
-          <button class="quiz-option abon-opt" data-operator="Tre">Tre</button>
-          <button class="quiz-option abon-opt" data-operator="Halebop">Halebop</button>
-        </div>
+<!-- Q3: Operator -->
+<div class="quiz-card">
+  <p class="quiz-title">Beskriv vad du söker?</p>
+
+  <div class="flex flex-col gap-5">
+
+    <!-- free text -->
+    <div>
+      <input
+        id="operatorFreeInput"
+        type="text"
+        placeholder="Skriv valfri operatör eller önskemål…"
+        class="w-full rounded-xl border border-gray-200
+               bg-white px-4 py-3 text-sm
+               placeholder:text-gray-400
+               focus:outline-none focus:ring-2 focus:ring-[#0C4A3C]/40
+               transition"
+      />
+
+      <!-- suggestions -->
+      <div class="mt-3 flex gap-3 text-xs text-gray-500">
+        <span
+          class="cursor-pointer rounded-full border border-gray-200
+                 px-3 py-1 hover:bg-gray-50 hover:text-gray-700 transition"
+          data-suggest="Billigast möjligt">
+          Billigast möjligt
+        </span>
+        <span
+          class="cursor-pointer rounded-full border border-gray-200
+                 px-3 py-1 hover:bg-gray-50 hover:text-gray-700 transition"
+          data-suggest="Bäst täckning">
+          Bäst täckning
+        </span>
       </div>
+    </div>
+
+    <!-- listed user inputs -->
+    <div id="operatorFreeList" class="flex flex-col gap-2 pt-1"></div>
+
+  </div>
+</div>
   
     </div>
     <!-- Q0: Binding -->
@@ -231,6 +260,7 @@
 
 </div>
 
+</div>
 </div>
   </section>
   
@@ -394,6 +424,46 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
+<script>
+const input = document.getElementById("operatorFreeInput");
+const list = document.getElementById("operatorFreeList");
+
+function addFreeItem(text) {
+  if (!text) return;
+
+  const row = document.createElement("div");
+  row.className =
+    "quiz-option abon-opt bg-gray-50 cursor-default flex items-center justify-between";
+
+  const label = document.createElement("span");
+  label.textContent = text;
+
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.textContent = "✕";
+  remove.className =
+    "ml-4 text-gray-400 hover:text-red-600 transition";
+  remove.onclick = () => row.remove();
+
+  row.appendChild(label);
+  row.appendChild(remove);
+  list.appendChild(row);
+}
+
+input.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    addFreeItem(input.value.trim());
+    input.value = "";
+  }
+});
+
+document.querySelectorAll("[data-suggest]").forEach(el => {
+  el.addEventListener("click", () => {
+    addFreeItem(el.dataset.suggest);
+  });
+});
+</script>
+
 <script type="module" src="assets/offers.js"></script>
 </body>
 </html>
