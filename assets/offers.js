@@ -295,51 +295,65 @@ if (isQuizComplete()) {
   /******************************
    QUIZ SECTIONS
   ******************************/
-  function buildOfferCard(o, stateOverride = null) {
+function buildOfferCard(o, stateOverride = null) {
   const state = stateOverride || abonState;
   const reward = calculateReward(o.finalPrice);
 
   const card = document.createElement("div");
   card.className =
-    "relative offer-choice text-left border rounded-2xl shadow bg-white p-6 flex flex-col justify-between";
+    "relative offer-choice text-left border border-gray-200 rounded-2xl shadow-md bg-white overflow-hidden flex flex-col";
 
   card.innerHTML = `
-    <div class="flex flex-col items-center gap-1 absolute -top-6 -right-6">
+    <!-- Top reward buttons -->
+    <div class="flex text-sm font-semibold">
       <button
-        class="reward-circle gift-btn"
+        type="button"
+        class="gift-btn adeala-btn adeala-btn-blue flex-1 py-3 text-center"
         data-reward="${reward}"
         data-offer-id="${o.id}"
-        type="button">
-        <div class="reward-inner">
-          <span class="reward-text">Välj presentkort</span>
-          <span class="reward-amount">${reward} kr</span>
-        </div>
+        data-type="new"
+      >
+        Ny kund · ${reward}:-
+      </button>
+
+      <button
+        type="button"
+        class="gift-btn adeala-btn adeala-btn-green flex-1 py-3 text-center"
+        data-reward="${Math.round(reward / 2)}"
+        data-offer-id="${o.id}"
+        data-type="renewal"
+      >
+        Förlängning · ${Math.round(reward / 2)}:-
       </button>
     </div>
 
-    <div>
-      <img src="${o.logo}" class="h-16 mx-auto mb-4 object-contain">
-      <p class="text-sm text-gray-500 mb-1">${o.operator}</p>
-      <h3 class="text-xl font-semibold mb-1 text-[#0C4A3C]">${o.title}</h3>
-      <p class="text-gray-600 text-sm mb-3">${o.text || ""}</p>
+    <!-- Content -->
+    <div class="p-6 flex flex-col justify-between h-full">
+      <div class="text-center">
+        <img src="${o.logo}" class="h-16 mx-auto mb-4 object-contain">
+        <p class="text-sm text-gray-500 mb-1">${o.operator}</p>
+        <h3 class="text-xl font-semibold mb-1 text-[#0C4A3C]">${o.title}</h3>
+        <p class="text-gray-600 text-sm mb-4">${o.text || ""}</p>
+      </div>
 
-    </div>
-
-    <div>
-      ${
-        state.persons > 1
-          ? `
-            <p class="text-xl font-bold text-[#0C4A3C]">
-              ${o.pricePerPerson} kr / person
-            </p>
-            <p class="text-sm text-gray-500 mt-1">
-              ${o.finalPrice} kr/mån totalt (${state.persons} personer)
-            </p>`
-          : `
-            <p class="text-xl font-bold text-[#0C4A3C]">
-              ${o.finalPrice} kr/mån
-            </p>`
-      }
+      <div>
+        ${
+          state.persons > 1
+            ? `
+              <p class="text-2xl font-bold text-[#0C4A3C]">
+                ${o.pricePerPerson} kr / person
+              </p>
+              <p class="text-sm text-gray-500 mt-1">
+                ${o.finalPrice} kr/mån totalt (${state.persons} personer)
+              </p>
+            `
+            : `
+              <p class="text-2xl font-bold text-[#0C4A3C]">
+                ${o.finalPrice} kr/mån
+              </p>
+            `
+        }
+      </div>
     </div>
   `;
 
