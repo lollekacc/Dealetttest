@@ -1,4 +1,6 @@
+<link rel="stylesheet" href="./assets/design.css">
 <link rel="stylesheet" href="./assets/style.css">
+
 <!-- 1) Prepare global plans -->
 <script>
   window.__PLANS__ = [];
@@ -14,48 +16,78 @@
 <script src="./assets/offers.js"></script>
 
 <!-- 4) Chat logic -->
-<script src="./assets/frontendchat.js"></script>
+<script src="./assets/chat.js"></script>
 
-<div id="dealett-chat" data-chat-root>
-<button id="chat-toggle">
-  <span>Dealett-AI</span>
+<!-- TOGGLE (JS LISTENS TO THIS) -->
+<button id="chat-toggle" class="adeala-btn chat-toggle-btn">
+  Dealett-AI
 </button>
 
+<!-- CHAT ROOT (NEVER TOGGLED) -->
+<div
+  id="dealett-chat"
+  data-chat-root
+  class="chat-container"
+  role="complementary"
+  lang="sv"
+>
 
+  <!-- CHAT PANEL (JS TOGGLES .closed HERE) -->
+  <div
+    id="chat-panel"
+    class="chat-box closed"
+    aria-live="polite"
+  >
 
-  <div id="chat-panel" class="chat-panel closed">
-<div class="chat-header">
-  <div class="chat-header-left">
-    <strong>Dealett-AI</strong>
-  </div>
+    <!-- HEADER -->
+    <div class="chat-box-header">
+      <h2>Dealett-AI</h2>
 
-  <div class="chat-header-right">
-    <button
-      id="chat-reset"
-      class="chat-reset-btn-header"
-      type="button"
-    >
-      Starta fräscht
-    </button>
+      <div class="chat-box-actions">
+        <button
+          id="chat-reset"
+          type="button"
+          aria-label="Starta fräscht"
+        >⟳</button>
 
-    <button id="chat-close" aria-label="Stäng chatt">✕</button>
-  </div>
-</div>
+        <button
+          id="chat-close"
+          type="button"
+          aria-label="Stäng chatt"
+        >✕</button>
+      </div>
+    </div>
 
+    <!-- SYSTEM NOTICE -->
+    <div class="chat-notice" role="alert">
+      <p>
+        Vi bryr oss om din integritet. Genom att starta chatten godkänner du våra villkor.
+      </p>
+      <button aria-label="Stäng meddelande">✕</button>
+    </div>
 
-    <div id="chat-messages"></div>
-    
-    <form id="chat-form">
-      <input
+    <!-- BODY -->
+    <div id="chat-body-container" class="chat-body">
+      <div
+        id="chat-messages"
+        class="chat-log"
+        role="log"
+        aria-live="polite"
+      ></div>
+    </div>
+
+    <!-- COMPOSER -->
+    <form id="chat-form" class="chat-composer" autocomplete="off">
+      <textarea
         id="chat-input"
-        type="text"
-        inputmode="text"
+        name="message"
+        placeholder="Ställ mig en fråga…"
+        rows="1"
         enterkeyhint="send"
-        placeholder="Skriv vad du behöver hjälp med här...."
-        autocomplete="off"
-      />
-      <button type="submit">Skicka</button>
-    </form>
-  </div>
+      ></textarea>
 
+      <button type="submit" aria-label="Skicka">➤</button>
+    </form>
+
+  </div>
 </div>

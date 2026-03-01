@@ -1,0 +1,194 @@
+:root {
+    --adeala-green: #0F4C3A;
+    --adeala-teal:  #0A7C66;
+    --adeala-blue:  #0B4E9A;
+    --adeala-beige: #F5EEDF;
+    --adeala-dark:  #0F2D24;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  
+  html { font-size: 100%; }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--adeala-dark);
+    overflow-x: hidden;
+    padding-top: 96px;
+  }
+  
+  img, video {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* =========================
+     BASE COMPONENTS
+     ========================= */
+  
+  .adeala-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.07);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 14px rgba(0,0,0,.08);
+  }
+  
+  .adeala-btn {
+    background: linear-gradient(90deg,#004C9E,#0C4A3C);
+    color: #fff;
+    padding: .85rem 2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .adeala-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  }
+  
+  /* =========================
+     QUIZ
+     ========================= */
+  
+  .quiz-card {
+    background: linear-gradient(180deg,#fff,#f9fafb);
+    border: 1px solid rgba(0,0,0,.06);
+    border-radius: 20px;
+    padding: 1.75rem;
+  }
+  
+  .quiz-option {
+    background: rgba(255,255,255,.85);
+    border: 2px solid rgba(15,23,42,.1);
+    border-radius: 16px;
+    padding: 1rem;
+    font-weight: 600;
+  }
+  
+  /* =========================
+     CHAT (STRUCTURE ONLY)
+     ========================= */
+  
+  /* Toggle button */
+  .chat-toggle-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 9999;
+  }
+  
+  /* Container never hidden */
+  .chat-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 380px;
+    max-height: 80vh;
+    z-index: 10001;
+    pointer-events: none; /* panel handles this */
+  }
+  
+  /* Chat panel */
+  #chat-panel {
+    pointer-events: none;
+  }
+  
+  #chat-panel:not(.closed) {
+    pointer-events: auto;
+  }
+  
+  /* Box */
+  .chat-box {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.18);
+    overflow: hidden;
+  }
+  
+  /* Header */
+  .chat-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(90deg,var(--adeala-blue),var(--adeala-green));
+    color: #fff;
+  }
+  
+  .chat-box-header h2 {
+    font-size: 1rem;
+    margin: 0;
+  }
+  
+  .chat-box-actions button {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  /* Notice */
+  .chat-notice {
+    padding: .75rem 1rem;
+    background: var(--adeala-beige);
+    font-size: .85rem;
+  }
+  
+  /* Body */
+  .chat-body {
+    flex: 1;
+    padding: 1rem;
+    background: #f9fafb;
+    overflow-y: auto;
+  }
+  
+  /* Messages */
+  .chat-log {
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+  
+  /* Composer */
+  .chat-composer {
+    display: flex;
+    gap: .5rem;
+    padding: .75rem;
+    border-top: 1px solid rgba(0,0,0,.08);
+  }
+  
+  .chat-composer textarea {
+    flex: 1;
+    resize: none;
+    border-radius: 14px;
+    border: 1px solid rgba(0,0,0,.12);
+    padding: .6rem .8rem;
+  }
+  
+  .chat-composer button {
+    background: var(--adeala-green);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 0 .9rem;
+  }
+  
+  /* Mobile */
+  @media (max-width: 640px) {
+    .chat-container {
+      left: 16px;
+      right: 16px;
+      width: auto;
+    }
+  }

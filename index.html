@@ -11,6 +11,7 @@
   <!-- Font Awesome Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="./assets/style.css">
+  <link rel="stylesheet" href="./assets/design.css">
 </head>
 
 <body class="min-h-screen font-[Inter] bg-[#f8fafc] text-gray-900 scroll-smooth" data-chat="index">
@@ -80,7 +81,7 @@
 
   </div>
   <!-- Mini Quiz -->
-<section class="w-full max-w-8xl mx-auto mt-4 mb-4 p-1 md:p-2
+<div class="w-full max-w-8xl mx-auto mt-4 mb-4 p-1 md:p-2
             bg-[#f7f8fa]/100 backdrop-blur-sm border border-gray-100
             rounded-xl shadow-lg">
   
@@ -151,46 +152,38 @@
       </div>
     </div>
 
-<div id="step1" class="transition-opacity duration-500 hidden opacity-0">
-  <div class="quiz-card flex flex-col">
-    <p class="quiz-title">Vilken operatör har ni idag?</p>
-
-<div id="operator-per-person"
-     class="mt-6 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-</div>
-
-    <p class="text-xs text-gray-600 text-center">
-      Välj operatör för varje person.
-    </p>
-  </div>
-</div>
-
-<!-- Template (keep anywhere on page, e.g. after step1) -->
-<template id="operator-picker-template">
-  <div class="rounded-xl border border-gray-200 bg-white/70 p-4">
-    <p class="font-semibold text-gray-900 mb-3">Person <span data-person-number></span></p>
-    <div class="flex flex-wrap justify-center gap-4">
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
-        <img src="images/tele2.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tele2">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
-        <img src="images/telia.png" class="partner-logo h-10 hover:scale-105 transition" alt="Telia">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
-        <img src="images/telenor.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Telenor">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
-        <img src="images/tre.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tre">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
-        <img src="images/halebop.webp" class="partner-logo h-10 hover:scale-105 transition" alt="Halebop">
-      </button>
-      <button type="button" class="quiz-option familj-opt px-4 py-2 whitespace-nowrap" data-operator="Other">
-        Andra
-      </button>
+    <div id="step1" class="transition-opacity duration-500">
+      <div class="quiz-card flex flex-col">
+        <p class="quiz-title">Vad har du för operatör idag?</p>
+        <div class="flex flex-wrap justify-center gap-4 mt-6">
+          <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
+            <img src="images/tele2.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tele2">
+          </button>
+  
+          <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
+            <img src="images/telia.png" class="partner-logo h-10 hover:scale-105 transition" alt="Telia">
+          </button>
+  
+          <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
+            <img src="images/telenor.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Telenor">
+          </button>
+  
+          <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
+            <img src="images/tre.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tre">
+          </button>
+  
+          <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
+            <img src="images/halebop.webp" class="partner-logo h-10 hover:scale-105 transition" alt="Halebop">
+          </button>
+  
+          <button type="button"
+                  class="quiz-option familj-opt px-4 py-2 whitespace-nowrap"
+                  data-operator="Other">
+            Andra
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
-</template>
     <!-- QUESTION 2 -->
     <div id="step2" class="hidden opacity-0 transition-opacity duration-500">
       <div class="quiz-card flex flex-col">
@@ -282,7 +275,7 @@
   </div>
   </div>
    </div>
-  </section>
+</div>
 <!-- HERO IMAGE GRID (clickable) -->
 <div class="max-w-8xl mx-auto mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
 
@@ -415,7 +408,8 @@
         <div class="md:col-span-1 flex flex-col gap-4">
           <button class="operator-btn active relative" data-operator="telia">
             <img src="images/telia.png" class="h-32 mx-auto">
-                        <a href="/se"
+                      
+     <a href="/se"
    class="absolute right-2 bottom-2
           px-2 py-1 text-xs font-semibold
           rounded-md
@@ -483,7 +477,7 @@
 </a>
           </button>
         </div>
-
+      
         <!-- RIGHT: MAP -->
         <div
           id="coverage-map"
