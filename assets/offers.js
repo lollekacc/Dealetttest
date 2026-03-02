@@ -815,7 +815,7 @@ window.renderSingleOfferCard = function (plan, payload = {}) {
     operator: payload.operator || plan.operator
   };
 
-  return buildOfferCard(
+  return buildOfferCard(  
     {
       ...plan,
       finalPrice: plan.price,
