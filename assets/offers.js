@@ -8,14 +8,7 @@ function getFamilyAddonForOperator(operator) {
     p.familyPriceType === "addon"
   );
 }
-/*
-function stopOffersScroll() {
-  const track = document.getElementById("offersTrack");
-  if (!track) return;
-  track.style.animation = "none";
-  track.style.transform = "translateX(0)";
-}
-*/
+
 function stopOffersScroll() {
   const track = document.getElementById("offersTrack");
   const strip = document.querySelector(".offers-strip");
@@ -128,8 +121,6 @@ function updateDataAvailability() {
     btn.classList.toggle("disabled-option", !valid);
   });
 }
-
-
 let offersSection;
 let offersContainer;
 const abonState = {
