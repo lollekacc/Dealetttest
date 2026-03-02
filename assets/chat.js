@@ -199,9 +199,6 @@ fetch("https://dealett-backend.onrender.com/api/chat", {
   addMessage(data.reply, "ai");
 });
 
-
-
-    // reset state
     quizState.persons = null;
     quizState.data = null;
   }
