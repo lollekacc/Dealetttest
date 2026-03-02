@@ -26,6 +26,8 @@ function stopOffersScroll() {
   if (strip) strip.classList.add("no-fade");
 }
 function showAllOffersInitial() {
+  stopOffersScroll(); // ⛔ stop shift / animation
+
   const offers = ALL_PLANS
     .filter(p => !p.isFamilyPlan) // base plans only
     .map(p => ({
@@ -33,24 +35,10 @@ function showAllOffersInitial() {
       finalPrice: p.price,
       pricePerPerson: p.price
     }))
-    .sort((a, b) => a.finalPrice - b.finalPrice); // show all (no slice)
-function showAllOffersInitial() {
-  stopOffersScroll(); // ⛔ STOP SHIFT EFFECT HERE
-
-  const offers = ALL_PLANS
-    .filter(p => !p.isFamilyPlan)
-    .map(p => ({
-      ...p,
-      finalPrice: p.price,
-      pricePerPerson: p.price
-    }))
-    .sort((a, b) => a.finalPrice - b.finalPrice);
+    .sort((a, b) => a.finalPrice - b.finalPrice); // show all, sorted
 
   offersSection.classList.remove("hidden");
-  renderOffers(offers);
-}
-  offersSection.classList.remove("hidden");
-  renderOffers(offers); // note: your renderOffers currently slices to 6
+  renderOffers(offers); // render (your renderOffers may slice internally)
 }
 async function filterOffers() {
   stopOffersScroll();
@@ -144,7 +132,6 @@ function updateDataAvailability() {
 
 let offersSection;
 let offersContainer;
-  
 const abonState = {
   persons: null,
   data: null,
@@ -165,7 +152,16 @@ offersSection = document.getElementById("offersSection");
 offersContainer = document.getElementById("offers-container");
 await loadPlans();
 showAllOffersInitial();
+const urlOp =
+  new URLSearchParams(window.location.search).get("op") ||
+  sessionStorage.getItem("preferredOperator");
 
+if (urlOp) {
+  abonState.operator = urlOp;
+  offersSection.classList.remove("hidden");
+  filterOffers();
+  smoothScrollTo(offersSection);
+}
 if (bindingYesBtn && bindingWrapper) {
   bindingYesBtn.addEventListener("click", () => {
     abonState.binding = "yes";
