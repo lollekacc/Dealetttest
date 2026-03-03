@@ -1,14 +1,5 @@
-let ALL_PLANS = [];
 window.offerChosen = false;
 window.beloningChosen = false;
-function getFamilyAddonForOperator(operator) {
-  return ALL_PLANS.find(p =>
-    p.operator === operator &&
-    p.isFamilyPlan === true &&
-    p.familyPriceType === "addon"
-  );
-}
-
 function stopOffersScroll() {
   const track = document.getElementById("offersTrack");
   const strip = document.querySelector(".offers-strip");
@@ -19,62 +10,17 @@ function stopOffersScroll() {
   if (strip) strip.classList.add("no-fade");
 }
 function showAllOffersInitial() {
-  stopOffersScroll(); // ⛔ stop shift / animation
-
-  const offers = ALL_PLANS
-    .filter(p => !p.isFamilyPlan) 
-    .map(p => ({
-      ...p,
-      finalPrice: p.price,
-      pricePerPerson: p.price
-    }))
-    .sort((a, b) => a.finalPrice - b.finalPrice); 
-
+  stopOffersScroll();
   offersSection.classList.remove("hidden");
-  renderOffers(offers); // render (your renderOffers may slice internally)
+  renderOffers(offers);
 }
 async function filterOffers() {
   stopOffersScroll();
   if (!ALL_PLANS.length) {
     await loadPlans();
   }
-
-  const offers = ALL_PLANS
-    .filter(p => !p.isFamilyPlan)
-    .filter(p => !abonState.operator || p.operator === abonState.operator)
-    .filter(p => {
-      if (abonState.data === "low") return p.dataAmount < 30;
-      if (abonState.data === "medium") return p.dataAmount >= 20 && p.dataAmount < 999;
-      if (abonState.data === "high") return p.dataAmount >= 999;
-      return true;
-    })
-    .map(p => {
-      let totalPrice = p.price;
-      let pricePerPerson = p.price;
-
-      if (abonState.persons > 1) {
-        const addon = getFamilyAddonForOperator(p.operator);
-        if (!addon) return null;
-
-        totalPrice =
-          p.price + (abonState.persons - 1) * addon.addonPrice;
-
-        pricePerPerson = Math.round(totalPrice / abonState.persons);
-      }
-
-      return {
-        ...p,
-        finalPrice: totalPrice,
-        pricePerPerson
-      };
-    })
-    .filter(Boolean)
-    .sort((a, b) => a.finalPrice - b.finalPrice)
-    .slice(0, 6);
-
-  renderOffers(offers);
+renderOffers(offers);
 }
-
 async function loadPlans() {
   if (ALL_PLANS.length) return ALL_PLANS;
 
@@ -82,74 +28,14 @@ async function loadPlans() {
   ALL_PLANS = await res.json();
   return ALL_PLANS;
 }
-function hasValidPlanForState(state) {
-  return ALL_PLANS.some(p => {
-    if (p.isFamilyPlan) return false;
-
-    if (state.operator && state.operator !== "" && p.operator !== state.operator)
-      return false;
-
-if (state.data === "low" && p.dataAmount >= 30) return false;
-
-if (state.data === "medium" && (p.dataAmount < 20 || p.dataAmount >= 999))
-  return false;
-
-if (state.data === "high" && p.dataAmount < 999)
-  return false;
-
-  return true;
-  });
-}
-
-
-
-
-
-
-
-
 function isQuizComplete() {
   return (
     abonState.persons !== null &&
     abonState.data !== null
   );
 }
-function updateDataAvailability() {
-  if (!ALL_PLANS.length) return;
-
-  document.querySelectorAll("[data-data]").forEach(btn => {
-    const dataValue = btn.dataset.data;
-
-    const valid = hasValidPlanForState({
-      ...abonState,
-      data: dataValue
-    });
-
-    btn.classList.toggle("disabled-option", !valid);
-  });
-}
-
-
-
-
-
-
 let offersSection;
 let offersContainer;
-const abonState = {
-  persons: null,
-  data: null,
-  operator: null,
-  binding: null,
-  bindingEndDate: null
-};
-
-
-
-
-/******************************
- LOAD HEADER + FOOTER
-******************************/
 document.addEventListener("DOMContentLoaded", async () => {
 // Binding logic
 const bindingYesBtn = document.getElementById("bindingYesBtn");
@@ -241,14 +127,6 @@ if (abonState.persons !== null && abonState.data !== null) {
   }
 
 });
-
-
-
-
-
-
-
-
 const savedState = localStorage.getItem("dealettState");
 
 if (savedState) {
@@ -269,13 +147,6 @@ function updateOperatorAvailability() {
     btn.classList.toggle("disabled-option", !valid);
   });
 }
-
-
-
-
-
-
-
 
 document.querySelectorAll(".abon-opt").forEach(btn => {
   btn.addEventListener("click", async () => {
@@ -309,10 +180,6 @@ if (isQuizComplete()) {
 
   });
 });
-
-  /******************************
-   QUIZ SECTIONS
-  ******************************/
 function buildOfferCard(o, stateOverride = null) {
   const state = stateOverride || abonState;
   const reward = calculateReward(o.finalPrice);
@@ -377,10 +244,6 @@ function buildOfferCard(o, stateOverride = null) {
 
   return card;
 }
-
-  /******************************
-   OFFER RENDER
-  ******************************/
   function renderOffers(offers) {
     offersContainer.innerHTML = "";
     const limited = offers;
@@ -432,29 +295,7 @@ if (rewardBtn) {
       frame.src = "";
     }, 300);
   });
-  
-
-
-
-
-
-
-
-
-
-
-  /******************************
-   NUMBER VALIDATION
-  ******************************/
-  function isValidPhone(num) {
-    num = num.replace(/\s+/g, "");
-    return /^07\d{8}$/.test(num) || /^\+467\d{8}$/.test(num);
-  }
-  
-  /******************************
-   STEP-BY-STEP NUMBER FLOW
-  ******************************/
-  const phoneInputs = document.getElementById("phoneInputsContainer");
+    const phoneInputs = document.getElementById("phoneInputsContainer");
 
   let totalPeople = 1;
   let currentPerson = 1;
@@ -474,9 +315,7 @@ if (rewardBtn) {
   
     askNextPerson();
   }
-  
-  
-  function askNextPerson() {
+    function askNextPerson() {
     phoneInputs.innerHTML = "";
     questionTitle.textContent = `Person ${currentPerson} – Hur vill du göra med numret?`;
   
@@ -501,8 +340,7 @@ if (rewardBtn) {
     smoothScrollTo(sectionPort);
 
   }
-  
-  function showNumberInput(type) {
+    function showNumberInput(type) {
     phoneInputs.innerHTML = "";
   
     const label = document.createElement("label");
@@ -549,8 +387,7 @@ if (rewardBtn) {
       else finishNumbers();
     };
   }
-  
-  const REWARD_LOGOS = {
+    const REWARD_LOGOS = {
     "ICA Maxi": "https://detailproduktion.se/wp-content/uploads/2014/04/ica-maxi-stormarknad-logo.png",
     "Amazon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png",
     "MIO": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/MIO_Logo.svg/2560px-MIO_Logo.svg.png",
@@ -564,18 +401,7 @@ if (rewardBtn) {
     "Synsam": "https://kraftenifinspang.se/wp-content/uploads/2024/09/Loggor-centrumbutikerna_Synsam-1024x503.png",
     "SATS": "https://cdn.sanity.io/images/xkmfhygb/production/7a8c8bd647ab4949343baef3fe30dc92281489e7-1920x1080.jpg"
   };
-  
-
-
-
-
-
-
-
-
-
-
-  function finishNumbers() {
+    function finishNumbers() {
     console.log("Alla nummer valda:", collectedNumbers);
   
     questionTitle.textContent = "Sammanfattning";
@@ -770,16 +596,7 @@ document.getElementById("startDateText").classList.remove("hidden");
     };
     
   }
-
-
-
-
-
-
-  /******************************
-   CHECK IF READY FOR NUMBERS
-  ******************************/
-function checkGoToNumberStep() {
+  function checkGoToNumberStep() {
   console.log("checkGoToNumberStep()", {
     offerChosen: window.offerChosen,
     beloningChosen: window.beloningChosen,
@@ -796,14 +613,6 @@ function checkGoToNumberStep() {
   contactSection.style.display = "block"; // force if CSS conflicts
   smoothScrollTo(contactSection);
 }
-
-  function calculateReward(price) {
-    if (price < 299) return 2000;
-    if (price < 399) return 3000;
-    if (price < 499) return 4000;
-    if (price < 699) return 5000;
-    return 1000;
-  }
 function openPchoicePopup(rewardValue, offerId) {
 
   // 🔥 FORCE SELECT OFFER
@@ -834,9 +643,6 @@ function openPchoicePopup(rewardValue, offerId) {
   modal.offsetHeight;
   modal.classList.add("show");
 }
-
-
-
 window.addEventListener("message", (e) => {
   if (e.data !== "rewardDone") return;
 
@@ -857,11 +663,6 @@ window.addEventListener("message", (e) => {
     checkGoToNumberStep();
   }, 0);
 });
-
-
-
-
-
   function smoothScrollTo(element) {
     if (!element) return;
   
@@ -870,7 +671,7 @@ window.addEventListener("message", (e) => {
       block: "start"
     });
   }
-window.renderSingleOfferCard = function (plan, payload = {}) {
+  window.renderSingleOfferCard = function (plan, payload = {}) {
   const fakeState = {
     persons: payload.persons || 1,
     data: payload.data || "high",
@@ -886,7 +687,6 @@ window.renderSingleOfferCard = function (plan, payload = {}) {
     fakeState
   );
 };
-// Show more persons (6–10) toggle
 document.addEventListener("DOMContentLoaded", () => {
   const showMoreBtn = document.getElementById("showMorePersons");
   const personsExtra = document.getElementById("personsExtra");
