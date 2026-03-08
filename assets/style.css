@@ -23,16 +23,6 @@
   display: block;
 }
 
-/* ===== CHAT (THIS FILE CONTROLS TOGGLE) ===== */
-
-#chat-toggle {
-  position: fixed;
-  bottom: 28px;
-  right: 28px;
-  z-index: 9999;
-}
-
-/* PANEL ANIMATION */
 #chat-panel {
   position: fixed;
   top: 50%;
