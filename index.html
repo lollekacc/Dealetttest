@@ -11,7 +11,6 @@
   <!-- Font Awesome Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="./assets/style.css">
-  <link rel="stylesheet" href="./assets/design.css">
 </head>
 
 <body class="min-h-screen font-[Inter] bg-[#f8fafc] text-gray-900 scroll-smooth" data-chat="index">
@@ -200,22 +199,32 @@ Steg <span id="quiz-step-current">1</span> / <span id="quiz-step-total">5</span>
   </div>
 </template>
     <!-- QUESTION 2 -->
-    <div id="step2" class="hidden opacity-0 transition-opacity duration-500">
-      <div class="quiz-card flex flex-col">
-        <p class="quiz-title">Hur använder ni mobilen mest?</p>
-        <div class="flex flex-col gap-4 mt-6">
-          <button class="quiz-option" data-usage="wifi">Mest wifi & sociala medier  
-            <p class="text-sm opacity-70">5 GB - 15 GB</p>
-          </button>
-          <button class="quiz-option flex flex-col">
-  <span>Streaming & video</span>
-  <span class="text-sm opacity-70">20 GB - 40 GB</span>
-</button>
-          <button class="quiz-option" data-usage="unlimited">Vill aldrig tänka på surf 
-            <p class="text-sm opacity-70">50 GB - Obegränsad </p> </button>
-        </div>
-      </div>
+<div id="step2" class="hidden opacity-0 transition-opacity duration-500">
+  <div class="quiz-card flex flex-col">
+
+    <p class="quiz-title">Hur använder ni mobilen mest?</p>
+
+    <div class="flex flex-col gap-4 mt-6">
+
+      <button class="quiz-option" data-data="low">
+        Mest wifi & sociala medier
+        <p class="text-sm opacity-70">5 GB - 15 GB</p>
+      </button>
+
+      <button class="quiz-option" data-data="medium">
+        Streaming & video
+        <p class="text-sm opacity-70">20 GB - 40 GB</p>
+      </button>
+
+      <button class="quiz-option" data-data="high">
+        Vill aldrig tänka på surf
+        <p class="text-sm opacity-70">50 GB - Obegränsad</p>
+      </button>
+
     </div>
+
+  </div>
+</div>
 
     <!-- QUESTION 3 -->
     <div id="step3" class="hidden opacity-0 transition-opacity duration-500">
@@ -242,52 +251,24 @@ Steg <span id="quiz-step-current">1</span> / <span id="quiz-step-total">5</span>
     </div>
 
     <!-- RESULT STEP -->
-    <div id="step5" class="hidden opacity-0 transition-opacity duration-500">
-      <div class="quiz-card flex flex-col text-center">
-        <h3 class="text-2xl font-bold mb-4 text-gray-800">
-          Din analys är klar
-        </h3>
-        <p class="text-gray-600 mb-10">
-          Baserat på dina svar tror vi att du kan optimera ditt abonnemang och få mer värde varje månad.
-        </p>
+<div id="step5" class="hidden opacity-0 transition-opacity duration-500">
+  <div class="quiz-card flex flex-col text-center">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+    <h3 class="text-2xl font-bold mb-4 text-gray-800">
+      Din analys är klar
+    </h3>
 
-          <!-- OPTION 1 -->
-          <div class="offer-choice">
-            <h4 class="font-bold mb-2">Mest prisvärd</h4>
-            <p class="text-2xl font-extrabold mb-2">399 kr/mån</p>
-            <ul class="text-sm mb-6">
-              <li>32 GB</li>
-              <li>Fri surf inom EU</li>
-              <li>1 000 kr ICA-presentkort</li>
-            </ul>
-            <button class="adeala-btn w-full">
-              👉 Välj detta abonnemang
-            </button>
-          </div>
+    <p class="text-gray-600 mb-10">
+      Baserat på dina svar har vi hittat abonnemang som passar dig.
+    </p>
 
-          <!-- OPTION 2 -->
-          <div class="offer-choice">
-            <h4 class="font-bold mb-2">Mest surf</h4>
-            <p class="text-2xl font-extrabold mb-2">449 kr/mån</p>
-            <ul class="text-sm mb-6">
-              <li>50 GB</li>
-              <li>5G & fri roaming</li>
-              <li>1 000 kr ICA-presentkort</li>
-            </ul>
-            <button class="adeala-btn w-full">
-              👉 Välj detta abonnemang
-            </button>
-          </div>
+    <div
+      id="offers-container"
+      class="grid grid-cols-1 md:grid-cols-2 gap-10"
+    ></div>
 
-        </div>
-
-        <p class="mt-8 text-sm text-gray-600">
-          Vi rekommenderar alternativ 1 baserat på ditt användningsmönster.
-        </p>
-      </div>
-    </div>
+  </div>
+</div>
 
   </div>
   </div>
@@ -499,6 +480,11 @@ document.querySelectorAll(".operator-btn").forEach(btn => {
     <div id="chat-modal-body" class="h-full"></div>
   </div>
 </div>
+<button id="closePchoice" style="display:none"></button>
+
+<div id="pchoiceModal" style="display:none">
+  <iframe id="pchoiceFrame"></iframe>
+</div>
   <!-- Load shared header/footer/chat -->
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
@@ -542,9 +528,11 @@ if (openBtn && modal && closeBtn && chatPanel && modalBody) {
   const script = document.createElement("script");
   script.src = "./assets/chat.js";
   script.defer = true;
-  script.onload = () => {
+script.onload = () => {
+  if (typeof initHeroChatMovement === "function") {
     initHeroChatMovement();
-  };
+  }
+};
   document.body.appendChild(script);
 });
 </script>

@@ -1,3 +1,6 @@
+let offersContainer;
+let offersSection;
+
 let ALL_PLANS = [];
 window.offerChosen = false;
 window.beloningChosen = false;
@@ -75,6 +78,8 @@ async function filterOffers() {
   renderOffers(offers);
 }
 
+  window.filterOffers = filterOffers;
+  
 async function loadPlans() {
   if (ALL_PLANS.length) return ALL_PLANS;
 
@@ -131,12 +136,7 @@ function updateDataAvailability() {
 
 
 
-
-
-
-let offersSection;
-let offersContainer;
-const abonState = {
+const abonState = window.abonState || {
   persons: null,
   data: null,
   operator: null,
@@ -156,7 +156,7 @@ const bindingYesBtn = document.getElementById("bindingYesBtn");
 const bindingNoBtn = document.querySelector('[data-binding="no"]');
 const bindingWrapper = document.getElementById("bindingDateWrapper");
 const bindingInput = document.getElementById("bindingEndDate");
-offersSection = document.getElementById("offersSection");
+offersSection = document.getElementById("step5");
 offersContainer = document.getElementById("offers-container");
 await loadPlans();
 showAllOffersInitial();
@@ -382,6 +382,9 @@ function buildOfferCard(o, stateOverride = null) {
    OFFER RENDER
   ******************************/
   function renderOffers(offers) {
+    if (!offersContainer) {
+  offersContainer = document.getElementById("offers-container");
+}
     offersContainer.innerHTML = "";
     const limited = offers;
   
@@ -887,7 +890,10 @@ window.renderSingleOfferCard = function (plan, payload = {}) {
   );
 };
 // Show more persons (6–10) toggle
+/*
 document.addEventListener("DOMContentLoaded", () => {
+  offersContainer = document.getElementById("offers-container");
+  offersSection = document.getElementById("step5");
   const showMoreBtn = document.getElementById("showMorePersons");
   const personsExtra = document.getElementById("personsExtra");
   if (!showMoreBtn || !personsExtra) return;
@@ -898,3 +904,4 @@ document.addEventListener("DOMContentLoaded", () => {
       personsExtra.classList.contains("hidden") ? "Visa fler" : "Visa färre";
   });
 });
+*/

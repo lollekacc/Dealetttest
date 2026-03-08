@@ -24,10 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
   if (stepTotalEl) stepTotalEl.textContent = String(TOTAL_QUESTIONS);
 
   let currentIndex = 0; // 0..4 questions, 5 result
-const state = window.abonState || (window.abonState = {
+window.abonState = window.abonState || {
   persons: null,
+  data: null,
+  operator: null,
   operators: []
-});
+};
+
+const state = window.abonState;
 const operatorContainer = document.getElementById("operator-per-person");
 const operatorTpl = document.getElementById("operator-picker-template");
 
@@ -56,6 +60,7 @@ wrapper?.addEventListener("click", (e) => {
   // STEP 0: persons
   if (steps[currentIndex]?.id === "step0" && btn.dataset.persons) {
     state.persons = Number(btn.dataset.persons);
+    window.abonState.persons = state.persons;
     renderOperatorPickers(state.persons);
     showStep(currentIndex + 1);
     return;
@@ -67,6 +72,8 @@ wrapper?.addEventListener("click", (e) => {
     if (!Number.isNaN(idx)) {
       state.operators[idx] = btn.dataset.operator;
 
+      window.abonState.operator = btn.dataset.operator;
+
       // optional: visual selected state per person group
       const group = btn.closest(".rounded-xl");
       group?.querySelectorAll(".quiz-option[data-operator]").forEach(b => b.classList.remove("ring-2","ring-emerald-500"));
@@ -77,12 +84,17 @@ wrapper?.addEventListener("click", (e) => {
     if (done) showStep(currentIndex + 1);
     return;
   }
-
+  if (steps[currentIndex]?.id === "step2" && btn.dataset.data) {
+  state.data = btn.dataset.data;
+  window.abonState.data = btn.dataset.data;
+  showStep(currentIndex + 1);
+  return;
+}
   // default auto-advance for step2..step4
   if (currentIndex < TOTAL_QUESTIONS - 1) {
     showStep(currentIndex + 1);
-} else if (currentIndex === TOTAL_QUESTIONS - 2) {
-  showStep(TOTAL_QUESTIONS - 1);
+} if (currentIndex < TOTAL_QUESTIONS - 1) {
+  showStep(currentIndex + 1);
 }
 });
 
@@ -109,7 +121,6 @@ function updateNav() {
     }
   }
 }
-
 function showStep(nextIndex) {
   const prev = steps[currentIndex];
   const next = steps[nextIndex];
@@ -146,9 +157,20 @@ function showStep(nextIndex) {
       });
     });
 
-    currentIndex = nextIndex;
-    updateNav();
+currentIndex = nextIndex;
+updateNav();
 
+if (nextIndex === 5) {
+  console.log("Quiz finished", window.abonState);
+
+  loadOffersScript().then(() => {
+    console.log("filterOffers exists:", typeof window.filterOffers);
+
+    if (window.filterOffers) {
+      filterOffers();
+    }
+  });
+}
   }, 250);
 }
 function startQuiz() {
@@ -201,3 +223,30 @@ if (currentIndex > 0) {
 }
   });
 });
+function loadOffersScript() {
+  return new Promise((resolve) => {
+
+    // already loaded
+    if (window.filterOffers) {
+      resolve();
+      return;
+    }
+
+    // script already being added
+    const existing = document.getElementById("offers-script");
+    if (existing) {
+      existing.onload = resolve;
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.id = "offers-script";
+    script.src = "./assets/offers.js";
+
+script.onload = () => {
+  resolve();
+};
+
+    document.body.appendChild(script);
+  });
+}
