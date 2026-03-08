@@ -580,49 +580,6 @@ if (openBtn && modal && closeBtn && chatPanel && modalBody) {
     initHeroChatMovement();
   };
   document.body.appendChild(script);
-
-function initHeroChatMovement() {
-
-  const panel = document.getElementById("chat-panel");
-  const anchor = document.getElementById("hero-chat-anchor");
-
-  if (!panel || !anchor) return;
-
-  const hero = anchor.closest("section");
-  if (!hero) return;
-
-  let inHero = false;
-
-  function updateChatPosition() {
-if (chatInModal) return;
-    const heroBottom = hero.offsetTop + hero.offsetHeight;
-    const scrollY = window.scrollY;
-
-    if (scrollY < heroBottom - panel.offsetHeight - 40) {
-
-      if (!inHero) {
-        anchor.appendChild(panel);
-        panel.classList.add("hero-mode");
-        inHero = true;
-      }
-
-    } else {
-
-      if (inHero) {
-        document.body.appendChild(panel);
-        panel.classList.remove("hero-mode");
-        inHero = false;
-      }
-
-    }
-  }
-
-  window.addEventListener("scroll", updateChatPosition, { passive: true });
-  window.addEventListener("resize", updateChatPosition);
-  updateChatPosition();
-}
-
-
 });
 </script>
 <script>

@@ -436,7 +436,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 <script>
-const input = document.getElementById("operatorFreeInput");
+(() => {
+  const operatorInput = document.getElementById("operatorFreeInput");
+})();
 const list = document.getElementById("operatorFreeList");
 
 function addFreeItem(text) {
@@ -461,10 +463,10 @@ function addFreeItem(text) {
   list.appendChild(row);
 }
 
-input.addEventListener("keydown", e => {
+operatorInput.addEventListener("keydown", e => {
   if (e.key === "Enter") {
-    addFreeItem(input.value.trim());
-    input.value = "";
+    addFreeItem(operatorInput.value.trim());
+    operatorInput.value = "";
   }
 });
 
