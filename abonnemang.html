@@ -436,44 +436,49 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 <script>
-(() => {
+document.addEventListener("DOMContentLoaded", () => {
+
   const operatorInput = document.getElementById("operatorFreeInput");
-})();
-const list = document.getElementById("operatorFreeList");
+  const list = document.getElementById("operatorFreeList");
 
-function addFreeItem(text) {
-  if (!text) return;
+  if (!operatorInput || !list) return;
 
-  const row = document.createElement("div");
-  row.className =
-    "quiz-option abon-opt bg-gray-50 cursor-default flex items-center justify-between";
+  function addFreeItem(text) {
+    if (!text) return;
 
-  const label = document.createElement("span");
-  label.textContent = text;
+    const row = document.createElement("div");
+    row.className =
+      "quiz-option abon-opt bg-gray-50 cursor-default flex items-center justify-between";
 
-  const remove = document.createElement("button");
-  remove.type = "button";
-  remove.textContent = "✕";
-  remove.className =
-    "ml-4 text-gray-400 hover:text-red-600 transition";
-  remove.onclick = () => row.remove();
+    const label = document.createElement("span");
+    label.textContent = text;
 
-  row.appendChild(label);
-  row.appendChild(remove);
-  list.appendChild(row);
-}
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.textContent = "✕";
+    remove.className =
+      "ml-4 text-gray-400 hover:text-red-600 transition";
 
-operatorInput.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    addFreeItem(operatorInput.value.trim());
-    operatorInput.value = "";
+    remove.onclick = () => row.remove();
+
+    row.appendChild(label);
+    row.appendChild(remove);
+    list.appendChild(row);
   }
-});
 
-document.querySelectorAll("[data-suggest]").forEach(el => {
-  el.addEventListener("click", () => {
-    addFreeItem(el.dataset.suggest);
+  operatorInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      addFreeItem(operatorInput.value.trim());
+      operatorInput.value = "";
+    }
   });
+
+  document.querySelectorAll("[data-suggest]").forEach(el => {
+    el.addEventListener("click", () => {
+      addFreeItem(el.dataset.suggest);
+    });
+  });
+
 });
 </script>
 <script>

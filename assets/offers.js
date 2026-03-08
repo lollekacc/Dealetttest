@@ -22,19 +22,25 @@ function stopOffersScroll() {
   if (strip) strip.classList.add("no-fade");
 }
 function showAllOffersInitial() {
-  stopOffersScroll(); // ⛔ stop shift / animation
+
+  const offersSection = document.getElementById("offersSection");
+
+  stopOffersScroll();
 
   const offers = ALL_PLANS
-    .filter(p => !p.isFamilyPlan) 
+    .filter(p => !p.isFamilyPlan)
     .map(p => ({
       ...p,
       finalPrice: p.price,
       pricePerPerson: p.price
     }))
-    .sort((a, b) => a.finalPrice - b.finalPrice); 
+    .sort((a, b) => a.finalPrice - b.finalPrice);
 
-  offersSection.classList.remove("hidden");
-  renderOffers(offers); // render (your renderOffers may slice internally)
+  if (offersSection) {
+    offersSection.classList.remove("hidden");
+  }
+
+  renderOffers(offers);
 }
 async function filterOffers() {
   stopOffersScroll();
@@ -156,7 +162,7 @@ const bindingYesBtn = document.getElementById("bindingYesBtn");
 const bindingNoBtn = document.querySelector('[data-binding="no"]');
 const bindingWrapper = document.getElementById("bindingDateWrapper");
 const bindingInput = document.getElementById("bindingEndDate");
-offersSection = document.getElementById("step5");
+offersSection = document.getElementById("offersSection");
 offersContainer = document.getElementById("offers-container");
 await loadPlans();
 showAllOffersInitial();
@@ -890,10 +896,10 @@ window.renderSingleOfferCard = function (plan, payload = {}) {
   );
 };
 // Show more persons (6–10) toggle
-/*
+
 document.addEventListener("DOMContentLoaded", () => {
   offersContainer = document.getElementById("offers-container");
-  offersSection = document.getElementById("step5");
+ offersSection = document.getElementById("offersSection");
   const showMoreBtn = document.getElementById("showMorePersons");
   const personsExtra = document.getElementById("personsExtra");
   if (!showMoreBtn || !personsExtra) return;
@@ -904,4 +910,4 @@ document.addEventListener("DOMContentLoaded", () => {
       personsExtra.classList.contains("hidden") ? "Visa fler" : "Visa färre";
   });
 });
-*/
+
