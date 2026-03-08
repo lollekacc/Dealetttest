@@ -20,30 +20,30 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("step5"),
   ].filter(Boolean);
 
-  const TOTAL_QUESTIONS = 5; // step0..step4
+  const TOTAL_QUESTIONS = 6; // step0..step4
   if (stepTotalEl) stepTotalEl.textContent = String(TOTAL_QUESTIONS);
 
   let currentIndex = 0; // 0..4 questions, 5 result
 const state = window.abonState || (window.abonState = {
   persons: null,
-  operators: [], // per person
+  operators: []
 });
 const operatorContainer = document.getElementById("operator-per-person");
 const operatorTpl = document.getElementById("operator-picker-template");
 
 function renderOperatorPickers(persons) {
   if (!operatorContainer || !operatorTpl) return;
-  operatorContainer.innerHTML = "";
 
+  operatorContainer.innerHTML = "";
   state.operators = Array.from({ length: persons }, () => null);
 
   for (let i = 0; i < persons; i++) {
     const node = operatorTpl.content.cloneNode(true);
-    node.querySelector("[data-person-number]").textContent = String(i + 1);
 
-    // tag buttons with which person they belong to
+    node.querySelector("[data-person-number]").textContent = i + 1;
+
     node.querySelectorAll(".quiz-option[data-operator]").forEach(btn => {
-      btn.dataset.personIndex = String(i);
+      btn.dataset.personIndex = i;
     });
 
     operatorContainer.appendChild(node);
@@ -81,76 +81,123 @@ wrapper?.addEventListener("click", (e) => {
   // default auto-advance for step2..step4
   if (currentIndex < TOTAL_QUESTIONS - 1) {
     showStep(currentIndex + 1);
-  } else if (currentIndex === TOTAL_QUESTIONS - 1) {
-    showStep(TOTAL_QUESTIONS);
-  }
+} else if (currentIndex === TOTAL_QUESTIONS - 2) {
+  showStep(TOTAL_QUESTIONS - 1);
+}
 });
-  function setSlotHeightTo(el) {
-    if (!slot || !el) return;
-    el.classList.remove("hidden"); // ensure measurable
-    slot.style.height = el.offsetHeight + "px";
+
+function updateNav() {
+  const onResult = currentIndex === TOTAL_QUESTIONS;
+
+  if (backBtn) backBtn.disabled = currentIndex === 0;
+
+  if (progress) {
+    const progressStep = onResult ? TOTAL_QUESTIONS : currentIndex + 1;
+    progress.style.width = `${(progressStep / TOTAL_QUESTIONS) * 100}%`;
   }
 
-  function updateNav() {
-    const onResult = currentIndex >= TOTAL_QUESTIONS;
-    const stepNumber = Math.min(currentIndex + 1, TOTAL_QUESTIONS);
+  const stepLabel = document.getElementById("quiz-step-label");
 
-    if (stepCurrentEl) stepCurrentEl.textContent = String(stepNumber);
-    if (backBtn) backBtn.disabled = currentIndex === 0 || onResult;
-
-    if (progress) {
-      progress.style.width = `${(stepNumber / TOTAL_QUESTIONS) * 100}%`;
+  if (onResult) {
+    if (stepLabel) stepLabel.textContent = "Resultat";
+  } else {
+    if (stepLabel) {
+      stepLabel.innerHTML = `Steg <span id="quiz-step-current">${currentIndex + 1}</span> / <span id="quiz-step-total">${TOTAL_QUESTIONS}</span>`;
+    } else {
+      if (stepCurrentEl) stepCurrentEl.textContent = String(currentIndex + 1);
+      if (stepTotalEl) stepTotalEl.textContent = String(TOTAL_QUESTIONS);
     }
   }
+}
 
-  function showStep(nextIndex) {
-    const prev = steps[currentIndex];
-    const next = steps[nextIndex];
-    if (!prev || !next) return;
+function showStep(nextIndex) {
+  const prev = steps[currentIndex];
+  const next = steps[nextIndex];
+  if (!prev || !next) return;
 
-    prev.classList.add("opacity-0");
-    setTimeout(() => {
-      prev.classList.add("hidden");
+  const startHeight = wrapper.offsetHeight;
 
-      next.classList.remove("hidden");
-      setSlotHeightTo(next);
+  // fade out
+  prev.classList.add("opacity-0");
 
-      requestAnimationFrame(() => next.classList.remove("opacity-0"));
+  setTimeout(() => {
+    prev.classList.add("hidden");
 
-      currentIndex = nextIndex;
-      updateNav();
-    }, 250);
-  }
+    // show next but invisible
+    next.classList.remove("hidden");
+    next.style.opacity = "0";
 
-  function startQuiz() {
-    if (!intro || !wrapper) return;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
 
-    intro.classList.add("opacity-0");
-    setTimeout(() => {
-      intro.classList.add("hidden");
+        const endHeight = wrapper.scrollHeight;
 
-      wrapper.classList.remove("hidden");
-      requestAnimationFrame(() => wrapper.classList.remove("opacity-0"));
+        wrapper.style.height = startHeight + "px";
 
-      steps.forEach((s, i) => {
-        if (i === 0) {
-          s.classList.remove("hidden", "opacity-0");
-        } else {
-          s.classList.add("hidden", "opacity-0");
-        }
+        requestAnimationFrame(() => {
+          wrapper.style.height = endHeight + "px";
+          next.style.opacity = "1";
+        });
+
+        setTimeout(() => {
+          wrapper.style.height = "auto";
+        }, 300);
+
+      });
+    });
+
+    currentIndex = nextIndex;
+    updateNav();
+
+  }, 250);
+}
+function startQuiz() {
+  if (!intro || !wrapper || !slot) return;
+
+  const startHeight = slot.offsetHeight;
+
+  intro.classList.add("opacity-0");
+
+  setTimeout(() => {
+    intro.classList.add("hidden");
+
+    wrapper.classList.remove("hidden");
+    wrapper.classList.add("opacity-0");
+
+    // allow DOM to render
+    requestAnimationFrame(() => {
+      const endHeight = wrapper.scrollHeight;
+
+      slot.style.height = startHeight + "px";
+
+      requestAnimationFrame(() => {
+        slot.style.height = endHeight + "px";
+        wrapper.classList.remove("opacity-0");
       });
 
-      currentIndex = 0;
-      setSlotHeightTo(steps[0]);
-      updateNav();
-    }, 250);
-  }
+      setTimeout(() => {
+        slot.style.height = "auto";
+      }, 300);
+    });
+
+    steps.forEach((s, i) => {
+      if (i === 0) {
+        s.classList.remove("hidden", "opacity-0");
+      } else {
+        s.classList.add("hidden", "opacity-0");
+      }
+    });
+
+    currentIndex = 0;
+    updateNav();
+  }, 250);
+}
 
   startBtn?.addEventListener("click", startQuiz);
 
   backBtn?.addEventListener("click", () => {
-    if (currentIndex > 0 && currentIndex < TOTAL_QUESTIONS) {
-      showStep(currentIndex - 1);
-    }
+if (currentIndex > 0) {
+  showStep(currentIndex - 1);
+}
   });
 });
