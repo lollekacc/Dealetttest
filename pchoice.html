@@ -186,18 +186,25 @@ continueBtn.addEventListener("click", () => {
     JSON.parse(localStorage.getItem("rewardChoice")) || {};
 
   const cartItem = {
-    offerId: rewardInfo.offerId || null,
+    offerId: rewardInfo.offerId || "unknown",
     rewardTotal: rewardInfo.reward || 0,
     rewards: rewardDistribution
   };
 
-  // save to cart
-  const cart = JSON.parse(localStorage.getItem("dealettCart")) || [];
+  let cart = [];
+
+  try {
+    cart = JSON.parse(localStorage.getItem("dealettCart")) || [];
+  } catch {
+    cart = [];
+  }
+
   cart.push(cartItem);
 
   localStorage.setItem("dealettCart", JSON.stringify(cart));
 
-  // redirect to cart
+  console.log("Cart saved:", cart);   // debug
+
   window.location.href = "varukorg.html";
 });
 

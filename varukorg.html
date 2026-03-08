@@ -80,7 +80,24 @@ const totalPriceEl = document.getElementById("totalPrice");
 
 let total = 0;
 
+if (!cart.length) {
 
+cartItems.innerHTML = `
+<div class="bg-white rounded-xl border p-10 text-center">
+
+<h2 class="text-xl font-semibold mb-4">
+Din varukorg är tom
+</h2>
+
+<a href="abonnemang.html"
+class="adeala-btn px-6 py-3 rounded-lg">
+Se erbjudanden
+</a>
+
+</div>
+`;
+
+}
 /******************************
 RENDER CART
 ******************************/
