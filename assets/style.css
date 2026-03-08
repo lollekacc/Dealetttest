@@ -45,8 +45,6 @@
   transform: translate(100%, -50%);
 }
 
-/* ===== Quiz runtime ===== */
-
 .quiz-option.active {
   box-shadow: 0 4px 12px rgba(0,0,0,.15);
 }
@@ -109,8 +107,6 @@
   z-index: 9999;
 }
 
-
-/* ===== Header buttons ===== */
 
 .chat-reset-header {
   background: none;
