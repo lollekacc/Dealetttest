@@ -179,16 +179,26 @@ function updateTotals() {
    CONTINUE
 ----------------------------- */
 continueBtn.addEventListener("click", () => {
-  localStorage.setItem("rewardDistribution", JSON.stringify(selections));
 
-  // CASE 1: Loaded inside iframe (mobil / familj)
-  if (window.parent && window.parent !== window) {
-    window.parent.postMessage("rewardDone", "*");
-    return;
-  }
+  const rewardDistribution = selections;
 
-  // CASE 2: Standalone page (bredband)
-  window.location.href = "signera.html";
+  const rewardInfo =
+    JSON.parse(localStorage.getItem("rewardChoice")) || {};
+
+  const cartItem = {
+    offerId: rewardInfo.offerId || null,
+    rewardTotal: rewardInfo.reward || 0,
+    rewards: rewardDistribution
+  };
+
+  // save to cart
+  const cart = JSON.parse(localStorage.getItem("dealettCart")) || [];
+  cart.push(cartItem);
+
+  localStorage.setItem("dealettCart", JSON.stringify(cart));
+
+  // redirect to cart
+  window.location.href = "varukorg.html";
 });
 
 updateTotals();

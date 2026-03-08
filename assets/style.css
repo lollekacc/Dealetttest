@@ -488,3 +488,72 @@
 .quiz-option.active:hover::after {
   left: 180%;
 }
+
+#quiz-card-stack {
+  position: relative;
+  min-height: 620px;
+  overflow: visible;
+}
+
+.quiz-step-card {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  transition:
+    transform 0.45s ease,
+    opacity 0.45s ease,
+    box-shadow 0.35s ease,
+    filter 0.35s ease;
+}
+
+.quiz-step-card .quiz-card {
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    opacity 0.35s ease;
+}
+
+/* current */
+.quiz-step-card.active-step {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  z-index: 200;
+}
+
+.quiz-step-card.active-step .quiz-card {
+  box-shadow: 0 24px 60px rgba(0,0,0,0.16);
+}
+
+/* answered cards still visible in pile */
+.quiz-step-card.stacked-card {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(calc(var(--stack-offset) * -1)) scale(0.98);
+}
+
+.quiz-step-card.stacked-card .quiz-card {
+  box-shadow: 0 10px 26px rgba(0,0,0,0.10);
+  cursor: pointer;
+}
+
+/* hover old card to inspect it */
+.quiz-step-card.stacked-card:hover {
+  transform: translateY(calc(var(--stack-offset) * -1 - 10px)) scale(0.995);
+}
+
+.quiz-step-card.stacked-card:hover .quiz-card {
+  box-shadow: 0 20px 45px rgba(0,0,0,0.16);
+}
+
+/* future cards also slightly visible below */
+.quiz-step-card.upcoming-card {
+  opacity: 0.22;
+  pointer-events: none;
+  transform: translateY(var(--stack-offset)) scale(0.985);
+}
+
+.quiz-step-card.upcoming-card .quiz-card {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}

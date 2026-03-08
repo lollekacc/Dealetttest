@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dealett – Varukorg</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="./assets/style.css">
+<link rel="stylesheet" href="./assets/design.css">
+
+</head>
+
+<body class="font-[Inter] bg-gray-50 min-h-screen text-gray-900">
+
+<div class="max-w-7xl mx-auto px-8 py-16">
+
+<h1 class="text-4xl font-bold mb-12 text-[#0C4A3C]">
+Varukorg
+</h1>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+<!-- LEFT -->
+<div class="lg:col-span-2">
+
+<div id="cartItems" class="space-y-8"></div>
+
+</div>
+
+
+<!-- RIGHT SUMMARY -->
+<div class="bg-white rounded-2xl shadow p-8 h-fit border">
+
+<h2 class="text-xl font-semibold mb-6">
+Sammanfattning
+</h2>
+
+<div id="summaryArea" class="space-y-4 text-sm"></div>
+
+<div class="border-t pt-6 mt-6">
+
+<p class="text-gray-600 text-sm mb-2">
+Totalt per månad
+</p>
+
+<p id="totalPrice"
+class="text-3xl font-bold text-[#0C4A3C]">
+0 kr
+</p>
+
+</div>
+
+<button id="checkoutBtn"
+class="mt-8 w-full adeala-btn py-4 text-lg rounded-xl">
+Fortsätt till signering
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/******************************
+LOAD CART
+******************************/
+
+const cart = JSON.parse(localStorage.getItem("dealettCart")) || [];
+
+const cartItems = document.getElementById("cartItems");
+const summaryArea = document.getElementById("summaryArea");
+const totalPriceEl = document.getElementById("totalPrice");
+
+let total = 0;
+
+
+/******************************
+RENDER CART
+******************************/
+
+cart.forEach(item => {
+
+const rewardRows = Object.entries(item.rewards || {})
+.filter(([k,v]) => v > 0)
+.map(([company,value]) => {
+
+return `
+<div class="flex justify-between text-sm">
+<span>${company}</span>
+<span>${value} kr</span>
+</div>
+`;
+
+}).join("");
+
+const card = document.createElement("div");
+
+card.className =
+"bg-white border rounded-2xl shadow p-8";
+
+card.innerHTML = `
+
+<div class="flex justify-between items-start mb-6">
+
+<div>
+
+<h3 class="text-xl font-semibold">
+Abonnemang
+</h3>
+
+<p class="text-gray-500 text-sm">
+ID: ${item.offerId || "-"}
+</p>
+
+</div>
+
+<button class="text-red-500 text-sm removeBtn">
+Ta bort
+</button>
+
+</div>
+
+<div class="grid grid-cols-2 gap-8">
+
+<div>
+
+<p class="text-gray-600 text-sm mb-2">
+Belöningar
+</p>
+
+${rewardRows || "<p class='text-gray-400'>Inga</p>"}
+
+</div>
+
+<div>
+
+<p class="text-gray-600 text-sm mb-2">
+Totalt belöningsvärde
+</p>
+
+<p class="text-lg font-semibold text-[#0C4A3C]">
+${item.rewardTotal || 0} kr
+</p>
+
+</div>
+
+</div>
+
+`;
+
+cartItems.appendChild(card);
+
+
+/******************************
+SUMMARY
+******************************/
+
+summaryArea.innerHTML += `
+<div class="flex justify-between">
+<span>Abonnemang</span>
+<span>—</span>
+</div>
+`;
+
+});
+
+
+/******************************
+CHECKOUT
+******************************/
+
+document.getElementById("checkoutBtn").onclick = () => {
+
+window.location.href = "signera.html";
+
+};
+
+</script>
+
+</body>
+</html>

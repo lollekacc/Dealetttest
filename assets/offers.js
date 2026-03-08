@@ -424,7 +424,7 @@ if (rewardBtn) {
 
     const rewardValue = Number(rewardBtn.dataset.reward);
     const offerId = rewardBtn.dataset.offerId || "";
-    openPchoicePopup(rewardValue, offerId);
+    openRewardSection(rewardValue, offerId);
   });
 }
       offersContainer.appendChild(card);
@@ -813,35 +813,21 @@ function checkGoToNumberStep() {
     if (price < 699) return 5000;
     return 1000;
   }
-function openPchoicePopup(rewardValue, offerId) {
+function openRewardSection(rewardValue, offerId) {
 
-  // 🔥 FORCE SELECT OFFER
-  const card = [...document.querySelectorAll(".offer-choice")]
-    .find(c =>
-      c.querySelector(".gift-btn")?.dataset.offerId === offerId
-    );
-
-  if (card) {
-    document.querySelectorAll(".offer-choice")
-      .forEach(c => c.classList.remove("active"));
-
-    card.classList.add("active");
-    window.offerChosen = true;
-    window.selectedOfferId = offerId;
-  }
+  const rewardSection = document.getElementById("rewardSection");
+  const frame = document.getElementById("rewardFrame");
 
   localStorage.setItem(
     "rewardChoice",
     JSON.stringify({ reward: rewardValue, offerId })
   );
 
-  const modal = document.getElementById("pchoiceModal");
-  const frame = document.getElementById("pchoiceFrame");
-
   frame.src = "pchoice.html";
-  modal.style.display = "block";
-  modal.offsetHeight;
-  modal.classList.add("show");
+
+  rewardSection.classList.remove("hidden");
+
+  smoothScrollTo(rewardSection);
 }
 
 
@@ -851,22 +837,14 @@ window.addEventListener("message", (e) => {
 
   window.beloningChosen = true;
 
-  const modal = document.getElementById("pchoiceModal");
-  const frame = document.getElementById("pchoiceFrame");
-
-  if (modal) {
-    modal.classList.remove("show");
-    modal.style.display = "none";
-  }
+  const frame = document.getElementById("rewardFrame");
 
   if (frame) frame.src = "";
 
-  // Delay until DOM ready
   setTimeout(() => {
     checkGoToNumberStep();
   }, 0);
 });
-
 
 
 
