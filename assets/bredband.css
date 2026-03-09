@@ -807,3 +807,47 @@ body {
     font-size: 1.7rem;
   }
 }
+/* FILTER BAR */
+
+.bb-filters{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+margin-bottom:22px;
+gap:20px;
+
+flex-wrap:wrap;
+
+}
+
+.bb-filter-left,
+.bb-filter-right{
+
+display:flex;
+gap:10px;
+
+}
+
+.bb-filters select{
+
+padding:10px 14px;
+border-radius:10px;
+
+border:1px solid #e5e7eb;
+
+background:white;
+
+font-size:14px;
+
+cursor:pointer;
+
+}
+
+.bb-filters select:focus{
+
+outline:none;
+border-color:#0C4A3C;
+
+}

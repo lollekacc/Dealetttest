@@ -64,7 +64,37 @@
       </div>
     </div>
   </section>
+<div id="filtersBar" class="bb-filters hidden">
 
+  <div class="bb-filter-left">
+
+    <select id="techFilter">
+      <option value="all">Alla tekniker</option>
+      <option value="fiber">Fiber</option>
+      <option value="5g">5G</option>
+    </select>
+
+    <select id="speedFilter">
+      <option value="0">Alla hastigheter</option>
+      <option value="100">Minst 100 Mbit/s</option>
+      <option value="250">Minst 250 Mbit/s</option>
+      <option value="500">Minst 500 Mbit/s</option>
+      <option value="1000">1 Gbit/s</option>
+    </select>
+
+  </div>
+
+  <div class="bb-filter-right">
+
+    <select id="sortSelect">
+      <option value="price">Lägst pris</option>
+      <option value="speed">Snabbast</option>
+      <option value="value">Bäst värde</option>
+    </select>
+
+  </div>
+
+</div>
   <!-- RESULTS -->
   <section class="bb-results-section">
     <div class="bb-results-shell">
@@ -92,7 +122,7 @@
       </div>
 
       <button id="continueBtn" class="bb-continue-btn" disabled>
-        Fortsätt
+        Lägg i varukorgen
       </button>
     </div>
   </div>
@@ -200,16 +230,38 @@
         return;
       }
 
-      const fiberPlans = bredbandPlans.filter(p => p.technology === "fiber");
-      const relevantPlans = fiberPlans.length ? fiberPlans : bredbandPlans.filter(p => p.technology === "5g");
+let offers = [...bredbandPlans];
 
-      const offers = relevantPlans
-        .slice()
-        .sort((a, b) =>
-          a.speedMbps !== b.speedMbps
-            ? a.speedMbps - b.speedMbps
-            : a.price - b.price
-        );
+/* FILTERS */
+
+const tech = document.getElementById("techFilter")?.value;
+const speed = parseInt(document.getElementById("speedFilter")?.value || 0);
+
+if (tech && tech !== "all") {
+  offers = offers.filter(p => p.technology === tech);
+}
+
+if (speed > 0) {
+  offers = offers.filter(p => p.speedMbps >= speed);
+}
+
+/* SORT */
+
+const sort = document.getElementById("sortSelect")?.value;
+
+if (sort === "price") {
+  offers.sort((a, b) => a.price - b.price);
+}
+
+if (sort === "speed") {
+  offers.sort((a, b) => b.speedMbps - a.speedMbps);
+}
+
+if (sort === "value") {
+  offers.sort((a, b) =>
+    (b.speedMbps / b.price) - (a.speedMbps / a.price)
+  );
+}
 
       if (!offers.length) {
         els.searchMsg.textContent = "Vi hittade inga bredband på den adressen.";
@@ -225,6 +277,7 @@
       const recommended = getRecommendedPlan(offers);
       els.resultsCount.textContent = `${offers.length} erbjudanden`;
       els.offersTop.classList.remove("hidden");
+      document.getElementById("filtersBar").classList.remove("hidden");
 
       els.offers.innerHTML = offers.map(plan => {
         const reward = calculateReward(plan.price);
@@ -384,7 +437,10 @@
         });
 
       els.searchBtn.addEventListener("click", renderOffers);
-
+        ["techFilter","speedFilter","sortSelect"].forEach(id=>{
+  document.getElementById(id)
+  ?.addEventListener("change", renderOffers)
+});
       els.addressInput.addEventListener("keydown", e => {
         if (e.key === "Enter") renderOffers();
       });
