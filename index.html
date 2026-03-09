@@ -420,7 +420,9 @@ const map = L.map("coverage-map", {
 let searchMarker;
 
 L.Control.geocoder({
-  defaultMarkGeocode: false
+  defaultMarkGeocode: false,
+  collapsed: false,
+  placeholder: "Sök adress eller stad..."
 })
 .on("markgeocode", function(e) {
   const c = e.geocode.center;
