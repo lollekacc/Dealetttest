@@ -1,297 +1,444 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dealett – Bredband</title>
 
-<title>Dealett – Bredband</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="./assets/bredband.css">
-
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/bredband.css" />
 </head>
 
-<body class="font-[Inter] bg-slate-50 text-gray-900">
-
-<div id="header-placeholder"></div>
-
-
-<!-- HERO -->
-
-<section class="hero">
-
-<img src="https://images.unsplash.com/photo-1555617117-08fda8eab7e6?q=80&w=2070&auto=format&fit=crop" class="hero-bg">
-
-<div class="hero-overlay"></div>
-
-<div class="hero-content">
-
-<h1>Hitta rätt bredband</h1>
-
-<p>Se vilka operatörer som kan leverera till din adress</p>
-
-<div class="hero-search">
-
-<input id="addressInput"
-placeholder="Ex: Storgatan 3, Stockholm">
-
-<button id="searchBtn">
-Sök bredband
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-
-
-<!-- RESULTS -->
-
-<section class="results-section">
-
-<div class="results-container">
-
-<div id="resultsHeader" class="results-header hidden">
-
-<h2>Tillgängliga bredband</h2>
-
-<p id="resultsCount"></p>
-
-</div>
-
-<div id="offers" class="offers-grid"></div>
-
-</div>
-
-</section>
-
-
-
-<!-- STICKY CONTINUE -->
-
-<div id="stickyContinue" class="sticky-continue hidden">
-
-<div class="continue-inner">
-
-<p id="selectedPlanText">
-Inget bredband valt
-</p>
-
-<button id="continueBtn">
-Fortsätt
-</button>
-
-</div>
-
-</div>
-
-
-
-<!-- CHANNEL MODAL -->
-
-<div id="channelsModal" class="modal hidden">
-
-<div class="modal-card">
-
-<button id="closeChannelsModal">✕</button>
-
-<h3 id="channelsTitle">Kanaler</h3>
-
-<div id="channelsGrid" class="channels-grid"></div>
-
-</div>
-
-</div>
-
-
-
-<div id="footer-placeholder"></div>
-
-
-
-<script>
-
-let bredbandPlans = []
-let selectedPlan = null
-
-
-
-const operatorLogos = {
-
-Telia:"images/telia.png",
-Tele2:"images/tele2.jpg",
-Tre:"images/tre.jpg",
-Telenor:"images/telenor.jpg"
-
-}
-
-
-
-function calculateReward(price){
-
-if(price<299) return 1000
-if(price<399) return 2000
-if(price<499) return 3000
-if(price<699) return 4000
-return 5000
-
-}
-
-
-
-fetch("./data/5Gbredband.json")
-.then(r=>r.json())
-.then(data=>{
-
-bredbandPlans=data
-
-})
-
-
-
-document.getElementById("searchBtn").onclick=()=>{
-
-const address=document.getElementById("addressInput").value.trim()
-
-if(!address) return
-
-renderOffers()
-
-}
-
-
-
-function renderOffers(){
-
-const container=document.getElementById("offers")
-
-const header=document.getElementById("resultsHeader")
-
-container.innerHTML=""
-
-const fiber=bredbandPlans.filter(p=>p.technology==="fiber")
-
-const offers=fiber.length?fiber:bredbandPlans
-
-
-
-offers
-.sort((a,b)=>a.speedMbps-b.speedMbps || a.price-b.price)
-.forEach(plan=>{
-
-const card=document.createElement("div")
-
-card.className="offer-card"
-
-card.innerHTML=`
-
-<div class="offer-top">
-
-<img src="${operatorLogos[plan.operator]}" class="operator-logo">
-
-<span class="speed">${plan.speed}</span>
-
-</div>
-
-<div class="price">
-
-${plan.price} kr/mån
-
-</div>
-
-<div class="features">
-
-${plan.features?plan.features.map(f=>`<div>${f}</div>`).join(""):""}
-
-</div>
-
-<div class="offer-actions">
-
-<button class="reward-btn">
-${calculateReward(plan.price)} kr
-</button>
-
-${plan.tv?`<button class="channels-btn" data-id="${plan.id}">
-Kanaler
-</button>`:""}
-
-</div>
-
-`
-
-card.onclick=()=>selectPlan(plan,card)
-
-container.appendChild(card)
-
-})
-
-
-
-header.classList.remove("hidden")
-
-document.getElementById("resultsCount").textContent=
-
-`${offers.length} bredband hittades`
-
-}
-
-
-
-function selectPlan(plan,card){
-
-document.querySelectorAll(".offer-card")
-.forEach(c=>c.classList.remove("active"))
-
-card.classList.add("active")
-
-selectedPlan=plan
-
-document.getElementById("stickyContinue")
-.classList.remove("hidden")
-
-document.getElementById("selectedPlanText")
-.textContent=`Valt: ${plan.operator} ${plan.speed}`
-
-}
-
-
-
-document.getElementById("continueBtn").onclick=()=>{
-
-if(!selectedPlan) return
-
-sessionStorage.setItem("selectedBredbandId",selectedPlan.id)
-
-window.location.href="signera.html"
-
-}
-
-
-
-</script>
-
-
-
-<script>
-
-document.addEventListener("DOMContentLoaded", async()=>{
-
-document.getElementById("header-placeholder").innerHTML=
-await fetch("partials/header.html").then(r=>r.text())
-
-document.getElementById("footer-placeholder").innerHTML=
-await fetch("partials/footer.html").then(r=>r.text())
-
-})
-
-</script>
-
+<body class="min-h-screen font-[Inter] bg-[#f6f8fb] text-slate-900">
+  <div id="header-placeholder"></div>
+
+  <!-- HERO -->
+  <section class="bb-hero">
+    <img
+      src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=2070&auto=format&fit=crop"
+      alt="Bredband"
+      class="bb-hero-bg"
+    />
+    <div class="bb-hero-overlay"></div>
+
+    <div class="bb-hero-inner">
+      <div class="bb-hero-copy">
+        <span class="bb-kicker">Bredband · Jämför smartare</span>
+        <h1>Hitta rätt bredband för din adress</h1>
+        <p>
+          Jämför hastighet, pris, bindningstid och eventuella TV-paket på ett ställe.
+        </p>
+
+        <div class="bb-trust-row">
+          <div class="bb-trust-pill"><i class="fa-solid fa-wifi"></i><span>Fiber & 5G</span></div>
+          <div class="bb-trust-pill"><i class="fa-solid fa-bolt"></i><span>Snabb jämförelse</span></div>
+          <div class="bb-trust-pill"><i class="fa-solid fa-gift"></i><span>Presentkort</span></div>
+        </div>
+      </div>
+
+      <div class="bb-search-card">
+        <div class="bb-search-header">
+          <h2>Sök på din adress</h2>
+          <p>Se vilka bredband som är tillgängliga där du bor.</p>
+        </div>
+
+        <div class="bb-search-row">
+          <div class="bb-input-wrap">
+            <i class="fa-solid fa-location-dot"></i>
+            <input
+              id="addressInput"
+              type="text"
+              placeholder="Ex. Storgatan 3, Stockholm"
+            />
+          </div>
+
+          <button id="searchBtn" class="bb-search-btn">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <span>Sök bredband</span>
+          </button>
+        </div>
+
+        <p id="searchMsg" class="bb-search-msg"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="bb-results-section">
+    <div class="bb-results-shell">
+      <div id="offersTop" class="bb-results-top hidden">
+        <div>
+          <p class="bb-results-label">Resultat</p>
+          <h2>Tillgängliga bredband</h2>
+        </div>
+
+        <div class="bb-results-summary">
+          <span id="resultsCount">0 träffar</span>
+        </div>
+      </div>
+
+      <div id="offers" class="bb-offers-grid"></div>
+    </div>
+  </section>
+
+  <!-- STICKY BAR -->
+  <div id="stickyBar" class="bb-sticky-bar hidden">
+    <div class="bb-sticky-inner">
+      <div class="bb-sticky-left">
+        <p class="bb-sticky-small">Valt bredband</p>
+        <p id="selectedPlanText" class="bb-sticky-title">Inget valt ännu</p>
+      </div>
+
+      <button id="continueBtn" class="bb-continue-btn" disabled>
+        Fortsätt
+      </button>
+    </div>
+  </div>
+
+  <!-- CHANNELS MODAL -->
+  <div id="channelsModal" class="bb-modal hidden">
+    <div class="bb-modal-card">
+      <button id="closeChannelsModal" class="bb-modal-close">✕</button>
+
+      <div class="bb-modal-head">
+        <p class="bb-modal-kicker">TV-paket</p>
+        <h3 id="channelsTitle">Ingående kanaler</h3>
+      </div>
+
+      <div id="channelsGrid" class="bb-channels-grid"></div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    const operatorLogos = {
+      Telia: "images/telia.png",
+      Tele2: "images/tele2.jpg",
+      Tre: "images/tre.jpg",
+      Telenor: "images/telenor.jpg"
+    };
+
+    const CHANNEL_LOGOS = {
+      svt1: "https://www.telia.se/images/j6b4qnxw7ufu/4Fq8uxCGToyw7NNX75uqEf/a631bbec5393e926fb32f16e1bb9546a/svt1.png?fm=webp&w=128&q=75&h=128",
+      svt2: "https://www.telia.se/images/j6b4qnxw7ufu/3NoMCuXDQbHS4lwP0dIc8m/8ad0153f89511d90da94a4e957745185/svt2.png?fm=webp&w=128&q=75&h=128",
+      tv3: "https://www.telia.se/images/j6b4qnxw7ufu/6gTu9t8ikn5qnQc3lChJWi/abd5223ed4a7ac4f6d38d0088bda595e/tv3.png?fm=webp&w=128&q=75&h=128",
+      tv4: "https://www.telia.se/images/j6b4qnxw7ufu/1NzwvcDwlVIzxj1J2V8gHA/e7e875668baae14a69df698aa9000a65/tv4.png?fm=webp&w=128&q=75&h=128",
+      kanal5: "https://www.telia.se/images/j6b4qnxw7ufu/1O5VLxSp45CSbAhRy537HI/808d1b0c88263b6eb2c58c8d45129285/kanal_5_ny.png?fm=webp&w=128&q=75&h=128",
+      tv6: "https://www.telia.se/images/j6b4qnxw7ufu/7gBxKTcBDSviuwIgrHxa5U/5e26f9609247f707103c36744da57c9a/tv6.png?fm=webp&w=128&q=75&h=128",
+      sjuan: "https://www.telia.se/images/j6b4qnxw7ufu/4GCCAhOFC3JRO5eXEIkK3b/6218c2b69285279fd74fb22e3ec6c5a3/sjuan.png?fm=webp&w=128&q=75&h=128",
+      tv8: "https://www.telia.se/images/j6b4qnxw7ufu/71jSsQmSKbLfxwPV41VuGX/835d0c05d217a61cea02981120f1cfee/tv8.png?fm=webp&w=128&q=75&h=128",
+      kanal9: "https://www.telia.se/images/j6b4qnxw7ufu/6Q8yLzFypNwLc6STtFrbcn/ab6c89dd26617956d86eafee04323352/nian_ny.png?fm=webp&w=128&q=75&h=128",
+      tv10: "https://www.telia.se/images/j6b4qnxw7ufu/6cu9gwORJ9W1iGfUXr5Tdb/6fbc196f67e2d98c74570656eee19609/tv10.png?fm=webp&w=64&q=75&h=64",
+      kanal11: "https://www.telia.se/images/j6b4qnxw7ufu/5SpEFXPJnsLFw2duwsyq4o/cdf5a6969c2c87bf25adff0bd1d3c5e1/kanal_11_ny.png?fm=webp&w=64&q=75&h=64",
+      tv12: "https://www.telia.se/images/j6b4qnxw7ufu/6Ytm4ILEf86lEGe2og6FqR/8d49e28f16292626640b6201c0425e0d/tv12.png?fm=webp&w=64&q=75&h=64",
+      svt24: "https://www.telia.se/images/j6b4qnxw7ufu/1sQ6i5Sklx3aiN1EMHynQs/60844f8c6b618730581c0af8c38ef339/svt24.avif?fm=webp&w=64&q=75&h=64",
+      kunskapskanalen: "https://www.telia.se/images/j6b4qnxw7ufu/2rMMo6wYa35XYyrutTIRhB/6657c18c4d9c52248609b74a54d3998e/kunskapskanalen.png?fm=webp&w=64&q=75&h=64",
+      axess: "https://www.telia.se/images/j6b4qnxw7ufu/6kon2CgeVbujyE7XJI7had/cb56971b47d66830bfc63774bde8cb5e/axess_tv.png?fm=webp&w=64&q=75&h=64",
+      tv4film: "https://www.telia.se/images/j6b4qnxw7ufu/65AwVgjMRz7iVV9mTOhyzA/09ab7de53d06b56eb6bec19721ba7557/tv4_film.png?fm=webp&w=64&q=75&h=64",
+      tv4sport: "https://www.telia.se/images/j6b4qnxw7ufu/3Vc6mfQOifCvEiMmxpzW0t/b3d27e584278e0ffa1b610db9cb69288/tv4_sportkanalen.png?fm=webp&w=64&q=75&h=64",
+      godare: "https://www.telia.se/images/j6b4qnxw7ufu/56me8HNogxpUr91fbcbyj0/2ae943b121a2d4e5b647b48e0859ab9e/godare.png?fm=webp&w=64&q=75&h=64",
+      tv4guld: "https://www.telia.se/images/j6b4qnxw7ufu/3P3KsOfgKkflXvXqoaDMyt/f4214914f894cdab4b5bab683f5d44ea/tv4_guld.png?fm=webp&w=64&q=75&h=64"
+    };
+
+    let bredbandPlans = [];
+    let selectedPlan = null;
+
+    const els = {
+      addressInput: document.getElementById("addressInput"),
+      searchBtn: document.getElementById("searchBtn"),
+      searchMsg: document.getElementById("searchMsg"),
+      offers: document.getElementById("offers"),
+      offersTop: document.getElementById("offersTop"),
+      resultsCount: document.getElementById("resultsCount"),
+      stickyBar: document.getElementById("stickyBar"),
+      continueBtn: document.getElementById("continueBtn"),
+      selectedPlanText: document.getElementById("selectedPlanText"),
+      channelsModal: document.getElementById("channelsModal"),
+      channelsTitle: document.getElementById("channelsTitle"),
+      channelsGrid: document.getElementById("channelsGrid"),
+      closeChannelsModal: document.getElementById("closeChannelsModal")
+    };
+
+    function calculateReward(price) {
+      if (price < 299) return 1000;
+      if (price < 399) return 2000;
+      if (price < 499) return 3000;
+      if (price < 699) return 4000;
+      return 5000;
+    }
+
+    function formatBinding(plan) {
+      return plan.bindingMonths
+        ? `${plan.bindingMonths} mån bindningstid`
+        : "Ingen bindningstid";
+    }
+
+    function getRecommendedPlan(plans) {
+      if (!plans.length) return null;
+      return [...plans].sort((a, b) => {
+        const aScore = (a.speedMbps / Math.max(a.price, 1));
+        const bScore = (b.speedMbps / Math.max(b.price, 1));
+        return bScore - aScore;
+      })[0];
+    }
+
+    function renderOffers() {
+      const address = els.addressInput.value.trim();
+
+      if (!address) {
+        els.searchMsg.textContent = "Ange en giltig adress för att söka.";
+        els.searchMsg.className = "bb-search-msg error";
+        return;
+      }
+
+      if (!bredbandPlans.length) {
+        els.searchMsg.textContent = "Kunde inte ladda bredbandsdata.";
+        els.searchMsg.className = "bb-search-msg error";
+        return;
+      }
+
+      const fiberPlans = bredbandPlans.filter(p => p.technology === "fiber");
+      const relevantPlans = fiberPlans.length ? fiberPlans : bredbandPlans.filter(p => p.technology === "5g");
+
+      const offers = relevantPlans
+        .slice()
+        .sort((a, b) =>
+          a.speedMbps !== b.speedMbps
+            ? a.speedMbps - b.speedMbps
+            : a.price - b.price
+        );
+
+      if (!offers.length) {
+        els.searchMsg.textContent = "Vi hittade inga bredband på den adressen.";
+        els.searchMsg.className = "bb-search-msg error";
+        els.offers.innerHTML = "";
+        els.offersTop.classList.add("hidden");
+        return;
+      }
+
+      els.searchMsg.textContent = "Sökningen är klar.";
+      els.searchMsg.className = "bb-search-msg success";
+
+      const recommended = getRecommendedPlan(offers);
+      els.resultsCount.textContent = `${offers.length} erbjudanden`;
+      els.offersTop.classList.remove("hidden");
+
+      els.offers.innerHTML = offers.map(plan => {
+        const reward = calculateReward(plan.price);
+        const isRecommended = recommended && recommended.id === plan.id;
+
+        return `
+          <article class="bb-offer-card ${isRecommended ? "recommended" : ""}" data-id="${plan.id}">
+            ${isRecommended ? `<div class="bb-badge-best"><i class="fa-solid fa-star"></i> Bäst värde</div>` : ""}
+
+            <div class="bb-offer-select-indicator">
+              <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div class="bb-offer-top">
+              <div class="bb-offer-brand">
+                <img src="${operatorLogos[plan.operator] || ""}" alt="${plan.operator}" class="bb-operator-logo" />
+                <div>
+                  <p class="bb-operator-name">${plan.operator}</p>
+                  <p class="bb-operator-speed">${plan.speed}</p>
+                </div>
+              </div>
+
+              <button
+                class="bb-reward-btn gift-btn"
+                data-reward="${reward}"
+                type="button"
+              >
+                <span>Presentkort</span>
+                <strong>${reward} kr</strong>
+              </button>
+            </div>
+
+            <div class="bb-offer-price-row">
+              <div>
+                <p class="bb-price">${plan.price} kr/mån</p>
+                <p class="bb-binding">${formatBinding(plan)}</p>
+              </div>
+
+              <div class="bb-speed-chip">
+                ${plan.speedMbps} Mbit/s
+              </div>
+            </div>
+
+            <ul class="bb-feature-list">
+              ${(plan.features || ["Snabb installation", "Stabil uppkoppling", "Support ingår"])
+                .slice(0, 4)
+                .map(f => `<li><i class="fa-solid fa-check"></i><span>${f}</span></li>`)
+                .join("")}
+            </ul>
+
+            <div class="bb-offer-footer">
+              ${
+                plan.tv
+                  ? `
+                    <button class="bb-tv-btn channels-btn" data-plan-id="${plan.id}" type="button">
+                      <i class="fa-solid fa-tv"></i>
+                      <span>Se kanaler</span>
+                    </button>
+                  `
+                  : `<div class="bb-footer-note">Bredband utan TV-paket</div>`
+              }
+
+              <button class="bb-choose-btn" type="button">
+                Välj bredband
+              </button>
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      restoreSelection();
+      setTimeout(() => {
+        document.getElementById("offersTop")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 120);
+    }
+
+    function selectPlanById(planId) {
+      const card = document.querySelector(`.bb-offer-card[data-id="${planId}"]`);
+      const plan = bredbandPlans.find(p => String(p.id) === String(planId));
+      if (!card || !plan) return;
+
+      document.querySelectorAll(".bb-offer-card").forEach(c => c.classList.remove("active"));
+      card.classList.add("active");
+
+      selectedPlan = plan;
+      sessionStorage.setItem("selectedBredband", "1");
+      sessionStorage.setItem("selectedBredbandId", plan.id);
+
+      els.selectedPlanText.textContent = `${plan.operator} · ${plan.speed} · ${plan.price} kr/mån`;
+      els.stickyBar.classList.remove("hidden");
+      els.continueBtn.disabled = false;
+    }
+
+    function restoreSelection() {
+      const savedId = sessionStorage.getItem("selectedBredbandId");
+      if (!savedId) return;
+      selectPlanById(savedId);
+    }
+
+    function openChannelsModal(planId) {
+      const plan = bredbandPlans.find(p => String(p.id) === String(planId));
+      if (!plan || !plan.tv || !plan.tv.channels) return;
+
+      els.channelsTitle.textContent = `${plan.title || plan.operator} – Ingående kanaler`;
+
+      els.channelsGrid.innerHTML = plan.tv.channels.map(ch => `
+        <div class="bb-channel-card">
+          <img src="${CHANNEL_LOGOS[ch] || ""}" alt="${ch}" class="bb-channel-logo" />
+          <span>${ch}</span>
+        </div>
+      `).join("");
+
+      els.channelsModal.classList.remove("hidden");
+      document.body.classList.add("overflow-hidden");
+    }
+
+    function closeChannelsModal() {
+      els.channelsModal.classList.add("hidden");
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    async function loadPartials() {
+      document.getElementById("header-placeholder").innerHTML =
+        await fetch("partials/header.html").then(r => r.text());
+
+      document.getElementById("footer-placeholder").innerHTML =
+        await fetch("partials/footer.html").then(r => r.text());
+
+      const chatHtml = await fetch("partials/chat.html").then(r => r.text());
+      document.body.insertAdjacentHTML("beforeend", chatHtml);
+
+      const chatScript = document.createElement("script");
+      chatScript.src = "assets/chat.js";
+      document.body.appendChild(chatScript);
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      await loadPartials();
+
+      fetch("./data/5Gbredband.json")
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.json();
+        })
+        .then(data => {
+          bredbandPlans = data;
+
+          if (location.hash === "#offers") {
+            els.addressInput.value = "Stockholm";
+            renderOffers();
+          }
+        })
+        .catch(err => {
+          console.error("Kunde inte ladda 5Gbredband.json", err);
+          els.searchMsg.textContent = "Kunde inte ladda bredbandsdata.";
+          els.searchMsg.className = "bb-search-msg error";
+        });
+
+      els.searchBtn.addEventListener("click", renderOffers);
+
+      els.addressInput.addEventListener("keydown", e => {
+        if (e.key === "Enter") renderOffers();
+      });
+
+      document.addEventListener("click", e => {
+        const giftBtn = e.target.closest(".gift-btn");
+        if (giftBtn) {
+          e.stopPropagation();
+          localStorage.setItem("rewardChoice", JSON.stringify({
+            reward: Number(giftBtn.dataset.reward)
+          }));
+          window.location.href = "pchoice.html";
+          return;
+        }
+
+        const channelsBtn = e.target.closest(".channels-btn");
+        if (channelsBtn) {
+          e.stopPropagation();
+          openChannelsModal(channelsBtn.dataset.planId);
+          return;
+        }
+
+        const chooseBtn = e.target.closest(".bb-choose-btn");
+        if (chooseBtn) {
+          const card = chooseBtn.closest(".bb-offer-card");
+          if (card) selectPlanById(card.dataset.id);
+          return;
+        }
+
+        const card = e.target.closest(".bb-offer-card");
+        if (card) {
+          selectPlanById(card.dataset.id);
+        }
+      });
+
+      els.closeChannelsModal.addEventListener("click", closeChannelsModal);
+
+      els.channelsModal.addEventListener("click", e => {
+        if (e.target === els.channelsModal) closeChannelsModal();
+      });
+
+      els.continueBtn.addEventListener("click", () => {
+        if (!selectedPlan) return;
+
+        const fromAbonnemang = sessionStorage.getItem("fromAbonnemang");
+        if (fromAbonnemang === "1") {
+          sessionStorage.removeItem("fromAbonnemang");
+          window.location.href = "abonnemang.html";
+          return;
+        }
+
+        window.location.href = "signera.html";
+      });
+    });
+  </script>
 </body>
 </html>
