@@ -596,8 +596,9 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("step5"),
   ].filter(Boolean);
 
-  let currentStep = 0;
-  const TOTAL_QUESTIONS = 5;
+let currentStep = 0;
+let firstRender = true;
+const TOTAL_QUESTIONS = 5;
 
   if (stepTotalEl) stepTotalEl.textContent = TOTAL_QUESTIONS;
 
@@ -615,30 +616,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function renderStack() {
-    steps.forEach((step, index) => {
-      step.className = "quiz-step-card";
+function renderStack() {
 
-      if (index < currentStep) {
-        step.classList.add("stacked-card");
-        step.style.setProperty("--stack-offset", `${(currentStep - index) * 28}px`);
-        step.style.zIndex = 100 - (currentStep - index);
-        step.dataset.stepIndex = index;
-        step.style.pointerEvents = "auto";
-      } else if (index === currentStep) {
-        step.classList.add("active-step");
-        step.style.zIndex = 200;
-        step.style.pointerEvents = "auto";
-      } else {
-        step.classList.add("upcoming-card");
-        step.style.setProperty("--stack-offset", `${(index - currentStep) * 10}px`);
-        step.style.zIndex = 50 - index;
-        step.style.pointerEvents = "none";
-      }
+  const STACK_GAP = 48;
+
+  steps.forEach((step, index) => {
+
+    if (firstRender) {
+      step.style.transition = "none";
+    }
+
+    step.className = "quiz-step-card";
+
+    if (index < currentStep) {
+
+      step.classList.add("stacked-card");
+
+      const offset = (index <= currentStep ? index : currentStep) * STACK_GAP;
+step.style.setProperty("--card-top", `${offset}px`);
+
+      step.style.zIndex = 100 + index;
+      step.dataset.stepIndex = index;
+      step.style.pointerEvents = "auto";
+
+    } else if (index === currentStep) {
+
+      step.classList.add("active-step");
+
+const offset = (index <= currentStep ? index : currentStep) * STACK_GAP;
+step.style.setProperty("--card-top", `${offset}px`);
+
+      step.style.zIndex = 200;
+      step.style.pointerEvents = "auto";
+
+    } else {
+
+      step.classList.add("upcoming-card");
+
+const offset = (index <= currentStep ? index : currentStep) * STACK_GAP;
+step.style.setProperty("--card-top", `${offset}px`);
+
+      step.style.zIndex = 50 - index;
+      step.style.pointerEvents = "none";
+    }
+
+  });
+
+  updateProgress();
+
+  if (firstRender) {
+    requestAnimationFrame(() => {
+      steps.forEach(step => step.style.transition = "");
     });
-
-    updateProgress();
+    firstRender = false;
   }
+
+}
 
   function goToStep(nextIndex) {
     if (nextIndex < 0 || nextIndex >= steps.length) return;
