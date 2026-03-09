@@ -1,0 +1,179 @@
+/* PAGE BASE */
+
+body {
+  background: #f8fafc;
+}
+
+/* HERO */
+
+section.relative.w-full.h-\[380px\] {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+section.relative.w-full.h-\[380px\] h1 {
+  letter-spacing: -0.02em;
+}
+
+/* SEARCH CARD */
+
+.max-w-5xl {
+  border-radius: 22px;
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.08),
+    0 2px 8px rgba(0,0,0,0.04);
+}
+
+#addressInput {
+  font-size: 16px;
+  background: #fafafa;
+  transition: all .25s ease;
+}
+
+#addressInput:focus {
+  background: white;
+  border-color: #0C4A3C;
+  box-shadow: 0 0 0 3px rgba(12,74,60,0.15);
+}
+
+/* OFFERS GRID */
+
+#offers {
+  margin-top: 40px;
+}
+
+/* OFFER CARD */
+
+.offer-choice {
+  border: 1px solid #e6e6e6;
+  border-radius: 18px;
+  transition: all .25s ease;
+  position: relative;
+}
+
+.offer-choice:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.08),
+    0 2px 8px rgba(0,0,0,0.05);
+}
+
+.offer-choice.active {
+  border: 2px solid #0C4A3C;
+  box-shadow:
+    0 12px 40px rgba(12,74,60,0.18);
+}
+
+/* OPERATOR AREA */
+
+.offer-choice img {
+  filter: grayscale(.2);
+}
+
+/* PRICE */
+
+.offer-choice .text-xl {
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+
+/* FEATURE LIST */
+
+.offer-choice ul li {
+  line-height: 1.4;
+  font-size: 14px;
+}
+
+/* REWARD CIRCLE */
+
+.reward-circle {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg,#0C4A3C,#004C9E);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 8px 18px rgba(0,0,0,0.25);
+  transition: all .25s ease;
+}
+
+.reward-circle:hover {
+  transform: scale(1.05);
+}
+
+.channels-btn {
+  background: linear-gradient(135deg,#1e293b,#334155);
+}
+
+.reward-inner {
+  text-align: center;
+  line-height: 1.1;
+}
+
+.reward-text {
+  font-size: 10px;
+  opacity: .85;
+  display: block;
+}
+
+.reward-amount {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* CONTINUE BUTTON */
+
+#continueBtn {
+  margin-bottom: 80px;
+  font-size: 18px;
+  padding: 16px;
+  border-radius: 16px;
+}
+
+#continueBtn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* MODAL */
+
+#channelsModal {
+  backdrop-filter: blur(6px);
+}
+
+#channelsModal .bg-white {
+  border-radius: 22px;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.35);
+}
+
+#channelsGrid div {
+  transition: all .2s ease;
+}
+
+#channelsGrid div:hover {
+  background: #f3f4f6;
+  transform: scale(1.05);
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+  .reward-circle {
+    width: 76px;
+    height: 76px;
+  }
+
+  .reward-text {
+    font-size: 9px;
+  }
+
+  .reward-amount {
+    font-size: 12px;
+  }
+
+}

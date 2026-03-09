@@ -15,8 +15,8 @@
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet"
   />
-  <link rel="stylesheet" href="./assets/style.css">
-  <link rel="stylesheet" href="./assets/design.css">
+  <link rel="stylesheet" href="./assets/bredband.css">
+
 </head>
 
 <body class="min-h-screen font-[Inter] bg-white text-gray-900">
@@ -136,17 +136,21 @@ function calculateReward(price) {
 }
       let bredbandPlans = [];
 
-      fetch("./data/5Gbredband.json")
-        .then(res => {
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          return res.json();
-        })
-        .then(data => {
-          bredbandPlans = data;
-        })
-        .catch(err => {
-          console.error("Kunde inte ladda 5Gbredband.json", err);
-        });
+fetch("./data/5Gbredband.json")
+  .then(res => {
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    return res.json();
+  })
+  .then(data => {
+    bredbandPlans = data;
+
+    // auto show offers
+    document.getElementById("addressInput").value = "Stockholm";
+    document.getElementById("searchBtn").click();
+  })
+  .catch(err => {
+    console.error("Kunde inte ladda 5Gbredband.json", err);
+  });
 
       document.getElementById("searchBtn").addEventListener("click", () => {
         const address = document.getElementById("addressInput").value.trim();
