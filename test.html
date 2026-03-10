@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Dealett – Test</title>
+
+<!-- Core framework -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Icons -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+crossorigin="anonymous"
+referrerpolicy="no-referrer" />
+
+<!-- Global styles -->
+<link rel="stylesheet" href="./assets/style.css">
+<link rel="stylesheet" href="./assets/design.css">
+</head>
+
+<body class="min-h-screen font-[Inter] bg-[#f8fafc] text-gray-900">
+<div id="header-placeholder"></div>
+
+
+
+
+
+<main id="page-content" class="max-w-7xl mx-auto p-10">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</main>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const headerRes = await fetch("partials/header.html");
+  if (headerRes.ok) {
+    document.getElementById("header-placeholder").innerHTML =
+      await headerRes.text();
+  }
+  const footerRes = await fetch("partials/footer.html");
+  if (footerRes.ok) {
+    document.body.insertAdjacentHTML("beforeend", await footerRes.text());
+  }
+  const chatRes = await fetch("partials/chat.html");
+  if (chatRes.ok) {
+    document.body.insertAdjacentHTML("beforeend", await chatRes.text());
+  }
+  const script = document.createElement("script");
+  script.src = "./assets/chat.js";
+  script.defer = true;
+  document.body.appendChild(script);
+});
+</script>
+</body>
+</html>
