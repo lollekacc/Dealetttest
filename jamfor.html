@@ -53,21 +53,6 @@
           <a href="#coverageApp" class="coverage-btn coverage-btn--primary">Öppna kartan</a>
           <a href="abonnemang.html" class="coverage-btn coverage-btn--ghost">Jämför abonnemang</a>
         </div>
-
-        <div class="coverage-hero__stats">
-          <div class="coverage-stat">
-            <strong>5</strong>
-            <span>Operatörer</span>
-          </div>
-          <div class="coverage-stat">
-            <strong>Live</strong>
-            <span>Kartlager</span>
-          </div>
-          <div class="coverage-stat">
-            <strong>Leaflet</strong>
-            <span>Interaktiv vy</span>
-          </div>
-        </div>
       </div>
 
       <div class="coverage-hero__panel">
@@ -83,6 +68,7 @@
             </p>
 
             <div class="hero-panel-card__chips">
+              <span>3G</span>
               <span>4G</span>
               <span>5G</span>
               <span>Datatäckning</span>
@@ -125,7 +111,6 @@
                   <p class="coverage-section-label">Operatörer</p>
                   <h3>Välj nät</h3>
                 </div>
-                <span class="coverage-count">5 val</span>
               </div>
 
               <div class="operator-list">
@@ -135,7 +120,6 @@
                   </div>
                   <div class="operator-card__text">
                     <strong>Telia</strong>
-                    <span>Kartlager</span>
                   </div>
                 </button>
 
@@ -145,7 +129,6 @@
                   </div>
                   <div class="operator-card__text">
                     <strong>Tele2</strong>
-                    <span>Kartlager</span>
                   </div>
                 </button>
 
@@ -155,7 +138,6 @@
                   </div>
                   <div class="operator-card__text">
                     <strong>Telenor</strong>
-                    <span>Kartlager</span>
                   </div>
                 </button>
 
@@ -165,7 +147,6 @@
                   </div>
                   <div class="operator-card__text">
                     <strong>Tre</strong>
-                    <span>Kartlager</span>
                   </div>
                 </button>
 
@@ -175,33 +156,8 @@
                   </div>
                   <div class="operator-card__text">
                     <strong>Halebop</strong>
-                    <span>Kartlager</span>
                   </div>
                 </button>
-              </div>
-            </section>
-
-            <section class="coverage-card coverage-card--sidebar">
-              <div class="coverage-card__head">
-                <div>
-                  <p class="coverage-section-label">Status</p>
-                  <h3>Nuvarande val</h3>
-                </div>
-              </div>
-
-              <div class="coverage-status">
-                <div class="coverage-status__row">
-                  <span>Operatör</span>
-                  <strong id="activeOperatorLabel">Ingen vald</strong>
-                </div>
-                <div class="coverage-status__row">
-                  <span>Zoom</span>
-                  <strong id="zoomLabel">5</strong>
-                </div>
-                <div class="coverage-status__row">
-                  <span>Koordinater</span>
-                  <strong id="coordsLabel">62.0000, 15.0000</strong>
-                </div>
               </div>
             </section>
 
@@ -226,26 +182,22 @@
           <!-- MAP AREA -->
           <section class="coverage-map-area">
             <div class="coverage-map-card">
-              <div class="coverage-map-toolbar">
-                <div class="coverage-map-toolbar__left">
-
-  <div class="map-search">
+  <div class="map-search-overlay">
     <input
       id="mapSearchInput"
       type="text"
       placeholder="Sök adress eller stad..."
       autocomplete="off"
     >
-    <button id="mapSearchBtn" type="button">Sök</button>
-                  <span class="coverage-map-toolbar__dot"></span>
-                  <span id="mapToolbarLabel">Ingen operatör vald</span>
-                </div>
+    <button id="mapSearchBtn" type="button">🔍</button>
+  </div>
 
-                <div class="coverage-map-toolbar__right">
-                  <button id="zoomInBtn" class="map-mini-btn" type="button" aria-label="Zooma in">+</button>
-                  <button id="zoomOutBtn" class="map-mini-btn" type="button" aria-label="Zooma ut">−</button>
-                </div>
-              </div>
+  <!-- map -->
+  
+
+</div>
+              <div class="coverage-map-toolbar">
+
 
               <div id="map" class="coverage-map"></div>
             </div>
