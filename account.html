@@ -1,168 +1,429 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dealett – Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
-  <link rel="stylesheet" href="./assets/design.css">
+<title>Dealett – Mitt konto</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet" href="./assets/style.css">
+<link rel="stylesheet" href="./assets/design.css">
+<link rel="stylesheet" href="./assets/account.css">
+
 </head>
 
-<body class="min-h-screen bg-[#F8FAFC] font-[Inter] text-gray-900">
+<body class="account-body">
 
 <div id="header-placeholder"></div>
 
-<section class="px-6 py-14">
-  <div class="max-w-6xl mx-auto">
+<main class="account-page">
 
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-10">
-      <div>
-        <h1 class="text-3xl md:text-4xl font-extrabold text-[#0C4A3C]">
-          Välkommen, <span id="userName">–</span>
-        </h1>
-        <p class="text-gray-500 mt-2 text-sm">
-          Här hanterar du dina abonnemang och belöningar.
-        </p>
-      </div>
+<section class="account-hero">
 
-      <button id="logoutBtn"
-        class="mt-6 md:mt-0 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl">
-        Logga ut
-      </button>
-    </div>
+<div class="account-hero__bg"></div>
 
-    <div class="grid md:grid-cols-3 gap-6 mb-10">
-      <div class="bg-white rounded-2xl shadow p-6">
-        <p class="text-sm text-gray-500">Aktivt abonnemang</p>
-        <h2 id="activePlan" class="text-xl font-bold mt-2">Inget aktivt</h2>
-      </div>
+<div class="account-shell">
 
-      <div class="bg-white rounded-2xl shadow p-6">
-        <p class="text-sm text-gray-500">Månadskostnad</p>
-        <h2 id="monthlyCost" class="text-xl font-bold mt-2">0 kr</h2>
-      </div>
+<div class="account-hero__content">
 
-      <div class="bg-white rounded-2xl shadow p-6">
-        <p class="text-sm text-gray-500">Belöning</p>
-        <h2 id="rewardStatus" class="text-xl font-bold mt-2">Ingen vald</h2>
-      </div>
-    </div>
+<div>
+<p class="account-eyebrow">Dashboard</p>
 
-    <div class="grid md:grid-cols-3 gap-8">
+<h1 class="account-title">
+Välkommen tillbaka,
+<span id="userName">Kund</span>
+</h1>
 
-      <div class="md:col-span-2 bg-white rounded-2xl shadow p-8">
-        <h2 class="text-xl font-bold text-[#0C4A3C] mb-6">
-          Mitt abonnemang
-        </h2>
+<p class="account-subtitle">
+Hantera abonnemang, belöningar och kontoinställningar på ett ställe.
+</p>
+</div>
 
-        <div id="subscriptionDetails" class="text-sm text-gray-700 space-y-2">
-          Inget abonnemang kopplat till kontot.
-        </div>
+<div class="account-hero__actions">
+<a href="offers.html" class="btn btn--primary">Utforska nya abonnemang</a>
+<button id="logoutBtn" class="btn btn--ghost">Logga ut</button>
+</div>
 
-        <div class="mt-6 flex gap-4">
-          <a href="offers.html"
-             class="bg-[#0C4A3C] text-white px-6 py-3 rounded-xl">
-            Byt abonnemang
-          </a>
+</div>
 
-          <button id="cancelPlan"
-            class="border border-red-500 text-red-600 px-6 py-3 rounded-xl">
-            Avsluta
-          </button>
-        </div>
-      </div>
+<div class="account-stats">
 
-      <div class="bg-white rounded-2xl shadow p-8">
-        <h2 class="text-xl font-bold text-[#0C4A3C] mb-6">
-          Snabbval
-        </h2>
+<article class="stat-card stat-card--accent">
+<span class="stat-card__label">Aktivt abonnemang</span>
+<strong id="activePlan" class="stat-card__value">Inget aktivt</strong>
+<span id="activeOperator" class="stat-card__meta">Ingen operatör vald</span>
+</article>
 
-        <div class="space-y-4 text-sm">
-          <a href="support.html" class="block p-3 border rounded-xl hover:bg-gray-50">
-            Kontakta support
-          </a>
+<article class="stat-card">
+<span class="stat-card__label">Månadskostnad</span>
+<strong id="monthlyCost" class="stat-card__value">0 kr</strong>
+<span class="stat-card__meta">Nuvarande kostnadsnivå</span>
+</article>
 
-          <a href="profile.html" class="block p-3 border rounded-xl hover:bg-gray-50">
-            Uppdatera uppgifter
-          </a>
+<article class="stat-card">
+<span class="stat-card__label">Belöning</span>
+<strong id="rewardStatus" class="stat-card__value">Ingen vald</strong>
+<span id="rewardMeta" class="stat-card__meta">Ingen aktiv belöning registrerad</span>
+</article>
 
-          <button id="deleteAccount"
-            class="block w-full p-3 border border-red-500 text-red-600 rounded-xl">
-            Radera konto
-          </button>
-        </div>
-      </div>
+<article class="stat-card">
+<span class="stat-card__label">Kontostatus</span>
+<strong class="stat-card__value">Aktivt</strong>
+<span class="stat-card__meta">Ditt konto är redo att användas</span>
+</article>
 
-    </div>
-
-  </div>
+</div>
+</div>
 </section>
 
+<section class="account-shell account-content">
+
+<div class="account-grid">
+
+<div class="account-main">
+
+<article class="panel panel--subscription">
+
+<div class="panel__header">
+<div>
+<p class="panel__eyebrow">Abonnemang</p>
+<h2 class="panel__title">Mitt abonnemang</h2>
+</div>
+
+<span id="planBadge" class="status-badge">Ingen koppling</span>
+</div>
+
+<div id="emptyPlanState" class="empty-state">
+
+<div class="empty-state__icon">◎</div>
+
+<h3>Inget abonnemang kopplat</h3>
+
+<p>
+När du väljer ett abonnemang visas operatör, surf, pris och startdatum här.
+</p>
+
+<a href="offers.html" class="btn btn--primary btn--sm">Hitta abonnemang</a>
+
+</div>
+
+<div id="planContent" class="subscription-card is-hidden">
+
+<div class="subscription-top">
+
+<div>
+<h3 id="planNameHeading" class="subscription-name">–</h3>
+<p id="planOperatorLine" class="subscription-operator">–</p>
+</div>
+
+<div class="subscription-price-wrap">
+<span class="subscription-price-label">Månadskostnad</span>
+<strong id="planPriceBig" class="subscription-price">0 kr</strong>
+</div>
+
+</div>
+
+<div class="subscription-features">
+
+<div class="feature-box">
+<span class="feature-box__label">Surf</span>
+<strong id="planData">–</strong>
+</div>
+
+<div class="feature-box">
+<span class="feature-box__label">Startdatum</span>
+<strong id="planStartDate">–</strong>
+</div>
+
+<div class="feature-box">
+<span class="feature-box__label">Status</span>
+<strong>Aktivt abonnemang</strong>
+</div>
+
+</div>
+
+<div id="subscriptionDetails" class="subscription-details"></div>
+
+<div class="panel__actions">
+
+<a href="offers.html" class="btn btn--primary">Byt abonnemang</a>
+
+<button id="cancelPlan" class="btn btn--danger-outline">
+Avsluta abonnemang
+</button>
+
+</div>
+
+</div>
+</article>
+
+<article class="panel">
+
+<div class="panel__header">
+<div>
+<p class="panel__eyebrow">Belöningar</p>
+<h2 class="panel__title">Min belöning</h2>
+</div>
+</div>
+
+<div class="reward-card">
+
+<div class="reward-card__icon">★</div>
+
+<div class="reward-card__content">
+
+<strong id="rewardNameLarge">Ingen vald belöning</strong>
+
+<p id="rewardDescription">
+Välj en belöning när du tecknar eller förlänger abonnemang.
+</p>
+
+</div>
+
+</div>
+
+</article>
+
+</div>
+
+<aside class="account-sidebar">
+
+<article class="panel">
+
+<div class="panel__header">
+<div>
+<p class="panel__eyebrow">Snabbval</p>
+<h2 class="panel__title">Genvägar</h2>
+</div>
+</div>
+
+<div class="shortcut-list">
+
+<a href="support.html" class="shortcut-item">
+<span class="shortcut-item__icon">⌁</span>
+<div>
+<strong>Kontakta support</strong>
+<p>Få hjälp med konto eller abonnemang.</p>
+</div>
+</a>
+
+<a href="profile.html" class="shortcut-item">
+<span class="shortcut-item__icon">◌</span>
+<div>
+<strong>Uppdatera uppgifter</strong>
+<p>Redigera namn och kontaktuppgifter.</p>
+</div>
+</a>
+
+<a href="offers.html" class="shortcut-item">
+<span class="shortcut-item__icon">↗</span>
+<div>
+<strong>Jämför erbjudanden</strong>
+<p>Se bättre alternativ och besparingar.</p>
+</div>
+</a>
+
+</div>
+
+</article>
+
+<article class="panel panel--danger">
+
+<div class="panel__header">
+<div>
+<p class="panel__eyebrow">Säkerhet</p>
+<h2 class="panel__title">Kontohantering</h2>
+</div>
+</div>
+
+<p class="danger-text">
+Den här åtgärden rensar sparad lokal kontodata i webbläsaren.
+</p>
+
+<div class="panel__actions panel__actions--stack">
+
+<button id="deleteAccount" class="btn btn--danger">
+Radera konto
+</button>
+
+</div>
+
+</article>
+
+</aside>
+
+</div>
+
+</section>
+
+</main>
+
+<div id="footer-placeholder"></div>
+
 <script>
-document.addEventListener("DOMContentLoaded", async function () {
 
-  /* LOAD HEADER */
-  try {
-    const headerRes = await fetch("partials/header.html");
-    if (headerRes.ok) {
-      document.getElementById("header-placeholder").innerHTML =
-        await headerRes.text();
-    }
-  } catch (e) {}
+document.addEventListener("DOMContentLoaded", init);
 
-  /* LOAD FOOTER */
-  try {
-    const footerRes = await fetch("partials/footer.html");
-    if (footerRes.ok) {
-      document.body.insertAdjacentHTML("beforeend", await footerRes.text());
-    }
-  } catch (e) {}
+async function init() {
+await loadPartials();
+initAccountPage();
+}
 
-  /* USER LOGIC */
-  const user = JSON.parse(localStorage.getItem("dealett_user"));
-  if (!user) {
-    window.location.href = "login.html";
-    return;
-  }
+async function loadPartials(){
 
-  document.getElementById("userName").textContent = user.name || "Kund";
+try{
+const header = await fetch("./partials/header.html");
+if(header.ok){
+document.getElementById("header-placeholder").innerHTML = await header.text();
+}
+}catch{}
 
-  const plan = JSON.parse(localStorage.getItem("dealett_plan"));
-  const reward = JSON.parse(localStorage.getItem("dealett_reward"));
+try{
+const footer = await fetch("./partials/footer.html");
+if(footer.ok){
+document.getElementById("footer-placeholder").innerHTML = await footer.text();
+}
+}catch{}
 
-  if (plan) {
-    document.getElementById("activePlan").textContent = plan.name;
-    document.getElementById("monthlyCost").textContent = plan.price + " kr";
-    document.getElementById("subscriptionDetails").innerHTML = `
-      <p><strong>Operatör:</strong> ${plan.operator}</p>
-      <p><strong>Data:</strong> ${plan.data}</p>
-      <p><strong>Startdatum:</strong> ${plan.startDate || "-"}</p>
-    `;
-  }
+}
 
-  if (reward) {
-    document.getElementById("rewardStatus").textContent = reward.name;
-  }
+function readStorage(key){
+try{
+const value = localStorage.getItem(key);
+return value ? JSON.parse(value) : null;
+}catch{
+return null;
+}
+}
 
-  document.getElementById("logoutBtn").onclick = () => {
-    localStorage.removeItem("dealett_user");
-    window.location.href = "index.html";
-  };
+function initAccountPage(){
 
-  document.getElementById("cancelPlan").onclick = () => {
-    localStorage.removeItem("dealett_plan");
-    location.reload();
-  };
+const user = readStorage("dealett_user");
 
-  document.getElementById("deleteAccount").onclick = () => {
-    localStorage.clear();
-    window.location.href = "index.html";
-  };
+if(!user){
+window.location.href="login.html";
+return;
+}
 
+setupUser(user);
+
+const plan = readStorage("dealett_plan");
+setupPlan(plan);
+
+const reward = readStorage("dealett_reward");
+setupReward(reward);
+
+setupActions();
+
+}
+
+function setupUser(user){
+const el=document.getElementById("userName");
+if(el) el.textContent=user.name || "Kund";
+}
+
+function setupPlan(plan){
+
+const empty=document.getElementById("emptyPlanState");
+const content=document.getElementById("planContent");
+
+if(!plan){
+
+document.getElementById("activePlan").textContent="Inget aktivt";
+document.getElementById("activeOperator").textContent="Ingen operatör vald";
+document.getElementById("monthlyCost").textContent="0 kr";
+document.getElementById("planBadge").textContent="Ingen koppling";
+
+empty.classList.remove("is-hidden");
+content.classList.add("is-hidden");
+
+return;
+}
+
+document.getElementById("activePlan").textContent=plan.name || "-";
+document.getElementById("activeOperator").textContent=plan.operator || "-";
+document.getElementById("monthlyCost").textContent=(plan.price||0)+" kr";
+document.getElementById("planBadge").textContent="Aktivt";
+
+document.getElementById("planNameHeading").textContent=plan.name||"-";
+document.getElementById("planOperatorLine").textContent=plan.operator||"-";
+document.getElementById("planPriceBig").textContent=(plan.price||0)+" kr";
+document.getElementById("planData").textContent=plan.data||"-";
+document.getElementById("planStartDate").textContent=plan.startDate||"-";
+
+document.getElementById("subscriptionDetails").innerHTML=`
+
+<div class="detail-row">
+<span>Operatör</span>
+<strong>${plan.operator||"-"}</strong>
+</div>
+
+<div class="detail-row">
+<span>Abonnemang</span>
+<strong>${plan.name||"-"}</strong>
+</div>
+
+<div class="detail-row">
+<span>Surf</span>
+<strong>${plan.data||"-"}</strong>
+</div>
+
+<div class="detail-row">
+<span>Månadspris</span>
+<strong>${plan.price||0} kr</strong>
+</div>
+
+<div class="detail-row">
+<span>Startdatum</span>
+<strong>${plan.startDate||"-"}</strong>
+</div>
+
+`;
+
+empty.classList.add("is-hidden");
+content.classList.remove("is-hidden");
+
+}
+
+function setupReward(reward){
+
+if(!reward) return;
+
+document.getElementById("rewardStatus").textContent=reward.name||"Vald";
+document.getElementById("rewardMeta").textContent="Registrerad";
+document.getElementById("rewardNameLarge").textContent=reward.name||"Belöning";
+document.getElementById("rewardDescription").textContent=reward.description||"";
+
+}
+
+function setupActions(){
+
+document.getElementById("logoutBtn")?.addEventListener("click",()=>{
+localStorage.removeItem("dealett_user");
+location.href="index.html";
 });
+
+document.getElementById("cancelPlan")?.addEventListener("click",()=>{
+if(!confirm("Avsluta abonnemang?")) return;
+localStorage.removeItem("dealett_plan");
+location.reload();
+});
+
+document.getElementById("deleteAccount")?.addEventListener("click",()=>{
+if(!confirm("Radera all kontodata?")) return;
+localStorage.clear();
+location.href="index.html";
+});
+
+}
+
 </script>
 
 </body>
