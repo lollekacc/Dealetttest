@@ -7,246 +7,512 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css">
+
+  <link rel="stylesheet" href="./assets/style.css">
   <link rel="stylesheet" href="./assets/design.css">
+  <link rel="stylesheet" href="./assets/jamfor.css">
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
   <link
   rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
 />
+
 <script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js">
 </script>
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  </script>
 </head>
 
-<body>
+<body class="jamfor-page">
 
-<!-- HEADER -->
-<div id="header-placeholder"></div>
+  <!-- HEADER -->
+  <div id="header-placeholder"></div>
 
-<!-- PAGE WRAPPER (NO BEIGE) -->
-<section class="w-full bg-[#f8fafc]">
-  <div class="content-wrapper mt-16 mb-24">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-      <div
-  id="map"
-  class="adeala-card md:col-span-3 h-[700px] bg-white">
-  
-</div>
+  <!-- HERO -->
+  <section class="coverage-hero">
+    <div class="coverage-hero__bg"></div>
+    <div class="coverage-hero__glow coverage-hero__glow--one"></div>
+    <div class="coverage-hero__glow coverage-hero__glow--two"></div>
 
-<script>
-const map = L.map("map", {
-  zoomControl: true,
-  attributionControl: false
-}).setView([62.0, 15.0], 5);
-let activeOverlay;
+    <div class="content-wrapper coverage-hero__inner">
+      <div class="coverage-hero__copy">
+        <span class="coverage-badge">Täckning & nät</span>
+        <h1>Jämför mobilnät på kartan</h1>
+        <p>
+          Växla mellan operatörer, zooma in på ditt område och få en snabb
+          överblick över vilket nät som passar bäst för dig.
+        </p>
 
-const overlays = {
-  tele2: L.tileLayer(
-    "https://mim.tele2.com/MIMCore/api/Tile/GetOverlay?x={x}&y={y}&z={z}&viewType=1&serviceThresholdIds=14,15,16,18,35,36,37,39,56,57,58,60,69,80,82,90,101,103,111,122,124&countryCode=SWE&currentServiceLayerNo=100",
-    { opacity: 0.8 }
-  ),
+        <div class="coverage-hero__actions">
+          <a href="#coverageApp" class="coverage-btn coverage-btn--primary">Öppna kartan</a>
+          <a href="abonnemang.html" class="coverage-btn coverage-btn--ghost">Jämför abonnemang</a>
+        </div>
 
-  telia: L.tileLayer.wms(
-    "https://coverage.ddc.teliasonera.net/coverageportal_se/map/tile",
-    {
-      format: "image/png",
-      transparent: true,
-      opacity: 0.8
-    }
-  ),
-
-  tre: L.tileLayer(
-    "https://coverage.tre.se/MIMCore/api/Tile/GetOverlay?locale=se&countryCode=swe&z={z}&x={x}&y={y}&viewType=1&serviceThresholdIds=14,35,56,15,36,57,17,38,59,13,34,55,64,85,106,67,88,109,65,86,107&currentServiceLayerNo=100",
-    { opacity: 0.8 }
-  ),
-
-  telenor: L.tileLayer.wms(
-    "https://mboss.telenor.se/coverageportal/map/tile",
-    {
-      services: "NR3500_DATASA,NR_DATANSA,LTE_DATA",
-      qualities: "1,2,3",
-      serviceGroup: "mobile_broadband",
-      format: "image/png",
-      transparent: true,
-      opacity: 0.8
-    }
-  )
-};
-
-
-
-
-
-L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    maxZoom: 18
-  }
-).addTo(map);
-</script>
-
-
-      <!-- OPERATORS -->
-      <div class="md:col-span-1">
-        <div class="adeala-card flex flex-col gap-4 bg-white">
-
-          <button class="operator-btn" data-operator="telia">
-            <img src="images/telia.png" class="h-10 mx-auto">
-          </button>
-
-          <button class="operator-btn" data-operator="tele2">
-            <img src="images/tele2.jpg" class="h-10 mx-auto">
-          </button>
-
-          <button class="operator-btn" data-operator="telenor">
-            <img src="images/telenor.jpg" class="h-10 mx-auto">
-          </button>
-
-          <button class="operator-btn" data-operator="tre">
-            <img src="images/tre.jpg" class="h-10 mx-auto">
-          </button>
-
-          <button class="operator-btn" data-operator="halebop">
-            <img src="images/halebop.webp" class="h-10 mx-auto">
-          </button>
-
+        <div class="coverage-hero__stats">
+          <div class="coverage-stat">
+            <strong>5</strong>
+            <span>Operatörer</span>
+          </div>
+          <div class="coverage-stat">
+            <strong>Live</strong>
+            <span>Kartlager</span>
+          </div>
+          <div class="coverage-stat">
+            <strong>Leaflet</strong>
+            <span>Interaktiv vy</span>
+          </div>
         </div>
       </div>
 
+      <div class="coverage-hero__panel">
+        <div class="hero-panel-card">
+          <div class="hero-panel-card__top">
+            <span class="hero-panel-card__label">Aktiv vy</span>
+            <span id="heroActiveOperator" class="hero-panel-card__pill">Ingen vald</span>
+          </div>
+
+          <div class="hero-panel-card__body">
+            <p>
+              Klicka på en operatör för att ladda dess täckningslager direkt på kartan.
+            </p>
+
+            <div class="hero-panel-card__chips">
+              <span>4G</span>
+              <span>5G</span>
+              <span>Datatäckning</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- FOOTER -->
-<div id="footer-placeholder"></div>
+  <!-- MAIN APP -->
+  <main id="coverageApp" class="coverage-main">
+    <div class="content-wrapper">
+      <section class="coverage-shell">
 
-<script>
-/* LOAD HEADER & FOOTER */
-(async () => {
-  const header = await fetch("partials/header.html");
-  if (header.ok)
-    document.getElementById("header-placeholder").innerHTML = await header.text();
+        <!-- TOPBAR -->
+        <div class="coverage-topbar">
+          <div>
+            <p class="coverage-topbar__eyebrow">Täckningskarta</p>
+            <h2>Välj operatör och utforska kartan</h2>
+          </div>
 
-  const footer = await fetch("partials/footer.html");
-  if (footer.ok)
-    document.getElementById("footer-placeholder").innerHTML = await footer.text();
-})();
+          <div class="coverage-topbar__right">
+            <button id="resetViewBtn" class="coverage-btn coverage-btn--soft" type="button">
+              Återställ vy
+            </button>
+            <button id="clearLayerBtn" class="coverage-btn coverage-btn--soft" type="button">
+              Ta bort lager
+            </button>
+          </div>
+        </div>
 
-</script>
+        <div class="coverage-grid">
+          <!-- SIDEBAR -->
+          <aside class="coverage-sidebar">
 
-<script>
-function styleSweden(op) {
-  swedenLayer.setStyle({
-    fillColor: op.base,
-    fillOpacity: 0.75,
-    color: "#1f2937",
-    weight: 1.2
-  });
+            <section class="coverage-card coverage-card--sidebar">
+              <div class="coverage-card__head">
+                <div>
+                  <p class="coverage-section-label">Operatörer</p>
+                  <h3>Välj nät</h3>
+                </div>
+                <span class="coverage-count">5 val</span>
+              </div>
 
-  if (glowLayer) map.removeLayer(glowLayer);
+              <div class="operator-list">
+                <button class="operator-card" data-operator="telia" type="button">
+                  <div class="operator-card__logo">
+                    <img src="images/telia.png" alt="Telia">
+                  </div>
+                  <div class="operator-card__text">
+                    <strong>Telia</strong>
+                    <span>Kartlager</span>
+                  </div>
+                </button>
 
-  glowLayer = L.geoJSON(swedenLayer.toGeoJSON(), {
-    style: {
-      color: op.glow,
-      weight: 4,
-      opacity: 0.9,
-      fillOpacity: 0
+                <button class="operator-card" data-operator="tele2" type="button">
+                  <div class="operator-card__logo">
+                    <img src="images/tele2.jpg" alt="Tele2">
+                  </div>
+                  <div class="operator-card__text">
+                    <strong>Tele2</strong>
+                    <span>Kartlager</span>
+                  </div>
+                </button>
+
+                <button class="operator-card" data-operator="telenor" type="button">
+                  <div class="operator-card__logo">
+                    <img src="images/telenor.jpg" alt="Telenor">
+                  </div>
+                  <div class="operator-card__text">
+                    <strong>Telenor</strong>
+                    <span>Kartlager</span>
+                  </div>
+                </button>
+
+                <button class="operator-card" data-operator="tre" type="button">
+                  <div class="operator-card__logo">
+                    <img src="images/tre.jpg" alt="Tre">
+                  </div>
+                  <div class="operator-card__text">
+                    <strong>Tre</strong>
+                    <span>Kartlager</span>
+                  </div>
+                </button>
+
+                <button class="operator-card" data-operator="halebop" type="button">
+                  <div class="operator-card__logo">
+                    <img src="images/halebop.webp" alt="Halebop">
+                  </div>
+                  <div class="operator-card__text">
+                    <strong>Halebop</strong>
+                    <span>Kartlager</span>
+                  </div>
+                </button>
+              </div>
+            </section>
+
+            <section class="coverage-card coverage-card--sidebar">
+              <div class="coverage-card__head">
+                <div>
+                  <p class="coverage-section-label">Status</p>
+                  <h3>Nuvarande val</h3>
+                </div>
+              </div>
+
+              <div class="coverage-status">
+                <div class="coverage-status__row">
+                  <span>Operatör</span>
+                  <strong id="activeOperatorLabel">Ingen vald</strong>
+                </div>
+                <div class="coverage-status__row">
+                  <span>Zoom</span>
+                  <strong id="zoomLabel">5</strong>
+                </div>
+                <div class="coverage-status__row">
+                  <span>Koordinater</span>
+                  <strong id="coordsLabel">62.0000, 15.0000</strong>
+                </div>
+              </div>
+            </section>
+
+            <section class="coverage-card coverage-card--sidebar">
+              <div class="coverage-card__head">
+                <div>
+                  <p class="coverage-section-label">Tips</p>
+                  <h3>Så använder du kartan</h3>
+                </div>
+              </div>
+
+              <ul class="coverage-tips">
+                <li>Välj en operatör i listan.</li>
+                <li>Zooma in till stad eller område.</li>
+                <li>Dra kartan för att jämföra olika platser.</li>
+                <li>Rensa lagret för att börja om.</li>
+              </ul>
+            </section>
+
+          </aside>
+
+          <!-- MAP AREA -->
+          <section class="coverage-map-area">
+            <div class="coverage-map-card">
+              <div class="coverage-map-toolbar">
+                <div class="coverage-map-toolbar__left">
+
+  <div class="map-search">
+    <input
+      id="mapSearchInput"
+      type="text"
+      placeholder="Sök adress eller stad..."
+      autocomplete="off"
+    >
+    <button id="mapSearchBtn" type="button">Sök</button>
+                  <span class="coverage-map-toolbar__dot"></span>
+                  <span id="mapToolbarLabel">Ingen operatör vald</span>
+                </div>
+
+                <div class="coverage-map-toolbar__right">
+                  <button id="zoomInBtn" class="map-mini-btn" type="button" aria-label="Zooma in">+</button>
+                  <button id="zoomOutBtn" class="map-mini-btn" type="button" aria-label="Zooma ut">−</button>
+                </div>
+              </div>
+
+              <div id="map" class="coverage-map"></div>
+            </div>
+
+            <div class="coverage-legend">
+              <div class="coverage-legend__item">
+                <span class="legend-swatch legend-swatch--base"></span>
+                <span>Bakgrundskarta</span>
+              </div>
+              <div class="coverage-legend__item">
+                <span class="legend-swatch legend-swatch--overlay"></span>
+                <span>Aktivt täckningslager</span>
+              </div>
+              <div class="coverage-legend__item">
+                <span class="legend-swatch legend-swatch--focus"></span>
+                <span>Vald operatör</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
+
+  <script>
+    (async () => {
+      const header = await fetch("partials/header.html");
+      if (header.ok) {
+        document.getElementById("header-placeholder").innerHTML = await header.text();
+      }
+
+      const footer = await fetch("partials/footer.html");
+      if (footer.ok) {
+        document.getElementById("footer-placeholder").innerHTML = await footer.text();
+      }
+    })();
+  </script>
+
+  <script>
+    const DEFAULT_VIEW = {
+      center: [62.0, 15.0],
+      zoom: 5
+    };
+
+    const map = L.map("map", {
+      zoomControl: false,
+      attributionControl: false
+    }).setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom);
+
+    let activeOverlay = null;
+    let activeOperatorKey = null;
+
+    const operatorMeta = {
+      telia: {
+        label: "Telia",
+        theme: "#6d28d9"
+      },
+      tele2: {
+        label: "Tele2",
+        theme: "#111827"
+      },
+      telenor: {
+        label: "Telenor",
+        theme: "#1d4ed8"
+      },
+      tre: {
+        label: "Tre",
+        theme: "#047857"
+      },
+      halebop: {
+        label: "Halebop",
+        theme: "#15803d"
+      }
+    };
+
+    const overlays = {
+      tele2: L.tileLayer(
+        "https://mim.tele2.com/MIMCore/api/Tile/GetOverlay?x={x}&y={y}&z={z}&viewType=1&serviceThresholdIds=14,15,16,18,35,36,37,39,56,57,58,60,69,80,82,90,101,103,111,122,124&countryCode=SWE&currentServiceLayerNo=100",
+        { opacity: 0.78 }
+      ),
+
+      telia: L.tileLayer.wms(
+        "https://coverage.ddc.teliasonera.net/coverageportal_se/map/tile",
+        {
+          format: "image/png",
+          transparent: true,
+          opacity: 0.78
+        }
+      ),
+
+      tre: L.tileLayer(
+        "https://coverage.tre.se/MIMCore/api/Tile/GetOverlay?locale=se&countryCode=swe&z={z}&x={x}&y={y}&viewType=1&serviceThresholdIds=14,35,56,15,36,57,17,38,59,13,34,55,64,85,106,67,88,109,65,86,107&currentServiceLayerNo=100",
+        { opacity: 0.78 }
+      ),
+
+      telenor: L.tileLayer.wms(
+        "https://mboss.telenor.se/coverageportal/map/tile",
+        {
+          services: "NR3500_DATASA,NR_DATANSA,LTE_DATA",
+          qualities: "1,2,3",
+          serviceGroup: "mobile_broadband",
+          format: "image/png",
+          transparent: true,
+          opacity: 0.78
+        }
+      ),
+
+      halebop: L.tileLayer.wms(
+        "https://coverage.ddc.teliasonera.net/coverageportal_se/map/tile",
+        {
+          format: "image/png",
+          transparent: true,
+          opacity: 0.78
+        }
+      )
+    };
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18
+    }).addTo(map);
+
+    const operatorButtons = document.querySelectorAll(".operator-card");
+    const activeOperatorLabel = document.getElementById("activeOperatorLabel");
+    const heroActiveOperator = document.getElementById("heroActiveOperator");
+    const mapToolbarLabel = document.getElementById("mapToolbarLabel");
+    const zoomLabel = document.getElementById("zoomLabel");
+    const coordsLabel = document.getElementById("coordsLabel");
+    const mapElement = document.getElementById("map");
+
+    function setActiveOperatorUI(key) {
+      operatorButtons.forEach(btn => {
+        btn.classList.toggle("is-active", btn.dataset.operator === key);
+      });
+
+      const label = key ? operatorMeta[key].label : "Ingen vald";
+
+      activeOperatorLabel.textContent = label;
+      heroActiveOperator.textContent = label;
+      mapToolbarLabel.textContent = key
+        ? operatorMeta[key].label + " aktiv"
+        : "Ingen operatör vald";
+
+      if (key) {
+        document.documentElement.style.setProperty("--coverage-accent", operatorMeta[key].theme);
+      } else {
+        document.documentElement.style.setProperty("--coverage-accent", "#0f766e");
+      }
     }
-  }).addTo(map);
+
+    function clearActiveOverlay() {
+      if (activeOverlay) {
+        map.removeLayer(activeOverlay);
+        activeOverlay = null;
+      }
+      activeOperatorKey = null;
+      setActiveOperatorUI(null);
+    }
+
+    function activateOperator(key) {
+      if (!overlays[key]) return;
+
+      if (activeOverlay) {
+        map.removeLayer(activeOverlay);
+      }
+
+      activeOverlay = overlays[key];
+      activeOverlay.addTo(map);
+      activeOperatorKey = key;
+      setActiveOperatorUI(key);
+    }
+
+    operatorButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.operator;
+
+        if (activeOperatorKey === key) {
+          clearActiveOverlay();
+          return;
+        }
+
+        activateOperator(key);
+      });
+    });
+
+    document.getElementById("resetViewBtn").addEventListener("click", () => {
+      map.setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom, {
+        animate: true
+      });
+    });
+
+    document.getElementById("clearLayerBtn").addEventListener("click", () => {
+      clearActiveOverlay();
+    });
+
+    document.getElementById("zoomInBtn").addEventListener("click", () => {
+      map.zoomIn();
+    });
+
+    document.getElementById("zoomOutBtn").addEventListener("click", () => {
+      map.zoomOut();
+    });
+
+    map.on("zoomend", () => {
+      zoomLabel.textContent = map.getZoom();
+    });
+
+    map.on("moveend", () => {
+      const center = map.getCenter();
+      coordsLabel.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
+    });
+
+    map.on("load", () => {
+      zoomLabel.textContent = map.getZoom();
+      const center = map.getCenter();
+      coordsLabel.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
+    });
+
+    setTimeout(() => {
+      map.invalidateSize();
+      zoomLabel.textContent = map.getZoom();
+      const center = map.getCenter();
+      coordsLabel.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
+    }, 250);
+
+    window.addEventListener("resize", () => {
+      map.invalidateSize();
+    });
+    let searchMarker = null;
+
+async function searchAddress(query) {
+
+  if (!query) return;
+
+  const url =
+    "https://nominatim.openstreetmap.org/search?format=json&q=" +
+    encodeURIComponent(query);
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  if (!data.length) return;
+
+  const lat = parseFloat(data[0].lat);
+  const lon = parseFloat(data[0].lon);
+
+  map.setView([lat, lon], 14, { animate: true });
+
+  if (searchMarker) map.removeLayer(searchMarker);
+
+  searchMarker = L.marker([lat, lon]).addTo(map);
 }
-function pointInPolygon(point, vs) {
-  let x = point[1], y = point[0], inside = false;
-  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-    const xi = vs[i][1], yi = vs[i][0];
-    const xj = vs[j][1], yj = vs[j][0];
-    const intersect =
-      yi > y !== yj > y &&
-      x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
-    if (intersect) inside = !inside;
-  }
-  return inside;
-}
+const searchInput = document.getElementById("mapSearchInput");
+const searchBtn = document.getElementById("mapSearchBtn");
 
-function generateNoise(op) {
-  if (noiseLayer) map.removeLayer(noiseLayer);
-  noiseLayer = L.layerGroup();
-
-  let added = 0;
-  while (added < 12000 * op.density) {
-    const lat = 55 + Math.random() * 15;
-    const lng = 11 + Math.random() * 13;
-
-    if (!pointInPolygon([lat, lng], swedenPoly)) continue;
-
-    L.circleMarker([lat, lng], {
-      radius: Math.random() < 0.7 ? 0.8 : 1.6,
-      fillColor: op.noise[Math.floor(Math.random() * op.noise.length)],
-      fillOpacity: 0.9,
-      stroke: false,
-      renderer: L.canvas()
-    }).addTo(noiseLayer);
-
-    added++;
-  }
-
-  noiseLayer.addTo(map);
-}
-
-
-const OPERATORS = {
-  telia: {
-    base: "#4b3f72",
-    glow: "#fde047",
-    noise: ["#fde047", "#7dd3fc"],
-    density: 1.0
-  },
-  tele2: {
-    base: "#111827",
-    glow: "#60a5fa",
-    noise: ["#60a5fa"],
-    density: 0.85
-  },
-  telenor: {
-    base: "#1e3a8a",
-    glow: "#93c5fd",
-    noise: ["#93c5fd", "#38bdf8"],
-    density: 0.9
-  },
-  tre: {
-    base: "#064e3b",
-    glow: "#5eead4",
-    noise: ["#5eead4"],
-    density: 0.75
-  },
-  halebop: {
-    base: "#14532d",
-    glow: "#86efac",
-    noise: ["#86efac"],
-    density: 0.7
-  }
-};
-
-</script>
-
-<script>
-document.querySelectorAll(".operator-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document
-      .querySelectorAll(".operator-btn")
-      .forEach(b => b.classList.remove("active"));
-
-    btn.classList.add("active");
-
-    if (activeOverlay) map.removeLayer(activeOverlay);
-
-    const key = btn.dataset.operator;
-    if (!overlays[key]) return;
-
-    activeOverlay = overlays[key];
-    activeOverlay.addTo(map);
-  });
+searchBtn.addEventListener("click", () => {
+  searchAddress(searchInput.value.trim());
 });
-</script>
 
+searchInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    searchAddress(searchInput.value.trim());
+  }
+});
+  </script>
 </body>
 </html>
