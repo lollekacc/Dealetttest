@@ -11,7 +11,7 @@
   pointer-events: none;
 }
 
-.active {
+.quiz-active {
   background: linear-gradient(to right,#004C9E,#0C4A3C) !important;
   color: #fff !important;
 }
@@ -293,7 +293,7 @@
   background: linear-gradient(180deg, #ffffff, #f8fafc);
   border-color: var(--adeala-green);
   box-shadow: 0 8px 22px rgba(12,74,60,0.25);
-  }
+}
   .quiz-steps {
   margin-top: 2rem;
 }
