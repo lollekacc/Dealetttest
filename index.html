@@ -110,166 +110,222 @@
 <div id="quiz-steps-wrapper"
      class="relative z-10 hidden opacity-0 transition-all duration-300 px-2 md:px-4 overflow-visible">
 
-    <div class="flex flex-col gap-8">
-
-      <!-- QUIZ NAV -->
-      <div class="sticky top-0 z-20 mb-2 px-4 py-3
-                  bg-white/70 backdrop-blur-md border border-gray-200/70
-                  rounded-xl shadow-sm">
-
-        <div class="flex items-center justify-between">
-
-          <button id="quiz-back" type="button"
-                  class="inline-flex items-center gap-2 px-3 py-2 rounded-lg
-                         text-sm font-semibold text-gray-800
-                         hover:bg-gray-900/5 active:scale-[0.99]
-                         disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent">
-            <span class="text-base leading-none">←</span> Tillbaka
-          </button>
-
-          <div class="flex items-center gap-3">
-            <div class="h-2 w-28 rounded-full bg-gray-200 overflow-hidden">
-              <div id="quiz-progress" class="h-full w-1/4 rounded-full bg-emerald-600"></div>
-            </div>
-
-            <div class="text-sm font-semibold text-gray-800">
-Steg <span id="quiz-step-current">1</span> / <span id="quiz-step-total">5</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
+<div class="flex flex-col gap-8">
 
 <div id="quiz-card-stack" class="relative min-h-[460px]">
-    <!-- QUESTION 1 -->
-    <div id="step0" class="quiz-step-card active-step">
-      <div class="quiz-card flex flex-col">
-        <p class="quiz-title">Hur många personer gäller det?</p>
-        <div class="flex flex-wrap justify-center gap-4 mt-6">
-          <button class="quiz-option" data-persons="1">1</button>
-          <button class="quiz-option" data-persons="2">2</button>
-          <button class="quiz-option" data-persons="3">3</button>
-          <button class="quiz-option" data-persons="4">4</button>
-          <button class="quiz-option" data-persons="5">5+</button>
-        </div>
-      </div>
-    </div>
 
+<!-- QUESTION 1 -->
+<div id="step0" class="quiz-step-card active-step">
+<div class="quiz-card flex flex-col">
+
+<div class="flex items-center justify-between mb-4">
+<button id="quiz-back" type="button"
+class="inline-flex items-center gap-2 px-3 py-2 rounded-lg
+text-sm font-semibold text-gray-800
+hover:bg-gray-900/5 disabled:opacity-40">
+<span class="text-base leading-none">←</span> Tillbaka
+</button>
+
+<div class="flex items-center gap-3">
+<div class="h-2 w-28 rounded-full bg-gray-200 overflow-hidden">
+<div id="quiz-progress" class="h-full w-1/4 rounded-full bg-emerald-600"></div>
+</div>
+
+<div class="text-sm font-semibold text-gray-800">
+Steg <span id="quiz-step-current">1</span> /
+<span id="quiz-step-total">5</span>
+</div>
+</div>
+</div>
+
+<p class="quiz-title">Hur många personer gäller det?</p>
+
+<div class="flex flex-wrap justify-center gap-4 mt-6">
+<button class="quiz-option" data-persons="1">1</button>
+<button class="quiz-option" data-persons="2">2</button>
+<button class="quiz-option" data-persons="3">3</button>
+<button class="quiz-option" data-persons="4">4</button>
+<button class="quiz-option" data-persons="5">5+</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- QUESTION 2 -->
 <div id="step1" class="quiz-step-card hidden-step">
-  <div class="quiz-card flex flex-col">
-    <p class="quiz-title">Vilken operatör har ni idag?</p>
+<div class="quiz-card flex flex-col">
+
+<div class="flex items-center justify-between mb-4">
+<button id="quiz-back" type="button"
+class="inline-flex items-center gap-2 px-3 py-2 rounded-lg
+text-sm font-semibold text-gray-800 hover:bg-gray-900/5">
+<span class="text-base leading-none">←</span> Tillbaka
+</button>
+
+<div class="flex items-center gap-3">
+<div class="h-2 w-28 rounded-full bg-gray-200 overflow-hidden">
+<div id="quiz-progress" class="h-full w-1/4 rounded-full bg-emerald-600"></div>
+</div>
+
+<div class="text-sm font-semibold text-gray-800">
+Steg <span id="quiz-step-current">1</span> /
+<span id="quiz-step-total">5</span>
+</div>
+</div>
+</div>
+
+<p class="quiz-title">Vilken operatör har ni idag?</p>
 
 <div id="operator-per-person"
-     class="mt-6 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+class="mt-6 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
 </div>
 
-    <p class="text-xs text-gray-600 text-center">
-      Välj operatör för varje person.
-    </p>
-  </div>
+<p class="text-xs text-gray-600 text-center">
+Välj operatör för varje person.
+</p>
+
+</div>
 </div>
 
-<!-- Template (keep anywhere on page, e.g. after step1) -->
-<template id="operator-picker-template">
-  <div class="rounded-xl border border-gray-200 bg-white/70 p-4">
-    <p class="font-semibold text-gray-900 mb-3">Person <span data-person-number></span></p>
-    <div class="flex flex-wrap justify-center gap-4">
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
-        <img src="images/tele2.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tele2">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
-        <img src="images/telia.png" class="partner-logo h-10 hover:scale-105 transition" alt="Telia">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
-        <img src="images/telenor.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Telenor">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
-        <img src="images/tre.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tre">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
-        <img src="images/halebop.webp" class="partner-logo h-10 hover:scale-105 transition" alt="Halebop">
-      </button>
-      <button type="button" class="quiz-option familj-opt px-4 py-2 whitespace-nowrap" data-operator="Other">
-        Andra
-      </button>
-    </div>
-  </div>
-</template>
-    <!-- QUESTION 2 -->
+
+<!-- QUESTION 3 -->
 <div id="step2" class="quiz-step-card hidden-step">
-  <div class="quiz-card flex flex-col">
+<div class="quiz-card flex flex-col">
 
-    <p class="quiz-title">Hur använder ni mobilen mest?</p>
+<div class="flex items-center justify-between mb-4">
+<button id="quiz-back" type="button"
+class="inline-flex items-center gap-2 px-3 py-2 rounded-lg
+text-sm font-semibold text-gray-800 hover:bg-gray-900/5">
+<span class="text-base leading-none">←</span> Tillbaka
+</button>
 
-    <div class="flex flex-col gap-4 mt-6">
-
-      <button class="quiz-option" data-data="low">
-        Mest wifi & sociala medier
-        <p class="text-sm opacity-70">5 GB - 15 GB</p>
-      </button>
-
-      <button class="quiz-option" data-data="medium">
-        Streaming & video
-        <p class="text-sm opacity-70">20 GB - 40 GB</p>
-      </button>
-
-      <button class="quiz-option" data-data="high">
-        Vill aldrig tänka på surf
-        <p class="text-sm opacity-70">50 GB - Obegränsad</p>
-      </button>
-
-    </div>
-
-  </div>
+<div class="flex items-center gap-3">
+<div class="h-2 w-28 rounded-full bg-gray-200 overflow-hidden">
+<div id="quiz-progress" class="h-full w-1/4 rounded-full bg-emerald-600"></div>
 </div>
 
-    <!-- QUESTION 3 -->
+<div class="text-sm font-semibold text-gray-800">
+Steg <span id="quiz-step-current">1</span> /
+<span id="quiz-step-total">5</span>
+</div>
+</div>
+</div>
+
+<p class="quiz-title">Hur använder ni mobilen mest?</p>
+
+<div class="flex flex-col gap-4 mt-6">
+<button class="quiz-option" data-data="low">
+Mest wifi & sociala medier
+<p class="text-sm opacity-70">5 GB - 15 GB</p>
+</button>
+
+<button class="quiz-option" data-data="medium">
+Streaming & video
+<p class="text-sm opacity-70">20 GB - 40 GB</p>
+</button>
+
+<button class="quiz-option" data-data="high">
+Vill aldrig tänka på surf
+<p class="text-sm opacity-70">50 GB - Obegränsad</p>
+</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- QUESTION 4 -->
 <div id="step3" class="quiz-step-card hidden-step">
-      <div class="quiz-card flex flex-col">
-        <p class="quiz-title">Vad betalar du ungefär idag per abonnemang?</p>
-        <div class="flex flex-col gap-4 mt-6">
-          <button class="quiz-option" data-price="under300">Under 300 kr</button>
-          <button class="quiz-option" data-price="300-400">300–400 kr</button>
-          <button class="quiz-option" data-price="400-500">400–500+ kr</button>
-        </div>
-      </div>
-    </div>
+<div class="quiz-card flex flex-col">
 
-    <!-- QUESTION 4 -->
+<div class="flex items-center justify-between mb-4">
+<button id="quiz-back" type="button"
+class="inline-flex items-center gap-2 px-3 py-2 rounded-lg
+text-sm font-semibold text-gray-800 hover:bg-gray-900/5">
+<span class="text-base leading-none">←</span> Tillbaka
+</button>
+
+<div class="flex items-center gap-3">
+<div class="h-2 w-28 rounded-full bg-gray-200 overflow-hidden">
+<div id="quiz-progress" class="h-full w-1/4 rounded-full bg-emerald-600"></div>
+</div>
+
+<div class="text-sm font-semibold text-gray-800">
+Steg <span id="quiz-step-current">1</span> /
+<span id="quiz-step-total">5</span>
+</div>
+</div>
+</div>
+
+<p class="quiz-title">Vad betalar du ungefär idag per abonnemang?</p>
+
+<div class="flex flex-col gap-4 mt-6">
+<button class="quiz-option" data-price="under300">Under 300 kr</button>
+<button class="quiz-option" data-price="300-400">300–400 kr</button>
+<button class="quiz-option" data-price="400-500">400–500+ kr</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- QUESTION 5 -->
 <div id="step4" class="quiz-step-card hidden-step">
-      <div class="quiz-card flex flex-col">
-        <p class="quiz-title">Har du bindningstid kvar?</p>
-        <div class="flex flex-col gap-4 mt-6">
-          <button class="quiz-option" data-binding="no">Nej</button>
-          <button class="quiz-option" data-binding="yes">Ja</button>
-          <button class="quiz-option" data-binding="unknown">Vet inte</button>
-        </div>
-      </div>
-    </div>
+<div class="quiz-card flex flex-col">
 
-    <!-- RESULT STEP -->
+<div class="flex items-center justify-between mb-4">
+<button id="quiz-back" type="button"
+class="inline-flex items-center gap-2 px-3 py-2 rounded-lg
+text-sm font-semibold text-gray-800 hover:bg-gray-900/5">
+<span class="text-base leading-none">←</span> Tillbaka
+</button>
+
+<div class="flex items-center gap-3">
+<div class="h-2 w-28 rounded-full bg-gray-200 overflow-hidden">
+<div id="quiz-progress" class="h-full w-1/4 rounded-full bg-emerald-600"></div>
+</div>
+
+<div class="text-sm font-semibold text-gray-800">
+Steg <span id="quiz-step-current">1</span> /
+<span id="quiz-step-total">5</span>
+</div>
+</div>
+</div>
+
+<p class="quiz-title">Har du bindningstid kvar?</p>
+
+<div class="flex flex-col gap-4 mt-6">
+<button class="quiz-option" data-binding="no">Nej</button>
+<button class="quiz-option" data-binding="yes">Ja</button>
+<button class="quiz-option" data-binding="unknown">Vet inte</button>
+</div>
+
+</div>
+</div>
+
+
+<!-- RESULT -->
 <div id="step5" class="quiz-step-card hidden-step">
-  <div class="quiz-card flex flex-col text-center">
+<div class="quiz-card flex flex-col text-center">
 
-    <h3 class="text-2xl font-bold mb-4 text-gray-800">
-      Din analys är klar
-    </h3>
+<h3 class="text-2xl font-bold mb-4 text-gray-800">
+Din analys är klar
+</h3>
 
-    <p class="text-gray-600 mb-10">
-      Baserat på dina svar har vi hittat abonnemang som passar dig.
-    </p>
+<p class="text-gray-600 mb-10">
+Baserat på dina svar har vi hittat abonnemang som passar dig.
+</p>
 
-    <div
-      id="offers-container"
-      class="grid grid-cols-1 md:grid-cols-2 gap-10"
-    ></div>
+<div id="offers-container"
+class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
 
-  </div>
 </div>
 </div>
-  </div>
-  </div>
+
+</div>
+</div>
+</div>
    </div>
 </div>
 <!-- HERO IMAGE GRID (clickable) -->
