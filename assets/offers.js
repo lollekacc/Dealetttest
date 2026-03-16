@@ -322,61 +322,78 @@ if (isQuizComplete()) {
 function buildOfferCard(o, stateOverride = null) {
   const state = stateOverride || abonState;
   const reward = calculateReward(o.finalPrice);
+  const renewalReward = Math.round(reward / 2);
+  const isFamily = state.persons > 1;
 
   const card = document.createElement("div");
-  card.className =
-    "relative offer-choice text-left border border-gray-200 rounded-2xl shadow-md bg-white overflow-hidden flex flex-col";
+  card.className = "offer-choice offer-card-pro";
 
   card.innerHTML = `
-    <!-- Top reward buttons -->
-    <div class="flex text-sm font-semibold">
+    <div class="offer-card-top">
       <button
         type="button"
-        class="gift-btn adeala-btn adeala-btn-blue flex-1 py-3 text-center"
+        class="reward-pill reward-pill-blue gift-btn"
         data-reward="${reward}"
         data-offer-id="${o.id}"
         data-type="new"
       >
-        Ny kund · ${reward}:-
+        <span class="reward-pill-label">Ny kund</span>
+        <span class="reward-pill-value">${reward} kr</span>
       </button>
 
       <button
         type="button"
-        class="gift-btn adeala-btn adeala-btn-green flex-1 py-3 text-center"
-        data-reward="${Math.round(reward / 2)}"
+        class="reward-pill reward-pill-green gift-btn gift-btn-renewal"
+        data-reward="${renewalReward}"
         data-offer-id="${o.id}"
         data-type="renewal"
       >
-        Förlängning · ${Math.round(reward / 2)}:-
+        <span class="reward-pill-label">Förlängning</span>
+        <span class="reward-pill-value">${renewalReward} kr</span>
       </button>
     </div>
 
-    <!-- Content -->
-    <div class="p-6 flex flex-col justify-between h-full">
-      <div class="text-center">
-        <img src="${o.logo}" class="h-16 mx-auto mb-4 object-contain">
-        <p class="text-sm text-gray-500 mb-1">${o.operator}</p>
-        <h3 class="text-xl font-semibold mb-1 text-[#0C4A3C]">${o.title}</h3>
-        <p class="text-gray-600 text-sm mb-4">${o.text || ""}</p>
+    <div class="offer-card-body">
+      <div class="offer-brand-wrap">
+        <div class="offer-logo-wrap">
+          <img src="${o.logo}" alt="${o.operator}" class="offer-logo-img">
+        </div>
+        <p class="offer-operator">${o.operator}</p>
       </div>
 
-      <div>
+      <div class="offer-main">
+        <h3 class="offer-title">${o.title}</h3>
+        <p class="offer-desc">${o.text || "Mobilabonnemang med tydligt upplägg och konkurrenskraftigt pris."}</p>
+      </div>
+
+      <div class="offer-meta">
+        <div class="offer-data-badge">
+          <i class="fa-solid fa-wifi"></i>
+          <span>${o.dataAmount >= 999 ? "Obegränsad surf" : `${o.dataAmount} GB surf`}</span>
+        </div>
+
         ${
-          state.persons > 1
+          isFamily
             ? `
-              <p class="text-2xl font-bold text-[#0C4A3C]">
-                ${o.pricePerPerson} kr / person
-              </p>
-              <p class="text-sm text-gray-500 mt-1">
-                ${o.finalPrice} kr/mån totalt (${state.persons} personer)
-              </p>
+              <div class="offer-price-wrap">
+                <p class="offer-price-main">${o.pricePerPerson} kr <span>/ person</span></p>
+                <p class="offer-price-sub">${o.finalPrice} kr/mån totalt · ${state.persons} personer</p>
+              </div>
             `
             : `
-              <p class="text-2xl font-bold text-[#0C4A3C]">
-                ${o.finalPrice} kr/mån
-              </p>
+              <div class="offer-price-wrap">
+                <p class="offer-price-main">${o.finalPrice} kr <span>/ mån</span></p>
+                <p class="offer-price-sub">Tydlig månadskostnad och enkel överblick</p>
+              </div>
             `
         }
+      </div>
+
+      <div class="offer-card-bottom">
+        <div class="offer-select-text">
+          <i class="fa-solid fa-circle-check"></i>
+          <span>Välj detta erbjudande</span>
+        </div>
       </div>
     </div>
   `;
@@ -409,15 +426,13 @@ card.addEventListener("click", () => {
 
 });
 
-const rewardBtn = card.querySelector(".gift-btn");
-
-if (rewardBtn) {
+card.querySelectorAll(".gift-btn").forEach(rewardBtn => {
   rewardBtn.addEventListener("click", (e) => {
     e.stopPropagation();
 
-    // ✅ FORCE-SELECT OFFER WHEN CLICKING REWARD
     document.querySelectorAll(".offer-choice")
       .forEach(c => c.classList.remove("active"));
+
     card.classList.add("active");
     window.offerChosen = true;
     window.selectedOfferId = o.id;
@@ -426,7 +441,7 @@ if (rewardBtn) {
     const offerId = rewardBtn.dataset.offerId || "";
     openRewardSection(rewardValue, offerId);
   });
-}
+});
       offersContainer.appendChild(card);
     });
   }

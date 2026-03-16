@@ -14,8 +14,46 @@ referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="./assets/design.css">
 </head>
 <body class="min-h-screen font-[Inter] bg-[#f8fafc] text-gray-900">
+  
 <div id="header-placeholder"></div>
+<!-- subtle background lines -->
+<div class="page-bg-lines" aria-hidden="true">
+  <svg class="bg-line bg-line-1" viewBox="0 0 1440 500" fill="none" preserveAspectRatio="none">
+    <path
+      d="M-40 220C120 180 220 120 380 140C540 160 620 260 790 270C980 282 1080 180 1230 160C1330 146 1400 155 1480 175"
+      stroke="url(#lineGradient1)"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+    <defs>
+      <linearGradient id="lineGradient1" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#10b981" stop-opacity="0"/>
+        <stop offset="0.25" stop-color="#10b981" stop-opacity="0.18"/>
+        <stop offset="0.5" stop-color="#0f766e" stop-opacity="0.22"/>
+        <stop offset="0.75" stop-color="#10b981" stop-opacity="0.16"/>
+        <stop offset="1" stop-color="#10b981" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+  </svg>
 
+  <svg class="bg-line bg-line-2" viewBox="0 0 1440 500" fill="none" preserveAspectRatio="none">
+    <path
+      d="M-20 300C130 340 240 410 390 392C530 375 640 250 820 238C1000 226 1115 320 1260 340C1350 352 1410 345 1480 330"
+      stroke="url(#lineGradient2)"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+    <defs>
+      <linearGradient id="lineGradient2" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#14b8a6" stop-opacity="0"/>
+        <stop offset="0.25" stop-color="#14b8a6" stop-opacity="0.12"/>
+        <stop offset="0.5" stop-color="#10b981" stop-opacity="0.18"/>
+        <stop offset="0.75" stop-color="#14b8a6" stop-opacity="0.12"/>
+        <stop offset="1" stop-color="#14b8a6" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+  </svg>
+</div>
 <main id="page-content" class="max-w-7xl mx-auto p-10">
 
 <div class="w-full max-w-8xl mx-auto mt-4 mb-4 p-1 md:p-2
@@ -242,5 +280,6 @@ Steg <span id="quiz-step-current">1</span> / <span id="quiz-step-total">5</span>
 </main>
 <div id="footer-placeholder"></div>
 <script src="assets/indexbehovsanalys.js"></script>
+<style></style>
 </body>
 </html>
