@@ -559,26 +559,26 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (footerRes.ok) {
     document.body.insertAdjacentHTML("beforeend", await footerRes.text());
   }
+  const chatRoot = document.getElementById("dealett-chat");
 const openBtn = document.getElementById("open-chat");
 const modal = document.getElementById("chat-modal");
 const closeBtn = document.getElementById("close-chat");
-const chatPanel = document.getElementById("chat-panel");
 const modalBody = document.getElementById("chat-modal-body");
 
-if (openBtn && modal && closeBtn && chatPanel && modalBody) {
+if (openBtn && modal && closeBtn && chatRoot && modalBody) {
   openBtn.onclick = () => {
     chatInModal = true;
     modal.classList.remove("hidden");
     modal.classList.add("flex");
-    modalBody.appendChild(chatPanel);
-    chatPanel.classList.remove("closed");
+    modalBody.appendChild(chatRoot);
+    document.getElementById("chat-panel")?.classList.remove("closed");
   };
 
   closeBtn.onclick = () => {
     chatInModal = false;
     modal.classList.add("hidden");
     modal.classList.remove("flex");
-    document.body.appendChild(chatPanel);
+    document.body.appendChild(chatRoot);
   };
 }
   const script = document.createElement("script");
