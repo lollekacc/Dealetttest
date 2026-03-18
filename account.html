@@ -6,325 +6,182 @@
 
 <title>Dealett – Mitt konto</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<link rel="stylesheet" href="./assets/style.css">
-<link rel="stylesheet" href="./assets/design.css">
-<link rel="stylesheet" href="./assets/account.css">
-
+<link rel="stylesheet" href="./assets/account-dark.css">
 </head>
 
-<body class="account-body">
+<body class="account-dark font-[Inter]">
 
 <div id="header-placeholder"></div>
 
-<main class="account-page">
+<main class="account">
 
-<section class="account-hero">
+<!-- HERO -->
+<section class="hero">
+<div class="wrap">
 
-<div class="account-hero__bg"></div>
+<p class="eyebrow">Dashboard</p>
 
-<div class="account-shell">
-
-<div class="account-hero__content">
-
-<div>
-<p class="account-eyebrow">Dashboard</p>
-
-<h1 class="account-title">
+<h1>
 Välkommen tillbaka,
 <span id="userName">Kund</span>
 </h1>
 
-<p class="account-subtitle">
-Hantera abonnemang, belöningar och kontoinställningar på ett ställe.
+<p class="sub">
+Hantera abonnemang, belöningar och konto – i ett premiumflöde.
 </p>
+
+<div class="hero-actions">
+<a href="offers.html" class="btn btn-primary">Utforska</a>
+<button id="logoutBtn" class="btn btn-ghost">Logga ut</button>
 </div>
 
-<div class="account-hero__actions">
-<a href="offers.html" class="btn btn--primary">Utforska nya abonnemang</a>
-<button id="logoutBtn" class="btn btn--ghost">Logga ut</button>
-</div>
-
-</div>
-
-<div class="account-stats">
-
-<article class="stat-card stat-card--accent">
-<span class="stat-card__label">Aktivt abonnemang</span>
-<strong id="activePlan" class="stat-card__value">Inget aktivt</strong>
-<span id="activeOperator" class="stat-card__meta">Ingen operatör vald</span>
-</article>
-
-<article class="stat-card">
-<span class="stat-card__label">Månadskostnad</span>
-<strong id="monthlyCost" class="stat-card__value">0 kr</strong>
-<span class="stat-card__meta">Nuvarande kostnadsnivå</span>
-</article>
-
-<article class="stat-card">
-<span class="stat-card__label">Belöning</span>
-<strong id="rewardStatus" class="stat-card__value">Ingen vald</strong>
-<span id="rewardMeta" class="stat-card__meta">Ingen aktiv belöning registrerad</span>
-</article>
-
-<article class="stat-card">
-<span class="stat-card__label">Kontostatus</span>
-<strong class="stat-card__value">Aktivt</strong>
-<span class="stat-card__meta">Ditt konto är redo att användas</span>
-</article>
-
-</div>
 </div>
 </section>
 
-<section class="account-shell account-content">
+<!-- STATS -->
+<section class="wrap stats">
 
-<div class="account-grid">
+<div class="card">
+<span>Abonnemang</span>
+<strong id="activePlan">Inget</strong>
+</div>
 
-<div class="account-main">
+<div class="card">
+<span>Pris</span>
+<strong id="monthlyCost">0 kr</strong>
+</div>
 
-<article class="panel panel--subscription">
+<div class="card">
+<span>Belöning</span>
+<strong id="rewardStatus">Ingen</strong>
+</div>
 
-<div class="panel__header">
+<div class="card">
+<span>Status</span>
+<strong>Aktivt</strong>
+</div>
+
+</section>
+
+<!-- CONTENT -->
+<section class="wrap grid">
+
+<!-- MAIN -->
 <div>
-<p class="panel__eyebrow">Abonnemang</p>
-<h2 class="panel__title">Mitt abonnemang</h2>
+
+<div class="panel">
+
+<h2>Mitt abonnemang</h2>
+
+<div id="emptyPlanState" class="empty">
+<p>Inget abonnemang kopplat</p>
+<a href="offers.html" class="btn btn-primary">Hitta abonnemang</a>
 </div>
 
-<span id="planBadge" class="status-badge">Ingen koppling</span>
+<div id="planContent" class="plan hidden">
+
+<h3 id="planNameHeading">–</h3>
+<p id="planOperatorLine">–</p>
+
+<div class="plan-meta">
+<span id="planData">–</span>
+<span id="planStartDate">–</span>
 </div>
 
-<div id="emptyPlanState" class="empty-state">
+<strong id="planPriceBig">0 kr</strong>
 
-<div class="empty-state__icon">◎</div>
-
-<h3>Inget abonnemang kopplat</h3>
-
-<p>
-När du väljer ett abonnemang visas operatör, surf, pris och startdatum här.
-</p>
-
-<a href="offers.html" class="btn btn--primary btn--sm">Hitta abonnemang</a>
-
+<div class="actions">
+<a href="offers.html" class="btn btn-primary">Byt</a>
+<button id="cancelPlan" class="btn btn-danger">Avsluta</button>
 </div>
-
-<div id="planContent" class="subscription-card is-hidden">
-
-<div class="subscription-top">
-
-<div>
-<h3 id="planNameHeading" class="subscription-name">–</h3>
-<p id="planOperatorLine" class="subscription-operator">–</p>
-</div>
-
-<div class="subscription-price-wrap">
-<span class="subscription-price-label">Månadskostnad</span>
-<strong id="planPriceBig" class="subscription-price">0 kr</strong>
-</div>
-
-</div>
-
-<div class="subscription-features">
-
-<div class="feature-box">
-<span class="feature-box__label">Surf</span>
-<strong id="planData">–</strong>
-</div>
-
-<div class="feature-box">
-<span class="feature-box__label">Startdatum</span>
-<strong id="planStartDate">–</strong>
-</div>
-
-<div class="feature-box">
-<span class="feature-box__label">Status</span>
-<strong>Aktivt abonnemang</strong>
-</div>
-
-</div>
-
-<div id="subscriptionDetails" class="subscription-details"></div>
-
-<div class="panel__actions">
-
-<a href="offers.html" class="btn btn--primary">Byt abonnemang</a>
-
-<button id="cancelPlan" class="btn btn--danger-outline">
-Avsluta abonnemang
-</button>
-
-</div>
-
-</div>
-</article>
-
-<article class="panel">
-
-<div class="panel__header">
-<div>
-<p class="panel__eyebrow">Belöningar</p>
-<h2 class="panel__title">Min belöning</h2>
-</div>
-</div>
-
-<div class="reward-card">
-
-<div class="reward-card__icon">★</div>
-
-<div class="reward-card__content">
-
-<strong id="rewardNameLarge">Ingen vald belöning</strong>
-
-<p id="rewardDescription">
-Välj en belöning när du tecknar eller förlänger abonnemang.
-</p>
 
 </div>
 
 </div>
 
-</article>
+<div class="panel">
+
+<h2>Belöning</h2>
+
+<p id="rewardNameLarge">Ingen vald</p>
+<p id="rewardDescription" class="muted"></p>
 
 </div>
 
-<aside class="account-sidebar">
-
-<article class="panel">
-
-<div class="panel__header">
-<div>
-<p class="panel__eyebrow">Snabbval</p>
-<h2 class="panel__title">Genvägar</h2>
-</div>
 </div>
 
-<div class="shortcut-list">
+<!-- SIDEBAR -->
+<aside>
 
-<a href="support.html" class="shortcut-item">
-<span class="shortcut-item__icon">⌁</span>
-<div>
-<strong>Kontakta support</strong>
-<p>Få hjälp med konto eller abonnemang.</p>
-</div>
-</a>
+<div class="panel">
 
-<a href="profile.html" class="shortcut-item">
-<span class="shortcut-item__icon">◌</span>
-<div>
-<strong>Uppdatera uppgifter</strong>
-<p>Redigera namn och kontaktuppgifter.</p>
-</div>
-</a>
+<h2>Genvägar</h2>
 
-<a href="offers.html" class="shortcut-item">
-<span class="shortcut-item__icon">↗</span>
-<div>
-<strong>Jämför erbjudanden</strong>
-<p>Se bättre alternativ och besparingar.</p>
-</div>
-</a>
+<a href="support.html" class="link">Support</a>
+<a href="profile.html" class="link">Profil</a>
+<a href="offers.html" class="link">Erbjudanden</a>
 
 </div>
-
-</article>
-
-<article class="panel panel--danger">
-
-<div class="panel__header">
-<div>
-<p class="panel__eyebrow">Säkerhet</p>
-<h2 class="panel__title">Kontohantering</h2>
-</div>
-</div>
-
-<p class="danger-text">
-Den här åtgärden rensar sparad lokal kontodata i webbläsaren.
-</p>
-
-<div class="panel__actions panel__actions--stack">
-
-
-
-</div>
-
-</article>
 
 </aside>
-
-</div>
 
 </section>
 
 </main>
 
-<div id="footer-placeholder"></div>
-
 <script>
-
 document.addEventListener("DOMContentLoaded", init);
 
-async function init() {
+async function init(){
 await loadPartials();
 initAccountPage();
 }
 
 async function loadPartials(){
-
 try{
-const header = await fetch("./partials/header.html");
-if(header.ok){
-document.getElementById("header-placeholder").innerHTML = await header.text();
-}
+const h=await fetch("./partials/header.html");
+if(h.ok) document.getElementById("header-placeholder").innerHTML=await h.text();
 }catch{}
-
-try{
-const footer = await fetch("./partials/footer.html");
-if(footer.ok){
-document.getElementById("footer-placeholder").innerHTML = await footer.text();
-}
-}catch{}
-
 }
 
 function readStorage(key){
 try{
-const value = localStorage.getItem(key);
-return value ? JSON.parse(value) : null;
-}catch{
-return null;
-}
+const v=localStorage.getItem(key);
+return v?JSON.parse(v):null;
+}catch{return null;}
 }
 
 function initAccountPage(){
 
-const user = readStorage("dealett_user");
+const user=readStorage("dealett_user");
+if(!user){location.href="login.html";return;}
 
-if(!user){
-window.location.href="login.html";
-return;
-}
+document.getElementById("userName").textContent=user.name||"Kund";
 
-setupUser(user);
-
-const plan = readStorage("dealett_plan");
+const plan=readStorage("dealett_plan");
 setupPlan(plan);
 
-const reward = readStorage("dealett_reward");
-setupReward(reward);
-
-setupActions();
-
+const reward=readStorage("dealett_reward");
+if(reward){
+document.getElementById("rewardStatus").textContent=reward.name;
+document.getElementById("rewardNameLarge").textContent=reward.name;
+document.getElementById("rewardDescription").textContent=reward.description;
 }
 
-function setupUser(user){
-const el=document.getElementById("userName");
-if(el) el.textContent=user.name || "Kund";
+document.getElementById("logoutBtn").onclick=()=>{
+localStorage.removeItem("dealett_user");
+location.href="index.html";
+};
+
+document.getElementById("cancelPlan")?.addEventListener("click",()=>{
+if(!confirm("Avsluta abonnemang?"))return;
+localStorage.removeItem("dealett_plan");
+location.reload();
+});
 }
 
 function setupPlan(plan){
@@ -333,96 +190,155 @@ const empty=document.getElementById("emptyPlanState");
 const content=document.getElementById("planContent");
 
 if(!plan){
-
-document.getElementById("activePlan").textContent="Inget aktivt";
-document.getElementById("activeOperator").textContent="Ingen operatör vald";
-document.getElementById("monthlyCost").textContent="0 kr";
-document.getElementById("planBadge").textContent="Ingen koppling";
-
-empty.classList.remove("is-hidden");
-content.classList.add("is-hidden");
-
+empty.classList.remove("hidden");
+content.classList.add("hidden");
 return;
 }
 
-document.getElementById("activePlan").textContent=plan.name || "-";
-document.getElementById("activeOperator").textContent=plan.operator || "-";
-document.getElementById("monthlyCost").textContent=(plan.price||0)+" kr";
-document.getElementById("planBadge").textContent="Aktivt";
+document.getElementById("activePlan").textContent=plan.name;
+document.getElementById("monthlyCost").textContent=plan.price+" kr";
 
-document.getElementById("planNameHeading").textContent=plan.name||"-";
-document.getElementById("planOperatorLine").textContent=plan.operator||"-";
-document.getElementById("planPriceBig").textContent=(plan.price||0)+" kr";
-document.getElementById("planData").textContent=plan.data||"-";
-document.getElementById("planStartDate").textContent=plan.startDate||"-";
+document.getElementById("planNameHeading").textContent=plan.name;
+document.getElementById("planOperatorLine").textContent=plan.operator;
+document.getElementById("planPriceBig").textContent=plan.price+" kr";
+document.getElementById("planData").textContent=plan.data;
+document.getElementById("planStartDate").textContent=plan.startDate;
 
-document.getElementById("subscriptionDetails").innerHTML=`
-
-<div class="detail-row">
-<span>Operatör</span>
-<strong>${plan.operator||"-"}</strong>
-</div>
-
-<div class="detail-row">
-<span>Abonnemang</span>
-<strong>${plan.name||"-"}</strong>
-</div>
-
-<div class="detail-row">
-<span>Surf</span>
-<strong>${plan.data||"-"}</strong>
-</div>
-
-<div class="detail-row">
-<span>Månadspris</span>
-<strong>${plan.price||0} kr</strong>
-</div>
-
-<div class="detail-row">
-<span>Startdatum</span>
-<strong>${plan.startDate||"-"}</strong>
-</div>
-
-`;
-
-empty.classList.add("is-hidden");
-content.classList.remove("is-hidden");
-
+empty.classList.add("hidden");
+content.classList.remove("hidden");
 }
-
-function setupReward(reward){
-
-if(!reward) return;
-
-document.getElementById("rewardStatus").textContent=reward.name||"Vald";
-document.getElementById("rewardMeta").textContent="Registrerad";
-document.getElementById("rewardNameLarge").textContent=reward.name||"Belöning";
-document.getElementById("rewardDescription").textContent=reward.description||"";
-
-}
-
-function setupActions(){
-
-document.getElementById("logoutBtn")?.addEventListener("click",()=>{
-localStorage.removeItem("dealett_user");
-location.href="index.html";
-});
-
-document.getElementById("cancelPlan")?.addEventListener("click",()=>{
-if(!confirm("Avsluta abonnemang?")) return;
-localStorage.removeItem("dealett_plan");
-location.reload();
-});
-
-document.getElementById("deleteAccount")?.addEventListener("click",()=>{
-if(!confirm("Radera all kontodata?")) return;
-localStorage.clear();
-location.href="index.html";
-});
-
-}
-
 </script>
+<style>
+    :root{
+--bg:#0b0c10;
+--card:#15161d;
+--line:rgba(255,255,255,0.08);
 
+--text:#e5e7eb;
+--muted:#9ca3af;
+
+--gold:#d4af37;
+}
+
+body{
+margin:0;
+background:linear-gradient(180deg,#0b0c10,#0e0f14);
+color:var(--text);
+}
+
+.wrap{
+width:min(1100px,calc(100% - 40px));
+margin:auto;
+}
+
+.hero{
+padding:100px 0 60px;
+text-align:center;
+}
+
+.hero h1{
+font-size:clamp(2.8rem,5vw,4rem);
+font-weight:900;
+}
+
+.hero span{color:var(--gold)}
+
+.sub{color:var(--muted);margin-top:10px}
+
+.eyebrow{
+color:var(--gold);
+font-size:12px;
+letter-spacing:.12em;
+}
+
+.hero-actions{
+margin-top:20px;
+display:flex;
+gap:10px;
+justify-content:center;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:30px;
+}
+
+.card{
+background:var(--card);
+padding:20px;
+border-radius:14px;
+border:1px solid var(--line);
+}
+
+.card span{color:var(--muted);font-size:12px}
+.card strong{display:block;margin-top:6px}
+
+.grid{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:20px;
+margin-top:40px;
+}
+
+.panel{
+background:var(--card);
+padding:24px;
+border-radius:18px;
+border:1px solid var(--line);
+margin-bottom:20px;
+}
+
+.plan-meta{
+display:flex;
+gap:10px;
+color:var(--muted);
+}
+
+.actions{
+margin-top:20px;
+display:flex;
+gap:10px;
+}
+
+.btn{
+padding:10px 18px;
+border-radius:999px;
+font-weight:600;
+cursor:pointer;
+border:none;
+}
+
+.btn-primary{
+background:var(--gold);
+color:#000;
+}
+
+.btn-ghost{
+background:transparent;
+color:var(--text);
+border:1px solid var(--line);
+}
+
+.btn-danger{
+background:#dc2626;
+color:#fff;
+}
+
+.link{
+display:block;
+margin-top:10px;
+color:var(--muted);
+text-decoration:none;
+}
+
+.hidden{display:none}
+
+@media(max-width:800px){
+.stats{grid-template-columns:1fr}
+.grid{grid-template-columns:1fr}
+}
+</style>
 </body>
 </html>
