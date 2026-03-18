@@ -1,148 +1,958 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adeala – Kundservice</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dealett – Kundservice</title>
+  <meta
+    name="description"
+    content="Kundservice hos Dealett. Få hjälp med vanliga frågor, kontaktformulär och snabb vägledning kring mobil- och bredbandsabonnemang."
+  />
 
-  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  />
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="./assets/style.css">
-  <link rel="stylesheet" href="./assets/design.css">
+  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="stylesheet" href="./assets/design.css" />
+  <link rel="stylesheet" href="./assets/kundservice.css" />
 </head>
 
-<body class="font-[Inter] bg-white text-green-800">
+<body class="support-page font-[Inter] text-slate-900">
+  <a href="#main-content" class="support-skip-link">Hoppa till innehåll</a>
 
-  <!-- Header -->
   <div id="header-placeholder"></div>
 
-  <!-- MAIN -->
-  <main class="max-w-5xl mx-auto py-20 px-6">
+  <main id="main-content" class="support-main">
+    <!-- HERO -->
+    <section class="support-hero">
+      <div class="support-container">
+        <div class="support-hero-grid">
+          <div class="support-hero-copy">
+            <span class="support-kicker">Kundservice</span>
 
-    <!-- Title -->
-    <h2 class="text-4xl font-bold text-center mb-12 text-green-800">
-      Vanliga frågor (FAQ)
-    </h2>
+            <h1 class="support-title">
+              Hjälp när du behöver den
+              <span>snabbt, tydligt och enkelt</span>
+            </h1>
 
-    <!-- FAQ SECTION -->
-    <div class="space-y-6">
+            <p class="support-lead">
+              Här hittar du svar på vanliga frågor, kontaktvägar och ett enkelt formulär
+              om du vill komma i kontakt med oss direkt.
+            </p>
 
-      <div class="adeala-card">
-        <h3 class="text-xl font-semibold mb-2 flex items-center gap-2 text-green-800">
-          <i class="fas fa-signal text-green-800"></i>
-          Hur väljer jag rätt abonnemang?
-        </h3>
-        <p class="text-green-800">
-          Genom att använda våra quiz kan du snabbt hitta det abonnemang som bäst matchar ditt behov baserat på surf, täckning och pris.
-        </p>
+            <div class="support-hero-badges">
+              <div class="support-badge">
+                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                <span>Vanliga frågor</span>
+              </div>
+              <div class="support-badge">
+                <i class="fa-solid fa-headset" aria-hidden="true"></i>
+                <span>Snabb kontakt</span>
+              </div>
+              <div class="support-badge">
+                <i class="fa-solid fa-shield-heart" aria-hidden="true"></i>
+                <span>Tydlig vägledning</span>
+              </div>
+            </div>
+          </div>
+
+          <aside class="support-hero-card" aria-label="Snabböversikt">
+            <div class="support-info-card">
+              <span class="support-info-label">Behöver du hjälp?</span>
+              <strong>Vi guidar dig vidare</strong>
+              <p>
+                Använd formuläret nedan eller Dealett-AI nere till höger för snabbare svar
+                kring abonnemang, surf, familjeupplägg och erbjudanden.
+              </p>
+            </div>
+
+            <div class="support-mini-grid">
+              <div class="support-mini-card">
+                <span>Hjälp med</span>
+                <strong>Mobil & bredband</strong>
+              </div>
+              <div class="support-mini-card">
+                <span>Fokus</span>
+                <strong>Snabb och tydlig service</strong>
+              </div>
+            </div>
+          </aside>
+        </div>
       </div>
+    </section>
 
-      <div class="adeala-card">
-        <h3 class="text-xl font-semibold mb-2 flex items-center gap-2 text-green-800">
-          <i class="fas fa-user-friends text-green-800"></i>
-          Kan jag lägga till familjemedlemmar i efterhand?
-        </h3>
-        <p class="text-green-800">
-          Ja! Våra partners erbjuder flexibla lösningar där du enkelt kan utöka ditt abonnemang för fler personer när som helst.
-        </p>
+    <!-- FAQ -->
+    <section class="support-section" aria-labelledby="faq-title">
+      <div class="support-container">
+        <div class="support-section-head center">
+          <span class="support-kicker">Vanliga frågor</span>
+          <h2 id="faq-title">Svar på det flest undrar över</h2>
+          <p>
+            Här är några av de vanligaste frågorna om hur Dealett fungerar och hur du hittar rätt abonnemang.
+          </p>
+        </div>
+
+        <div class="support-faq-list">
+          <details class="support-faq-item" open>
+            <summary>
+              <span class="support-faq-icon">
+                <i class="fa-solid fa-signal" aria-hidden="true"></i>
+              </span>
+              <span class="support-faq-title">Hur väljer jag rätt abonnemang?</span>
+              <span class="support-faq-arrow">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              </span>
+            </summary>
+            <div class="support-faq-content">
+              Genom att använda våra guider och quiz kan du snabbt hitta det abonnemang som bäst matchar ditt behov utifrån surf, täckning, pris och hur du faktiskt använder mobilen.
+            </div>
+          </details>
+
+          <details class="support-faq-item">
+            <summary>
+              <span class="support-faq-icon">
+                <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+              </span>
+              <span class="support-faq-title">Kan jag lägga till familjemedlemmar i efterhand?</span>
+              <span class="support-faq-arrow">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              </span>
+            </summary>
+            <div class="support-faq-content">
+              Ja, många av våra partners erbjuder flexibla familjelösningar där du kan lägga till fler användare senare beroende på operatörens upplägg och aktuella villkor.
+            </div>
+          </details>
+
+          <details class="support-faq-item">
+            <summary>
+              <span class="support-faq-icon">
+                <i class="fa-solid fa-gift" aria-hidden="true"></i>
+              </span>
+              <span class="support-faq-title">Hur fungerar kampanjer och erbjudanden?</span>
+              <span class="support-faq-arrow">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              </span>
+            </summary>
+            <div class="support-faq-content">
+              När du tecknar ett abonnemang via Dealett kan vissa erbjudanden inkludera bonusar som presentkort, rabatter eller extra surf. Exakta kampanjer varierar beroende på operatör och tidsperiod.
+            </div>
+          </details>
+
+          <details class="support-faq-item">
+            <summary>
+              <span class="support-faq-icon">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+              </span>
+              <span class="support-faq-title">Är mina uppgifter säkra hos er?</span>
+              <span class="support-faq-arrow">
+                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              </span>
+            </summary>
+            <div class="support-faq-content">
+              Vi strävar efter att hantera information på ett tryggt och ansvarsfullt sätt. När du går vidare mot ett erbjudande sker det i regel vidare till aktuell operatör eller relevant flöde.
+            </div>
+          </details>
+        </div>
       </div>
+    </section>
 
-      <div class="adeala-card">
-        <h3 class="text-xl font-semibold mb-2 flex items-center gap-2 text-green-800">
-          <i class="fas fa-gift text-green-800"></i>
-          Hur fungerar kampanjer och erbjudanden?
-        </h3>
-        <p class="text-green-800">
-          När du tecknar ett abonnemang via Dealett får du tillgång till exklusiva bonusar såsom presentkort, rabatter eller extra surf.
-        </p>
+    <!-- CONTACT + INFO -->
+    <section class="support-section support-section-soft" aria-labelledby="contact-title">
+      <div class="support-container">
+        <div class="support-contact-grid">
+          <div class="support-contact-copy">
+            <span class="support-kicker">Kontakta oss</span>
+            <h2 id="contact-title">Skicka ett meddelande</h2>
+            <p>
+              Har du frågor om abonnemang, erbjudanden eller hur Dealett fungerar? Skicka ett meddelande så återkommer vi så snart vi kan.
+            </p>
+
+            <div class="support-contact-points">
+              <div class="support-contact-point">
+                <i class="fa-solid fa-comments" aria-hidden="true"></i>
+                <div>
+                  <strong>Snabb hjälp</strong>
+                  <p>Använd Dealett-AI nere till höger för direkt vägledning.</p>
+                </div>
+              </div>
+
+              <div class="support-contact-point">
+                <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+                <div>
+                  <strong>Tydliga frågor ger snabbare svar</strong>
+                  <p>Beskriv gärna vad du jämför eller vad du behöver hjälp med.</p>
+                </div>
+              </div>
+
+              <div class="support-contact-point">
+                <i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i>
+                <div>
+                  <strong>Mobil och bredband</strong>
+                  <p>Vi fokuserar på att hjälpa dig hitta rätt upplägg utifrån behov och pris.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <form class="support-form" action="#" method="post">
+            <div class="support-form-row">
+              <label for="name">Namn</label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                placeholder="Ditt namn"
+                autocomplete="name"
+              />
+            </div>
+
+            <div class="support-form-row">
+              <label for="email">E-post</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="namn@exempel.se"
+                autocomplete="email"
+              />
+            </div>
+
+            <div class="support-form-row">
+              <label for="topic">Vad gäller ditt ärende?</label>
+              <select id="topic" name="topic">
+                <option value="">Välj ämne</option>
+                <option value="abonnemang">Abonnemang</option>
+                <option value="bredband">Bredband</option>
+                <option value="erbjudanden">Erbjudanden</option>
+                <option value="ovrigt">Övrigt</option>
+              </select>
+            </div>
+
+            <div class="support-form-row">
+              <label for="message">Meddelande</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="6"
+                placeholder="Skriv ditt meddelande här..."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="support-btn support-btn-primary">
+              Skicka meddelande
+            </button>
+          </form>
+        </div>
       </div>
+    </section>
 
-      <div class="adeala-card">
-        <h3 class="text-xl font-semibold mb-2 flex items-center gap-2 text-green-800">
-          <i class="fas fa-lock text-green-800"></i>
-          Är mina uppgifter säkra hos er?
-        </h3>
-        <p class="text-green-800">
-          Absolut. Vi sparar ingen känslig data utan skickar dina val direkt till operatören du själv väljer.
-        </p>
+    <!-- CTA -->
+    <section class="support-section support-cta-section">
+      <div class="support-container">
+        <div class="support-cta-card">
+          <span class="support-kicker">Kom igång</span>
+          <h2>Vill du jämföra direkt istället?</h2>
+          <p>
+            Utforska abonnemang och hitta ett alternativ som passar dina behov bättre.
+          </p>
+
+          <div class="support-cta-actions">
+            <a href="abonnemang.html" class="support-btn support-btn-light">
+              Jämför abonnemang
+            </a>
+            <a href="index.html" class="support-btn support-btn-outline-light">
+              Till startsidan
+            </a>
+          </div>
+        </div>
       </div>
-
-    </div>
-
-    <!-- Divider -->
-    <div class="border-t border-green-800/20 my-14"></div>
-
-    <!-- Contact -->
-    <h2 class="text-3xl font-bold text-center mb-4 text-green-800">
-      Kontakta oss
-    </h2>
-
-    <p class="text-center text-green-800 mb-10">
-      Fyll i formuläret nedan eller använd Dealett-Ai ner till höger för snabb hjälp.
-    </p>
-
-    <!-- CONTACT FORM -->
-    <form class="max-w-2xl mx-auto bg-white p-10 rounded-2xl shadow-lg border border-black/5 text-green-800">
-
-      <div class="mb-6">
-        <label for="name" class="block font-semibold mb-2 text-green-800">Namn</label>
-        <input id="name" type="text" placeholder="Ditt namn"
-          class="w-full rounded-lg px-4 py-3 border border-black/10 focus:ring-2 focus:ring-green-800 outline-none text-green-800">
-      </div>
-
-      <div class="mb-6">
-        <label for="email" class="block font-semibold mb-2 text-green-800">E-post</label>
-        <input id="email" type="email" placeholder="namn@exempel.se"
-          class="w-full rounded-lg px-4 py-3 border border-black/10 focus:ring-2 focus:ring-green-800 outline-none text-green-800">
-      </div>
-
-      <div class="mb-6">
-        <label for="message" class="block font-semibold mb-2 text-green-800">Meddelande</label>
-        <textarea id="message" rows="5" placeholder="Skriv ditt meddelande här..."
-          class="w-full rounded-lg px-4 py-3 border border-black/10 focus:ring-2 focus:ring-green-800 outline-none text-green-800"></textarea>
-      </div>
-
-      <button type="button" class="adeala-btn mt-2">
-        Skicka
-      </button>
-
-     
-    </form>
-
+    </section>
   </main>
 
-    <!-- Load Header, Chat, Footer (same as Code1) -->
   <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      document.getElementById("header-placeholder").innerHTML =
-        await fetch("partials/header.html").then(r => r.text());
+    async function loadPartial(url, targetSelector, position = "inner") {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Kunde inte ladda ${url}`);
+        const html = await response.text();
 
-      document.body.insertAdjacentHTML(
-        "beforeend",
-        await fetch("partials/chat.html").then(r => r.text())
-      );
+        if (position === "inner") {
+          const target = document.querySelector(targetSelector);
+          if (target) target.innerHTML = html;
+        }
 
-      document.body.insertAdjacentHTML(
-        "beforeend",
-        await fetch("partials/footer.html").then(r => r.text())
-      );
+        if (position === "beforeend") {
+          document.body.insertAdjacentHTML("beforeend", html);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-      const script = document.createElement("script");
-      script.src = "assets/chat.js";
-      document.body.appendChild(script);
-    });
+    async function initLayout() {
+      await loadPartial("partials/header.html", "#header-placeholder", "inner");
+      await loadPartial("partials/chat.html", "body", "beforeend");
+      await loadPartial("partials/footer.html", "body", "beforeend");
+
+      if (document.getElementById("chatSend")) {
+        const script = document.createElement("script");
+        script.src = "assets/chat.js";
+        script.defer = true;
+        document.body.appendChild(script);
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", initLayout);
   </script>
+  <style>
+    :root{
+  --support-bg: #ffffff;
+  --support-bg-soft: #f6faf9;
+  --support-surface: rgba(255,255,255,0.82);
+  --support-surface-strong: rgba(255,255,255,0.94);
+  --support-line: rgba(15,23,42,0.08);
+  --support-line-strong: rgba(15,23,42,0.14);
+  --support-text: #0f172a;
+  --support-muted: #5b6778;
+  --support-brand: #0f766e;
+  --support-brand-dark: #0b5c56;
+  --support-brand-soft: rgba(15,118,110,0.10);
+  --support-blue-soft: rgba(59,130,246,0.08);
+  --support-shadow-sm: 0 10px 30px rgba(15,23,42,0.05);
+  --support-shadow-md: 0 18px 50px rgba(15,23,42,0.08);
+  --support-shadow-lg: 0 30px 90px rgba(15,23,42,0.12);
+  --support-radius-sm: 16px;
+  --support-radius-md: 24px;
+  --support-radius-lg: 32px;
+  --support-max: 1240px;
+  --support-transition: 220ms ease;
+}
+
+*,
+*::before,
+*::after{
+  box-sizing: border-box;
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+body{
+  margin: 0;
+}
+
+.support-page{
+  background:
+    radial-gradient(circle at 0% 0%, rgba(16,185,129,0.08), transparent 26%),
+    radial-gradient(circle at 100% 0%, rgba(59,130,246,0.06), transparent 28%),
+    linear-gradient(180deg, #fcfefd 0%, #f8fbfc 30%, #ffffff 100%);
+  color: var(--support-text);
+}
+
+.support-skip-link{
+  position: absolute;
+  left: -9999px;
+  top: 0;
+}
+
+.support-skip-link:focus{
+  left: 16px;
+  top: 16px;
+  z-index: 9999;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #0f172a;
+  color: #fff;
+  text-decoration: none;
+}
+
+.support-main{
+  overflow: clip;
+  padding-top: 8px;
+}
+
+.support-container{
+  width: min(var(--support-max), calc(100% - 48px));
+  margin-inline: auto;
+}
+
+.support-hero,
+.support-section,
+.support-cta-section{
+  position: relative;
+}
+
+.support-kicker{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--support-brand-soft);
+  color: var(--support-brand-dark);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.support-hero{
+  padding: 52px 0 88px;
+}
+
+.support-hero::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(16,185,129,0.10), transparent 22%),
+    radial-gradient(circle at 86% 14%, rgba(59,130,246,0.08), transparent 20%);
+}
+
+.support-hero-grid{
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+  gap: 56px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.support-title{
+  margin: 20px 0 20px;
+  font-size: clamp(2.9rem, 6vw, 5.2rem);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+  font-weight: 900;
+  text-wrap: balance;
+}
+
+.support-title span{
+  display: block;
+  color: var(--support-brand);
+}
+
+.support-lead{
+  max-width: 62ch;
+  color: #334155;
+  font-size: 1.08rem;
+  line-height: 1.85;
+}
+
+.support-hero-badges{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.support-badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.86);
+  border: 1px solid rgba(15,23,42,0.06);
+  box-shadow: var(--support-shadow-sm);
+  color: var(--support-text);
+  font-weight: 600;
+}
+
+.support-badge i{
+  color: var(--support-brand);
+}
+
+.support-hero-card{
+  position: relative;
+  padding: 28px;
+  border-radius: var(--support-radius-lg);
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,255,255,0.78));
+  border: 1px solid rgba(255,255,255,0.65);
+  box-shadow: var(--support-shadow-lg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.support-hero-card::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(16,185,129,0.08), transparent 42%),
+    linear-gradient(315deg, rgba(59,130,246,0.08), transparent 42%);
+}
+
+.support-info-card,
+.support-mini-card{
+  position: relative;
+  z-index: 1;
+}
+
+.support-info-card{
+  padding: 26px;
+  border-radius: 24px;
+  background: var(--support-surface-strong);
+  border: 1px solid var(--support-line);
+}
+
+.support-info-label{
+  display: block;
+  margin-bottom: 12px;
+  color: var(--support-muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.support-info-card strong{
+  display: block;
+  margin-bottom: 12px;
+  font-size: clamp(1.6rem, 2.5vw, 2.15rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.support-info-card p{
+  color: #475569;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.support-mini-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.support-mini-card{
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.82);
+  border: 1px solid var(--support-line);
+}
+
+.support-mini-card span{
+  display: block;
+  margin-bottom: 6px;
+  color: var(--support-muted);
+  font-size: 0.82rem;
+}
+
+.support-mini-card strong{
+  display: block;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.support-section{
+  padding: 92px 0;
+}
+
+.support-section-head{
+  max-width: 860px;
+  margin-bottom: 44px;
+}
+
+.support-section-head.center{
+  margin-inline: auto;
+  text-align: center;
+}
+
+.support-section-head h2{
+  margin: 18px 0 16px;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+  font-weight: 850;
+  text-wrap: balance;
+}
+
+.support-section-head p{
+  color: #475569;
+  font-size: 1.02rem;
+  line-height: 1.9;
+}
+
+.support-faq-list{
+  display: grid;
+  gap: 16px;
+}
+
+.support-faq-item{
+  border-radius: 24px;
+  background: rgba(255,255,255,0.88);
+  border: 1px solid var(--support-line);
+  box-shadow: var(--support-shadow-sm);
+  overflow: hidden;
+  transition: transform var(--support-transition), box-shadow var(--support-transition);
+}
+
+.support-faq-item:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--support-shadow-md);
+}
+
+.support-faq-item summary{
+  list-style: none;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 24px;
+  cursor: pointer;
+}
+
+.support-faq-item summary::-webkit-details-marker{
+  display: none;
+}
+
+.support-faq-icon{
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(16,185,129,0.10);
+  color: var(--support-brand);
+  font-size: 1rem;
+}
+
+.support-faq-title{
+  font-size: 1.06rem;
+  font-weight: 700;
+  color: var(--support-text);
+  line-height: 1.45;
+}
+
+.support-faq-arrow{
+  color: var(--support-muted);
+  transition: transform var(--support-transition);
+}
+
+.support-faq-item[open] .support-faq-arrow{
+  transform: rotate(45deg);
+}
+
+.support-faq-content{
+  padding: 0 24px 24px 86px;
+  color: #516071;
+  line-height: 1.85;
+}
+
+.support-section-soft{
+  background: linear-gradient(180deg, rgba(248,251,252,0.86), rgba(255,255,255,0.96));
+  border-top: 1px solid rgba(15,23,42,0.04);
+  border-bottom: 1px solid rgba(15,23,42,0.04);
+}
+
+.support-contact-grid{
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 34px;
+  align-items: start;
+}
+
+.support-contact-copy h2{
+  margin: 18px 0 14px;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  font-weight: 850;
+}
+
+.support-contact-copy > p{
+  color: #475569;
+  line-height: 1.9;
+  margin: 0 0 24px;
+}
+
+.support-contact-points{
+  display: grid;
+  gap: 16px;
+}
+
+.support-contact-point{
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid var(--support-line);
+}
+
+.support-contact-point i{
+  width: 52px;
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: rgba(16,185,129,0.10);
+  color: var(--support-brand);
+}
+
+.support-contact-point strong{
+  display: block;
+  margin-bottom: 4px;
+  font-size: 1rem;
+}
+
+.support-contact-point p{
+  margin: 0;
+  color: #516071;
+  line-height: 1.7;
+}
+
+.support-form{
+  padding: 28px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.88);
+  border: 1px solid var(--support-line);
+  box-shadow: var(--support-shadow-md);
+}
+
+.support-form-row{
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.support-form-row label{
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--support-text);
+}
+
+.support-form input,
+.support-form select,
+.support-form textarea{
+  width: 100%;
+  border: 1px solid rgba(15,23,42,0.10);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 14px 16px;
+  font: inherit;
+  color: var(--support-text);
+  outline: none;
+  transition: border-color var(--support-transition), box-shadow var(--support-transition), transform var(--support-transition);
+}
+
+.support-form textarea{
+  resize: vertical;
+  min-height: 140px;
+}
+
+.support-form input:focus,
+.support-form select:focus,
+.support-form textarea:focus{
+  border-color: rgba(15,118,110,0.45);
+  box-shadow: 0 0 0 4px rgba(15,118,110,0.10);
+}
+
+.support-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 190px;
+  min-height: 54px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-weight: 750;
+  text-decoration: none;
+  border: 0;
+  cursor: pointer;
+  transition:
+    transform var(--support-transition),
+    background var(--support-transition),
+    border-color var(--support-transition),
+    color var(--support-transition),
+    box-shadow var(--support-transition);
+}
+
+.support-btn:hover{
+  transform: translateY(-2px);
+}
+
+.support-btn-primary{
+  background: linear-gradient(135deg, #0f766e, #15803d);
+  color: #ffffff;
+  box-shadow: 0 18px 34px rgba(15,118,110,0.18);
+}
+
+.support-btn-primary:hover{
+  filter: brightness(1.03);
+}
+
+.support-cta-section{
+  padding: 0 0 110px;
+}
+
+.support-cta-card{
+  padding: 58px 38px;
+  border-radius: 36px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.10), transparent 24%),
+    linear-gradient(135deg, #0c4a3c 0%, #0f766e 58%, #15803d 100%);
+  box-shadow: var(--support-shadow-lg);
+  text-align: center;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.support-cta-card .support-kicker{
+  background: rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.95);
+}
+
+.support-cta-card h2{
+  margin: 18px auto 14px;
+  max-width: 14ch;
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  font-weight: 860;
+  text-wrap: balance;
+}
+
+.support-cta-card p{
+  max-width: 62ch;
+  margin: 0 auto;
+  color: rgba(255,255,255,0.86);
+  line-height: 1.9;
+}
+
+.support-cta-actions{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.support-btn-light{
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 16px 34px rgba(0,0,0,0.16);
+}
+
+.support-btn-outline-light{
+  background: rgba(255,255,255,0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.24);
+}
+
+.support-btn-outline-light:hover{
+  background: rgba(255,255,255,0.14);
+}
+
+@media (max-width: 1120px){
+  .support-hero-grid,
+  .support-contact-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px){
+  .support-container{
+    width: min(var(--support-max), calc(100% - 28px));
+  }
+
+  .support-hero{
+    padding: 28px 0 72px;
+  }
+
+  .support-section{
+    padding: 76px 0;
+  }
+
+  .support-title{
+    margin-top: 18px;
+  }
+
+  .support-lead{
+    font-size: 1rem;
+  }
+
+  .support-hero-badges,
+  .support-cta-actions{
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .support-badge{
+    width: 100%;
+    border-radius: 18px;
+  }
+
+  .support-hero-card,
+  .support-faq-item,
+  .support-form,
+  .support-cta-card{
+    border-radius: 24px;
+  }
+
+  .support-hero-card{
+    padding: 18px;
+  }
+
+  .support-info-card{
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .support-mini-grid{
+    grid-template-columns: 1fr;
+  }
+
+  .support-faq-item summary{
+    padding: 18px;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+  }
+
+  .support-faq-content{
+    padding: 0 18px 18px 18px;
+  }
+
+  .support-contact-point{
+    grid-template-columns: 1fr;
+  }
+
+  .support-form{
+    padding: 20px;
+  }
+
+  .support-cta-card{
+    padding: 38px 20px;
+  }
+
+  .support-btn{
+    width: 100%;
+  }
+}
+  </style>
 </body>
 </html>
-
-
-
-
