@@ -1,344 +1,597 @@
 <!DOCTYPE html>
 <html lang="sv">
+    
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dealett – Mitt konto</title>
 
-<title>Dealett – Mitt konto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ["Inter", "sans-serif"]
+          },
+          colors: {
+            dealett: {
+              bg: "#06070b",
+              bgSoft: "#0b0f16",
+              panel: "rgba(14,19,28,0.78)",
+              panelSoft: "rgba(255,255,255,0.04)",
+              line: "rgba(255,255,255,0.08)",
+              lineStrong: "rgba(255,255,255,0.14)",
+              text: "#f5f7fb",
+              muted: "#9aa4b2",
+              gold: "#d4af37",
+              goldSoft: "rgba(212,175,55,0.14)",
+              green: "#10b981",
+              red: "#ef4444"
+            }
+          },
+          boxShadow: {
+            glass: "0 20px 60px rgba(0,0,0,0.32)",
+            soft: "0 10px 30px rgba(0,0,0,0.18)",
+            gold: "0 0 0 1px rgba(212,175,55,0.16), 0 20px 60px rgba(0,0,0,0.32)"
+          }
+        }
+      }
+    };
+  </script>
 
-<script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-1: #06070b;
+      --bg-2: #0b0f16;
+      --text: #f5f7fb;
+      --muted: #9aa4b2;
+      --gold: #d4af37;
+    }
 
-<link rel="stylesheet" href="./assets/account-dark.css">
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(212,175,55,0.12), transparent 26%),
+        radial-gradient(circle at 85% 10%, rgba(255,255,255,0.06), transparent 20%),
+        linear-gradient(180deg, #06070b 0%, #0a0e15 45%, #070a10 100%);
+      min-height: 100vh;
+    }
+
+    .glass {
+      background: rgba(14, 19, 28, 0.78);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .card-hover {
+      transition: transform .28s ease, border-color .28s ease, background-color .28s ease, box-shadow .28s ease;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212,175,55,0.2);
+    }
+
+    .gold-outline {
+      box-shadow:
+        0 0 0 1px rgba(212,175,55,0.15),
+        0 20px 60px rgba(0,0,0,0.34);
+    }
+
+    .text-balance {
+      text-wrap: balance;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .page-grid {
+      background-image:
+        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent 90%);
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent 90%);
+    }
+  </style>
 </head>
 
-<body class="account-dark font-[Inter]">
-
-<div id="header-placeholder"></div>
-
-<main class="account">
-
-<!-- HERO -->
-<section class="hero">
-<div class="wrap">
-
-<p class="eyebrow">Dashboard</p>
-
-<h1>
-Välkommen tillbaka,
-<span id="userName">Kund</span>
-</h1>
-
-<p class="sub">
-Hantera abonnemang, belöningar och konto – i ett premiumflöde.
-</p>
-
-<div class="hero-actions">
-<a href="offers.html" class="btn btn-primary">Utforska</a>
-<button id="logoutBtn" class="btn btn-ghost">Logga ut</button>
-</div>
-
-</div>
-</section>
-
-<!-- STATS -->
-<section class="wrap stats">
-
-<div class="card">
-<span>Abonnemang</span>
-<strong id="activePlan">Inget</strong>
-</div>
-
-<div class="card">
-<span>Pris</span>
-<strong id="monthlyCost">0 kr</strong>
-</div>
-
-<div class="card">
-<span>Belöning</span>
-<strong id="rewardStatus">Ingen</strong>
-</div>
-
-<div class="card">
-<span>Status</span>
-<strong>Aktivt</strong>
-</div>
-
-</section>
-
-<!-- CONTENT -->
-<section class="wrap grid">
-
-<!-- MAIN -->
-<div>
-
-<div class="panel">
-
-<h2>Mitt abonnemang</h2>
-
-<div id="emptyPlanState" class="empty">
-<p>Inget abonnemang kopplat</p>
-<a href="offers.html" class="btn btn-primary">Hitta abonnemang</a>
-</div>
-
-<div id="planContent" class="plan hidden">
-
-<h3 id="planNameHeading">–</h3>
-<p id="planOperatorLine">–</p>
-
-<div class="plan-meta">
-<span id="planData">–</span>
-<span id="planStartDate">–</span>
-</div>
-
-<strong id="planPriceBig">0 kr</strong>
-
-<div class="actions">
-<a href="offers.html" class="btn btn-primary">Byt</a>
-<button id="cancelPlan" class="btn btn-danger">Avsluta</button>
-</div>
-
-</div>
-
-</div>
-
-<div class="panel">
-
-<h2>Belöning</h2>
-
-<p id="rewardNameLarge">Ingen vald</p>
-<p id="rewardDescription" class="muted"></p>
-
-</div>
-
-</div>
-
-<!-- SIDEBAR -->
-<aside>
-
-<div class="panel">
-
-<h2>Genvägar</h2>
-
-<a href="support.html" class="link">Support</a>
-<a href="profile.html" class="link">Profil</a>
-<a href="offers.html" class="link">Erbjudanden</a>
-
-</div>
-
-</aside>
-
-</section>
-
-</main>
-
-<script>
-document.addEventListener("DOMContentLoaded", init);
-
-async function init(){
-await loadPartials();
-initAccountPage();
-}
-
-async function loadPartials(){
-try{
-const h=await fetch("./partials/header.html");
-if(h.ok) document.getElementById("header-placeholder").innerHTML=await h.text();
-}catch{}
-}
-
-function readStorage(key){
-try{
-const v=localStorage.getItem(key);
-return v?JSON.parse(v):null;
-}catch{return null;}
-}
-
-function initAccountPage(){
-
-const user=readStorage("dealett_user");
-if(!user){location.href="login.html";return;}
-
-document.getElementById("userName").textContent=user.name||"Kund";
-
-const plan=readStorage("dealett_plan");
-setupPlan(plan);
-
-const reward=readStorage("dealett_reward");
-if(reward){
-document.getElementById("rewardStatus").textContent=reward.name;
-document.getElementById("rewardNameLarge").textContent=reward.name;
-document.getElementById("rewardDescription").textContent=reward.description;
-}
-
-document.getElementById("logoutBtn").onclick=()=>{
-localStorage.removeItem("dealett_user");
-location.href="index.html";
-};
-
-document.getElementById("cancelPlan")?.addEventListener("click",()=>{
-if(!confirm("Avsluta abonnemang?"))return;
-localStorage.removeItem("dealett_plan");
-location.reload();
-});
-}
-
-function setupPlan(plan){
-
-const empty=document.getElementById("emptyPlanState");
-const content=document.getElementById("planContent");
-
-if(!plan){
-empty.classList.remove("hidden");
-content.classList.add("hidden");
-return;
-}
-
-document.getElementById("activePlan").textContent=plan.name;
-document.getElementById("monthlyCost").textContent=plan.price+" kr";
-
-document.getElementById("planNameHeading").textContent=plan.name;
-document.getElementById("planOperatorLine").textContent=plan.operator;
-document.getElementById("planPriceBig").textContent=plan.price+" kr";
-document.getElementById("planData").textContent=plan.data;
-document.getElementById("planStartDate").textContent=plan.startDate;
-
-empty.classList.add("hidden");
-content.classList.remove("hidden");
-}
-</script>
-<style>
-    :root{
---bg:#0b0c10;
---card:#15161d;
---line:rgba(255,255,255,0.08);
-
---text:#e5e7eb;
---muted:#9ca3af;
-
---gold:#d4af37;
-}
-
-body{
-margin:0;
-background:linear-gradient(180deg,#0b0c10,#0e0f14);
-color:var(--text);
-}
-
-.wrap{
-width:min(1100px,calc(100% - 40px));
-margin:auto;
-}
-
-.hero{
-padding:100px 0 60px;
-text-align:center;
-}
-
-.hero h1{
-font-size:clamp(2.8rem,5vw,4rem);
-font-weight:900;
-}
-
-.hero span{color:var(--gold)}
-
-.sub{color:var(--muted);margin-top:10px}
-
-.eyebrow{
-color:var(--gold);
-font-size:12px;
-letter-spacing:.12em;
-}
-
-.hero-actions{
-margin-top:20px;
-display:flex;
-gap:10px;
-justify-content:center;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:12px;
-margin-top:30px;
-}
-
-.card{
-background:var(--card);
-padding:20px;
-border-radius:14px;
-border:1px solid var(--line);
-}
-
-.card span{color:var(--muted);font-size:12px}
-.card strong{display:block;margin-top:6px}
-
-.grid{
-display:grid;
-grid-template-columns:2fr 1fr;
-gap:20px;
-margin-top:40px;
-}
-
-.panel{
-background:var(--card);
-padding:24px;
-border-radius:18px;
-border:1px solid var(--line);
-margin-bottom:20px;
-}
-
-.plan-meta{
-display:flex;
-gap:10px;
-color:var(--muted);
-}
-
-.actions{
-margin-top:20px;
-display:flex;
-gap:10px;
-}
-
-.btn{
-padding:10px 18px;
-border-radius:999px;
-font-weight:600;
-cursor:pointer;
-border:none;
-}
-
-.btn-primary{
-background:var(--gold);
-color:#000;
-}
-
-.btn-ghost{
-background:transparent;
-color:var(--text);
-border:1px solid var(--line);
-}
-
-.btn-danger{
-background:#dc2626;
-color:#fff;
-}
-
-.link{
-display:block;
-margin-top:10px;
-color:var(--muted);
-text-decoration:none;
-}
-
-.hidden{display:none}
-
-@media(max-width:800px){
-.stats{grid-template-columns:1fr}
-.grid{grid-template-columns:1fr}
-}
-</style>
+<body class="font-inter text-dealett-text">
+  <!-- Background -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute inset-0 page-grid opacity-[0.28]"></div>
+    <div class="absolute top-[-120px] left-[-60px] w-[420px] h-[420px] rounded-full bg-dealett-goldSoft blur-3xl opacity-70"></div>
+    <div class="absolute top-[120px] right-[-120px] w-[360px] h-[360px] rounded-full bg-white/5 blur-3xl opacity-80"></div>
+    <div class="absolute bottom-[-120px] left-[20%] w-[340px] h-[340px] rounded-full bg-dealett-goldSoft blur-3xl opacity-40"></div>
+  </div>
+
+  <!-- New Header -->
+  <header class="sticky top-0 z-50 px-4 pt-4 md:px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="glass gold-outline rounded-[24px] border border-dealett-line">
+        <div class="flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
+          <a href="index.html" class="flex items-center gap-3 group">
+            <div class="h-11 w-11 rounded-2xl bg-dealett-gold text-black flex items-center justify-center text-lg font-black shadow-soft">
+              D
+            </div>
+            <div class="min-w-0">
+              <div class="text-[11px] uppercase tracking-[0.32em] text-dealett-gold font-semibold">
+                Dealett
+              </div>
+              <div class="text-sm md:text-base font-semibold text-white group-hover:text-dealett-gold transition-colors">
+                Mitt konto
+              </div>
+            </div>
+          </a>
+
+          <div class="flex items-center gap-2 md:gap-3">
+            <a
+              href="offers.html"
+              class="hidden sm:inline-flex items-center justify-center rounded-full border border-dealett-lineStrong bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-white/[0.08]"
+            >
+              Erbjudanden
+            </a>
+
+            <a
+              href="profile.html"
+              class="inline-flex items-center justify-center rounded-full bg-dealett-gold px-4 py-2.5 text-sm font-semibold text-black transition hover:scale-[1.02]"
+            >
+              Profil
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10">
+    <!-- Hero -->
+    <section class="pt-8 pb-6 md:pt-10 md:pb-8">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="glass gold-outline rounded-[32px] border border-dealett-line overflow-hidden">
+          <div class="relative px-6 py-7 md:px-10 md:py-10 lg:px-12 lg:py-12">
+            <div class="absolute -top-10 right-[-30px] w-52 h-52 rounded-full bg-dealett-goldSoft blur-3xl opacity-70"></div>
+            <div class="absolute bottom-[-40px] left-[-10px] w-40 h-40 rounded-full bg-white/5 blur-3xl"></div>
+
+            <div class="relative grid gap-8 lg:grid-cols-[minmax(0,1.5fr)_340px] lg:items-end">
+              <div>
+                <p class="text-[11px] md:text-xs uppercase tracking-[0.3em] text-dealett-gold font-semibold">
+                  Premium dashboard
+                </p>
+
+                <h1 class="mt-4 text-4xl md:text-6xl font-black tracking-[-0.05em] leading-[0.95] text-balance">
+                  Välkommen tillbaka,
+                  <span id="userName" class="text-dealett-gold">Kund</span>
+                </h1>
+
+                <p class="mt-5 max-w-2xl text-sm md:text-lg text-dealett-muted leading-relaxed">
+                  Din samlade översikt för abonnemang, belöningar och kontostatus — renare, snabbare och tydligare.
+                </p>
+
+                <div class="mt-7 flex flex-wrap gap-3">
+                  <a
+                    href="offers.html"
+                    class="inline-flex items-center justify-center rounded-full bg-dealett-gold px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
+                  >
+                    Utforska abonnemang
+                  </a>
+
+                  <button
+                    id="logoutBtn"
+                    class="inline-flex items-center justify-center rounded-full border border-dealett-lineStrong bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+                  >
+                    Logga ut
+                  </button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div class="rounded-[24px] border border-white/10 bg-white/[0.04] p-4 md:p-5">
+                  <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Status</p>
+                  <strong class="mt-2 block text-xl md:text-2xl font-bold text-dealett-green">Aktivt</strong>
+                </div>
+
+                <div class="rounded-[24px] border border-white/10 bg-white/[0.04] p-4 md:p-5">
+                  <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Konto</p>
+                  <strong class="mt-2 block text-xl md:text-2xl font-bold text-dealett-gold">Premium</strong>
+                </div>
+
+                <div class="rounded-[24px] border border-white/10 bg-white/[0.04] p-4 md:p-5 col-span-2">
+                  <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Senast uppdaterad</p>
+                  <strong id="lastUpdated" class="mt-2 block text-lg font-semibold text-white">—</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top stats -->
+    <section class="pb-6">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+          <div class="glass card-hover rounded-[24px] border border-dealett-line px-5 py-5 shadow-glass">
+            <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Abonnemang</p>
+            <strong id="activePlan" class="mt-3 block text-2xl font-bold tracking-[-0.03em] text-white">Inget</strong>
+            <span class="mt-2 block text-sm text-dealett-muted">Aktiv plan</span>
+          </div>
+
+          <div class="glass card-hover rounded-[24px] border border-dealett-line px-5 py-5 shadow-glass">
+            <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Pris</p>
+            <strong id="monthlyCost" class="mt-3 block text-2xl font-bold tracking-[-0.03em] text-white">0 kr</strong>
+            <span class="mt-2 block text-sm text-dealett-muted">Per månad</span>
+          </div>
+
+          <div class="glass card-hover rounded-[24px] border border-dealett-line px-5 py-5 shadow-glass">
+            <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Belöning</p>
+            <strong id="rewardStatus" class="mt-3 block text-2xl font-bold tracking-[-0.03em] text-white">Ingen</strong>
+            <span class="mt-2 block text-sm text-dealett-muted">Aktuell förmån</span>
+          </div>
+
+          <div class="glass card-hover rounded-[24px] border border-dealett-line px-5 py-5 shadow-glass">
+            <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Användare</p>
+            <strong id="userInitials" class="mt-3 block text-2xl font-bold tracking-[-0.03em] text-dealett-gold">DK</strong>
+            <span class="mt-2 block text-sm text-dealett-muted">Kontoprofil</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content -->
+    <section class="pb-16 md:pb-20">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1.7fr)_360px] gap-5">
+          <!-- Left -->
+          <div class="space-y-5">
+            <!-- Subscription card -->
+            <div class="glass card-hover rounded-[30px] border border-dealett-line p-6 md:p-8 shadow-glass">
+              <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                <div>
+                  <p class="text-[11px] uppercase tracking-[0.22em] text-dealett-gold font-semibold">Mitt abonnemang</p>
+                  <h2 class="mt-2 text-2xl md:text-3xl font-bold tracking-[-0.03em] text-white">
+                    Din aktiva plan
+                  </h2>
+                  <p class="mt-2 text-sm text-dealett-muted">
+                    Operatör, surf, startdatum och månadskostnad samlat på ett ställe.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Empty state -->
+              <div id="emptyPlanState" class="mt-8 rounded-[26px] border border-dashed border-white/10 bg-white/[0.025] p-8 md:p-10 text-center">
+                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-dealett-lineStrong bg-dealett-goldSoft text-2xl text-dealett-gold">
+                  +
+                </div>
+                <p class="mt-5 text-2xl font-semibold text-white">Inget abonnemang kopplat</p>
+                <p class="mt-3 max-w-md mx-auto text-sm text-dealett-muted leading-relaxed">
+                  Du har ännu inte lagt till någon plan. Utforska de bästa alternativen och koppla ett abonnemang till ditt konto.
+                </p>
+                <a
+                  href="offers.html"
+                  class="mt-6 inline-flex items-center justify-center rounded-full bg-dealett-gold px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
+                >
+                  Hitta abonnemang
+                </a>
+              </div>
+
+              <!-- Active plan -->
+              <div id="planContent" class="hidden mt-8">
+                <div class="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 md:p-7">
+                  <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                    <div class="min-w-0">
+                      <div class="inline-flex items-center rounded-full border border-dealett-lineStrong bg-dealett-goldSoft px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-dealett-gold">
+                        Aktiv plan
+                      </div>
+
+                      <h3 id="planNameHeading" class="mt-4 text-3xl md:text-4xl font-black tracking-[-0.04em] text-white break-words">
+                        —
+                      </h3>
+
+                      <p id="planOperatorLine" class="mt-2 text-base md:text-lg text-dealett-muted">
+                        —
+                      </p>
+
+                      <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-4">
+                          <p class="text-[11px] uppercase tracking-[0.18em] text-dealett-muted">Surf</p>
+                          <strong id="planData" class="mt-2 block text-lg font-semibold text-dealett-gold">—</strong>
+                        </div>
+
+                        <div class="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-4">
+                          <p class="text-[11px] uppercase tracking-[0.18em] text-dealett-muted">Startdatum</p>
+                          <strong id="planStartDate" class="mt-2 block text-lg font-semibold text-dealett-gold">—</strong>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="shrink-0 rounded-[24px] border border-dealett-lineStrong bg-black/20 px-6 py-5 min-w-[230px]">
+                      <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Månadskostnad</p>
+                      <strong id="planPriceBig" class="mt-3 block text-4xl font-black tracking-[-0.05em] text-white">
+                        0 kr
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div class="mt-7 flex flex-wrap gap-3">
+                    <a
+                      href="offers.html"
+                      class="inline-flex items-center justify-center rounded-full bg-dealett-gold px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
+                    >
+                      Byt abonnemang
+                    </a>
+
+                    <button
+                      id="cancelPlan"
+                      class="inline-flex items-center justify-center rounded-full border border-red-500/30 bg-red-500/10 px-6 py-3 text-sm font-semibold text-red-300 transition hover:bg-red-500/15"
+                    >
+                      Avsluta abonnemang
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reward card -->
+            <div class="glass card-hover rounded-[30px] border border-dealett-line p-6 md:p-8 shadow-glass">
+              <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p class="text-[11px] uppercase tracking-[0.22em] text-dealett-gold font-semibold">Belöning</p>
+                  <h2 class="mt-3 text-2xl md:text-3xl font-bold tracking-[-0.03em] text-white">
+                    Din valda förmån
+                  </h2>
+                  <p class="mt-2 text-sm text-dealett-muted">
+                    Din bonus eller kampanj kopplad till kontot.
+                  </p>
+                </div>
+
+                <div class="inline-flex items-center rounded-full border border-dealett-lineStrong bg-dealett-goldSoft px-4 py-2 text-sm font-semibold text-dealett-gold">
+                  Aktiv förmån
+                </div>
+              </div>
+
+              <div class="mt-8 rounded-[26px] border border-white/10 bg-white/[0.03] p-6 md:p-7">
+                <p id="rewardNameLarge" class="text-2xl md:text-3xl font-bold tracking-[-0.03em] text-white">
+                  Ingen vald
+                </p>
+                <p id="rewardDescription" class="mt-3 max-w-3xl text-sm md:text-base text-dealett-muted leading-relaxed">
+                  Ingen belöning är kopplad till ditt konto ännu.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right -->
+          <aside class="space-y-5">
+            <div class="glass card-hover rounded-[30px] border border-dealett-line p-6 shadow-glass">
+              <p class="text-[11px] uppercase tracking-[0.22em] text-dealett-gold font-semibold">Snabbval</p>
+              <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-white">Genvägar</h2>
+              <p class="mt-2 text-sm text-dealett-muted">
+                Direkt åtkomst till viktiga delar av kontot.
+              </p>
+
+              <div class="mt-6 space-y-3">
+                <a href="support.html" class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-white transition hover:bg-white/[0.06]">
+                  <span class="font-medium">Support</span>
+                  <span class="text-dealett-muted">→</span>
+                </a>
+
+                <a href="profile.html" class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-white transition hover:bg-white/[0.06]">
+                  <span class="font-medium">Profil</span>
+                  <span class="text-dealett-muted">→</span>
+                </a>
+
+                <a href="offers.html" class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-white transition hover:bg-white/[0.06]">
+                  <span class="font-medium">Erbjudanden</span>
+                  <span class="text-dealett-muted">→</span>
+                </a>
+              </div>
+            </div>
+
+            <div class="glass card-hover rounded-[30px] border border-dealett-line p-6 shadow-glass">
+              <p class="text-[11px] uppercase tracking-[0.22em] text-dealett-gold font-semibold">Kontostatus</p>
+              <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-white">Översikt</h2>
+
+              <div class="mt-6 space-y-4">
+                <div class="flex items-start justify-between gap-4">
+                  <span class="text-sm text-dealett-muted">Inloggad som</span>
+                  <span id="sidebarUserName" class="text-sm font-semibold text-white text-right">Kund</span>
+                </div>
+
+                <div class="h-px bg-white/8"></div>
+
+                <div class="flex items-start justify-between gap-4">
+                  <span class="text-sm text-dealett-muted">Aktivt abonnemang</span>
+                  <span id="sidebarPlanName" class="text-sm font-semibold text-white text-right">Inget</span>
+                </div>
+
+                <div class="h-px bg-white/8"></div>
+
+                <div class="flex items-start justify-between gap-4">
+                  <span class="text-sm text-dealett-muted">Belöning</span>
+                  <span id="sidebarRewardName" class="text-sm font-semibold text-white text-right">Ingen</span>
+                </div>
+
+                <div class="h-px bg-white/8"></div>
+
+                <div class="flex items-start justify-between gap-4">
+                  <span class="text-sm text-dealett-muted">Status</span>
+                  <span class="text-sm font-semibold text-dealett-green text-right">Aktivt</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass card-hover rounded-[30px] border border-dealett-line p-6 shadow-glass">
+              <p class="text-[11px] uppercase tracking-[0.22em] text-dealett-gold font-semibold">Profil</p>
+              <div class="mt-4 flex items-center gap-4">
+                <div id="avatarCircle" class="h-14 w-14 rounded-2xl bg-dealett-gold text-black flex items-center justify-center text-lg font-black">
+                  DK
+                </div>
+                <div class="min-w-0">
+                  <p id="profileNameCard" class="text-lg font-semibold text-white truncate">Kund</p>
+                  <p class="text-sm text-dealett-muted">Dealett medlem</p>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", init);
+
+    function init() {
+      initAccountPage();
+      setLastUpdated();
+    }
+
+    function readStorage(key) {
+      try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function formatPrice(value) {
+      if (value === undefined || value === null || value === "") return "0 kr";
+      const num = Number(value);
+      if (!Number.isNaN(num)) {
+        return `${num.toLocaleString("sv-SE")} kr`;
+      }
+      return `${value} kr`;
+    }
+
+    function getInitials(name) {
+      if (!name || typeof name !== "string") return "DK";
+      const parts = name.trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return "DK";
+      return parts.slice(0, 2).map(part => part.charAt(0).toUpperCase()).join("");
+    }
+
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = value;
+    }
+
+    function setLastUpdated() {
+      const now = new Date();
+      const formatted = now.toLocaleString("sv-SE", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      setText("lastUpdated", formatted);
+    }
+
+    function initAccountPage() {
+      const user = readStorage("dealett_user");
+
+      if (!user) {
+        location.href = "login.html";
+        return;
+      }
+
+      const userName = user.name || "Kund";
+      const initials = getInitials(userName);
+
+      setText("userName", userName);
+      setText("sidebarUserName", userName);
+      setText("profileNameCard", userName);
+      setText("userInitials", initials);
+      setText("avatarCircle", initials);
+
+      const plan = readStorage("dealett_plan");
+      const reward = readStorage("dealett_reward");
+
+      setupPlan(plan);
+      setupReward(reward);
+
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+          localStorage.removeItem("dealett_user");
+          location.href = "index.html";
+        });
+      }
+
+      const cancelBtn = document.getElementById("cancelPlan");
+      if (cancelBtn) {
+        cancelBtn.addEventListener("click", () => {
+          const confirmed = confirm("Vill du avsluta ditt abonnemang?");
+          if (!confirmed) return;
+
+          localStorage.removeItem("dealett_plan");
+          location.reload();
+        });
+      }
+    }
+
+    function setupPlan(plan) {
+      const empty = document.getElementById("emptyPlanState");
+      const content = document.getElementById("planContent");
+
+      if (!plan) {
+        setText("activePlan", "Inget");
+        setText("monthlyCost", "0 kr");
+        setText("sidebarPlanName", "Inget");
+
+        empty.classList.remove("hidden");
+        content.classList.add("hidden");
+        return;
+      }
+
+      const planName = plan.name || "Okänt abonnemang";
+      const operator = plan.operator || "Okänd operatör";
+      const price = formatPrice(plan.price);
+      const data = plan.data || "Ej angivet";
+      const startDate = plan.startDate || "Ej angivet";
+
+      setText("activePlan", planName);
+      setText("monthlyCost", price);
+      setText("sidebarPlanName", planName);
+
+      setText("planNameHeading", planName);
+      setText("planOperatorLine", operator);
+      setText("planPriceBig", price);
+      setText("planData", data);
+      setText("planStartDate", startDate);
+
+      empty.classList.add("hidden");
+      content.classList.remove("hidden");
+    }
+
+    function setupReward(reward) {
+      if (!reward) {
+        setText("rewardStatus", "Ingen");
+        setText("rewardNameLarge", "Ingen vald");
+        setText("rewardDescription", "Ingen belöning är kopplad till ditt konto ännu.");
+        setText("sidebarRewardName", "Ingen");
+        return;
+      }
+
+      const rewardName = reward.name || "Vald belöning";
+      const rewardText = reward.description || "Din valda belöning visas här.";
+
+      setText("rewardStatus", rewardName);
+      setText("rewardNameLarge", rewardName);
+      setText("rewardDescription", rewardText);
+      setText("sidebarRewardName", rewardName);
+    }
+  </script>
 </body>
 </html>
