@@ -20,87 +20,86 @@
   <div id="header-placeholder"></div>
   
 <!-- HERO SECTION -->
-<div class="relative w-full h-[480px] overflow-hidden">
+<section class="relative w-full h-[520px] overflow-hidden">
 
   <div id="hero-chat-anchor"></div>
 
-  <!-- global gradient -->
-  <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40 pointer-events-none"></div>
+  <!-- overlay -->
+  <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40 z-10"></div>
 
   <!-- SLIDER -->
   <ul id="heroSlider"
       class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide">
 
-    <!-- Slide 1 -->
     <li class="min-w-full snap-start relative">
       <img src="https://images.ctfassets.net/wnyreqeg7zsz/6QnqlXszeR8PTYtoTDBGax/aa1932112dc7c83fab22d2c9fbf6dc37/ViaplayWinterSport26_visuals_Horizontal_platform_AW_NoCTA.jpg"
            class="w-full h-full object-cover">
-      <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
     </li>
 
-    <!-- Slide 2 -->
     <li class="min-w-full snap-start relative">
       <img src="https://images.ctfassets.net/nproz1mx87a8/3WRMjowUFuguIJ6zTSILUN/d89ea4fa4ddc04d0ca87ff3705979020/Allsvenskan_2026_-_Promotion_Grid_1_-_DESKTOP.jpg"
            class="w-full h-full object-cover">
-      <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
     </li>
 
-    <!-- Slide 3 -->
     <li class="min-w-full snap-start relative">
       <img src="https://images.ctfassets.net/nproz1mx87a8/2az4Kn80SfUZBqwDo0ORnp/cf49e91eb96619034639011319a8f617/Tele2_-_tele2.se_Purchase_Flow_TV_Banner_Product_Card_800x450_Paradise_S2.jpg"
            class="w-full h-full object-cover">
-      <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
     </li>
 
   </ul>
 
-</div>
+  <!-- ARROWS (FIXED inside hero) -->
+  <button onclick="scrollHero(-1)"
+    class="hidden md:flex absolute z-20 left-6 top-1/2 -translate-y-1/2
+           bg-white/80 hover:bg-white w-12 h-12 items-center justify-center rounded-full shadow-md">
+    ‹
+  </button>
 
-    <!-- ARROWS -->
-    <button onclick="scrollHero(-1)"
-      class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2
-             bg-white/70 hover:bg-white w-12 h-12 items-center justify-center rounded-full">
-      ‹
-    </button>
+  <button onclick="scrollHero(1)"
+    class="hidden md:flex absolute z-20 right-6 top-1/2 -translate-y-1/2
+           bg-white/80 hover:bg-white w-12 h-12 items-center justify-center rounded-full shadow-md">
+    ›
+  </button>
 
-    <button onclick="scrollHero(1)"
-      class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2
-             bg-white/70 hover:bg-white w-12 h-12 items-center justify-center rounded-full">
-      ›
-    </button>
-
-    <!-- DOTS -->
-    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
-      <button onclick="goToSlide(0)" class="w-3 h-3 bg-white rounded-full"></button>
-      <button onclick="goToSlide(1)" class="w-3 h-3 bg-white/60 rounded-full"></button>
-      <button onclick="goToSlide(2)" class="w-3 h-3 bg-white/60 rounded-full"></button>
-    </div>
-
+  <!-- DOTS -->
+  <div class="absolute z-20 bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
+    <button onclick="goToSlide(0)" class="w-3 h-3 bg-white rounded-full"></button>
+    <button onclick="goToSlide(1)" class="w-3 h-3 bg-white/50 rounded-full"></button>
+    <button onclick="goToSlide(2)" class="w-3 h-3 bg-white/50 rounded-full"></button>
   </div>
-  <!-- Mini Quiz -->
-      <div class="mx-auto max-w-7xl">
-        <div class="rounded-[2rem] border border-white/70 bg-white/85 shadow-soft backdrop-blur-xl">
-          <div class="border-b border-slate-100 px-6 py-5 sm:px-8">
-            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-                  Behovsanalys
-                </p>
-                <h2 class="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
-                  Hitta rätt abonnemang på ett mer professionellt sätt
-                </h2>
-              </div>
 
-              <div class="flex flex-wrap gap-2 text-sm font-medium text-slate-600">
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Mobil</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Pris</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Surf</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Bindningstid</span>
-              </div>
-            </div>
+</section>
+
+
+<!-- QUIZ SECTION -->
+<section class="px-4 sm:px-6 lg:px-8 -mt-20 relative z-20">
+  <div class="mx-auto max-w-7xl">
+
+    <!-- card wrapper -->
+    <div class="rounded-[2rem] border border-white/70 bg-white shadow-2xl backdrop-blur-xl">
+
+      <!-- header -->
+      <div class="border-b border-slate-100 px-6 py-6 sm:px-8">
+        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
+              Behovsanalys
+            </p>
+            <h2 class="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
+              Hitta rätt abonnemang
+            </h2>
           </div>
 
-          <div id="quiz-slot" class="px-6 py-8 sm:px-8 sm:py-10 transition-all duration-300 overflow-hidden">
+          <div class="flex flex-wrap gap-2 text-sm text-slate-600">
+            <span class="rounded-full bg-slate-100 px-3 py-1.5">Mobil</span>
+            <span class="rounded-full bg-slate-100 px-3 py-1.5">Pris</span>
+            <span class="rounded-full bg-slate-100 px-3 py-1.5">Surf</span>
+            <span class="rounded-full bg-slate-100 px-3 py-1.5">Bindningstid</span>
+          </div>
+        </div>
+      </div>
+
+          <div id="quiz-slot" class="px-6 py-10 sm:px-8">
             <!-- INTRO -->
             <div id="quiz-intro" class="transition-opacity duration-300">
               <div class="mx-auto max-w-3xl text-center">
@@ -376,50 +375,52 @@
           </div>
         </div>
       </div>
-<!-- HERO IMAGE GRID (clickable) -->
-<div class="max-w-8xl mx-auto mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+    </section>
+<!-- IMAGE GRID -->
+<section class="px-4 sm:px-6 lg:px-8 mt-16">
+  <div class="mx-auto max-w-7xl">
 
-  <button type="button"
-    class="relative h-[250px] rounded-2xl overflow-hidden group focus:outline-none"
-    onclick="onHeroImageClick(1)">
-    <img src="https://cdn.vectorstock.com/i/1000v/19/95/gold-number-1-one-logo-icon-design-vector-21361995.jpg"
-         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-  </button>
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
 
-  <button type="button"
-    class="relative h-[250px] rounded-2xl overflow-hidden group focus:outline-none"
-    onclick="onHeroImageClick(2)">
-    <img src="https://static.vecteezy.com/ti/gratis-vektor/p1/4655897-3d-gyllene-nummer-tva-2-vektor-2-a-arsjubileumsfirande-bakgrund-andra-position-koncept-guld-logotyp-isolerad-pa-svart-kvadrat-mall-vector.jpg"
-         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-  </button>
+      <button onclick="onHeroImageClick(1)"
+        class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md">
+        <img src="https://cdn.vectorstock.com/i/1000v/19/95/gold-number-1-one-logo-icon-design-vector-21361995.jpg"
+             class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+      </button>
 
-  <button type="button"
-    class="relative h-[250px] rounded-2xl overflow-hidden group focus:outline-none"
-    onclick="onHeroImageClick(3)">
-    <img src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
-         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-  </button>
+      <button onclick="onHeroImageClick(2)"
+        class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md">
+        <img src="https://static.vecteezy.com/ti/gratis-vektor/p1/4655897-3d-gyllene-nummer-tva-2-vektor-2-a-arsjubileumsfirande-bakgrund-andra-position-koncept-guld-logotyp-isolerad-pa-svart-kvadrat-mall-vector.jpg"
+             class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+      </button>
 
-  <button type="button"
-    class="relative h-[250px] rounded-2xl overflow-hidden group focus:outline-none"
-    onclick="onHeroImageClick(4)">
-    <img src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
-         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-  </button>
+      <button onclick="onHeroImageClick(3)"
+        class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md">
+        <img src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
+             class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+      </button>
 
-  <button type="button"
-    class="relative h-[250px] rounded-2xl overflow-hidden group focus:outline-none"
-    onclick="onHeroImageClick(5)">
-    <img src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
-         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-  </button>
+      <button onclick="onHeroImageClick(4)"
+        class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md">
+        <img src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
+             class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+      </button>
 
-</div>
+      <button onclick="onHeroImageClick(5)"
+        class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md">
+        <img src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
+             class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+      </button>
+
+    </div>
+
+  </div>
+</section>
 
  <section class="scroll-ads bg-gradient-to-b from-white to-gray-50 py-32 pb-48">
 <div class="ad-container fade-in relative overflow-hidden">
