@@ -1,285 +1,478 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dealett – Test</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-crossorigin="anonymous"
-referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="./assets/style.css">
-<link rel="stylesheet" href="./assets/design.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dealett – Behovsanalys</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            inter: ["Inter", "sans-serif"],
+          },
+          colors: {
+            dealett: {
+              dark: "#0b1220",
+              primary: "#0f766e",
+              primaryDark: "#115e59",
+              soft: "#f0fdfa",
+              line: "#dbe4ea",
+            },
+          },
+          boxShadow: {
+            soft: "0 20px 60px rgba(15, 23, 42, 0.10)",
+            card: "0 10px 35px rgba(2, 6, 23, 0.08)",
+          },
+        },
+      },
+    };
+  </script>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="stylesheet" href="./assets/design.css" />
 </head>
-<body class="min-h-screen font-[Inter] bg-[#f8fafc] text-gray-900">
-  
-<div id="header-placeholder"></div>
-<!-- subtle background lines -->
-<div class="page-bg-lines" aria-hidden="true">
-  <svg class="bg-line bg-line-1" viewBox="0 0 1440 500" fill="none" preserveAspectRatio="none">
-    <path
-      d="M-40 220C120 180 220 120 380 140C540 160 620 260 790 270C980 282 1080 180 1230 160C1330 146 1400 155 1480 175"
-      stroke="url(#lineGradient1)"
-      stroke-width="2"
-      stroke-linecap="round"
-    />
-    <defs>
-      <linearGradient id="lineGradient1" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#10b981" stop-opacity="0"/>
-        <stop offset="0.25" stop-color="#10b981" stop-opacity="0.18"/>
-        <stop offset="0.5" stop-color="#0f766e" stop-opacity="0.22"/>
-        <stop offset="0.75" stop-color="#10b981" stop-opacity="0.16"/>
-        <stop offset="1" stop-color="#10b981" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-  </svg>
 
-  <svg class="bg-line bg-line-2" viewBox="0 0 1440 500" fill="none" preserveAspectRatio="none">
-    <path
-      d="M-20 300C130 340 240 410 390 392C530 375 640 250 820 238C1000 226 1115 320 1260 340C1350 352 1410 345 1480 330"
-      stroke="url(#lineGradient2)"
-      stroke-width="2"
-      stroke-linecap="round"
-    />
-    <defs>
-      <linearGradient id="lineGradient2" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
-        <stop stop-color="#14b8a6" stop-opacity="0"/>
-        <stop offset="0.25" stop-color="#14b8a6" stop-opacity="0.12"/>
-        <stop offset="0.5" stop-color="#10b981" stop-opacity="0.18"/>
-        <stop offset="0.75" stop-color="#14b8a6" stop-opacity="0.12"/>
-        <stop offset="1" stop-color="#14b8a6" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-  </svg>
-</div>
-<main id="page-content" class="max-w-7xl mx-auto p-10">
+<body class="min-h-screen bg-slate-50 font-[Inter] text-slate-900 antialiased">
+  <div id="header-placeholder"></div>
 
-<div class="w-full max-w-8xl mx-auto mt-4 mb-4 p-1 md:p-2
-            bg-[#f7f8fa]/100 backdrop-blur-sm border border-gray-100
-            rounded-xl shadow-lg">
-  
-  <!-- STEP 1 – HERO QUESTION -->
-  <h2 class="text-3xl text-center font-bold mb-4 text-green-950">
-    Betalar du mer än du behöver för ditt mobilabonnemang?
-  </h2>
-  <p class="text-center text-gray-900 mb-10">
-    Vi analyserar ditt nuvarande abonnemang och visar om du kan få mer värde – utan att byta telefon.
-  </p>
-<div id="quiz-slot" class="transition-all duration-300 overflow-hidden">
-
-  <!-- INTRO -->
-  <div id="quiz-intro" class="transition-opacity duration-300">
-    <div class="text-center mb-12">
-      <button id="quiz-start" class="adeala-btn px-8 py-4 text-lg">
-        👉 Se min analys
-      </button>
+  <main class="relative overflow-hidden">
+    <!-- Background -->
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.08),transparent_35%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_35%),linear-gradient(to_bottom,#f8fafc,#eef6f4)]"></div>
+      <div class="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
     </div>
 
-    <div class="flex flex-wrap justify-center gap-6 mb-4 text-sm font-semibold text-gray-700">
-      <span>✔️ Transparens</span>
-      <span>✔️ Kontroll</span>
-      <span>✔️ Säkerhet</span>
-    </div>
-  </div>
+    <!-- Hero -->
+    <section class="px-4 sm:px-6 lg:px-8 pt-10 pb-6 lg:pt-16 lg:pb-10">
+      <div class="mx-auto max-w-7xl">
+        <div class="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div class="max-w-3xl">
+            <span class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/80 px-4 py-2 text-sm font-semibold text-emerald-800 shadow-sm backdrop-blur">
+              <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+              Kostnadsfri analys på under 1 minut
+            </span>
 
-  <!-- QUIZ -->
-<div id="quiz-steps-wrapper"
-     class="relative z-10 hidden opacity-0 transition-all duration-300 px-2 md:px-4 overflow-visible">
+            <h1 class="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">
+              Betalar du mer än du behöver för ditt mobilabonnemang?
+            </h1>
 
-    <div class="flex flex-col gap-8">
+            <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
+              Vi analyserar ditt nuvarande abonnemang och visar om du kan få bättre värde,
+              mer surf eller lägre pris utan att byta telefon.
+            </p>
 
-      <!-- QUIZ NAV -->
-      <div class="sticky top-0 z-20 mb-2 px-4 py-3
-                  bg-white/70 backdrop-blur-md border border-gray-200/70
-                  rounded-xl shadow-sm">
-
-        <div class="flex items-center justify-between">
-
-          <button id="quiz-back" type="button"
-                  class="inline-flex items-center gap-2 px-3 py-2 rounded-lg
-                         text-sm font-semibold text-gray-800
-                         hover:bg-gray-900/5 active:scale-[0.99]
-                         disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-transparent">
-            <span class="text-base leading-none">←</span> Tillbaka
-          </button>
-
-          <div class="flex items-center gap-3">
-            <div class="h-2 w-28 rounded-full bg-gray-200 overflow-hidden">
-              <div id="quiz-progress" class="h-full w-1/4 rounded-full bg-emerald-600"></div>
-            </div>
-
-            <div class="text-sm font-semibold text-gray-800">
-Steg <span id="quiz-step-current">1</span> / <span id="quiz-step-total">5</span>
+            <div class="mt-8 flex flex-wrap gap-3 text-sm font-semibold text-slate-700">
+              <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm">
+                <i class="fa-solid fa-shield-halved text-emerald-600"></i>
+                Säker
+              </span>
+              <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm">
+                <i class="fa-solid fa-eye text-emerald-600"></i>
+                Transparent
+              </span>
+              <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm">
+                <i class="fa-solid fa-sliders text-emerald-600"></i>
+                Full kontroll
+              </span>
             </div>
           </div>
 
+          <div class="relative">
+            <div class="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-emerald-200/40 via-transparent to-sky-200/40 blur-2xl"></div>
+            <div class="relative rounded-[2rem] border border-white/70 bg-white/80 p-6 shadow-soft backdrop-blur-xl sm:p-8">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-5">
+                <div>
+                  <p class="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
+                    Dealett Analys
+                  </p>
+                  <p class="mt-1 text-sm text-slate-500">
+                    Jämför smartare innan du betalar mer än du behöver
+                  </p>
+                </div>
+                <div class="rounded-2xl bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700">
+                  1 min
+                </div>
+              </div>
+
+              <div class="mt-6 space-y-4">
+                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
+                  <p class="text-sm font-semibold text-slate-900">Det här får du</p>
+                  <p class="mt-1 text-sm text-slate-600">
+                    En snabb rekommendation baserad på hushåll, operatör, surfbehov, prisnivå och bindningstid.
+                  </p>
+                </div>
+
+                <div class="grid gap-3 sm:grid-cols-3">
+                  <div class="rounded-2xl border border-slate-100 bg-white p-4 text-center shadow-sm">
+                    <p class="text-2xl font-extrabold text-slate-950">5</p>
+                    <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Steg</p>
+                  </div>
+                  <div class="rounded-2xl border border-slate-100 bg-white p-4 text-center shadow-sm">
+                    <p class="text-2xl font-extrabold text-slate-950">0 kr</p>
+                    <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Kostnad</p>
+                  </div>
+                  <div class="rounded-2xl border border-slate-100 bg-white p-4 text-center shadow-sm">
+                    <p class="text-2xl font-extrabold text-slate-950">100%</p>
+                    <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Digitalt</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </section>
 
+    <!-- Quiz section -->
+    <section class="px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
+      <div class="mx-auto max-w-7xl">
+        <div class="rounded-[2rem] border border-white/70 bg-white/85 shadow-soft backdrop-blur-xl">
+          <div class="border-b border-slate-100 px-6 py-5 sm:px-8">
+            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                  Behovsanalys
+                </p>
+                <h2 class="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
+                  Hitta rätt abonnemang på ett mer professionellt sätt
+                </h2>
+              </div>
 
-<div id="quiz-card-stack" class="relative min-h-[460px]">
-    <!-- QUESTION 1 -->
-    <div id="step0" class="quiz-step-card active-step">
-      <div class="quiz-card flex flex-col">
-        <p class="quiz-title">Hur många personer gäller det?</p>
-        <div class="flex flex-wrap justify-center gap-4 mt-6">
-          <button class="quiz-option" data-persons="1">1</button>
-          <button class="quiz-option" data-persons="2">2</button>
-          <button class="quiz-option" data-persons="3">3</button>
-          <button class="quiz-option" data-persons="4">4</button>
-          <button class="quiz-option" data-persons="5">5+</button>
+              <div class="flex flex-wrap gap-2 text-sm font-medium text-slate-600">
+                <span class="rounded-full bg-slate-100 px-3 py-1.5">Mobil</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1.5">Pris</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1.5">Surf</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1.5">Bindningstid</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="quiz-slot" class="px-6 py-8 sm:px-8 sm:py-10 transition-all duration-300 overflow-hidden">
+            <!-- INTRO -->
+            <div id="quiz-intro" class="transition-opacity duration-300">
+              <div class="mx-auto max-w-3xl text-center">
+                <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
+                  <i class="fa-solid fa-sparkles"></i>
+                  Personlig analys direkt
+                </div>
+
+                <h3 class="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+                  Se om du kan sänka kostnaden eller få mer för pengarna
+                </h3>
+
+                <p class="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+                  Svara på några enkla frågor så visar vi abonnemang som bättre matchar ditt behov.
+                </p>
+
+                <div class="mt-8">
+                  <button
+                    id="quiz-start"
+                    class="adeala-btn inline-flex items-center justify-center rounded-2xl px-8 py-4 text-base font-bold shadow-lg transition hover:-translate-y-0.5"
+                  >
+                    <span class="mr-2">👉</span> Se min analys
+                  </button>
+                </div>
+
+                <div class="mt-10 grid gap-3 sm:grid-cols-3">
+                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
+                    ✔️ Transparens
+                  </div>
+                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
+                    ✔️ Kontroll
+                  </div>
+                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
+                    ✔️ Säkerhet
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- QUIZ -->
+            <div
+              id="quiz-steps-wrapper"
+              class="relative z-10 hidden opacity-0 transition-all duration-300 px-0 sm:px-1 overflow-visible"
+            >
+              <div class="flex flex-col gap-8">
+                <!-- NAV -->
+                <div class="sticky top-4 z-20 rounded-2xl border border-slate-200/80 bg-white/90 px-4 py-4 shadow-card backdrop-blur-md sm:px-5">
+                  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <button
+                      id="quiz-back"
+                      type="button"
+                      class="inline-flex items-center gap-2 self-start rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+                    >
+                      <span class="text-base leading-none">←</span>
+                      Tillbaka
+                    </button>
+
+                    <div class="flex items-center gap-4">
+                      <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                        <div id="quiz-progress" class="h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                      </div>
+
+                      <div class="text-sm font-bold text-slate-800">
+                        Steg <span id="quiz-step-current">1</span> / <span id="quiz-step-total">5</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- CARD STACK -->
+                <div id="quiz-card-stack" class="relative min-h-[500px]">
+                  <!-- STEP 0 -->
+                  <div id="step0" class="quiz-step-card active-step">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                      <div class="mx-auto w-full max-w-3xl text-center">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                          <i class="fa-solid fa-users text-emerald-600"></i>
+                          Hushåll
+                        </span>
+
+                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                          Hur många personer gäller det?
+                        </p>
+
+                        <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="1">1</button>
+                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="2">2</button>
+                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="3">3</button>
+                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="4">4</button>
+                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md col-span-2 sm:col-span-1" data-persons="5">5+</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STEP 1 -->
+                  <div id="step1" class="quiz-step-card hidden-step">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                      <div class="mx-auto w-full max-w-5xl text-center">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                          <i class="fa-solid fa-tower-cell text-emerald-600"></i>
+                          Operatör
+                        </span>
+
+                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                          Vilken operatör har ni idag?
+                        </p>
+
+                        <p class="mt-3 text-base text-slate-600">
+                          Välj operatör för varje person.
+                        </p>
+
+                        <div
+                          id="operator-per-person"
+                          class="mt-8 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TEMPLATE -->
+                  <template id="operator-picker-template">
+                    <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
+                      <p class="mb-4 text-left text-base font-bold text-slate-900">
+                        Person <span data-person-number></span>
+                      </p>
+
+                      <div class="grid grid-cols-2 gap-3">
+                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Tele2">
+                          <img src="images/tele2.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Tele2">
+                        </button>
+
+                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Telia">
+                          <img src="images/telia.png" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Telia">
+                        </button>
+
+                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Telenor">
+                          <img src="images/telenor.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Telenor">
+                        </button>
+
+                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Tre">
+                          <img src="images/tre.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Tre">
+                        </button>
+
+                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Halebop">
+                          <img src="images/halebop.webp" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Halebop">
+                        </button>
+
+                        <button type="button" class="quiz-option familj-opt inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm font-bold text-slate-800 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Other">
+                          Andra
+                        </button>
+                      </div>
+                    </div>
+                  </template>
+
+                  <!-- STEP 2 -->
+                  <div id="step2" class="quiz-step-card hidden-step">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                      <div class="mx-auto w-full max-w-3xl text-center">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                          <i class="fa-solid fa-signal text-emerald-600"></i>
+                          Surfbehov
+                        </span>
+
+                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                          Hur använder ni mobilen mest?
+                        </p>
+
+                        <div class="mt-8 flex flex-col gap-4">
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="low">
+                            <span class="block text-lg font-bold text-slate-900">Mest wifi & sociala medier</span>
+                            <span class="mt-1 block text-sm text-slate-500">5 GB – 15 GB</span>
+                          </button>
+
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="medium">
+                            <span class="block text-lg font-bold text-slate-900">Streaming & video</span>
+                            <span class="mt-1 block text-sm text-slate-500">20 GB – 40 GB</span>
+                          </button>
+
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="high">
+                            <span class="block text-lg font-bold text-slate-900">Vill aldrig tänka på surf</span>
+                            <span class="mt-1 block text-sm text-slate-500">50 GB – Obegränsad</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STEP 3 -->
+                  <div id="step3" class="quiz-step-card hidden-step">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                      <div class="mx-auto w-full max-w-3xl text-center">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                          <i class="fa-solid fa-wallet text-emerald-600"></i>
+                          Pris
+                        </span>
+
+                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                          Vad betalar du ungefär idag per abonnemang?
+                        </p>
+
+                        <div class="mt-8 flex flex-col gap-4">
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="under300">
+                            Under 300 kr
+                          </button>
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="300-400">
+                            300–400 kr
+                          </button>
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="400-500">
+                            400–500+ kr
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STEP 4 -->
+                  <div id="step4" class="quiz-step-card hidden-step">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                      <div class="mx-auto w-full max-w-3xl text-center">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                          <i class="fa-solid fa-link text-emerald-600"></i>
+                          Bindningstid
+                        </span>
+
+                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                          Har du bindningstid kvar?
+                        </p>
+
+                        <div class="mt-8 flex flex-col gap-4">
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="no">
+                            Nej
+                          </button>
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="yes">
+                            Ja
+                          </button>
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="unknown">
+                            Vet inte
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STEP 5 -->
+                  <div id="step5" class="quiz-step-card hidden-step">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col text-center">
+                      <div class="mx-auto max-w-3xl">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
+                          <i class="fa-solid fa-circle-check"></i>
+                          Analys klar
+                        </span>
+
+                        <h3 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
+                          Din analys är klar
+                        </h3>
+
+                        <p class="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+                          Baserat på dina svar har vi hittat abonnemang som passar ditt behov bättre.
+                        </p>
+                      </div>
+
+                      <div
+                        id="offers-container"
+                        class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /QUIZ -->
+          </div>
         </div>
       </div>
-    </div>
+    </section>
+  </main>
 
-<div id="step1" class="quiz-step-card hidden-step">
-  <div class="quiz-card flex flex-col">
-    <p class="quiz-title">Vilken operatör har ni idag?</p>
+  <div id="footer-placeholder"></div>
 
-<div id="operator-per-person"
-     class="mt-6 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const header = document.getElementById("header-placeholder");
+        if (header) {
+          const res = await fetch("partials/header.html");
+          if (res.ok) header.innerHTML = await res.text();
+        }
 
-    <p class="text-xs text-gray-600 text-center">
-      Välj operatör för varje person.
-    </p>
-  </div>
-</div>
+        const footer = document.getElementById("footer-placeholder");
+        if (footer) {
+          const res = await fetch("partials/footer.html");
+          if (res.ok) footer.innerHTML = await res.text();
+        }
 
-<!-- Template (keep anywhere on page, e.g. after step1) -->
-<template id="operator-picker-template">
-  <div class="rounded-xl border border-gray-200 bg-white/70 p-4">
-    <p class="font-semibold text-gray-900 mb-3">Person <span data-person-number></span></p>
-    <div class="flex flex-wrap justify-center gap-4">
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tele2">
-        <img src="images/tele2.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tele2">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telia">
-        <img src="images/telia.png" class="partner-logo h-10 hover:scale-105 transition" alt="Telia">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Telenor">
-        <img src="images/telenor.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Telenor">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Tre">
-        <img src="images/tre.jpg" class="partner-logo h-10 hover:scale-105 transition" alt="Tre">
-      </button>
-      <button type="button" class="partner-wrapper quiz-option familj-opt" data-operator="Halebop">
-        <img src="images/halebop.webp" class="partner-logo h-10 hover:scale-105 transition" alt="Halebop">
-      </button>
-      <button type="button" class="quiz-option familj-opt px-4 py-2 whitespace-nowrap" data-operator="Other">
-        Andra
-      </button>
-    </div>
-  </div>
-</template>
-    <!-- QUESTION 2 -->
-<div id="step2" class="quiz-step-card hidden-step">
-  <div class="quiz-card flex flex-col">
+        const chatRes = await fetch("partials/chat.html");
+        if (chatRes.ok) {
+          document.body.insertAdjacentHTML("beforeend", await chatRes.text());
+        }
 
-    <p class="quiz-title">Hur använder ni mobilen mest?</p>
+        const chatScript = document.createElement("script");
+        chatScript.src = "./assets/chat.js";
+        chatScript.defer = true;
+        document.body.appendChild(chatScript);
+      } catch (error) {
+        console.error("Kunde inte ladda partials:", error);
+      }
+    });
+  </script>
 
-    <div class="flex flex-col gap-4 mt-6">
-
-      <button class="quiz-option" data-data="low">
-        Mest wifi & sociala medier
-        <p class="text-sm opacity-70">5 GB - 15 GB</p>
-      </button>
-
-      <button class="quiz-option" data-data="medium">
-        Streaming & video
-        <p class="text-sm opacity-70">20 GB - 40 GB</p>
-      </button>
-
-      <button class="quiz-option" data-data="high">
-        Vill aldrig tänka på surf
-        <p class="text-sm opacity-70">50 GB - Obegränsad</p>
-      </button>
-
-    </div>
-
-  </div>
-</div>
-
-    <!-- QUESTION 3 -->
-<div id="step3" class="quiz-step-card hidden-step">
-      <div class="quiz-card flex flex-col">
-        <p class="quiz-title">Vad betalar du ungefär idag per abonnemang?</p>
-        <div class="flex flex-col gap-4 mt-6">
-          <button class="quiz-option" data-price="under300">Under 300 kr</button>
-          <button class="quiz-option" data-price="300-400">300–400 kr</button>
-          <button class="quiz-option" data-price="400-500">400–500+ kr</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- QUESTION 4 -->
-<div id="step4" class="quiz-step-card hidden-step">
-      <div class="quiz-card flex flex-col">
-        <p class="quiz-title">Har du bindningstid kvar?</p>
-        <div class="flex flex-col gap-4 mt-6">
-          <button class="quiz-option" data-binding="no">Nej</button>
-          <button class="quiz-option" data-binding="yes">Ja</button>
-          <button class="quiz-option" data-binding="unknown">Vet inte</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- RESULT STEP -->
-<div id="step5" class="quiz-step-card hidden-step">
-  <div class="quiz-card flex flex-col text-center">
-
-    <h3 class="text-2xl font-bold mb-4 text-gray-800">
-      Din analys är klar
-    </h3>
-
-    <p class="text-gray-600 mb-10">
-      Baserat på dina svar har vi hittat abonnemang som passar dig.
-    </p>
-
-    <div
-      id="offers-container"
-      class="grid grid-cols-1 md:grid-cols-2 gap-10"
-    ></div>
-
-  </div>
-</div>
-</div>
-  </div>
-  </div>
-   </div>
-</div>
-<script>
-  document.addEventListener("DOMContentLoaded", async () => {
-
-  const header = document.getElementById("header-placeholder");
-  if (header) {
-    const res = await fetch("partials/header.html");
-    if (res.ok) header.innerHTML = await res.text();
-  }
-
-  const footer = document.getElementById("footer-placeholder");
-  if (footer) {
-    const res = await fetch("partials/footer.html");
-    if (res.ok) footer.innerHTML = await res.text();
-  }
-
-  const chatRes = await fetch("partials/chat.html");
-  if (chatRes.ok) {
-    document.body.insertAdjacentHTML("beforeend", await chatRes.text());
-  }
-
-  const chatScript = document.createElement("script");
-  chatScript.src = "./assets/chat.js";
-  chatScript.defer = true;
-  document.body.appendChild(chatScript);
-
-});
-</script>
-</main>
-<div id="footer-placeholder"></div>
-<script src="assets/indexbehovsanalys.js"></script>
-<style></style>
+  <script src="assets/indexbehovsanalys.js"></script>
 </body>
 </html>
