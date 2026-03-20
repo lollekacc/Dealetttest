@@ -447,9 +447,7 @@ function setSelectedInScope(button, selector) {
   button.classList.add("selected", "active");
 }
 
-function persistState() {
-  localStorage.setItem("dealettState", JSON.stringify(abonState));
-}
+
 
 function isQuizComplete() {
   return abonState.persons !== null && abonState.data !== null;
@@ -821,13 +819,36 @@ function openRewardSection(totalReward, offerId) {
   });
 
   continueBtn.onclick = () => {
-    localStorage.setItem("rewardDistribution", JSON.stringify(selections));
-    localStorage.setItem("rewardChoice", JSON.stringify({ offerId, reward: totalReward }));
-
+    const selectedOffer = JSON.parse(localStorage.getItem("selectedOffer") || "null");
+    if (!selectedOffer) return;
+  
+    const cartItem = {
+      offerId: selectedOffer.id,
+      operator: selectedOffer.operator,
+      title: selectedOffer.title,
+      logo: selectedOffer.logo,
+      price: selectedOffer.finalPrice,
+      pricePerPerson: selectedOffer.pricePerPerson,
+      rewardTotal: totalReward,
+      rewards: selections
+    };
+  
+    // ✅ use global cart API only
+    if (window.cartAPI) {
+      window.cartAPI.addToCart(cartItem);
+    }
+  
+    // mark flow done
     window.beloningChosen = true;
+  
+    // open drawer instead of redirect
+    if (window.openCart) {
+      window.openCart();
+    }
+  
+    // continue flow
     checkGoToNumberStep();
   };
-
   rewardSection.classList.remove("is-hidden");
   smoothScrollTo(rewardSection);
 }
