@@ -818,7 +818,7 @@ function openRewardSection(totalReward, offerId) {
     rewardGrid.appendChild(card);
   });
 
-  continueBtn.onclick = () => {
+  continueBtn.onclick = () => { 
     const selectedOffer = JSON.parse(localStorage.getItem("selectedOffer") || "null");
     if (!selectedOffer) return;
   
