@@ -110,7 +110,6 @@
         </div>
 
         <div class="quiz-steps-grid">
-          <!-- Steg 1 -->
           <article class="step-card" data-card="persons">
             <div class="step-card-head">
               <span class="card-step">Steg 1</span>
@@ -137,7 +136,6 @@
             </div>
           </article>
 
-          <!-- Steg 2 -->
           <article class="step-card" data-card="data">
             <div class="step-card-head">
               <span class="card-step">Steg 2</span>
@@ -163,7 +161,6 @@
             </div>
           </article>
 
-          <!-- Steg 3 -->
           <article class="step-card" data-card="binding">
             <div class="step-card-head">
               <span class="card-step">Steg 3</span>
@@ -182,7 +179,6 @@
             </div>
           </article>
 
-          <!-- Steg 4 -->
           <article class="step-card" data-card="wishes">
             <div class="step-card-head">
               <span class="card-step">Steg 4</span>
@@ -212,7 +208,6 @@
             <div id="operatorFreeList" class="wish-list"></div>
           </article>
 
-          <!-- Steg 5 -->
           <article class="step-card step-card-wide" data-card="operators">
             <div class="step-card-head">
               <span class="card-step">Steg 5</span>
@@ -324,7 +319,78 @@
       </div>
     </section>
   </main>
+<style>
+  /* REWARD FIX */
 
+.reward-panel {
+  padding: 24px;
+}
+
+.reward-grid-native {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.reward-option-card {
+  background: white;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.reward-option-card:hover {
+  transform: translateY(-2px);
+  border-color: #0f766e;
+}
+
+.reward-option-card.active {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 2px rgba(15,118,110,0.2);
+}
+
+.reward-option-logo-wrap {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reward-option-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.reward-option-meta {
+  text-align: center;
+  font-size: 14px;
+}
+
+.reward-option-meta strong {
+  display: block;
+  font-weight: 600;
+}
+.reward-input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.reward-error {
+  color: red;
+  font-size: 12px;
+}
+</style>
   <script type="module" src="./assets/offers.js"></script>
 </body>
 </html>

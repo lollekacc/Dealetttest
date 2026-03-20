@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", initPage);
 
 async function initPage() {
   hydrateElements();
+  resetTransientFlowStorage();
   restoreSavedState();
   await loadShell();
   initHeroSlider();
@@ -43,7 +44,7 @@ async function initPage() {
   await loadPlans();
   initQuiz();
   preselectFromUrl();
-  showAllOffersInitial();
+  showInitialOffersIfNeeded();
   updateAvailability();
   bindContactStep();
   bindNumberFlowBase();
@@ -52,6 +53,14 @@ async function initPage() {
 function hydrateElements() {
   offersContainer = document.getElementById("offers-container");
   offersSection = document.getElementById("offersSection");
+}
+
+function resetTransientFlowStorage() {
+  localStorage.removeItem("rewardChoice");
+  localStorage.removeItem("rewardDistribution");
+  localStorage.removeItem("selectedOffer");
+  localStorage.removeItem("collectedNumbers");
+  localStorage.removeItem("startDateChoice");
 }
 
 function restoreSavedState() {
@@ -180,6 +189,11 @@ function bindPersons() {
       abonState.persons = Number(btn.dataset.persons);
       setSelectedInScope(btn, "[data-persons]");
       renderOperators(abonState.persons);
+
+      window.offerChosen = false;
+      window.beloningChosen = false;
+      clearRewardAndNextSteps();
+
       persistState();
       updateAvailability();
       updateOffers();
@@ -191,8 +205,14 @@ function bindData() {
   document.querySelectorAll("[data-data]").forEach(btn => {
     btn.addEventListener("click", () => {
       if (btn.classList.contains("disabled-option")) return;
+
       abonState.data = btn.dataset.data;
       setSelectedInScope(btn, "[data-data]");
+
+      window.offerChosen = false;
+      window.beloningChosen = false;
+      clearRewardAndNextSteps();
+
       persistState();
       updateAvailability();
       updateOffers();
@@ -310,8 +330,8 @@ function renderOperators(count) {
   while (abonState.operatorsByPerson.length < count) {
     abonState.operatorsByPerson.push(null);
   }
-  abonState.operatorsByPerson.length = count;
 
+  abonState.operatorsByPerson.length = count;
   wrapper.innerHTML = "";
 
   for (let i = 0; i < count; i++) {
@@ -338,10 +358,18 @@ function renderOperators(count) {
       }
 
       btn.addEventListener("click", () => {
+        if (btn.classList.contains("disabled-option")) return;
+
         card.querySelectorAll("[data-operator]").forEach(x => x.classList.remove("selected"));
         btn.classList.add("selected");
+
         abonState.operatorsByPerson[i] = btn.dataset.operator;
         abonState.operator = getMainChosenOperator();
+
+        window.offerChosen = false;
+        window.beloningChosen = false;
+        clearRewardAndNextSteps();
+
         persistState();
         updateAvailability();
         updateOffers();
@@ -392,15 +420,23 @@ function restoreSelectionsUI() {
 }
 
 function preselectFromUrl() {
-  const urlOp = new URLSearchParams(window.location.search).get("op")
-    || sessionStorage.getItem("preferredOperator");
+  const urlOp =
+    new URLSearchParams(window.location.search).get("op") ||
+    sessionStorage.getItem("preferredOperator");
 
-  if (!urlOp || !abonState.persons) return;
+  if (!urlOp) return;
+
+  if (!abonState.persons) {
+    abonState.persons = 1;
+    const personsBtn = document.querySelector('[data-persons="1"]');
+    if (personsBtn) setSelectedInScope(personsBtn, "[data-persons]");
+  }
 
   abonState.operatorsByPerson = abonState.operatorsByPerson || [];
   abonState.operatorsByPerson[0] = urlOp;
   abonState.operator = urlOp;
-  renderOperators(abonState.persons);
+
+  renderOperators(abonState.persons || 1);
   persistState();
 }
 
@@ -452,6 +488,7 @@ function updateOperatorAvailability() {
 
   operatorButtons.forEach(btn => {
     const operatorValue = btn.dataset.operator;
+
     if (operatorValue === "Andra / Ingen") {
       btn.classList.remove("disabled-option");
       return;
@@ -490,7 +527,12 @@ function stopOffersScroll() {
   if (strip) strip.classList.add("no-fade");
 }
 
-function showAllOffersInitial() {
+function showInitialOffersIfNeeded() {
+  if (isQuizComplete()) {
+    updateOffers();
+    return;
+  }
+
   if (!ALL_PLANS.length) return;
 
   stopOffersScroll();
@@ -687,6 +729,7 @@ function selectOfferCard(card, plan, rewardValue) {
   card.classList.add("active");
 
   window.offerChosen = true;
+  window.beloningChosen = false;
   window.selectedOfferId = plan.id;
 
   localStorage.setItem("selectedOffer", JSON.stringify({
@@ -699,10 +742,14 @@ function selectOfferCard(card, plan, rewardValue) {
     pricePerPerson: plan.pricePerPerson
   }));
 
+  localStorage.removeItem("rewardChoice");
+  localStorage.removeItem("rewardDistribution");
+
+  hideNextSteps();
   openRewardSection(rewardValue, plan.id);
 }
 
-function openRewardSection(rewardValue, offerId) {
+function openRewardSection(totalReward, offerId) {
   const rewardSection = document.getElementById("rewardSection");
   const rewardGrid = document.getElementById("rewardGrid");
   const totalRewardEl = document.getElementById("totalReward");
@@ -710,63 +757,85 @@ function openRewardSection(rewardValue, offerId) {
   const rewardProgressFill = document.getElementById("rewardProgressFill");
   const continueBtn = document.getElementById("rewardContinueBtn");
 
-  if (!rewardGrid || !totalRewardEl || !remainingSumEl || !rewardProgressFill || !continueBtn) return;
-
-  totalRewardEl.textContent = rewardValue;
-  remainingSumEl.textContent = rewardValue;
-  rewardProgressFill.style.width = "0%";
-  continueBtn.disabled = true;
-
-  let chosenReward = null;
+  totalRewardEl.textContent = totalReward;
   rewardGrid.innerHTML = "";
 
-  REWARD_OPTIONS.forEach(option => {
-    const card = document.createElement("button");
-    card.type = "button";
+  const selections = {};
+  let remaining = totalReward;
+
+  function updateUI() {
+    const used = Object.values(selections).reduce((a, b) => a + b, 0);
+    remaining = totalReward - used;
+
+    remainingSumEl.textContent = remaining;
+    rewardProgressFill.style.width = `${(used / totalReward) * 100}%`;
+
+    const valid =
+      remaining === 0 &&
+      Object.values(selections).every(v => v === 0 || v >= 200);
+
+    continueBtn.disabled = !valid;
+  }
+
+  REWARD_OPTIONS.forEach(opt => {
+    const card = document.createElement("div");
     card.className = "reward-option-card";
+
     card.innerHTML = `
       <div class="reward-option-logo-wrap">
-        <img src="${option.logo}" alt="${option.name}" class="reward-option-logo">
+        <img src="${opt.logo}" class="reward-option-logo">
       </div>
-      <div class="reward-option-meta">
-        <strong>${option.name}</strong>
-        <span>${rewardValue} kr</span>
-      </div>
+
+      <strong>${opt.name}</strong>
+
+      <input 
+        type="number" 
+        min="0" 
+        step="100"
+        placeholder="0"
+        class="reward-input"
+      />
+
+      <span class="reward-error hidden">Minst 200 kr</span>
     `;
 
-    card.addEventListener("click", () => {
-      rewardGrid.querySelectorAll(".reward-option-card").forEach(x => x.classList.remove("active"));
-      card.classList.add("active");
+    const input = card.querySelector("input");
+    const error = card.querySelector(".reward-error");
 
-      chosenReward = {
-        company: option.name,
-        value: rewardValue,
-        offerId
-      };
+    input.addEventListener("input", () => {
+      let val = Number(input.value) || 0;
 
-      remainingSumEl.textContent = "0";
-      rewardProgressFill.style.width = "100%";
-      continueBtn.disabled = false;
+      error.classList.add("hidden");
+
+      if (val > 0 && val < 200) {
+        error.classList.remove("hidden");
+        selections[opt.name] = 0;
+      } else {
+        selections[opt.name] = val;
+      }
+
+      updateUI();
     });
 
     rewardGrid.appendChild(card);
   });
 
   continueBtn.onclick = () => {
-    if (!chosenReward) return;
-
-    localStorage.setItem("rewardChoice", JSON.stringify(chosenReward));
-    localStorage.setItem("rewardDistribution", JSON.stringify({
-      [chosenReward.company]: chosenReward.value
-    }));
+    localStorage.setItem("rewardDistribution", JSON.stringify(selections));
+    localStorage.setItem("rewardChoice", JSON.stringify({ offerId, reward: totalReward }));
 
     window.beloningChosen = true;
-    rewardSection.classList.remove("is-hidden");
     checkGoToNumberStep();
   };
 
   rewardSection.classList.remove("is-hidden");
   smoothScrollTo(rewardSection);
+}
+
+function remainingElState(value, remainingSumEl, remainingSumWrap) {
+  remainingSumEl.textContent = value;
+  remainingSumWrap.classList.remove("is-good", "is-negative");
+  remainingSumWrap.classList.add(value === 0 ? "is-good" : "is-negative");
 }
 
 function bindContactStep() {
@@ -871,6 +940,7 @@ function startNumberFlow() {
     });
 
     confirmBtn.textContent = currentPerson < totalPeople ? "Nästa person" : "Slutför";
+
     confirmBtn.onclick = () => {
       if (!mode) {
         alert("Välj hur du vill göra med numret.");
@@ -880,13 +950,21 @@ function startNumberFlow() {
       if (mode === "port") {
         const input = document.getElementById("portInput");
         const value = input?.value.trim() || "";
+
         if (!isValidPhone(value)) {
           alert("Ange ett giltigt svenskt nummer.");
           return;
         }
-        collectedNumbers[`person_${currentPerson}`] = { type: "port", number: value };
+
+        collectedNumbers[`person_${currentPerson}`] = {
+          type: "port",
+          number: value
+        };
       } else {
-        collectedNumbers[`person_${currentPerson}`] = { type: "new", number: "nytt nummer" };
+        collectedNumbers[`person_${currentPerson}`] = {
+          type: "new",
+          number: "nytt nummer"
+        };
       }
 
       if (currentPerson < totalPeople) {
@@ -944,7 +1022,17 @@ function finishNumbers(collectedNumbers) {
         <h3 style="margin-bottom:16px;">Vald belöning</h3>
         ${
           rewardChoice
-            ? `<p><strong>${rewardChoice.company}</strong> – ${rewardChoice.value} kr</p>`
+            ? `
+              <div style="display:flex;align-items:center;gap:16px;">
+                <div style="width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#fff;">
+                  <img src="${getRewardLogo(rewardChoice.company)}" alt="${rewardChoice.company}" style="max-width:42px;max-height:42px;object-fit:contain;">
+                </div>
+                <div>
+                  <p><strong>${rewardChoice.company}</strong></p>
+                  <p>${rewardChoice.value} kr</p>
+                </div>
+              </div>
+            `
             : `<p>Ingen belöning vald.</p>`
         }
       </div>
@@ -1005,6 +1093,45 @@ function finishNumbers(collectedNumbers) {
     localStorage.setItem("collectedNumbers", JSON.stringify(collectedNumbers));
     window.location.href = "signera.html";
   };
+}
+
+function getRewardLogo(companyName) {
+  return REWARD_OPTIONS.find(item => item.name === companyName)?.logo || "";
+}
+
+function clearRewardAndNextSteps() {
+  localStorage.removeItem("rewardChoice");
+  localStorage.removeItem("rewardDistribution");
+  localStorage.removeItem("selectedOffer");
+  localStorage.removeItem("collectedNumbers");
+  localStorage.removeItem("startDateChoice");
+
+  const rewardSection = document.getElementById("rewardSection");
+  const contactSection = document.getElementById("contactSection");
+  const numberSection = document.getElementById("numberSection");
+  const portNumberSection = document.getElementById("portNumberSection");
+  const rewardGrid = document.getElementById("rewardGrid");
+  const continueBtn = document.getElementById("rewardContinueBtn");
+  const totalRewardEl = document.getElementById("totalReward");
+  const remainingSumEl = document.getElementById("remainingSum");
+  const rewardProgressFill = document.getElementById("rewardProgressFill");
+
+  rewardSection?.classList.add("is-hidden");
+  contactSection?.classList.add("is-hidden");
+  numberSection?.classList.add("is-hidden");
+  portNumberSection?.classList.add("is-hidden");
+
+  if (rewardGrid) rewardGrid.innerHTML = "";
+  if (continueBtn) continueBtn.disabled = true;
+  if (totalRewardEl) totalRewardEl.textContent = "0";
+  if (remainingSumEl) remainingSumEl.textContent = "0";
+  if (rewardProgressFill) rewardProgressFill.style.width = "0%";
+}
+
+function hideNextSteps() {
+  document.getElementById("contactSection")?.classList.add("is-hidden");
+  document.getElementById("numberSection")?.classList.add("is-hidden");
+  document.getElementById("portNumberSection")?.classList.add("is-hidden");
 }
 
 function smoothScrollTo(element) {
