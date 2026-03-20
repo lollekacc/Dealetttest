@@ -227,6 +227,13 @@ if (typeof updateInlineStepUI === "function") {
   }
 
   renderStack();
+  document.querySelectorAll(".quiz-back-inline").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (currentStep > 0) {
+      goToStep(currentStep - 1);
+    }
+  });
+});
 });
 
 function loadOffersScript() {
