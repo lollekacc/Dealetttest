@@ -2,244 +2,88 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adeala – Välj belöning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dealett – Välj belöning</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/style.css">
   <link rel="stylesheet" href="./assets/design.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 
 <body class="font-[Inter] min-h-screen bg-[#f5f8fb] text-slate-900">
 
+<main class="max-w-6xl mx-auto px-6 py-10">
 
-<main class="reward-page max-w-7xl mx-auto px-6 py-10">
+  <h1 class="text-3xl font-bold text-center mb-8">
+    Välj din belöning
+  </h1>
 
-  <section class="reward-hero text-center mb-10">
-    <span class="reward-eyebrow">BELÖNINGAR</span>
-    <h1 class="reward-title">Välj dina belöningar</h1>
-    <p class="reward-subtitle">
-      Fördela din belöning mellan våra samarbetspartners. Minst 100 kr per val.
-    </p>
-  </section>
+  <div id="rewardGrid" class="grid grid-cols-2 md:grid-cols-3 gap-6"></div>
 
-  <section class="reward-summary">
-    <div class="reward-summary-card">
-      <div class="reward-summary-block">
-        <span class="reward-summary-label">Totalt belöningsvärde</span>
-        <strong class="reward-summary-value"><span id="totalReward">0</span> kr</strong>
-      </div>
-
-      <div class="reward-progress-wrap">
-        <div class="reward-progress-bar">
-          <div id="rewardProgressFill" class="reward-progress-fill"></div>
-        </div>
-      </div>
-
-      <div class="reward-summary-block reward-summary-block-right">
-        <span class="reward-summary-label">Återstår</span>
-        <strong id="remainingSumWrap" class="reward-summary-value is-negative">
-          <span id="remainingSum">0</span> kr
-        </strong>
-      </div>
-    </div>
-  </section>
-
-  <section>
-    <div id="rewardGrid" class="reward-grid"></div>
-  </section>
-
-  <section class="reward-footer-bar">
-    <button
-      id="continueBtn"
-      disabled
-      class="reward-continue-btn opacity-50">
-      Fortsätt till varukorg
+  <div class="mt-10 text-center">
+    <button id="continueBtn" disabled class="px-8 py-4 bg-[#0C4A3C] text-white rounded-xl opacity-50">
+      Fortsätt
     </button>
-  </section>
+  </div>
 
 </main>
+
 <script>
-const selections = {};
 const rewards = [
-  { company: "ICA Maxi", logo: "https://detailproduktion.se/wp-content/uploads/2014/04/ica-maxi-stormarknad-logo.png"},
-  { company: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1280px-Amazon_logo.svg.png"},
-  { company: "MIO", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/MIO_Logo.svg/2560px-MIO_Logo.svg.png"},
-  { company: "Coop", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Coop_logo.svg/2560px-Coop_logo.svg.png"},
-  { company: "H&M", logo: "https://upload.wikimedia.org/wikipedia/commons/5/53/H%26M-Logo.svg"},
-  { company: "MQ", logo: "https://www.kungsmassan.se/Images/Butiker/MQMARQET_1080x1080.png"},
-  { company: "Guldfynd", logo: "https://www.datocms-assets.com/138720/1732112442-guldfynd.png?auto=format&fit=max&w=1200"},
-  { company: "Hemtex", logo: "https://images.seeklogo.com/logo-png/32/1/hemtex-logo-png_seeklogo-329500.png"},
-  { company: "Hemköp", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Hemkop_logo.svg/1280px-Hemkop_logo.svg.png"},
-  { company: "Specsavers", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Specsavers_logo.svg/1200px-Specsavers_logo.svg.png"},
-  { company: "Synsam", logo: "https://kraftenifinspang.se/wp-content/uploads/2024/09/Loggor-centrumbutikerna_Synsam-1024x503.png"},
-  { company: "SATS", logo: "https://cdn.sanity.io/images/xkmfhygb/production/7a8c8bd647ab4949343baef3fe30dc92281489e7-1920x1080.jpg?w=1200&h=630&fit=crop&crop=focalpoint"}
+  { name: "ICA Maxi", logo: "https://detailproduktion.se/wp-content/uploads/2014/04/ica-maxi-stormarknad-logo.png"},
+  { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1280px-Amazon_logo.svg.png"},
+  { name: "MIO", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/MIO_Logo.svg/2560px-MIO_Logo.svg.png"},
+  { name: "Coop", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Coop_logo.svg/2560px-Coop_logo.svg.png"},
+  { name: "H&M", logo: "https://upload.wikimedia.org/wikipedia/commons/5/53/H%26M-Logo.svg"}
 ];
 
-/* -----------------------------
-   TOTAL REWARD
------------------------------ */
 const stored = JSON.parse(localStorage.getItem("rewardChoice"));
-const TOTAL_REWARD = stored?.reward ? Number(stored.reward) : 1000;
+const TOTAL = stored?.reward || 1000;
 
-/* -----------------------------
-   ELEMENTS
------------------------------ */
 const grid = document.getElementById("rewardGrid");
-const remainingEl = document.getElementById("remainingSum");
-const totalEl = document.getElementById("totalReward");
-const continueBtn = document.getElementById("continueBtn");
+const btn = document.getElementById("continueBtn");
 
-totalEl.textContent = TOTAL_REWARD;
+let selected = null;
 
-/* -----------------------------
-   RENDER
------------------------------ */
 rewards.forEach(r => {
-const card = document.createElement("div");
-card.className = "reward-card";
-card.dataset.company = r.company;
+  const card = document.createElement("button");
+  card.className = "p-6 bg-white rounded-xl shadow flex flex-col items-center gap-3";
 
-card.innerHTML = `
-  <div class="reward-logo-wrap">
-    <img src="${r.logo}" alt="${r.company}" class="reward-logo">
-  </div>
+  card.innerHTML = `
+    <img src="${r.logo}" class="h-10 object-contain">
+    <strong>${r.name}</strong>
+    <span>${TOTAL} kr</span>
+  `;
 
-  <h3 class="reward-company">${r.company}</h3>
-  <p class="reward-meta">Ange belopp i steg om 100 kr.</p>
+  card.onclick = () => {
+    document.querySelectorAll("#rewardGrid button")
+      .forEach(x => x.classList.remove("ring-2","ring-green-500"));
 
-  <div class="reward-input-wrapper">
-    <div class="reward-input-shell">
-      <span class="reward-currency">kr</span>
-      <input
-        type="number"
-        min="0"
-        step="100"
-        class="reward-input"
-        data-company="${r.company}"
-        placeholder="0" />
-    </div>
+    card.classList.add("ring-2","ring-green-500");
 
-    <p class="validation-text hidden">
-      Minst 100 kr per val
-    </p>
-  </div>
-`;
+    selected = {
+      company: r.name,
+      value: TOTAL
+    };
+
+    btn.disabled = false;
+    btn.classList.remove("opacity-50");
+  };
 
   grid.appendChild(card);
 });
-const savedDistribution =
-  JSON.parse(localStorage.getItem("rewardDistribution")) || {};
 
-document.querySelectorAll(".reward-input").forEach(input => {
-  const company = input.dataset.company;
-  const savedValue = savedDistribution[company];
+btn.onclick = () => {
+  if (!selected) return;
 
-if (savedValue !== undefined && savedValue !== null && savedValue !== 0) {
-  input.value = savedValue;
-  selections[company] = Number(savedValue);
-}
-});
+  localStorage.setItem("rewardDistribution", JSON.stringify({
+    [selected.company]: selected.value
+  }));
 
-document.querySelectorAll(".reward-input").forEach(input => {
-  input.addEventListener("input", () => {
-    const company = input.dataset.company;
-    const value = Number(input.value) || 0;
-
-    const wrapper = input.closest(".reward-input-wrapper");
-    const msg = wrapper.querySelector(".validation-text");
-
-    // reset visuals
-    input.classList.remove("input-valid", "input-invalid");
-    msg.classList.add("hidden");
-
-    if (value > 0 && value < 100) {
-      input.classList.add("input-invalid");
-      msg.classList.remove("hidden");
-      selections[company] = 0;
-    } else {
-      if (value >= 100) input.classList.add("input-valid");
-      selections[company] = value;
-    }
-
-    // 🔒 persist state on every change
-    localStorage.setItem(
-      "rewardDistribution",
-      JSON.stringify(selections)
-    );
-
-    updateTotals();
-  });
-});
-
-function updateTotals() {
-  const selected = Object.values(selections).reduce((a, b) => a + b, 0);
-  const remaining = TOTAL_REWARD - selected;
-  const progress = TOTAL_REWARD > 0
-    ? Math.max(0, Math.min(100, (selected / TOTAL_REWARD) * 100))
-    : 0;
-
-  const remainingWrap = document.getElementById("remainingSumWrap");
-  const progressFill = document.getElementById("rewardProgressFill");
-
-  remainingEl.textContent = remaining;
-  progressFill.style.width = `${progress}%`;
-
-  remainingWrap.classList.remove("is-negative", "is-good");
-  remainingWrap.classList.add(remaining === 0 ? "is-good" : "is-negative");
-
-  const valid =
-    remaining === 0 &&
-    Object.values(selections).every(v => v === 0 || v >= 100);
-
-  continueBtn.disabled = !valid;
-  continueBtn.classList.toggle("opacity-50", !valid);
-
-  document.querySelectorAll(".reward-card").forEach(card => {
-    const company = card.dataset.company;
-    const value = Number(selections[company]) || 0;
-    card.classList.toggle("has-value", value >= 100);
-  });
-}
-
-
-/* -----------------------------
-   CONTINUE
------------------------------ */
-continueBtn.addEventListener("click", () => {
-
-  const rewardDistribution = selections;
-
-  const rewardInfo =
-    JSON.parse(localStorage.getItem("rewardChoice")) || {};
-
-  const cartItem = {
-    offerId: rewardInfo.offerId || "unknown",
-    rewardTotal: rewardInfo.reward || 0,
-    rewards: rewardDistribution
-  };
-
-  let cart = [];
-
-  try {
-    cart = JSON.parse(localStorage.getItem("dealettCart")) || [];
-  } catch {
-    cart = [];
-  }
-
-  cart.push(cartItem);
-
-  localStorage.setItem("dealettCart", JSON.stringify(cart));
-
-  console.log("Cart saved:", cart);   // debug
-
-  window.location.href = "varukorg.html";
-});
-
-updateTotals();
-
+  // 🔥 notify parent (your abonnemang page)
+  window.parent.postMessage("rewardDone", "*");
+};
 </script>
 
 </body>

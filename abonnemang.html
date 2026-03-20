@@ -8,13 +8,12 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-<link rel="stylesheet" href="./assets/style.css">
-<link rel="stylesheet" href="./assets/design.css">
-<link rel="stylesheet" href="./assets/abonnemang.css">
+  <link rel="stylesheet" href="./assets/style.css">
+  <link rel="stylesheet" href="./assets/design.css">
+  <link rel="stylesheet" href="./assets/abonnemang.css">
 </head>
 
 <body class="abon-page">
-
   <div id="header-placeholder"></div>
 
   <main class="abon-main">
@@ -82,18 +81,18 @@
           </div>
         </div>
 
-        <button type="button" class="hero-arrow hero-arrow-left" onclick="scrollHero(-1)" aria-label="Föregående slide">
+        <button type="button" class="hero-arrow hero-arrow-left" id="heroPrevBtn" aria-label="Föregående slide">
           <i class="fa-solid fa-chevron-left"></i>
         </button>
 
-        <button type="button" class="hero-arrow hero-arrow-right" onclick="scrollHero(1)" aria-label="Nästa slide">
+        <button type="button" class="hero-arrow hero-arrow-right" id="heroNextBtn" aria-label="Nästa slide">
           <i class="fa-solid fa-chevron-right"></i>
         </button>
 
         <div class="hero-dots" id="heroDots">
-          <button type="button" class="hero-dot active" onclick="goToSlide(0)" aria-label="Slide 1"></button>
-          <button type="button" class="hero-dot" onclick="goToSlide(1)" aria-label="Slide 2"></button>
-          <button type="button" class="hero-dot" onclick="goToSlide(2)" aria-label="Slide 3"></button>
+          <button type="button" class="hero-dot active" data-slide="0" aria-label="Slide 1"></button>
+          <button type="button" class="hero-dot" data-slide="1" aria-label="Slide 2"></button>
+          <button type="button" class="hero-dot" data-slide="2" aria-label="Slide 3"></button>
         </div>
       </div>
     </section>
@@ -174,7 +173,7 @@
 
             <div class="inline-options equal-buttons">
               <button type="button" class="quiz-option abon-opt" data-binding="no">Nej</button>
-              <button type="button" id="bindingYesBtn" class="quiz-option abon-opt" data-binding="yes">Ja</button>
+              <button type="button" class="quiz-option abon-opt" data-binding="yes">Ja</button>
             </div>
 
             <div id="bindingDateWrapper" class="binding-date is-hidden">
@@ -221,37 +220,7 @@
               <p class="quiz-subtitle">En sektion skapas automatiskt för varje person.</p>
             </div>
 
-            <div id="operatorWrapper" class="operator-wrapper">
-              <div id="operatorBase" class="operator-person-card">
-                <p class="operator-person-title">Vad har du för operatör idag? (Person 1)</p>
-
-                <div class="operator-logos">
-                  <button type="button" class="quiz-option operator-btn" data-operator="Tele2">
-                    <img src="images/tele2.jpg" alt="Tele2">
-                  </button>
-
-                  <button type="button" class="quiz-option operator-btn" data-operator="Telia">
-                    <img src="images/telia.png" alt="Telia">
-                  </button>
-
-                  <button type="button" class="quiz-option operator-btn" data-operator="Telenor">
-                    <img src="images/telenor.jpg" alt="Telenor">
-                  </button>
-
-                  <button type="button" class="quiz-option operator-btn" data-operator="Tre">
-                    <img src="images/tre.jpg" alt="Tre">
-                  </button>
-
-                  <button type="button" class="quiz-option operator-btn" data-operator="Halebop">
-                    <img src="images/halebop.webp" alt="Halebop">
-                  </button>
-
-                  <button type="button" class="quiz-option operator-text-btn" data-operator="Andra / Ingen">
-                    Andra / Ingen
-                  </button>
-                </div>
-              </div>
-            </div>
+            <div id="operatorWrapper" class="operator-wrapper"></div>
           </article>
         </div>
       </div>
@@ -281,8 +250,8 @@
       <div class="result-shell result-narrow">
         <div class="section-head center">
           <span class="section-kicker">Belöningar</span>
-          <h2>Välj dina belöningar</h2>
-          <p>Fördela din belöning direkt i samma flöde.</p>
+          <h2>Välj din belöning</h2>
+          <p>Välj var hela beloppet ska läggas.</p>
         </div>
 
         <div class="pro-card reward-panel">
@@ -344,261 +313,18 @@
         <div id="portNumberSection" class="pro-card is-hidden">
           <div class="section-head left-tight">
             <span class="section-kicker">Nummerflytt</span>
-            <h2>Fyll i numren som ska flyttas</h2>
+            <h2 id="numberFlowTitle">Fyll i numren som ska flyttas</h2>
+            <p id="numberFlowText">Vi går igenom en person i taget.</p>
           </div>
 
           <div id="phoneInputsContainer" class="phone-inputs"></div>
 
-          <button id="confirmNumbersBtn" class="primary-btn full-btn">Bekräfta nummer</button>
+          <button id="confirmNumbersBtn" class="primary-btn full-btn is-hidden">Bekräfta</button>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- POPUP -->
-  <div id="pchoiceModal" class="popup-overlay is-hidden">
-    <div class="popup-content">
-      <button id="closePchoice" class="popup-close" aria-label="Stäng">✕</button>
-      <iframe id="pchoiceFrame" src="" class="popup-frame"></iframe>
-    </div>
-  </div>
-
-  <!-- HEADER LOAD -->
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const headerPlaceholder = document.getElementById("header-placeholder");
-      if (!headerPlaceholder) return;
-
-      try {
-        const headerRes = await fetch("partials/header.html");
-        if (headerRes.ok) {
-          headerPlaceholder.innerHTML = await headerRes.text();
-        }
-      } catch (err) {
-        console.error("Header load failed:", err);
-      }
-    });
-  </script>
-
-  <!-- HERO SLIDER -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const slider = document.getElementById("heroSlider");
-      const dots = [...document.querySelectorAll(".hero-dot")];
-      if (!slider) return;
-
-      let currentSlide = 0;
-      const totalSlides = slider.children.length;
-      const AUTO_INTERVAL = 6000;
-
-      function updateDots() {
-        dots.forEach((dot, i) => dot.classList.toggle("active", i === currentSlide));
-      }
-
-      window.goToSlide = function(i) {
-        currentSlide = i;
-        slider.scrollTo({
-          left: slider.clientWidth * currentSlide,
-          behavior: "smooth"
-        });
-        updateDots();
-      };
-
-      window.scrollHero = function(dir) {
-        currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
-        window.goToSlide(currentSlide);
-      };
-
-      setInterval(() => {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        window.goToSlide(currentSlide);
-      }, AUTO_INTERVAL);
-
-      window.addEventListener("resize", () => window.goToSlide(currentSlide));
-      updateDots();
-    });
-  </script>
-
-  <!-- QUIZ LOGIC -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const answers = {
-        persons: null,
-        data: null,
-        binding: null
-      };
-
-      const wrapper = document.getElementById("operatorWrapper");
-      const base = document.getElementById("operatorBase");
-      const extraPersons = document.getElementById("personsExtra");
-      const showMorePersonsBtn = document.getElementById("showMorePersons");
-      const bindingDateWrapper = document.getElementById("bindingDateWrapper");
-
-      function setSelectedInGroup(button, selector) {
-        const parent = button.closest(".step-card, .operator-person-card");
-        if (!parent) return;
-        parent.querySelectorAll(selector).forEach(btn => btn.classList.remove("selected"));
-        button.classList.add("selected");
-      }
-
-      function renderOperators(count) {
-        if (!wrapper || !base) return;
-
-        wrapper.innerHTML = "";
-
-        for (let i = 1; i <= count; i++) {
-          const clone = base.cloneNode(true);
-          clone.removeAttribute("id");
-
-          const title = clone.querySelector(".operator-person-title");
-          if (title) title.textContent = `Vad har du för operatör idag? (Person ${i})`;
-
-          clone.querySelectorAll("[data-operator]").forEach(btn => {
-            btn.addEventListener("click", () => {
-              clone.querySelectorAll("[data-operator]").forEach(b => b.classList.remove("selected"));
-              btn.classList.add("selected");
-            });
-          });
-
-          wrapper.appendChild(clone);
-        }
-      }
-
-      function maybeShowOffers() {
-        if (!answers.persons || !answers.data) return;
-        document.getElementById("offersSection")?.classList.remove("is-hidden");
-
-        if (typeof updateOffers === "function") {
-          updateOffers();
-        }
-      }
-
-      document.querySelectorAll("[data-persons]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          answers.persons = Number(btn.dataset.persons);
-          setSelectedInGroup(btn, "[data-persons]");
-          renderOperators(answers.persons);
-          maybeShowOffers();
-        });
-      });
-
-      document.querySelectorAll("[data-data]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          answers.data = btn.dataset.data;
-          setSelectedInGroup(btn, "[data-data]");
-          maybeShowOffers();
-        });
-      });
-
-      document.querySelectorAll("[data-binding]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          answers.binding = btn.dataset.binding;
-          setSelectedInGroup(btn, "[data-binding]");
-
-          if (btn.dataset.binding === "yes") {
-            bindingDateWrapper?.classList.remove("is-hidden");
-          } else {
-            bindingDateWrapper?.classList.add("is-hidden");
-          }
-        });
-      });
-
-      if (showMorePersonsBtn && extraPersons) {
-        showMorePersonsBtn.addEventListener("click", () => {
-          extraPersons.classList.toggle("is-hidden");
-          showMorePersonsBtn.textContent = extraPersons.classList.contains("is-hidden")
-            ? "Visa fler"
-            : "Visa färre";
-        });
-      }
-
-      renderOperators(1);
-    });
-  </script>
-
-  <!-- FREE TEXT / CHIPS -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const operatorInput = document.getElementById("operatorFreeInput");
-      const addBtn = document.getElementById("wishAddBtn");
-      const list = document.getElementById("operatorFreeList");
-
-      if (!operatorInput || !list || !addBtn) return;
-
-      function addFreeItem(text) {
-        if (!text) return;
-
-        const exists = [...list.querySelectorAll(".wish-tag-label")].some(
-          el => el.textContent.trim().toLowerCase() === text.trim().toLowerCase()
-        );
-        if (exists) return;
-
-        const item = document.createElement("div");
-        item.className = "wish-tag";
-
-        const label = document.createElement("span");
-        label.className = "wish-tag-label";
-        label.textContent = text;
-
-        const remove = document.createElement("button");
-        remove.type = "button";
-        remove.className = "wish-tag-remove";
-        remove.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-        remove.onclick = () => item.remove();
-
-        item.appendChild(label);
-        item.appendChild(remove);
-        list.appendChild(item);
-      }
-
-      function submitInput() {
-        const value = operatorInput.value.trim();
-        addFreeItem(value);
-        operatorInput.value = "";
-      }
-
-      addBtn.addEventListener("click", submitInput);
-
-      operatorInput.addEventListener("keydown", e => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          submitInput();
-        }
-      });
-
-      document.querySelectorAll("[data-suggest]").forEach(el => {
-        el.addEventListener("click", () => addFreeItem(el.dataset.suggest));
-      });
-    });
-  </script>
-
-  <!-- OFFERS RENDER HELPER -->
-  <script>
-    function renderOfferStrip(offers) {
-      const section = document.getElementById("offersSection");
-      const track = document.getElementById("offersTrack");
-      const container = document.getElementById("offers-container");
-
-      if (!track || !container) return;
-
-      container.innerHTML = "";
-      track.style.animation = "none";
-      track.offsetHeight;
-
-      const cards = offers.map(o => buildOfferCard(o));
-      cards.forEach(card => {
-        card.classList.add("offer-card");
-        container.appendChild(card);
-      });
-
-      cards.forEach(card => container.appendChild(card.cloneNode(true)));
-
-      track.style.animation = "";
-      section?.classList.remove("is-hidden");
-    }
-  </script>
-
   <script type="module" src="./assets/offers.js"></script>
-  
 </body>
 </html>

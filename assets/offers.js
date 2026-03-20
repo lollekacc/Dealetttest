@@ -1,9 +1,476 @@
-let offersContainer;
-let offersSection;
-
+let offersContainer = null;
+let offersSection = null;
 let ALL_PLANS = [];
+
 window.offerChosen = false;
 window.beloningChosen = false;
+window.selectedOfferId = null;
+
+const abonState = window.abonState || {
+  persons: null,
+  data: null,
+  operator: null,
+  binding: null,
+  bindingEndDate: null,
+  wishes: [],
+  operatorsByPerson: []
+};
+
+const REWARD_OPTIONS = [
+  { name: "ICA Maxi", logo: "https://detailproduktion.se/wp-content/uploads/2014/04/ica-maxi-stormarknad-logo.png" },
+  { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png" },
+  { name: "MIO", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/MIO_Logo.svg/2560px-MIO_Logo.svg.png" },
+  { name: "Coop", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Coop_logo.svg/2560px-Coop_logo.svg.png" },
+  { name: "H&M", logo: "https://upload.wikimedia.org/wikipedia/commons/5/53/H%26M-Logo.svg" },
+  { name: "MQ", logo: "https://www.kungsmassan.se/Images/Butiker/MQMARQET_1080x1080.png" },
+  { name: "Guldfynd", logo: "https://www.datocms-assets.com/138720/1732112442-guldfynd.png" },
+  { name: "Hemtex", logo: "https://images.seeklogo.com/logo-png/32/1/hemtex-logo-png_seeklogo-329500.png" },
+  { name: "Hemköp", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Hemkop_logo.svg/1280px-Hemkop_logo.svg.png" },
+  { name: "Specsavers", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Specsavers_logo.svg/1200px-Specsavers_logo.svg.png" },
+  { name: "Synsam", logo: "https://kraftenifinspang.se/wp-content/uploads/2024/09/Loggor-centrumbutikerna_Synsam-1024x503.png" },
+  { name: "SATS", logo: "https://cdn.sanity.io/images/xkmfhygb/production/7a8c8bd647ab4949343baef3fe30dc92281489e7-1920x1080.jpg" }
+];
+
+document.addEventListener("DOMContentLoaded", initPage);
+
+async function initPage() {
+  hydrateElements();
+  restoreSavedState();
+  await loadShell();
+  initHeroSlider();
+  initWishInput();
+  initShowMorePersons();
+  await loadPlans();
+  initQuiz();
+  preselectFromUrl();
+  showAllOffersInitial();
+  updateAvailability();
+  bindContactStep();
+  bindNumberFlowBase();
+}
+
+function hydrateElements() {
+  offersContainer = document.getElementById("offers-container");
+  offersSection = document.getElementById("offersSection");
+}
+
+function restoreSavedState() {
+  try {
+    const savedState = localStorage.getItem("dealettState");
+    if (savedState) Object.assign(abonState, JSON.parse(savedState));
+  } catch (err) {
+    console.warn("Could not restore state:", err);
+  }
+}
+
+async function loadShell() {
+  const headerPlaceholder = document.getElementById("header-placeholder");
+
+  try {
+    const headerRes = await fetch("./partials/header.html");
+    if (headerRes.ok && headerPlaceholder) {
+      headerPlaceholder.innerHTML = await headerRes.text();
+    }
+  } catch (err) {
+    console.warn("Header load failed:", err);
+  }
+
+  try {
+    const chatRes = await fetch("./partials/chat.html");
+    if (chatRes.ok) {
+      document.body.insertAdjacentHTML("beforeend", await chatRes.text());
+      const chatScript = document.createElement("script");
+      chatScript.src = "./assets/chat.js";
+      document.body.appendChild(chatScript);
+    }
+  } catch (err) {
+    console.warn("Chat load failed:", err);
+  }
+
+  try {
+    const footerRes = await fetch("./partials/footer.html");
+    if (footerRes.ok) {
+      document.body.insertAdjacentHTML("beforeend", await footerRes.text());
+    }
+  } catch (err) {
+    console.warn("Footer load failed:", err);
+  }
+}
+
+function initHeroSlider() {
+  const slider = document.getElementById("heroSlider");
+  const dots = [...document.querySelectorAll(".hero-dot")];
+  const prevBtn = document.getElementById("heroPrevBtn");
+  const nextBtn = document.getElementById("heroNextBtn");
+
+  if (!slider || !dots.length) return;
+
+  let currentSlide = 0;
+  const totalSlides = slider.children.length;
+  const autoInterval = 6000;
+  let timer = null;
+
+  function updateDots() {
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === currentSlide));
+  }
+
+  function goToSlide(index) {
+    currentSlide = index;
+    slider.scrollTo({
+      left: slider.clientWidth * currentSlide,
+      behavior: "smooth"
+    });
+    updateDots();
+  }
+
+  function nextSlide(step = 1) {
+    currentSlide = (currentSlide + step + totalSlides) % totalSlides;
+    goToSlide(currentSlide);
+  }
+
+  function restartTimer() {
+    clearInterval(timer);
+    timer = setInterval(() => nextSlide(1), autoInterval);
+  }
+
+  prevBtn?.addEventListener("click", () => {
+    nextSlide(-1);
+    restartTimer();
+  });
+
+  nextBtn?.addEventListener("click", () => {
+    nextSlide(1);
+    restartTimer();
+  });
+
+  dots.forEach(dot => {
+    dot.addEventListener("click", () => {
+      goToSlide(Number(dot.dataset.slide));
+      restartTimer();
+    });
+  });
+
+  window.addEventListener("resize", () => goToSlide(currentSlide));
+  updateDots();
+  restartTimer();
+}
+
+async function loadPlans() {
+  if (ALL_PLANS.length) return ALL_PLANS;
+  const res = await fetch("./data/plans.json");
+  ALL_PLANS = await res.json();
+  return ALL_PLANS;
+}
+
+function initQuiz() {
+  bindPersons();
+  bindData();
+  bindBinding();
+  renderOperators(abonState.persons || 1);
+  restoreSelectionsUI();
+
+  if (isQuizComplete()) {
+    updateOffers();
+  }
+}
+
+function bindPersons() {
+  document.querySelectorAll("[data-persons]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      abonState.persons = Number(btn.dataset.persons);
+      setSelectedInScope(btn, "[data-persons]");
+      renderOperators(abonState.persons);
+      persistState();
+      updateAvailability();
+      updateOffers();
+    });
+  });
+}
+
+function bindData() {
+  document.querySelectorAll("[data-data]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (btn.classList.contains("disabled-option")) return;
+      abonState.data = btn.dataset.data;
+      setSelectedInScope(btn, "[data-data]");
+      persistState();
+      updateAvailability();
+      updateOffers();
+    });
+  });
+}
+
+function bindBinding() {
+  const bindingDateWrapper = document.getElementById("bindingDateWrapper");
+  const bindingInput = document.getElementById("bindingEndDate");
+
+  document.querySelectorAll("[data-binding]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      abonState.binding = btn.dataset.binding;
+      setSelectedInScope(btn, "[data-binding]");
+
+      if (abonState.binding === "yes") {
+        bindingDateWrapper?.classList.remove("is-hidden");
+      } else {
+        abonState.bindingEndDate = null;
+        if (bindingInput) bindingInput.value = "";
+        bindingDateWrapper?.classList.add("is-hidden");
+      }
+
+      persistState();
+    });
+  });
+
+  bindingInput?.addEventListener("change", () => {
+    abonState.bindingEndDate = bindingInput.value || null;
+    persistState();
+  });
+}
+
+function initShowMorePersons() {
+  const btn = document.getElementById("showMorePersons");
+  const extra = document.getElementById("personsExtra");
+  if (!btn || !extra) return;
+
+  btn.addEventListener("click", () => {
+    extra.classList.toggle("is-hidden");
+    btn.textContent = extra.classList.contains("is-hidden") ? "Visa fler" : "Visa färre";
+  });
+}
+
+function initWishInput() {
+  const input = document.getElementById("operatorFreeInput");
+  const addBtn = document.getElementById("wishAddBtn");
+  const list = document.getElementById("operatorFreeList");
+
+  if (!input || !addBtn || !list) return;
+
+  function renderWishList() {
+    list.innerHTML = "";
+    abonState.wishes.forEach(text => {
+      const item = document.createElement("div");
+      item.className = "wish-tag";
+
+      const label = document.createElement("span");
+      label.className = "wish-tag-label";
+      label.textContent = text;
+
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "wish-tag-remove";
+      remove.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      remove.addEventListener("click", () => {
+        abonState.wishes = abonState.wishes.filter(x => x !== text);
+        persistState();
+        renderWishList();
+      });
+
+      item.append(label, remove);
+      list.appendChild(item);
+    });
+  }
+
+  function addWish(text) {
+    const clean = (text || "").trim();
+    if (!clean) return;
+    if (abonState.wishes.some(x => x.toLowerCase() === clean.toLowerCase())) return;
+    abonState.wishes.push(clean);
+    persistState();
+    renderWishList();
+  }
+
+  addBtn.addEventListener("click", () => {
+    addWish(input.value);
+    input.value = "";
+  });
+
+  input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      addWish(input.value);
+      input.value = "";
+    }
+  });
+
+  document.querySelectorAll("[data-suggest]").forEach(btn => {
+    btn.addEventListener("click", () => addWish(btn.dataset.suggest));
+  });
+
+  renderWishList();
+}
+
+function renderOperators(count) {
+  const wrapper = document.getElementById("operatorWrapper");
+  if (!wrapper) return;
+
+  if (!Array.isArray(abonState.operatorsByPerson)) {
+    abonState.operatorsByPerson = [];
+  }
+
+  while (abonState.operatorsByPerson.length < count) {
+    abonState.operatorsByPerson.push(null);
+  }
+  abonState.operatorsByPerson.length = count;
+
+  wrapper.innerHTML = "";
+
+  for (let i = 0; i < count; i++) {
+    const card = document.createElement("div");
+    card.className = "operator-person-card";
+    card.innerHTML = `
+      <p class="operator-person-title">Vad har du för operatör idag? (Person ${i + 1})</p>
+
+      <div class="operator-logos">
+        ${buildOperatorButton("Tele2", "images/tele2.jpg")}
+        ${buildOperatorButton("Telia", "images/telia.png")}
+        ${buildOperatorButton("Telenor", "images/telenor.jpg")}
+        ${buildOperatorButton("Tre", "images/tre.jpg")}
+        ${buildOperatorButton("Halebop", "images/halebop.webp")}
+        <button type="button" class="quiz-option operator-text-btn" data-operator="Andra / Ingen">Andra / Ingen</button>
+      </div>
+    `;
+
+    const selectedValue = abonState.operatorsByPerson[i];
+
+    card.querySelectorAll("[data-operator]").forEach(btn => {
+      if (selectedValue === btn.dataset.operator) {
+        btn.classList.add("selected");
+      }
+
+      btn.addEventListener("click", () => {
+        card.querySelectorAll("[data-operator]").forEach(x => x.classList.remove("selected"));
+        btn.classList.add("selected");
+        abonState.operatorsByPerson[i] = btn.dataset.operator;
+        abonState.operator = getMainChosenOperator();
+        persistState();
+        updateAvailability();
+        updateOffers();
+      });
+    });
+
+    wrapper.appendChild(card);
+  }
+}
+
+function buildOperatorButton(operator, logoPath) {
+  return `
+    <button type="button" class="quiz-option operator-btn" data-operator="${operator}">
+      <img src="${logoPath}" alt="${operator}">
+    </button>
+  `;
+}
+
+function getMainChosenOperator() {
+  const firstReal = (abonState.operatorsByPerson || []).find(Boolean);
+  if (!firstReal || firstReal === "Andra / Ingen") return null;
+  return firstReal;
+}
+
+function restoreSelectionsUI() {
+  if (abonState.persons) {
+    const btn = document.querySelector(`[data-persons="${abonState.persons}"]`);
+    if (btn) setSelectedInScope(btn, "[data-persons]");
+  }
+
+  if (abonState.data) {
+    const btn = document.querySelector(`[data-data="${abonState.data}"]`);
+    if (btn) setSelectedInScope(btn, "[data-data]");
+  }
+
+  if (abonState.binding) {
+    const btn = document.querySelector(`[data-binding="${abonState.binding}"]`);
+    if (btn) {
+      setSelectedInScope(btn, "[data-binding]");
+      document.getElementById("bindingDateWrapper")?.classList.toggle("is-hidden", abonState.binding !== "yes");
+    }
+  }
+
+  if (abonState.bindingEndDate) {
+    const input = document.getElementById("bindingEndDate");
+    if (input) input.value = abonState.bindingEndDate;
+  }
+}
+
+function preselectFromUrl() {
+  const urlOp = new URLSearchParams(window.location.search).get("op")
+    || sessionStorage.getItem("preferredOperator");
+
+  if (!urlOp || !abonState.persons) return;
+
+  abonState.operatorsByPerson = abonState.operatorsByPerson || [];
+  abonState.operatorsByPerson[0] = urlOp;
+  abonState.operator = urlOp;
+  renderOperators(abonState.persons);
+  persistState();
+}
+
+function setSelectedInScope(button, selector) {
+  const parent = button.closest(".step-card, .operator-person-card");
+  if (!parent) return;
+  parent.querySelectorAll(selector).forEach(btn => btn.classList.remove("selected", "active"));
+  button.classList.add("selected", "active");
+}
+
+function persistState() {
+  localStorage.setItem("dealettState", JSON.stringify(abonState));
+}
+
+function isQuizComplete() {
+  return abonState.persons !== null && abonState.data !== null;
+}
+
+function hasValidPlanForState(state) {
+  return ALL_PLANS.some(p => {
+    if (p.isFamilyPlan) return false;
+
+    if (state.operator && p.operator !== state.operator) return false;
+    if (state.data === "low" && p.dataAmount >= 30) return false;
+    if (state.data === "medium" && (p.dataAmount < 20 || p.dataAmount >= 999)) return false;
+    if (state.data === "high" && p.dataAmount < 999) return false;
+
+    if ((state.persons || 1) > 1) {
+      const addon = getFamilyAddonForOperator(p.operator);
+      if (!addon) return false;
+    }
+
+    return true;
+  });
+}
+
+function updateDataAvailability() {
+  document.querySelectorAll("[data-data]").forEach(btn => {
+    const valid = hasValidPlanForState({
+      ...abonState,
+      data: btn.dataset.data
+    });
+    btn.classList.toggle("disabled-option", !valid);
+  });
+}
+
+function updateOperatorAvailability() {
+  const operatorButtons = document.querySelectorAll("#operatorWrapper [data-operator]");
+
+  operatorButtons.forEach(btn => {
+    const operatorValue = btn.dataset.operator;
+    if (operatorValue === "Andra / Ingen") {
+      btn.classList.remove("disabled-option");
+      return;
+    }
+
+    const valid = hasValidPlanForState({
+      ...abonState,
+      operator: operatorValue
+    });
+
+    btn.classList.toggle("disabled-option", !valid);
+  });
+}
+
+function updateAvailability() {
+  updateDataAvailability();
+  updateOperatorAvailability();
+}
+
 function getFamilyAddonForOperator(operator) {
   return ALL_PLANS.find(p =>
     p.operator === operator &&
@@ -16,14 +483,15 @@ function stopOffersScroll() {
   const track = document.getElementById("offersTrack");
   const strip = document.querySelector(".offers-strip");
   if (!track) return;
+
   track.style.animation = "none";
   track.style.transform = "translateX(0)";
-    track.classList.add("no-scroll");
+  track.classList.add("no-scroll");
   if (strip) strip.classList.add("no-fade");
 }
-function showAllOffersInitial() {
 
-  const offersSection = document.getElementById("offersSection");
+function showAllOffersInitial() {
+  if (!ALL_PLANS.length) return;
 
   stopOffersScroll();
 
@@ -34,19 +502,24 @@ function showAllOffersInitial() {
       finalPrice: p.price,
       pricePerPerson: p.price
     }))
-    .sort((a, b) => a.finalPrice - b.finalPrice);
-
-  if (offersSection) {
-    offersSection.classList.remove("hidden");
-  }
+    .sort((a, b) => a.finalPrice - b.finalPrice)
+    .slice(0, 6);
 
   renderOffers(offers);
 }
+
+async function updateOffers() {
+  if (!isQuizComplete()) return;
+  await filterOffers();
+  offersSection?.classList.remove("is-hidden");
+}
+
 async function filterOffers() {
   stopOffersScroll();
-  if (!ALL_PLANS.length) {
-    await loadPlans();
-  }
+  if (!ALL_PLANS.length) await loadPlans();
+
+  const mainOperator = getMainChosenOperator();
+  abonState.operator = mainOperator || null;
 
   const offers = ALL_PLANS
     .filter(p => !p.isFamilyPlan)
@@ -61,14 +534,12 @@ async function filterOffers() {
       let totalPrice = p.price;
       let pricePerPerson = p.price;
 
-      if (abonState.persons > 1) {
+      if ((abonState.persons || 1) > 1) {
         const addon = getFamilyAddonForOperator(p.operator);
         if (!addon) return null;
 
-        totalPrice =
-          p.price + (abonState.persons - 1) * addon.addonPrice;
-
-        pricePerPerson = Math.round(totalPrice / abonState.persons);
+        totalPrice = p.price + ((abonState.persons || 1) - 1) * addon.addonPrice;
+        pricePerPerson = Math.round(totalPrice / (abonState.persons || 1));
       }
 
       return {
@@ -84,246 +555,19 @@ async function filterOffers() {
   renderOffers(offers);
 }
 
-  window.filterOffers = filterOffers;
-  
-async function loadPlans() {
-  if (ALL_PLANS.length) return ALL_PLANS;
-
-  const res = await fetch("./data/plans.json");
-  ALL_PLANS = await res.json();
-  return ALL_PLANS;
-}
-function hasValidPlanForState(state) {
-  return ALL_PLANS.some(p => {
-    if (p.isFamilyPlan) return false;
-
-    if (state.operator && state.operator !== "" && p.operator !== state.operator)
-      return false;
-
-if (state.data === "low" && p.dataAmount >= 30) return false;
-
-if (state.data === "medium" && (p.dataAmount < 20 || p.dataAmount >= 999))
-  return false;
-
-if (state.data === "high" && p.dataAmount < 999)
-  return false;
-
-  return true;
-  });
+function calculateReward(price) {
+  if (price < 299) return 2000;
+  if (price < 399) return 3000;
+  if (price < 499) return 4000;
+  if (price < 699) return 5000;
+  return 1000;
 }
 
-
-
-
-
-
-
-
-function isQuizComplete() {
-  return (
-    abonState.persons !== null &&
-    abonState.data !== null
-  );
-}
-function updateDataAvailability() {
-  if (!ALL_PLANS.length) return;
-
-  document.querySelectorAll("[data-data]").forEach(btn => {
-    const dataValue = btn.dataset.data;
-
-    const valid = hasValidPlanForState({
-      ...abonState,
-      data: dataValue
-    });
-
-    btn.classList.toggle("disabled-option", !valid);
-  });
-}
-
-
-
-const abonState = window.abonState || {
-  persons: null,
-  data: null,
-  operator: null,
-  binding: null,
-  bindingEndDate: null
-};
-
-
-
-
-/******************************
- LOAD HEADER + FOOTER
-******************************/
-document.addEventListener("DOMContentLoaded", async () => {
-// Binding logic
-const bindingYesBtn = document.getElementById("bindingYesBtn");
-const bindingNoBtn = document.querySelector('[data-binding="no"]');
-const bindingWrapper = document.getElementById("bindingDateWrapper");
-const bindingInput = document.getElementById("bindingEndDate");
-offersSection = document.getElementById("offersSection");
-offersContainer = document.getElementById("offers-container");
-await loadPlans();
-showAllOffersInitial();
-const urlOp =
-  new URLSearchParams(window.location.search).get("op") ||
-  sessionStorage.getItem("preferredOperator");
-
-if (urlOp) {
-  abonState.operator = urlOp;
-  offersSection.classList.remove("hidden");
-  filterOffers();
-  smoothScrollTo(offersSection);
-}
-if (bindingYesBtn && bindingWrapper) {
-  bindingYesBtn.addEventListener("click", () => {
-    abonState.binding = "yes";
-    bindingWrapper.classList.remove("hidden");
-  });
-}
-
-if (bindingNoBtn) {
-  bindingNoBtn.addEventListener("click", () => {
-    abonState.binding = "no";
-    abonState.bindingEndDate = null;
-    bindingWrapper.classList.add("hidden");
-  });
-}
-
-if (bindingInput) {
-  bindingInput.addEventListener("change", () => {
-    abonState.bindingEndDate = bindingInput.value;
-  });
-}
-
-    const headerRes = await fetch("partials/header.html");
-        if (headerRes.ok) {
-          document.getElementById("header-placeholder").innerHTML = await headerRes.text();
-          }
-  
-          const chatRes = await fetch("./partials/chat.html");
-          if (chatRes.ok) {
-            document.body.insertAdjacentHTML("beforeend", await chatRes.text());
-          }
-  
-          const footerRes = await fetch("partials/footer.html");
-          if (footerRes.ok) {
-            document.body.insertAdjacentHTML("beforeend", await footerRes.text());
-          }
-  
-  
-    // 🔥 LOAD CHAT.JS *AFTER* CHAT HTML EXISTS
-    const chatScript = document.createElement("script");
-    chatScript.src = "./assets/chat.js";
-    document.body.appendChild(chatScript);
-if (abonState.persons !== null && abonState.data !== null) {
-  offersSection.classList.remove("hidden");
-  await filterOffers();
-  smoothScrollTo(offersSection);
-  localStorage.removeItem("dealettState");
-}
-
-  const contactBtn = document.getElementById("contactContinueBtn");
-
-  if (contactBtn) {
-    contactBtn.addEventListener("click", () => {
-
-      const email = document.getElementById("contactEmail").value.trim();
-      const phone = document.getElementById("contactPhone").value.trim();
-
-      if (!email || !phone) {
-        alert("Fyll i både mejl och mobilnummer.");
-        return;
-      }
-
-      localStorage.setItem("contactEmail", email);
-      localStorage.setItem("contactPhone", phone);
-
-      document.getElementById("contactSection").classList.add("hidden");
-
-      startNumberFlow();
-    });
-  }
-
-});
-
-
-
-
-
-
-
-
-const savedState = localStorage.getItem("dealettState");
-
-if (savedState) {
-  const parsed = JSON.parse(savedState);
-  Object.assign(abonState, parsed);
-}
-function updateOperatorAvailability() {
-  if (!ALL_PLANS.length) return;
-
-  document.querySelectorAll("[data-operator]").forEach(btn => {
-    const operatorValue = btn.dataset.operator;
-
-    const valid = hasValidPlanForState({
-      ...abonState,
-      operator: operatorValue
-    });
-
-    btn.classList.toggle("disabled-option", !valid);
-  });
-}
-
-
-
-
-
-
-
-
-document.querySelectorAll(".abon-opt").forEach(btn => {
-  btn.addEventListener("click", async () => {
-    if (!ALL_PLANS.length) {
-      await loadPlans();
-    }
-
-    btn.closest(".quiz-card")
-      .querySelectorAll(".abon-opt")
-      .forEach(b => b.classList.remove("active"));
-
-    btn.classList.add("active");
-
-    if (btn.dataset.persons)
-      abonState.persons = Number(btn.dataset.persons);
-
-    if (btn.dataset.data)
-      abonState.data = btn.dataset.data;
-
-    if (btn.dataset.operator !== undefined)
-      abonState.operator = btn.dataset.operator;
-
-    updateDataAvailability();
-    updateOperatorAvailability();
-if (isQuizComplete()) {
-  offersSection.classList.remove("hidden");
-  filterOffers();
-  smoothScrollTo(offersSection);
-}
-
-
-  });
-});
-
-  /******************************
-   QUIZ SECTIONS
-  ******************************/
-function buildOfferCard(o, stateOverride = null) {
+function buildOfferCard(plan, stateOverride = null) {
   const state = stateOverride || abonState;
-  const reward = calculateReward(o.finalPrice);
+  const reward = calculateReward(plan.finalPrice);
   const renewalReward = Math.round(reward / 2);
-  const isFamily = state.persons > 1;
+  const isFamily = (state.persons || 1) > 1;
 
   const card = document.createElement("div");
   card.className = "offer-choice offer-card-pro";
@@ -334,7 +578,7 @@ function buildOfferCard(o, stateOverride = null) {
         type="button"
         class="reward-pill reward-pill-blue gift-btn"
         data-reward="${reward}"
-        data-offer-id="${o.id}"
+        data-offer-id="${plan.id}"
         data-type="new"
       >
         <span class="reward-pill-label">Ny kund</span>
@@ -343,9 +587,9 @@ function buildOfferCard(o, stateOverride = null) {
 
       <button
         type="button"
-        class="reward-pill reward-pill-green gift-btn gift-btn-renewal"
+        class="reward-pill reward-pill-green gift-btn"
         data-reward="${renewalReward}"
-        data-offer-id="${o.id}"
+        data-offer-id="${plan.id}"
         data-type="renewal"
       >
         <span class="reward-pill-label">Förlängning</span>
@@ -356,33 +600,33 @@ function buildOfferCard(o, stateOverride = null) {
     <div class="offer-card-body">
       <div class="offer-brand-wrap">
         <div class="offer-logo-wrap">
-          <img src="${o.logo}" alt="${o.operator}" class="offer-logo-img">
+          <img src="${plan.logo}" alt="${plan.operator}" class="offer-logo-img">
         </div>
-        <p class="offer-operator">${o.operator}</p>
+        <p class="offer-operator">${plan.operator}</p>
       </div>
 
       <div class="offer-main">
-        <h3 class="offer-title">${o.title}</h3>
-        <p class="offer-desc">${o.text || "Mobilabonnemang med tydligt upplägg och konkurrenskraftigt pris."}</p>
+        <h3 class="offer-title">${plan.title}</h3>
+        <p class="offer-desc">${plan.text || "Mobilabonnemang med tydligt upplägg och konkurrenskraftigt pris."}</p>
       </div>
 
       <div class="offer-meta">
         <div class="offer-data-badge">
           <i class="fa-solid fa-wifi"></i>
-          <span>${o.dataAmount >= 999 ? "Obegränsad surf" : `${o.dataAmount} GB surf`}</span>
+          <span>${plan.dataAmount >= 999 ? "Obegränsad surf" : `${plan.dataAmount} GB surf`}</span>
         </div>
 
         ${
           isFamily
             ? `
               <div class="offer-price-wrap">
-                <p class="offer-price-main">${o.pricePerPerson} kr <span>/ person</span></p>
-                <p class="offer-price-sub">${o.finalPrice} kr/mån totalt · ${state.persons} personer</p>
+                <p class="offer-price-main">${plan.pricePerPerson} kr <span>/ person</span></p>
+                <p class="offer-price-sub">${plan.finalPrice} kr/mån totalt · ${state.persons} personer</p>
               </div>
             `
             : `
               <div class="offer-price-wrap">
-                <p class="offer-price-main">${o.finalPrice} kr <span>/ mån</span></p>
+                <p class="offer-price-main">${plan.finalPrice} kr <span>/ mån</span></p>
                 <p class="offer-price-sub">Tydlig månadskostnad och enkel överblick</p>
               </div>
             `
@@ -401,485 +645,386 @@ function buildOfferCard(o, stateOverride = null) {
   return card;
 }
 
-  /******************************
-   OFFER RENDER
-  ******************************/
-  function renderOffers(offers) {
-    if (!offersContainer) {
-  offersContainer = document.getElementById("offers-container");
-}
-    offersContainer.innerHTML = "";
-    const limited = offers;
-  
-    limited.forEach(o => {
-  
-const card = buildOfferCard(o);
-card.addEventListener("click", () => {
-  document.querySelectorAll(".offer-choice")
-    .forEach(c => c.classList.remove("active"));
+function renderOffers(offers) {
+  if (!offersContainer) hydrateElements();
+  if (!offersContainer) return;
 
+  offersContainer.innerHTML = "";
+
+  if (!offers.length) {
+    offersContainer.innerHTML = `
+      <div class="pro-card" style="width:100%;max-width:720px;margin:0 auto;text-align:center;">
+        <h3>Inga träffar</h3>
+        <p>Testa att byta surfnivå eller operatör.</p>
+      </div>
+    `;
+    offersSection?.classList.remove("is-hidden");
+    return;
+  }
+
+  offers.forEach(plan => {
+    const card = buildOfferCard(plan);
+
+    card.addEventListener("click", () => {
+      selectOfferCard(card, plan, calculateReward(plan.finalPrice));
+    });
+
+    card.querySelectorAll(".gift-btn").forEach(rewardBtn => {
+      rewardBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        selectOfferCard(card, plan, Number(rewardBtn.dataset.reward));
+      });
+    });
+
+    offersContainer.appendChild(card);
+  });
+
+  offersSection?.classList.remove("is-hidden");
+}
+
+function selectOfferCard(card, plan, rewardValue) {
+  document.querySelectorAll(".offer-choice").forEach(c => c.classList.remove("active"));
   card.classList.add("active");
 
   window.offerChosen = true;
-  window.selectedOfferId = o.id;
+  window.selectedOfferId = plan.id;
 
+  localStorage.setItem("selectedOffer", JSON.stringify({
+    id: plan.id,
+    operator: plan.operator,
+    title: plan.title,
+    logo: plan.logo,
+    dataAmount: plan.dataAmount,
+    finalPrice: plan.finalPrice,
+    pricePerPerson: plan.pricePerPerson
+  }));
 
-});
-
-card.querySelectorAll(".gift-btn").forEach(rewardBtn => {
-  rewardBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-
-    document.querySelectorAll(".offer-choice")
-      .forEach(c => c.classList.remove("active"));
-
-    card.classList.add("active");
-    window.offerChosen = true;
-    window.selectedOfferId = o.id;
-
-    const rewardValue = Number(rewardBtn.dataset.reward);
-    const offerId = rewardBtn.dataset.offerId || "";
-    openRewardSection(rewardValue, offerId);
-  });
-});
-      offersContainer.appendChild(card);
-    });
-  }
-  
-  document.getElementById("closePchoice").addEventListener("click", () => {
-    const modal = document.getElementById("pchoiceModal");
-    const frame = document.getElementById("pchoiceFrame");
-  
-    modal.classList.remove("show");
-  
-    setTimeout(() => {
-      frame.src = "";
-    }, 300);
-  });
-  
-
-
-
-
-
-
-
-
-
-
-  /******************************
-   NUMBER VALIDATION
-  ******************************/
-  function isValidPhone(num) {
-    num = num.replace(/\s+/g, "");
-    return /^07\d{8}$/.test(num) || /^\+467\d{8}$/.test(num);
-  }
-  
-  /******************************
-   STEP-BY-STEP NUMBER FLOW
-  ******************************/
-  const phoneInputs = document.getElementById("phoneInputsContainer");
-
-  let totalPeople = 1;
-  let currentPerson = 1;
-  let collectedNumbers = {};
-  
-  function getFamilySize() {
-    return abonState.persons || 1;
-  }
-  
-  function startNumberFlow() {
-    totalPeople = getFamilySize();
-    currentPerson = 1;
-    collectedNumbers = {};
-    sectionNumbers.classList.remove("hidden");
-  
-    smoothScrollTo(sectionNumbers); // ✅ scroll here
-  
-    askNextPerson();
-  }
-  
-  
-  function askNextPerson() {
-    phoneInputs.innerHTML = "";
-    questionTitle.textContent = `Person ${currentPerson} – Hur vill du göra med numret?`;
-  
-    const wrapper = document.createElement("div");
-    wrapper.className = "flex flex-col gap-6 mt-10";
-  
-    const btnMove = document.createElement("button");
-    btnMove.className = "adeala-btn py-4 text-lg";
-    btnMove.textContent = "Flytta hit numret";
-    btnMove.onclick = () => showNumberInput("port");
-  
-    const btnNew = document.createElement("button");
-    btnNew.className = "adeala-btn py-4 text-lg";
-    btnNew.textContent = "Skaffa nytt nummer";
-    btnNew.onclick = () => showNumberInput("new");
-  
-    wrapper.appendChild(btnMove);
-    wrapper.appendChild(btnNew);
-  
-    phoneInputs.appendChild(wrapper);
-    sectionPort.classList.remove("hidden");
-    smoothScrollTo(sectionPort);
-
-  }
-  
-  function showNumberInput(type) {
-    phoneInputs.innerHTML = "";
-  
-    const label = document.createElement("label");
-    label.className = "font-semibold mb-2";
-    label.textContent =
-      type === "port"
-        ? `Person ${currentPerson} – skriv numret som ska flyttas`
-        : `Person ${currentPerson} – nytt nummer skapas automatiskt`;
-  
-    const input = document.createElement("input");
-    input.className = "border p-3 rounded-xl w-full";
-    input.placeholder = type === "port" ? "07XXXXXXXX eller +467XXXXXXXX" : "";
-    input.readOnly = type === "new";  // ⭐ FIXEN
-  
-    phoneInputs.appendChild(label);
-    phoneInputs.appendChild(input);
-  
-    btnConfirm.classList.remove("hidden");
-    btnConfirm.textContent =
-      currentPerson < totalPeople ? "Nästa person" : "Slutför";
-  
-    btnConfirm.onclick = () => {
-  
-      if (type === "port") {
-        const num = input.value.trim();
-        if (!isValidPhone(num)) {
-          alert("Ange ett giltigt svenskt nummer: 07XXXXXXXX eller +467XXXXXXXX");
-          return;
-        }
-        collectedNumbers[`person_${currentPerson}`] = {
-          type: "port",
-          number: num
-        };
-      } else {
-        collectedNumbers[`person_${currentPerson}`] = {
-          type: "new",
-          number: "nytt nummer"
-        };
-      }
-  
-      currentPerson++;
-  
-      if (currentPerson <= totalPeople) askNextPerson();
-      else finishNumbers();
-    };
-  }
-  
-  const REWARD_LOGOS = {
-    "ICA Maxi": "https://detailproduktion.se/wp-content/uploads/2014/04/ica-maxi-stormarknad-logo.png",
-    "Amazon": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png",
-    "MIO": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/MIO_Logo.svg/2560px-MIO_Logo.svg.png",
-    "Coop": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Coop_logo.svg/2560px-Coop_logo.svg.png",
-    "H&M": "https://upload.wikimedia.org/wikipedia/commons/5/53/H%26M-Logo.svg",
-    "MQ": "https://www.kungsmassan.se/Images/Butiker/MQMARQET_1080x1080.png",
-    "Guldfynd": "https://www.datocms-assets.com/138720/1732112442-guldfynd.png",
-    "Hemtex": "https://images.seeklogo.com/logo-png/32/1/hemtex-logo-png_seeklogo-329500.png",
-    "Hemköp": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Hemkop_logo.svg/1280px-Hemkop_logo.svg.png",
-    "Specsavers": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Specsavers_logo.svg/1200px-Specsavers_logo.svg.png",
-    "Synsam": "https://kraftenifinspang.se/wp-content/uploads/2024/09/Loggor-centrumbutikerna_Synsam-1024x503.png",
-    "SATS": "https://cdn.sanity.io/images/xkmfhygb/production/7a8c8bd647ab4949343baef3fe30dc92281489e7-1920x1080.jpg"
-  };
-  
-
-
-
-
-
-
-
-
-
-
-  function finishNumbers() {
-    console.log("Alla nummer valda:", collectedNumbers);
-  
-    questionTitle.textContent = "Sammanfattning";
-  
-    // Hämta valt erbjudande
-let chosenOffer = document.querySelector(".offer-choice.active");
-
-if (!chosenOffer && window.selectedOfferId) {
-  chosenOffer = [...document.querySelectorAll(".offer-choice")]
-    .find(c =>
-      c.querySelector(".gift-btn")?.dataset.offerId === window.selectedOfferId
-    );
+  openRewardSection(rewardValue, plan.id);
 }
 
-if (!chosenOffer) {
-  console.error("No chosen offer found");
-  return;
-}
-
-  
-  const offerTitle = chosenOffer
-    ? chosenOffer.querySelector("h3").textContent
-    : "Okänt erbjudande";
-  
-  const offerOperator = chosenOffer
-    ? chosenOffer.querySelector("p.text-sm").textContent
-    : "";
-  
-  const offerLogo = chosenOffer
-    ? chosenOffer.querySelector("img").src
-    : "";
-  
-  const priceEl = chosenOffer?.querySelector(".text-xl.font-bold");
-const offerPrice = priceEl ? priceEl.textContent.trim() : "";
-    const rewardDistribution =
-    JSON.parse(localStorage.getItem("rewardDistribution")) || {};
-    let rewardsHTML = Object.entries(rewardDistribution)
-  .filter(([_, v]) => v >= 100)
-  .map(([company, value]) => {
-    const logo = REWARD_LOGOS[company];
-
-    return `
-      <div class="reward-row">
-        <img
-          src="${logo}"
-          alt="${company}"
-          class="h-8 object-contain"
-        />
-        <span class="reward-amount-badge">${value} kr</span>
-      </div>
-    `;
-  })
-  .join("");
-
-
-  
-
-  let summaryHTML = `
-  <div class="p-6 bg-white rounded-2xl shadow text-left">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-  
-      <!-- LEFT COLUMN -->
-      <div class="md:col-span-2 space-y-6">
-  
-        <h3 class="text-2xl font-bold text-[#0C4A3C]">Valt erbjudande</h3>
-  
-        <div class="flex items-center gap-4 mt-4">
-          <img src="${offerLogo}" class="h-12 w-12 object-contain rounded-md border" />
-          <div>
-            <p class="text-lg font-semibold">${offerTitle}</p>
-            <p class="text-gray-700 text-md">från ${offerOperator}</p>
-            <p class="text-[#0C4A3C] font-bold mt-1">${offerPrice}</p>
-          </div>
-        </div>
-  `;
-  
-  Object.keys(collectedNumbers).forEach(key => {
-    const p = collectedNumbers[key];
-    summaryHTML += `
-      <div class="border p-4 rounded-xl bg-gray-50">
-        <p class="font-semibold">🧑 ${key.replace("person_", "Person ")}</p>
-        <p class="text-gray-700">
-          ${p.type === "port"
-            ? `Flyttar nummer: <strong>${p.number}</strong>`
-            : `Får nytt nummer`}
-        </p>
-      </div>
-    `;
-  });
-  
-  summaryHTML += `
-      </div>
-  
-      <!-- RIGHT COLUMN -->
-      <div class="md:col-span-2">
-        <h3 class="text-2xl font-bold text-[#0C4A3C] mb-4">
-          Valda belöningar
-        </h3>
-  
-        <div class="reward-summary">
-          ${rewardsHTML || "<p class='text-gray-500'>Inga belöningar valda</p>"}
-        </div>
-
-      </div>
-  
-    </div>
-    <!-- START DATE QUESTION -->
-    <div class="mt-8">
-      <h3 class="text-xl font-bold text-[#0C4A3C] mb-4">
-        När vill du starta ditt abonnemang?
-      </h3>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <button
-          class="start-option"
-          data-start="now"
-          type="button">
-          Starta nu
-        </button>
-
-       <button
-  class="start-option"
-  data-start="binding"
-  type="button">
-  Starta när bindningstiden slutar
-</button>
-
-      </div>
-    </div>
-<p id="startDateText" class="mt-4 text-sm text-gray-600 hidden">
-  Startdatum: <strong id="startDateValue"></strong>
-</p>
-
-    <button id="goToCheckout"
-      class="w-full adeala-btn mt-8 py-4 text-lg rounded-xl">
-      Fortsätt till signering
-    </button>
-  </div>
-  `;
-  
-  
-    phoneInputs.innerHTML = summaryHTML;
-    smoothScrollTo(sectionPort);
-const saved = localStorage.getItem("startDateChoice");
-if (saved) {
-  document.getElementById("startDateValue").textContent = saved;
-  document.getElementById("startDateText").classList.remove("hidden");
-}
-
-    btnConfirm.classList.add("hidden");
-    let startChoice = null;
-    
-document.querySelectorAll(".start-option").forEach(btn => {
-  btn.addEventListener("click", () => {
-
-    document.querySelectorAll(".start-option")
-      .forEach(b => b.classList.remove("active"));
-
-    btn.classList.add("active");
-
- startChoice = btn.dataset.start;
-let actualStartDate;
-
-if (startChoice === "now") {
-  actualStartDate = new Date().toISOString().split("T")[0];
-}
-
-if (startChoice === "binding") {
-  actualStartDate = abonState.bindingEndDate;
-}
-
-if (!actualStartDate) return;
-
-localStorage.setItem("startDateChoice", actualStartDate);
-
-document.getElementById("startDateValue").textContent = actualStartDate;
-document.getElementById("startDateText").classList.remove("hidden");
-
-  });
-});
-
-
-
-    // Click → next page
-    document.getElementById("goToCheckout").onclick = () => {
-      if (!startChoice) {
-        alert("Välj när ditt abonnemang ska starta.");
-        return;
-      }
-    
-      window.location.href = "signera.html";
-    };
-    
-  }
-
-
-
-
-
-
-  /******************************
-   CHECK IF READY FOR NUMBERS
-  ******************************/
-function checkGoToNumberStep() {
-  console.log("checkGoToNumberStep()", {
-    offerChosen: window.offerChosen,
-    beloningChosen: window.beloningChosen,
-    contactExists: !!document.getElementById("contactSection"),
-    contactHidden: document.getElementById("contactSection")?.classList.contains("hidden")
-  });
-
-  if (!window.offerChosen) return;
-  if (!window.beloningChosen) return;
-  const contactSection = document.getElementById("contactSection");
-  if (!contactSection) return;
-
-  contactSection.classList.remove("hidden");
-  contactSection.style.display = "block"; // force if CSS conflicts
-  smoothScrollTo(contactSection);
-}
-
-  function calculateReward(price) {
-    if (price < 299) return 2000;
-    if (price < 399) return 3000;
-    if (price < 499) return 4000;
-    if (price < 699) return 5000;
-    return 1000;
-  }
 function openRewardSection(rewardValue, offerId) {
-
   const rewardSection = document.getElementById("rewardSection");
-  const frame = document.getElementById("rewardFrame");
+  const rewardGrid = document.getElementById("rewardGrid");
+  const totalRewardEl = document.getElementById("totalReward");
+  const remainingSumEl = document.getElementById("remainingSum");
+  const rewardProgressFill = document.getElementById("rewardProgressFill");
+  const continueBtn = document.getElementById("rewardContinueBtn");
 
-  localStorage.setItem(
-    "rewardChoice",
-    JSON.stringify({ reward: rewardValue, offerId })
-  );
+  if (!rewardGrid || !totalRewardEl || !remainingSumEl || !rewardProgressFill || !continueBtn) return;
 
-  frame.src = "pchoice.html";
+  totalRewardEl.textContent = rewardValue;
+  remainingSumEl.textContent = rewardValue;
+  rewardProgressFill.style.width = "0%";
+  continueBtn.disabled = true;
 
-  rewardSection.classList.remove("hidden");
+  let chosenReward = null;
+  rewardGrid.innerHTML = "";
 
+  REWARD_OPTIONS.forEach(option => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "reward-option-card";
+    card.innerHTML = `
+      <div class="reward-option-logo-wrap">
+        <img src="${option.logo}" alt="${option.name}" class="reward-option-logo">
+      </div>
+      <div class="reward-option-meta">
+        <strong>${option.name}</strong>
+        <span>${rewardValue} kr</span>
+      </div>
+    `;
+
+    card.addEventListener("click", () => {
+      rewardGrid.querySelectorAll(".reward-option-card").forEach(x => x.classList.remove("active"));
+      card.classList.add("active");
+
+      chosenReward = {
+        company: option.name,
+        value: rewardValue,
+        offerId
+      };
+
+      remainingSumEl.textContent = "0";
+      rewardProgressFill.style.width = "100%";
+      continueBtn.disabled = false;
+    });
+
+    rewardGrid.appendChild(card);
+  });
+
+  continueBtn.onclick = () => {
+    if (!chosenReward) return;
+
+    localStorage.setItem("rewardChoice", JSON.stringify(chosenReward));
+    localStorage.setItem("rewardDistribution", JSON.stringify({
+      [chosenReward.company]: chosenReward.value
+    }));
+
+    window.beloningChosen = true;
+    rewardSection.classList.remove("is-hidden");
+    checkGoToNumberStep();
+  };
+
+  rewardSection.classList.remove("is-hidden");
   smoothScrollTo(rewardSection);
 }
 
+function bindContactStep() {
+  const contactBtn = document.getElementById("contactContinueBtn");
+  if (!contactBtn) return;
 
+  contactBtn.addEventListener("click", () => {
+    const email = document.getElementById("contactEmail")?.value.trim() || "";
+    const phone = document.getElementById("contactPhone")?.value.trim() || "";
 
-window.addEventListener("message", (e) => {
-  if (e.data !== "rewardDone") return;
+    if (!email || !phone) {
+      alert("Fyll i både mejl och mobilnummer.");
+      return;
+    }
 
-  window.beloningChosen = true;
+    localStorage.setItem("contactEmail", email);
+    localStorage.setItem("contactPhone", phone);
 
-  const frame = document.getElementById("rewardFrame");
+    document.getElementById("contactSection")?.classList.add("is-hidden");
+    startNumberFlow();
+  });
+}
 
-  if (frame) frame.src = "";
+function checkGoToNumberStep() {
+  if (!window.offerChosen) return;
+  if (!window.beloningChosen) return;
 
-  setTimeout(() => {
-    checkGoToNumberStep();
-  }, 0);
-});
+  const contactSection = document.getElementById("contactSection");
+  if (!contactSection) return;
 
+  contactSection.classList.remove("is-hidden");
+  smoothScrollTo(contactSection);
+}
 
+function bindNumberFlowBase() {
+  const confirmBtn = document.getElementById("confirmNumbersBtn");
+  if (confirmBtn) confirmBtn.classList.add("is-hidden");
+}
 
+function isValidPhone(num) {
+  const normalized = num.replace(/\s+/g, "");
+  return /^07\d{8}$/.test(normalized) || /^\+467\d{8}$/.test(normalized);
+}
 
-  function smoothScrollTo(element) {
-    if (!element) return;
-  
-    element.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
+function startNumberFlow() {
+  const numberSection = document.getElementById("numberSection");
+  const portSection = document.getElementById("portNumberSection");
+  const phoneInputsContainer = document.getElementById("phoneInputsContainer");
+  const confirmBtn = document.getElementById("confirmNumbersBtn");
+  const title = document.getElementById("numberFlowTitle");
+  const text = document.getElementById("numberFlowText");
+
+  if (!numberSection || !portSection || !phoneInputsContainer || !confirmBtn || !title || !text) return;
+
+  numberSection.classList.remove("is-hidden");
+  portSection.classList.remove("is-hidden");
+  confirmBtn.classList.remove("is-hidden");
+
+  const totalPeople = abonState.persons || 1;
+  let currentPerson = 1;
+  const collectedNumbers = {};
+
+  renderPersonStep();
+  smoothScrollTo(numberSection);
+
+  function renderPersonStep() {
+    title.textContent = `Person ${currentPerson} av ${totalPeople}`;
+    text.textContent = "Välj om numret ska flyttas eller om ett nytt nummer ska skapas.";
+
+    phoneInputsContainer.innerHTML = `
+      <div class="number-choice-wrap">
+        <button type="button" class="number-choice-btn" data-choice="port">Flytta hit numret</button>
+        <button type="button" class="number-choice-btn" data-choice="new">Skaffa nytt nummer</button>
+      </div>
+      <div id="numberDynamicArea"></div>
+    `;
+
+    const dynamicArea = document.getElementById("numberDynamicArea");
+    let mode = null;
+
+    phoneInputsContainer.querySelectorAll("[data-choice]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        phoneInputsContainer.querySelectorAll("[data-choice]").forEach(x => x.classList.remove("active"));
+        btn.classList.add("active");
+        mode = btn.dataset.choice;
+
+        if (mode === "port") {
+          dynamicArea.innerHTML = `
+            <div class="form-field" style="margin-top:16px;">
+              <label for="portInput">Nummer för person ${currentPerson}</label>
+              <input type="tel" id="portInput" placeholder="07XXXXXXXX eller +467XXXXXXXX">
+            </div>
+          `;
+        } else {
+          dynamicArea.innerHTML = `
+            <div class="pro-card" style="margin-top:16px;padding:16px;">
+              Nytt nummer kommer att skapas för person ${currentPerson}.
+            </div>
+          `;
+        }
+      });
     });
+
+    confirmBtn.textContent = currentPerson < totalPeople ? "Nästa person" : "Slutför";
+    confirmBtn.onclick = () => {
+      if (!mode) {
+        alert("Välj hur du vill göra med numret.");
+        return;
+      }
+
+      if (mode === "port") {
+        const input = document.getElementById("portInput");
+        const value = input?.value.trim() || "";
+        if (!isValidPhone(value)) {
+          alert("Ange ett giltigt svenskt nummer.");
+          return;
+        }
+        collectedNumbers[`person_${currentPerson}`] = { type: "port", number: value };
+      } else {
+        collectedNumbers[`person_${currentPerson}`] = { type: "new", number: "nytt nummer" };
+      }
+
+      if (currentPerson < totalPeople) {
+        currentPerson += 1;
+        renderPersonStep();
+      } else {
+        finishNumbers(collectedNumbers);
+      }
+    };
   }
-window.renderSingleOfferCard = function (plan, payload = {}) {
+}
+
+function finishNumbers(collectedNumbers) {
+  const phoneInputsContainer = document.getElementById("phoneInputsContainer");
+  const confirmBtn = document.getElementById("confirmNumbersBtn");
+  const title = document.getElementById("numberFlowTitle");
+  const text = document.getElementById("numberFlowText");
+
+  if (!phoneInputsContainer || !confirmBtn || !title || !text) return;
+
+  title.textContent = "Sammanfattning";
+  text.textContent = "Kontrollera uppgifterna innan du går vidare.";
+
+  const selectedOffer = JSON.parse(localStorage.getItem("selectedOffer") || "null");
+  const rewardChoice = JSON.parse(localStorage.getItem("rewardChoice") || "null");
+
+  const numbersHtml = Object.entries(collectedNumbers).map(([key, data]) => `
+    <div class="pro-card" style="padding:16px;">
+      <p><strong>${key.replace("person_", "Person ")}</strong></p>
+      <p>${data.type === "port" ? `Flyttar nummer: <strong>${data.number}</strong>` : "Får nytt nummer"}</p>
+    </div>
+  `).join("");
+
+  phoneInputsContainer.innerHTML = `
+    <div class="summary-grid" style="display:grid;gap:20px;">
+      <div class="pro-card" style="padding:20px;">
+        <h3 style="margin-bottom:16px;">Valt erbjudande</h3>
+        ${
+          selectedOffer
+            ? `
+              <div style="display:flex;align-items:center;gap:16px;">
+                <img src="${selectedOffer.logo}" alt="${selectedOffer.operator}" style="width:52px;height:52px;object-fit:contain;border-radius:10px;">
+                <div>
+                  <p><strong>${selectedOffer.title}</strong></p>
+                  <p>${selectedOffer.operator}</p>
+                  <p><strong>${selectedOffer.finalPrice} kr/mån</strong></p>
+                </div>
+              </div>
+            `
+            : `<p>Inget erbjudande valt.</p>`
+        }
+      </div>
+
+      <div class="pro-card" style="padding:20px;">
+        <h3 style="margin-bottom:16px;">Vald belöning</h3>
+        ${
+          rewardChoice
+            ? `<p><strong>${rewardChoice.company}</strong> – ${rewardChoice.value} kr</p>`
+            : `<p>Ingen belöning vald.</p>`
+        }
+      </div>
+
+      <div class="summary-grid-numbers" style="display:grid;gap:12px;">
+        ${numbersHtml}
+      </div>
+
+      <div class="pro-card" style="padding:20px;">
+        <h3 style="margin-bottom:16px;">Startdatum</h3>
+        <div style="display:grid;gap:12px;">
+          <button type="button" class="start-option" data-start="now">Starta nu</button>
+          <button type="button" class="start-option" data-start="binding">Starta när bindningstiden slutar</button>
+          <p id="startDateText" class="is-hidden">Startdatum: <strong id="startDateValue"></strong></p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  confirmBtn.classList.remove("is-hidden");
+  confirmBtn.textContent = "Fortsätt till signering";
+
+  let startChoice = null;
+
+  document.querySelectorAll(".start-option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".start-option").forEach(x => x.classList.remove("active"));
+      btn.classList.add("active");
+
+      startChoice = btn.dataset.start;
+      let actualStartDate = null;
+
+      if (startChoice === "now") {
+        actualStartDate = new Date().toISOString().split("T")[0];
+      }
+
+      if (startChoice === "binding") {
+        actualStartDate = abonState.bindingEndDate;
+      }
+
+      if (!actualStartDate) {
+        alert("Det finns inget bindningsdatum valt.");
+        return;
+      }
+
+      localStorage.setItem("startDateChoice", actualStartDate);
+      document.getElementById("startDateValue").textContent = actualStartDate;
+      document.getElementById("startDateText").classList.remove("is-hidden");
+    });
+  });
+
+  confirmBtn.onclick = () => {
+    if (!startChoice) {
+      alert("Välj när abonnemanget ska starta.");
+      return;
+    }
+
+    localStorage.setItem("collectedNumbers", JSON.stringify(collectedNumbers));
+    window.location.href = "signera.html";
+  };
+}
+
+function smoothScrollTo(element) {
+  if (!element) return;
+  element.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+window.updateOffers = updateOffers;
+window.filterOffers = filterOffers;
+window.renderSingleOfferCard = function(plan, payload = {}) {
   const fakeState = {
     persons: payload.persons || 1,
     data: payload.data || "high",
     operator: payload.operator || plan.operator
   };
 
-  return buildOfferCard(  
+  return buildOfferCard(
     {
       ...plan,
       finalPrice: plan.price,
@@ -888,19 +1033,3 @@ window.renderSingleOfferCard = function (plan, payload = {}) {
     fakeState
   );
 };
-// Show more persons (6–10) toggle
-
-document.addEventListener("DOMContentLoaded", () => {
-  offersContainer = document.getElementById("offers-container");
- offersSection = document.getElementById("offersSection");
-  const showMoreBtn = document.getElementById("showMorePersons");
-  const personsExtra = document.getElementById("personsExtra");
-  if (!showMoreBtn || !personsExtra) return;
-
-  showMoreBtn.addEventListener("click", () => {
-    personsExtra.classList.toggle("hidden");
-    showMoreBtn.textContent =
-      personsExtra.classList.contains("hidden") ? "Visa fler" : "Visa färre";
-  });
-});
-
