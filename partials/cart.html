@@ -1,0 +1,40 @@
+<!-- DRAWER -->
+<div id="cartDrawer" class="fixed inset-0 z-[9999] hidden">
+
+  <!-- OVERLAY -->
+  <div id="cartOverlay" class="absolute inset-0 bg-black/40"></div>
+
+  <!-- PANEL -->
+  <div class="absolute right-0 top-0 h-full w-[420px] bg-white shadow-2xl flex flex-col">
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between px-6 py-5 border-b">
+      <h2 class="text-xl font-bold">Din varukorg</h2>
+      <button id="closeCart" class="text-gray-500 hover:text-black text-lg">✕</button>
+    </div>
+
+    <!-- BODY -->
+    <div id="cartItems"
+         class="flex-1 overflow-y-auto px-6 py-6 space-y-4">
+    </div>
+
+    <!-- FOOTER -->
+    <div class="border-t p-6">
+
+      <div id="summaryArea" class="space-y-3 text-sm mb-4"></div>
+
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-gray-600">Totalt</span>
+        <span id="totalPrice" class="text-xl font-bold text-[#0C4A3C]">0 kr</span>
+      </div>
+
+      <button id="checkoutBtn"
+        class="w-full adeala-btn py-4 rounded-xl font-bold">
+        BankID-signering
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

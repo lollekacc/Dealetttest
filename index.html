@@ -715,6 +715,17 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (footerRes.ok) {
     document.body.insertAdjacentHTML("beforeend", await footerRes.text());
   }
+const cartRes = await fetch("partials/cart.html");
+if (cartRes.ok) {
+  document.body.insertAdjacentHTML("beforeend", await cartRes.text());
+
+  // init after DOM exists
+  const close = document.getElementById("closeCart");
+  const overlay = document.getElementById("cartOverlay");
+
+  if (close) close.onclick = () => closeCart();
+  if (overlay) overlay.onclick = () => closeCart();
+}
   const chatRoot = document.getElementById("dealett-chat");
 const openBtn = document.getElementById("open-chat");
 const modal = document.getElementById("chat-modal");
@@ -747,6 +758,7 @@ script.onload = () => {
 };
   document.body.appendChild(script);
 });
+
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -789,5 +801,19 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 <script src="assets/indexbehovsanalys.js"></script>
+<script src="assets/global.js"></script>
+  <script>
+  function openCart() {
+  document.getElementById("cartDrawer").classList.remove("hidden");
+}
+
+function closeCart() {
+  document.getElementById("cartDrawer").classList.add("hidden");
+}
+
+document.getElementById("closeCart").onclick = closeCart;
+document.getElementById("cartOverlay").onclick = closeCart;
+</script>
+<script src="assets/cart.js"></script>
 </body>
 </html>

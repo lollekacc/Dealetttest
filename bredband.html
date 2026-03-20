@@ -482,19 +482,30 @@ if (sort === "value") {
         if (e.target === els.channelsModal) closeChannelsModal();
       });
 
-      els.continueBtn.addEventListener("click", () => {
-        if (!selectedPlan) return;
+els.continueBtn.addEventListener("click", () => {
+  if (!selectedPlan) return;
 
-        const fromAbonnemang = sessionStorage.getItem("fromAbonnemang");
-        if (fromAbonnemang === "1") {
-          sessionStorage.removeItem("fromAbonnemang");
-          window.location.href = "abonnemang.html";
-          return;
-        }
+  const item = {
+    type: "bredband",
+    offerId: selectedPlan.id,
+    operator: selectedPlan.operator,
+    speed: selectedPlan.speed,
+    speedMbps: selectedPlan.speedMbps,
+    price: selectedPlan.price,
+    binding: selectedPlan.bindingMonths || 0,
+    rewards: {
+      presentkort: calculateReward(selectedPlan.price)
+    },
+    rewardTotal: calculateReward(selectedPlan.price)
+  };
 
-        window.location.href = "signera.html";
-      });
+  cartAPI.addToCart(item);
+
+  openCart(); // optional drawer
+});
     });
   </script>
+  <script src="assets/cart.js"></script>
+  
 </body>
 </html>
