@@ -208,35 +208,38 @@
               class="relative z-10 hidden opacity-0 transition-all duration-300 px-0 sm:px-1 overflow-visible"
             >
               <div class="flex flex-col gap-8">
-                <!-- NAV -->
-                <div class="sticky top-4 z-20 rounded-2xl border border-slate-200/80 bg-white/90 px-4 py-4 shadow-card backdrop-blur-md sm:px-5">
-                  <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <button
-                      id="quiz-back"
-                      type="button"
-                      class="inline-flex items-center gap-2 self-start rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
-                    >
-                      <span class="text-base leading-none">←</span>
-                      Tillbaka
-                    </button>
+                <!-- GLOBAL NAV -->
 
-                    <div class="flex items-center gap-4">
-                      <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-                        <div id="quiz-progress" class="h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
-                      </div>
-
-                      <div class="text-sm font-bold text-slate-800">
-                        Steg <span id="quiz-step-current">1</span> / <span id="quiz-step-total">5</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
                 <!-- CARD STACK -->
                 <div id="quiz-card-stack" class="relative min-h-[500px]">
                   <!-- STEP 0 -->
                   <div id="step0" class="quiz-step-card active-step">
                     <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+  <!-- BACK -->
+  <button
+    type="button"
+    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+  >
+    <span class="text-base leading-none">←</span>
+    Tillbaka
+  </button>
+
+  <!-- STEP + PROGRESS -->
+  <div class="flex items-center gap-4">
+    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+    </div>
+
+    <div class="text-sm font-bold text-slate-800">
+      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+    </div>
+  </div>
+
+</div>
+
                       <div class="mx-auto w-full max-w-3xl text-center">
                         <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
                           <i class="fa-solid fa-users text-emerald-600"></i>
@@ -261,6 +264,30 @@
                   <!-- STEP 1 -->
                   <div id="step1" class="quiz-step-card hidden-step">
                     <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+  <!-- BACK -->
+  <button
+    type="button"
+    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+  >
+    <span class="text-base leading-none">←</span>
+    Tillbaka
+  </button>
+
+  <!-- STEP + PROGRESS -->
+  <div class="flex items-center gap-4">
+    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+    </div>
+
+    <div class="text-sm font-bold text-slate-800">
+      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+    </div>
+  </div>
+
+</div>
+
                       <div class="mx-auto w-full max-w-5xl text-center">
                         <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
                           <i class="fa-solid fa-tower-cell text-emerald-600"></i>
@@ -321,6 +348,30 @@
                   <!-- STEP 2 -->
                   <div id="step2" class="quiz-step-card hidden-step">
                     <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+  <!-- BACK -->
+  <button
+    type="button"
+    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+  >
+    <span class="text-base leading-none">←</span>
+    Tillbaka
+  </button>
+
+  <!-- STEP + PROGRESS -->
+  <div class="flex items-center gap-4">
+    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+    </div>
+
+    <div class="text-sm font-bold text-slate-800">
+      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+    </div>
+  </div>
+
+</div>
+
                       <div class="mx-auto w-full max-w-3xl text-center">
                         <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
                           <i class="fa-solid fa-signal text-emerald-600"></i>
@@ -354,6 +405,30 @@
                   <!-- STEP 3 -->
                   <div id="step3" class="quiz-step-card hidden-step">
                     <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+  <!-- BACK -->
+  <button
+    type="button"
+    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+  >
+    <span class="text-base leading-none">←</span>
+    Tillbaka
+  </button>
+
+  <!-- STEP + PROGRESS -->
+  <div class="flex items-center gap-4">
+    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+    </div>
+
+    <div class="text-sm font-bold text-slate-800">
+      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+    </div>
+  </div>
+
+</div>
+
                       <div class="mx-auto w-full max-w-3xl text-center">
                         <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
                           <i class="fa-solid fa-wallet text-emerald-600"></i>
@@ -382,6 +457,30 @@
                   <!-- STEP 4 -->
                   <div id="step4" class="quiz-step-card hidden-step">
                     <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+  <!-- BACK -->
+  <button
+    type="button"
+    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+  >
+    <span class="text-base leading-none">←</span>
+    Tillbaka
+  </button>
+
+  <!-- STEP + PROGRESS -->
+  <div class="flex items-center gap-4">
+    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+    </div>
+
+    <div class="text-sm font-bold text-slate-800">
+      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+    </div>
+  </div>
+
+</div>
+
                       <div class="mx-auto w-full max-w-3xl text-center">
                         <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
                           <i class="fa-solid fa-link text-emerald-600"></i>
@@ -410,6 +509,30 @@
                   <!-- STEP 5 -->
                   <div id="step5" class="quiz-step-card hidden-step">
                     <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col text-center">
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+  <!-- BACK -->
+  <button
+    type="button"
+    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+  >
+    <span class="text-base leading-none">←</span>
+    Tillbaka
+  </button>
+
+  <!-- STEP + PROGRESS -->
+  <div class="flex items-center gap-4">
+    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+    </div>
+
+    <div class="text-sm font-bold text-slate-800">
+      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+    </div>
+  </div>
+
+</div>
+
                       <div class="mx-auto max-w-3xl">
                         <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
                           <i class="fa-solid fa-circle-check"></i>
@@ -470,7 +593,47 @@
       } catch (error) {
         console.error("Kunde inte ladda partials:", error);
       }
+
+      const globalBackBtn = document.getElementById("quiz-back");
+      const inlineBackBtns = document.querySelectorAll(".quiz-back-inline");
+
+      function triggerExistingBackLogic() {
+        if (window.goToPreviousQuizStep && typeof window.goToPreviousQuizStep === "function") {
+          window.goToPreviousQuizStep();
+          return;
+        }
+
+        if (window.handleQuizBack && typeof window.handleQuizBack === "function") {
+          window.handleQuizBack();
+          return;
+        }
+
+        if (globalBackBtn) {
+          globalBackBtn.click();
+        }
+      }
+
+      inlineBackBtns.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          triggerExistingBackLogic();
+        });
+      });
     });
+    function updateInlineStepUI(step, total) {
+  document.querySelectorAll(".quiz-step-current").forEach(el => el.textContent = step);
+  document.querySelectorAll(".quiz-step-total").forEach(el => el.textContent = total);
+
+  const percent = (step / total) * 100;
+  document.querySelectorAll(".quiz-progress-inline").forEach(el => {
+    el.style.width = percent + "%";
+  });
+}
+// hook into your existing quiz system
+document.addEventListener("quizStepChanged", (e) => {
+  const { step, total } = e.detail;
+  updateInlineStepUI(step, total);
+});
   </script>
 
   <script src="assets/indexbehovsanalys.js"></script>

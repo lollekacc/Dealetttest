@@ -77,6 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (backBtn) {
       backBtn.disabled = currentStep === 0;
     }
+
+if (typeof updateInlineStepUI === "function") {
+  updateInlineStepUI(visibleStep, TOTAL_QUESTIONS);
+}
   }
 
   function renderStack() {
