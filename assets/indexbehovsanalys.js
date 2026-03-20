@@ -59,7 +59,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const isResultStep = currentStep >= TOTAL_QUESTIONS;
     const visibleStep = isResultStep ? TOTAL_QUESTIONS : currentStep + 1;
 
-    if (stepCurrentEl) stepCurrentEl.textContent = String(visibleStep);
+    document.querySelectorAll(".quiz-step-current")
+  .forEach(el => el.textContent = visibleStep);
+
+document.querySelectorAll(".quiz-step-total")
+  .forEach(el => el.textContent = TOTAL_QUESTIONS);
 
     if (stepLabel) {
       if (isResultStep) {
@@ -69,10 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    if (progress) {
-      const percent = (Math.min(currentStep, TOTAL_QUESTIONS) / TOTAL_QUESTIONS) * 100;
-      progress.style.width = `${percent}%`;
-    }
+const percent = (Math.min(currentStep, TOTAL_QUESTIONS) / TOTAL_QUESTIONS) * 100;
+
+document.querySelectorAll(".quiz-progress-inline")
+  .forEach(el => el.style.width = percent + "%");
+
+if (progress) {
+  progress.style.width = percent + "%"; // keeps global working if used
+}
 
     if (backBtn) {
       backBtn.disabled = currentStep === 0;
