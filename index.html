@@ -2,560 +2,558 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dealett – Välkommen</title>
 
-  <!-- Frameworks & Global Styles -->
+  <!-- Frameworks & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Font Awesome Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="./assets/style.css">
-  <link rel="stylesheet" href="./assets/design.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <!-- Shared CSS -->
+  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="stylesheet" href="./assets/design.css" />
+  <link rel="stylesheet" href="./assets/jamfor.css" />
+
+  <!-- Leaflet -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
 </head>
 
-<body class="min-h-screen font-[Inter] bg-[#f8fafc] text-gray-900 scroll-smooth" data-chat="index">
-
-  <!-- Header Placeholder -->
+<body
+  class="min-h-screen font-[Inter] bg-[#f8fafc] text-gray-900 scroll-smooth"
+  data-chat="index"
+>
+  <!-- Header -->
   <div id="header-placeholder"></div>
-  
-<!-- HERO SECTION -->
-<section class="relative w-full h-[520px] overflow-hidden">
 
-  <div id="hero-chat-anchor"></div>
+  <!-- HERO -->
+  <section class="relative w-full h-[520px] overflow-hidden">
+    <div id="hero-chat-anchor"></div>
 
-  <!-- overlay -->
-  <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40 z-10"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40 z-10"></div>
 
-  <!-- SLIDER -->
-  <ul id="heroSlider"
-      class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide">
+    <ul
+      id="heroSlider"
+      class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth scrollbar-hide"
+    >
+      <li class="min-w-full snap-start relative">
+        <img
+          src="https://images.ctfassets.net/wnyreqeg7zsz/6QnqlXszeR8PTYtoTDBGax/aa1932112dc7c83fab22d2c9fbf6dc37/ViaplayWinterSport26_visuals_Horizontal_platform_AW_NoCTA.jpg"
+          class="w-full h-full object-cover"
+          alt="Hero slide 1"
+        />
+      </li>
 
-    <li class="min-w-full snap-start relative">
-      <img src="https://images.ctfassets.net/wnyreqeg7zsz/6QnqlXszeR8PTYtoTDBGax/aa1932112dc7c83fab22d2c9fbf6dc37/ViaplayWinterSport26_visuals_Horizontal_platform_AW_NoCTA.jpg"
-           class="w-full h-full object-cover">
-    </li>
+      <li class="min-w-full snap-start relative">
+        <img
+          src="https://images.ctfassets.net/nproz1mx87a8/3WRMjowUFuguIJ6zTSILUN/d89ea4fa4ddc04d0ca87ff3705979020/Allsvenskan_2026_-_Promotion_Grid_1_-_DESKTOP.jpg"
+          class="w-full h-full object-cover"
+          alt="Hero slide 2"
+        />
+      </li>
 
-    <li class="min-w-full snap-start relative">
-      <img src="https://images.ctfassets.net/nproz1mx87a8/3WRMjowUFuguIJ6zTSILUN/d89ea4fa4ddc04d0ca87ff3705979020/Allsvenskan_2026_-_Promotion_Grid_1_-_DESKTOP.jpg"
-           class="w-full h-full object-cover">
-    </li>
+      <li class="min-w-full snap-start relative">
+        <img
+          src="https://images.ctfassets.net/nproz1mx87a8/2az4Kn80SfUZBqwDo0ORnp/cf49e91eb96619034639011319a8f617/Tele2_-_tele2.se_Purchase_Flow_TV_Banner_Product_Card_800x450_Paradise_S2.jpg"
+          class="w-full h-full object-cover"
+          alt="Hero slide 3"
+        />
+      </li>
+    </ul>
 
-    <li class="min-w-full snap-start relative">
-      <img src="https://images.ctfassets.net/nproz1mx87a8/2az4Kn80SfUZBqwDo0ORnp/cf49e91eb96619034639011319a8f617/Tele2_-_tele2.se_Purchase_Flow_TV_Banner_Product_Card_800x450_Paradise_S2.jpg"
-           class="w-full h-full object-cover">
-    </li>
+    <button
+      onclick="scrollHero(-1)"
+      class="hidden md:flex absolute z-20 left-6 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white w-12 h-12 items-center justify-center rounded-full shadow-md"
+      type="button"
+      aria-label="Föregående bild"
+    >
+      ‹
+    </button>
 
-  </ul>
+    <button
+      onclick="scrollHero(1)"
+      class="hidden md:flex absolute z-20 right-6 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white w-12 h-12 items-center justify-center rounded-full shadow-md"
+      type="button"
+      aria-label="Nästa bild"
+    >
+      ›
+    </button>
 
-  <!-- ARROWS (FIXED inside hero) -->
-  <button onclick="scrollHero(-1)"
-    class="hidden md:flex absolute z-20 left-6 top-1/2 -translate-y-1/2
-           bg-white/80 hover:bg-white w-12 h-12 items-center justify-center rounded-full shadow-md">
-    ‹
-  </button>
+    <div class="absolute z-20 bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
+      <button onclick="goToSlide(0)" class="w-3 h-3 bg-white rounded-full" type="button" aria-label="Slide 1"></button>
+      <button onclick="goToSlide(1)" class="w-3 h-3 bg-white/50 rounded-full" type="button" aria-label="Slide 2"></button>
+      <button onclick="goToSlide(2)" class="w-3 h-3 bg-white/50 rounded-full" type="button" aria-label="Slide 3"></button>
+    </div>
+  </section>
 
-  <button onclick="scrollHero(1)"
-    class="hidden md:flex absolute z-20 right-6 top-1/2 -translate-y-1/2
-           bg-white/80 hover:bg-white w-12 h-12 items-center justify-center rounded-full shadow-md">
-    ›
-  </button>
+  <!-- QUIZ -->
+  <section class="px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
+    <div class="mx-auto max-w-7xl">
+      <div class="rounded-[2rem] border border-white/70 bg-white/85 shadow-soft backdrop-blur-xl">
+        <div class="border-b border-slate-100 px-6 py-5 sm:px-8">
+          <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p class="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                Behovsanalys
+              </p>
+              <h2 class="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
+                Hitta rätt abonnemang på ett mer professionellt sätt
+              </h2>
+            </div>
 
-  <!-- DOTS -->
-  <div class="absolute z-20 bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
-    <button onclick="goToSlide(0)" class="w-3 h-3 bg-white rounded-full"></button>
-    <button onclick="goToSlide(1)" class="w-3 h-3 bg-white/50 rounded-full"></button>
-    <button onclick="goToSlide(2)" class="w-3 h-3 bg-white/50 rounded-full"></button>
-  </div>
+            <div class="flex flex-wrap gap-2 text-sm font-medium text-slate-600">
+              <span class="rounded-full bg-slate-100 px-3 py-1.5">Mobil</span>
+              <span class="rounded-full bg-slate-100 px-3 py-1.5">Pris</span>
+              <span class="rounded-full bg-slate-100 px-3 py-1.5">Surf</span>
+              <span class="rounded-full bg-slate-100 px-3 py-1.5">Bindningstid</span>
+            </div>
+          </div>
+        </div>
 
-</section>
-
-
-    <!-- Quiz section -->
-    <section class="px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
-      <div class="mx-auto max-w-7xl">
-        <div class="rounded-[2rem] border border-white/70 bg-white/85 shadow-soft backdrop-blur-xl">
-          <div class="border-b border-slate-100 px-6 py-5 sm:px-8">
-            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-                  Behovsanalys
-                </p>
-                <h2 class="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
-                  Hitta rätt abonnemang på ett mer professionellt sätt
-                </h2>
+        <div id="quiz-slot" class="px-6 py-8 sm:px-8 sm:py-10 transition-all duration-300 overflow-hidden">
+          <div id="quiz-intro" class="transition-opacity duration-300">
+            <div class="mx-auto max-w-3xl text-center">
+              <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
+                <i class="fa-solid fa-sparkles"></i>
+                Analysera ditt behov
               </div>
 
-              <div class="flex flex-wrap gap-2 text-sm font-medium text-slate-600">
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Mobil</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Pris</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Surf</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Bindningstid</span>
+              <h3 class="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+                Se om du kan sänka kostnaden eller få mer för pengarna
+              </h3>
+
+              <div class="mt-8">
+                <button
+                  id="quiz-start"
+                  class="adeala-btn inline-flex items-center justify-center rounded-2xl px-8 py-4 text-base font-bold shadow-lg transition hover:-translate-y-0.5"
+                  type="button"
+                >
+                  <span class="mr-2">👉</span> Se min analys
+                </button>
+              </div>
+
+              <div class="mt-10 grid gap-3 sm:grid-cols-3">
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
+                  ✔️ Transparens
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
+                  ✔️ Kontroll
+                </div>
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
+                  ✔️ Säkerhet
+                </div>
               </div>
             </div>
           </div>
 
-          <div id="quiz-slot" class="px-6 py-8 sm:px-8 sm:py-10 transition-all duration-300 overflow-hidden">
-            <!-- INTRO -->
-            <div id="quiz-intro" class="transition-opacity duration-300">
-              <div class="mx-auto max-w-3xl text-center">
-                <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
-                  <i class="fa-solid fa-sparkles"></i>
-                  Analysera ditt behov
-                </div>
+          <div
+            id="quiz-steps-wrapper"
+            class="relative z-10 hidden opacity-0 transition-all duration-300 px-0 sm:px-1 overflow-visible"
+          >
+            <div class="flex flex-col gap-8">
+              <div id="quiz-card-stack" class="relative min-h-[500px]">
+                <!-- STEP 0 -->
+                <div id="step0" class="quiz-step-card active-step">
+                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <button
+                        type="button"
+                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                      >
+                        <span class="text-base leading-none">←</span>
+                        Tillbaka
+                      </button>
 
-                <h3 class="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-                  Se om du kan sänka kostnaden eller få mer för pengarna
-                </h3>
+                      <div class="flex items-center gap-4">
+                        <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                          <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                        </div>
 
-            
-
-                <div class="mt-8">
-                  <button
-                    id="quiz-start"
-                    class="adeala-btn inline-flex items-center justify-center rounded-2xl px-8 py-4 text-base font-bold shadow-lg transition hover:-translate-y-0.5"
-                  >
-                    <span class="mr-2">👉</span> Se min analys
-                  </button>
-                </div>
-
-                <div class="mt-10 grid gap-3 sm:grid-cols-3">
-                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
-                    ✔️ Transparens
-                  </div>
-                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
-                    ✔️ Kontroll
-                  </div>
-                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
-                    ✔️ Säkerhet
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- QUIZ -->
-            <div
-              id="quiz-steps-wrapper"
-              class="relative z-10 hidden opacity-0 transition-all duration-300 px-0 sm:px-1 overflow-visible"
-            >
-              <div class="flex flex-col gap-8">
-                <!-- GLOBAL NAV -->
-
-
-                <!-- CARD STACK -->
-                <div id="quiz-card-stack" class="relative min-h-[500px]">
-                  <!-- STEP 0 -->
-                  <div id="step0" class="quiz-step-card active-step">
-                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-  <!-- BACK -->
-  <button
-    type="button"
-    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-  >
-    <span class="text-base leading-none">←</span>
-    Tillbaka
-  </button>
-
-  <!-- STEP + PROGRESS -->
-  <div class="flex items-center gap-4">
-    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
-    </div>
-
-    <div class="text-sm font-bold text-slate-800">
-      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
-    </div>
-  </div>
-
-</div>
-
-                      <div class="mx-auto w-full max-w-3xl text-center">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                          <i class="fa-solid fa-users text-emerald-600"></i>
-                          Hushåll
-                        </span>
-
-                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
-                          Hur många personer gäller det?
-                        </p>
-
-                        <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="1">1</button>
-                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="2">2</button>
-                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="3">3</button>
-                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="4">4</button>
-                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md col-span-2 sm:col-span-1" data-persons="5">5+</button>
+                        <div class="text-sm font-bold text-slate-800">
+                          Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <!-- STEP 1 -->
-                  <div id="step1" class="quiz-step-card hidden-step">
-                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="mx-auto w-full max-w-3xl text-center">
+                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-users text-emerald-600"></i>
+                        Hushåll
+                      </span>
 
-  <!-- BACK -->
-  <button
-    type="button"
-    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-  >
-    <span class="text-base leading-none">←</span>
-    Tillbaka
-  </button>
-
-  <!-- STEP + PROGRESS -->
-  <div class="flex items-center gap-4">
-    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
-    </div>
-
-    <div class="text-sm font-bold text-slate-800">
-      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
-    </div>
-  </div>
-
-</div>
-
-                      <div class="mx-auto w-full max-w-5xl text-center">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                          <i class="fa-solid fa-tower-cell text-emerald-600"></i>
-                          Operatör
-                        </span>
-
-                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
-                          Vilken operatör har ni idag?
-                        </p>
-
-                        <p class="mt-3 text-base text-slate-600">
-                          Välj operatör för varje person.
-                        </p>
-
-                        <div
-                          id="operator-per-person"
-                          class="mt-8 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]"
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- TEMPLATE -->
-                  <template id="operator-picker-template">
-                    <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
-                      <p class="mb-4 text-left text-base font-bold text-slate-900">
-                        Person <span data-person-number></span>
+                      <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                        Hur många personer gäller det?
                       </p>
 
-                      <div class="grid grid-cols-2 gap-3">
-                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Tele2">
-                          <img src="images/tele2.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Tele2">
-                        </button>
-
-                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Telia">
-                          <img src="images/telia.png" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Telia">
-                        </button>
-
-                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Telenor">
-                          <img src="images/telenor.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Telenor">
-                        </button>
-
-                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Tre">
-                          <img src="images/tre.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Tre">
-                        </button>
-
-                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Halebop">
-                          <img src="images/halebop.webp" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Halebop">
-                        </button>
-
-                        <button type="button" class="quiz-option familj-opt inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm font-bold text-slate-800 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Other">
-                          Andra
-                        </button>
-                      </div>
-                    </div>
-                  </template>
-
-                  <!-- STEP 2 -->
-                  <div id="step2" class="quiz-step-card hidden-step">
-                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-  <!-- BACK -->
-  <button
-    type="button"
-    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-  >
-    <span class="text-base leading-none">←</span>
-    Tillbaka
-  </button>
-
-  <!-- STEP + PROGRESS -->
-  <div class="flex items-center gap-4">
-    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
-    </div>
-
-    <div class="text-sm font-bold text-slate-800">
-      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
-    </div>
-  </div>
-
-</div>
-
-                      <div class="mx-auto w-full max-w-3xl text-center">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                          <i class="fa-solid fa-signal text-emerald-600"></i>
-                          Surfbehov
-                        </span>
-
-                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
-                          Hur använder ni mobilen mest?
-                        </p>
-
-                        <div class="mt-8 flex flex-col gap-4">
-                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="low">
-                            <span class="block text-lg font-bold text-slate-900">Mest wifi & sociala medier</span>
-                            <span class="mt-1 block text-sm text-slate-500">5 GB – 15 GB</span>
-                          </button>
-
-                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="medium">
-                            <span class="block text-lg font-bold text-slate-900">Streaming & video</span>
-                            <span class="mt-1 block text-sm text-slate-500">20 GB – 50 GB</span>
-                          </button>
-
-                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="high">
-                            <span class="block text-lg font-bold text-slate-900">Vill aldrig tänka på surf</span>
-                            <span class="mt-1 block text-sm text-slate-500">100 GB – Obegränsad</span>
-                          </button>
-                        </div>
+                      <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                        <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="1" type="button">1</button>
+                        <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="2" type="button">2</button>
+                        <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="3" type="button">3</button>
+                        <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="4" type="button">4</button>
+                        <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md col-span-2 sm:col-span-1" data-persons="5" type="button">5+</button>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <!-- STEP 3 -->
-                  <div id="step3" class="quiz-step-card hidden-step">
-                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <!-- STEP 1 -->
+                <div id="step1" class="quiz-step-card hidden-step">
+                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <button
+                        type="button"
+                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                      >
+                        <span class="text-base leading-none">←</span>
+                        Tillbaka
+                      </button>
 
-  <!-- BACK -->
-  <button
-    type="button"
-    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-  >
-    <span class="text-base leading-none">←</span>
-    Tillbaka
-  </button>
+                      <div class="flex items-center gap-4">
+                        <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                          <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                        </div>
 
-  <!-- STEP + PROGRESS -->
-  <div class="flex items-center gap-4">
-    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
-    </div>
-
-    <div class="text-sm font-bold text-slate-800">
-      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
-    </div>
-  </div>
-
-</div>
-
-                      <div class="mx-auto w-full max-w-3xl text-center">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                          <i class="fa-solid fa-wallet text-emerald-600"></i>
-                          Pris
-                        </span>
-
-                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
-                          Vad betalar du ungefär idag per abonnemang?
-                        </p>
-
-                        <div class="mt-8 flex flex-col gap-4">
-                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="under300">
-                            Under 300 kr
-                          </button>
-                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="300-400">
-                            300–400 kr
-                          </button>
-                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="400-500">
-                            400–500+ kr
-                          </button>
+                        <div class="text-sm font-bold text-slate-800">
+                          Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <!-- STEP 4 -->
-                  <div id="step4" class="quiz-step-card hidden-step">
-                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="mx-auto w-full max-w-5xl text-center">
+                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-tower-cell text-emerald-600"></i>
+                        Operatör
+                      </span>
 
-  <!-- BACK -->
-  <button
-    type="button"
-    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-  >
-    <span class="text-base leading-none">←</span>
-    Tillbaka
-  </button>
+                      <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                        Vilken operatör har ni idag?
+                      </p>
 
-  <!-- STEP + PROGRESS -->
-  <div class="flex items-center gap-4">
-    <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-      <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
-    </div>
-
-    <div class="text-sm font-bold text-slate-800">
-      Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
-    </div>
-  </div>
-
-</div>
-
-                      <div class="mx-auto w-full max-w-3xl text-center">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                          <i class="fa-solid fa-link text-emerald-600"></i>
-                          Bindningstid
-                        </span>
-
-                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
-                          Har du bindningstid kvar?
-                        </p>
-
-                        <div class="mt-8 flex flex-col gap-4">
-                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="no">
-                            Nej
-                          </button>
-                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="yes">
-                            Ja
-                          </button>
-                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="unknown">
-                            Vet inte
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- STEP 5 -->
-                  <div id="step5" class="quiz-step-card hidden-step">
-                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col text-center">
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-
-  <!-- BACK -->
-  <button
-    type="button"
-    class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-  >
-    <span class="text-base leading-none">←</span>
-    Tillbaka
-  </button>
-
-</div>
-
-                      <div class="mx-auto max-w-3xl">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
-                          <i class="fa-solid fa-circle-check"></i>
-                          Analys klar
-                        </span>
-
-                        <h3 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
-                          Din analys är klar
-                        </h3>
-
-                        <p class="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
-                          Baserat på dina svar har vi hittat abonnemang som passar ditt behov bättre.
-                        </p>
-                      </div>
+                      <p class="mt-3 text-base text-slate-600">
+                        Välj operatör för varje person.
+                      </p>
 
                       <div
-                        id="offers-container"
-                        class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+                        id="operator-per-person"
+                        class="mt-8 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]"
                       ></div>
                     </div>
                   </div>
                 </div>
+
+                <!-- TEMPLATE -->
+                <template id="operator-picker-template">
+                  <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
+                    <p class="mb-4 text-left text-base font-bold text-slate-900">
+                      Person <span data-person-number></span>
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-3">
+                      <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Tele2">
+                        <img src="images/tele2.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Tele2" />
+                      </button>
+
+                      <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Telia">
+                        <img src="images/telia.png" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Telia" />
+                      </button>
+
+                      <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Telenor">
+                        <img src="images/telenor.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Telenor" />
+                      </button>
+
+                      <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Tre">
+                        <img src="images/tre.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Tre" />
+                      </button>
+
+                      <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Halebop">
+                        <img src="images/halebop.webp" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Halebop" />
+                      </button>
+
+                      <button type="button" class="quiz-option familj-opt inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm font-bold text-slate-800 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Other">
+                        Andra
+                      </button>
+                    </div>
+                  </div>
+                </template>
+
+                <!-- STEP 2 -->
+                <div id="step2" class="quiz-step-card hidden-step">
+                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <button
+                        type="button"
+                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                      >
+                        <span class="text-base leading-none">←</span>
+                        Tillbaka
+                      </button>
+
+                      <div class="flex items-center gap-4">
+                        <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                          <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                        </div>
+
+                        <div class="text-sm font-bold text-slate-800">
+                          Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mx-auto w-full max-w-3xl text-center">
+                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-signal text-emerald-600"></i>
+                        Surfbehov
+                      </span>
+
+                      <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                        Hur använder ni mobilen mest?
+                      </p>
+
+                      <div class="mt-8 flex flex-col gap-4">
+                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="low" type="button">
+                          <span class="block text-lg font-bold text-slate-900">Mest wifi & sociala medier</span>
+                          <span class="mt-1 block text-sm text-slate-500">5 GB – 15 GB</span>
+                        </button>
+
+                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="medium" type="button">
+                          <span class="block text-lg font-bold text-slate-900">Streaming & video</span>
+                          <span class="mt-1 block text-sm text-slate-500">20 GB – 50 GB</span>
+                        </button>
+
+                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="high" type="button">
+                          <span class="block text-lg font-bold text-slate-900">Vill aldrig tänka på surf</span>
+                          <span class="mt-1 block text-sm text-slate-500">100 GB – Obegränsad</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- STEP 3 -->
+                <div id="step3" class="quiz-step-card hidden-step">
+                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <button
+                        type="button"
+                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                      >
+                        <span class="text-base leading-none">←</span>
+                        Tillbaka
+                      </button>
+
+                      <div class="flex items-center gap-4">
+                        <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                          <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                        </div>
+
+                        <div class="text-sm font-bold text-slate-800">
+                          Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mx-auto w-full max-w-3xl text-center">
+                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-wallet text-emerald-600"></i>
+                        Pris
+                      </span>
+
+                      <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                        Vad betalar du ungefär idag per abonnemang?
+                      </p>
+
+                      <div class="mt-8 flex flex-col gap-4">
+                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="under300" type="button">
+                          Under 300 kr
+                        </button>
+                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="300-400" type="button">
+                          300–400 kr
+                        </button>
+                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="400-500" type="button">
+                          400–500+ kr
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- STEP 4 -->
+                <div id="step4" class="quiz-step-card hidden-step">
+                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <button
+                        type="button"
+                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                      >
+                        <span class="text-base leading-none">←</span>
+                        Tillbaka
+                      </button>
+
+                      <div class="flex items-center gap-4">
+                        <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                          <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                        </div>
+
+                        <div class="text-sm font-bold text-slate-800">
+                          Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mx-auto w-full max-w-3xl text-center">
+                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-link text-emerald-600"></i>
+                        Bindningstid
+                      </span>
+
+                      <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                        Har du bindningstid kvar?
+                      </p>
+
+                      <div class="mt-8 flex flex-col gap-4">
+                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="no" type="button">
+                          Nej
+                        </button>
+                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="yes" type="button">
+                          Ja
+                        </button>
+                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="unknown" type="button">
+                          Vet inte
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- STEP 5 -->
+                <div id="step5" class="quiz-step-card hidden-step">
+                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col text-center">
+                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <button
+                        type="button"
+                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                      >
+                        <span class="text-base leading-none">←</span>
+                        Tillbaka
+                      </button>
+                    </div>
+
+                    <div class="mx-auto max-w-3xl">
+                      <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
+                        <i class="fa-solid fa-circle-check"></i>
+                        Analys klar
+                      </span>
+
+                      <h3 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
+                        Din analys är klar
+                      </h3>
+
+                      <p class="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+                        Baserat på dina svar har vi hittat abonnemang som passar ditt behov bättre.
+                      </p>
+                    </div>
+
+                    <div
+                      id="offers-container"
+                      class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+                    ></div>
+                  </div>
+                </div>
               </div>
             </div>
-            <!-- /QUIZ -->
           </div>
+          <!-- /QUIZ -->
         </div>
       </div>
-    </section>
-<!-- IMAGE GRID -->
-<section class="px-4 sm:px-6 lg:px-8 mt-16">
-  <div class="mx-auto max-w-full">
-
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
-
-      <button onclick="onHeroImageClick(1)"
-        class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md">
-        <img src="https://cdn.vectorstock.com/i/1000v/19/95/gold-number-1-one-logo-icon-design-vector-21361995.jpg"
-             class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
-        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-      </button>
-
-      <button onclick="onHeroImageClick(2)"
-        class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md">
-        <img src="https://static.vecteezy.com/ti/gratis-vektor/p1/4655897-3d-gyllene-nummer-tva-2-vektor-2-a-arsjubileumsfirande-bakgrund-andra-position-koncept-guld-logotyp-isolerad-pa-svart-kvadrat-mall-vector.jpg"
-             class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
-        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-      </button>
-
-      <button onclick="onHeroImageClick(3)"
-        class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md">
-        <img src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
-             class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
-        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-      </button>
-
-      <button onclick="onHeroImageClick(4)"
-        class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md">
-        <img src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
-             class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
-        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-      </button>
-
-      <button onclick="onHeroImageClick(5)"
-        class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md">
-        <img src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
-             class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
-        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-      </button>
-
     </div>
+  </section>
 
-  </div>
-</section>
+  <!-- IMAGE GRID -->
+  <section class="px-4 sm:px-6 lg:px-8 mt-16">
+    <div class="mx-auto max-w-full">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
+        <button onclick="onHeroImageClick(1)" class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md" type="button">
+          <img
+            src="https://cdn.vectorstock.com/i/1000v/19/95/gold-number-1-one-logo-icon-design-vector-21361995.jpg"
+            class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+            alt="1"
+          />
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+        </button>
 
- <section class="scroll-ads bg-gradient-to-b from-white to-gray-50">
-<div class="ad-container fade-in relative overflow-hidden">
-<div class="absolute top-3 -right-16 rotate-45">
-  <div class="bg-green-700 text-white shadow-lg
-              w-[260px] h-[36px]
-              flex items-center justify-center
-              whitespace-nowrap
-              text-xs font-semibold
-              relative
-              left-[20px] top-[6px]">
-    Rekommenderas
-  </div>
-</div>
+        <button onclick="onHeroImageClick(2)" class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md" type="button">
+          <img
+            src="https://static.vecteezy.com/ti/gratis-vektor/p1/4655897-3d-gyllene-nummer-tva-2-vektor-2-a-arsjubileumsfirande-bakgrund-andra-position-koncept-guld-logotyp-isolerad-pa-svart-kvadrat-mall-vector.jpg"
+            class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+            alt="2"
+          />
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+        </button>
 
-  <img src="images/dealett-ai.png" alt="Mobilabonnemang" class="ad-image">
+        <button onclick="onHeroImageClick(3)" class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md" type="button">
+          <img
+            src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
+            class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+            alt="3"
+          />
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+        </button>
 
-  <div class="ad-text">
-    <span class="ad-tag">Dealett-AI Chatt</span>
-    <h2>
-      Vår smarta AI-guide analyserar dina behov och matchar dig direkt med det bästa abonnemanget.
-      Snabbt och enkelt
-    </h2>
-    <p>Dealett-AI hittar – du sparar.</p>
-    <button id="open-chat" class="ad-btn adeala-btn">
-      Chatta Med Dealett-AI
-    </button>
-  </div>
-</div>
+        <button onclick="onHeroImageClick(4)" class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md" type="button">
+          <img
+            src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
+            class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+            alt="4"
+          />
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+        </button>
+
+        <button onclick="onHeroImageClick(5)" class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md" type="button">
+          <img
+            src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
+            class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+            alt="5"
+          />
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADS -->
+  <section class="scroll-ads bg-gradient-to-b from-white to-gray-50">
+    <div class="ad-container fade-in relative overflow-hidden">
+      <div class="absolute top-3 -right-16 rotate-45">
+        <div class="bg-green-700 text-white shadow-lg w-[260px] h-[36px] flex items-center justify-center whitespace-nowrap text-xs font-semibold relative left-[20px] top-[6px]">
+          Rekommenderas
+        </div>
+      </div>
+
+      <img src="images/dealett-ai.png" alt="Mobilabonnemang" class="ad-image" />
+
+      <div class="ad-text">
+        <span class="ad-tag">Dealett-AI Chatt</span>
+        <h2>
+          Vår smarta AI-guide analyserar dina behov och matchar dig direkt med det bästa abonnemanget.
+          Snabbt och enkelt
+        </h2>
+        <p>Dealett-AI hittar – du sparar.</p>
+        <button id="open-chat" class="ad-btn adeala-btn" type="button">
+          Chatta Med Dealett-AI
+        </button>
+      </div>
+    </div>
 
     <div class="ad-container fade-in">
       <div class="ad-text">
@@ -564,254 +562,479 @@
         <p>Hos oss lönar det sig alltid att välja smart. Varje köp ger dig en exklusiv belöning som tack för ditt förtroende.</p>
         <a href="belöning.html" class="ad-btn adeala-btn">Utforska bonusar</a>
       </div>
-      <img src="images/p3.jpg" alt="5G-nät" class="ad-image">
+      <img src="images/p3.jpg" alt="5G-nät" class="ad-image" />
     </div>
   </section>
-<!-- PARTNERS + COVERAGE SECTION -->
-<section class="bg-gradient-to-b from-white to-gray-50 py-8">
-  <div class="max-w-10xl mx-auto px-6">
 
-    <div class="bg-white/80 backdrop-blur-sm border border-gray-100
-                rounded-3xl shadow-lg p-10">
+  <!-- MAP SECTION -->
+<!-- MAP SECTION (MATCHES JAMFOR) -->
+<section class="coverage-main py-16" id="coverageApp">
+  <div class="content-wrapper">
+    <section class="coverage-shell">
 
-      <h2 class="text-3xl md:text-4xl font-extrabold text-green-950 text-center mb-4">
-        I samarbete med ledande operatörer
-      </h2>
-      <p class="text-center text-gray-800 mb-12">
-        Jämför operatörer och se täckning direkt.
-      </p>
-
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-start">
-
-        <!-- LEFT: VERTICAL LOGOS -->
-        <div class="md:col-span-1 flex flex-col gap-4">
-          <button class="operator-btn active relative" data-operator="telia">
-            <img src="images/telia.png" class="h-32 mx-auto">
-          </button>
-
-          <button class="operator-btn relative" data-operator="tele2">
-            <img src="images/tele2.jpg" class="h-32 mx-auto">
-          </button>
-
-          <button class="operator-btn relative" data-operator="telenor">
-            <img src="images/telenor.jpg" class="h-32 mx-auto">
-          </button>
-
-          <button class="operator-btn relative" data-operator="tre">
-            <img src="images/tre.jpg" class="h-32 mx-auto">
-          </button>
-
-          <button class="operator-btn relative" data-operator="halebop">
-            <img src="images/halebop.webp" class="h-32 mx-auto">
-          </button>
+      <!-- TOPBAR -->
+      <div class="coverage-topbar">
+        <div>
+          <p class="coverage-topbar__eyebrow">Täckningskarta</p>
+          <h2>Välj operatör och utforska kartan</h2>
         </div>
 
-        <!-- RIGHT: MAP -->
-        <div
-          id="coverage-map"
-          class="md:col-span-3 h-[835px] rounded-2xl overflow-hidden border">
+        <div class="coverage-topbar__right">
+          <button id="resetViewBtn" class="coverage-btn coverage-btn--soft" type="button">
+            Återställ vy
+          </button>
+          <button id="clearLayerBtn" class="coverage-btn coverage-btn--soft" type="button">
+            Ta bort lager
+          </button>
         </div>
+      </div>
+
+      <div class="coverage-grid">
+
+        <!-- SIDEBAR -->
+        <aside class="coverage-sidebar">
+
+          <section class="coverage-card coverage-card--sidebar">
+            <div class="coverage-card__head">
+              <div>
+                <p class="coverage-section-label">Operatörer</p>
+                <h3>Välj nät</h3>
+              </div>
+            </div>
+
+            <div class="operator-list">
+              <button class="operator-card" data-operator="telia" type="button">
+                <div class="operator-card__logo">
+                  <img src="images/telia.png" alt="Telia">
+                </div>
+                <div class="operator-card__text"><strong>Telia</strong></div>
+              </button>
+
+              <button class="operator-card" data-operator="tele2" type="button">
+                <div class="operator-card__logo">
+                  <img src="images/tele2.jpg" alt="Tele2">
+                </div>
+                <div class="operator-card__text"><strong>Tele2</strong></div>
+              </button>
+
+              <button class="operator-card" data-operator="telenor" type="button">
+                <div class="operator-card__logo">
+                  <img src="images/telenor.jpg" alt="Telenor">
+                </div>
+                <div class="operator-card__text"><strong>Telenor</strong></div>
+              </button>
+
+              <button class="operator-card" data-operator="tre" type="button">
+                <div class="operator-card__logo">
+                  <img src="images/tre.jpg" alt="Tre">
+                </div>
+                <div class="operator-card__text"><strong>Tre</strong></div>
+              </button>
+
+              <button class="operator-card" data-operator="halebop" type="button">
+                <div class="operator-card__logo">
+                  <img src="images/halebop.webp" alt="Halebop">
+                </div>
+                <div class="operator-card__text"><strong>Halebop</strong></div>
+              </button>
+            </div>
+          </section>
+
+
+        </aside>
+
+        <!-- MAP AREA -->
+        <section class="coverage-map-area">
+
+          <div class="coverage-map-card">
+
+            <!-- MAP UI -->
+            <div class="map-ui">
+
+              <div class="map-search">
+                <input id="mapSearchInput" type="text" placeholder="Sök adress eller stad..." />
+                <button id="mapSearchBtn" type="button">🔍</button>
+              </div>
+
+              <div class="map-zoom">
+                <button id="zoomInBtn" type="button">+</button>
+                <button id="zoomOutBtn" type="button">−</button>
+              </div>
+
+            </div>
+
+            <!-- MAP -->
+            <div id="map" class="coverage-map"></div>
+
+          </div>
+
+          <!-- LEGEND -->
+          <div class="coverage-legend">
+            <div class="coverage-legend__item">
+              <span class="legend-swatch legend-swatch--base"></span>
+              <span>Bakgrundskarta</span>
+            </div>
+            <div class="coverage-legend__item">
+              <span class="legend-swatch legend-swatch--overlay"></span>
+              <span>Aktivt täckningslager</span>
+            </div>
+            <div class="coverage-legend__item">
+              <span class="legend-swatch legend-swatch--focus"></span>
+              <span>Vald operatör</span>
+            </div>
+          </div>
+
+        </section>
 
       </div>
-    </div>
+
+    </section>
   </div>
 </section>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
-<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-
-<script>
-const map = L.map("coverage-map", {
-  zoomControl: true,
-  attributionControl: false
-}).setView([62.0, 15.0], 5);
-let searchMarker;
-
-L.Control.geocoder({
-  defaultMarkGeocode: false,
-  collapsed: false,
-  placeholder: "Sök adress eller stad..."
-})
-.on("markgeocode", function(e) {
-  const c = e.geocode.center;
-
-  if (searchMarker) map.removeLayer(searchMarker);
-  searchMarker = L.marker(c).addTo(map);
-
-  map.setView(c, 14);
-})
-.addTo(map);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 18
-}).addTo(map);
-
-let activeOverlay;
-
-const overlays = {
-  tele2: L.tileLayer("https://mim.tele2.com/MIMCore/api/Tile/GetOverlay?x={x}&y={y}&z={z}&viewType=1&countryCode=SWE"),
-  telia: L.tileLayer.wms("https://coverage.ddc.teliasonera.net/coverageportal_se/map/tile", {
-    format: "image/png",
-    transparent: true
-  }),
-  tre: L.tileLayer("https://coverage.tre.se/MIMCore/api/Tile/GetOverlay?z={z}&x={x}&y={y}"),
-  telenor: L.tileLayer.wms("https://mboss.telenor.se/coverageportal/map/tile", {
-    format: "image/png",
-    transparent: true
-  })
-};
-let chatInModal = false;
-</script>
-<script>
-document.querySelectorAll(".operator-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-
-    document.querySelectorAll(".operator-btn")
-      .forEach(b => b.classList.remove("active"));
-
-    btn.classList.add("active");
-
-    if (activeOverlay) map.removeLayer(activeOverlay);
-
-    const key = btn.dataset.operator;
-    if (!overlays[key]) return;
-
-    activeOverlay = overlays[key];
-    activeOverlay.addTo(map);
-  });
-});
-</script>
-
-
-<div id="chat-modal" class="fixed inset-0 hidden items-center justify-center bg-black/50 z-[9999]">
-  <div class="bg-white rounded-2xl w-[95%] max-w-lg h-[80vh] relative">
-    <button id="close-chat" class="absolute top-3 right-3">✕</button>
-    <div id="chat-modal-body" class="h-full"></div>
+  <!-- CHAT MODAL -->
+  <div id="chat-modal" class="fixed inset-0 hidden items-center justify-center bg-black/50 z-[9999]">
+    <div class="bg-white rounded-2xl w-[95%] max-w-lg h-[80vh] relative">
+      <button id="close-chat" class="absolute top-3 right-3" type="button">✕</button>
+      <div id="chat-modal-body" class="h-full"></div>
+    </div>
   </div>
-</div>
-<button id="closePchoice" style="display:none"></button>
 
-<div id="pchoiceModal" style="display:none">
-  <iframe id="pchoiceFrame"></iframe>
-</div>
-  <!-- Load shared header/footer/chat -->
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
+  <button id="closePchoice" style="display:none" type="button"></button>
 
-  const headerRes = await fetch("partials/header.html");
-  if (headerRes.ok) {
-    document.getElementById("header-placeholder").innerHTML = await headerRes.text();
-  }
+  <div id="pchoiceModal" style="display:none">
+    <iframe id="pchoiceFrame"></iframe>
+  </div>
 
-  const chatRes = await fetch("partials/chat.html");
-  if (chatRes.ok) {
-    document.body.insertAdjacentHTML("beforeend", await chatRes.text());
-  }
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/indexbehovsanalys.js"></script>
+  <script src="assets/global.js"></script>
+  <script src="assets/cart.js"></script>
 
-  const footerRes = await fetch("partials/footer.html");
-  if (footerRes.ok) {
-    document.body.insertAdjacentHTML("beforeend", await footerRes.text());
-  }
-const cartRes = await fetch("partials/cart.html");
-if (cartRes.ok) {
-  document.body.insertAdjacentHTML("beforeend", await cartRes.text());
-
-  // init after DOM exists
-  const close = document.getElementById("closeCart");
-  const overlay = document.getElementById("cartOverlay");
-
-  if (close) close.onclick = () => closeCart();
-  if (overlay) overlay.onclick = () => closeCart();
-}
-  const chatRoot = document.getElementById("dealett-chat");
-const openBtn = document.getElementById("open-chat");
-const modal = document.getElementById("chat-modal");
-const closeBtn = document.getElementById("close-chat");
-const modalBody = document.getElementById("chat-modal-body");
-
-if (openBtn && modal && closeBtn && chatRoot && modalBody) {
-  openBtn.onclick = () => {
-    chatInModal = true;
-    modal.classList.remove("hidden");
-    modal.classList.add("flex");
-    modalBody.appendChild(chatRoot);
-    document.getElementById("chat-panel")?.classList.remove("closed");
-  };
-
-  closeBtn.onclick = () => {
-    chatInModal = false;
-    modal.classList.add("hidden");
-    modal.classList.remove("flex");
-    document.body.appendChild(chatRoot);
-  };
-}
-  const script = document.createElement("script");
-  script.src = "./assets/chat.js";
-  script.defer = true;
-script.onload = () => {
-  if (typeof initHeroChatMovement === "function") {
-    initHeroChatMovement();
-  }
-};
-  document.body.appendChild(script);
-});
-
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  const heroContainer = document.getElementById("hero-chat-container");
-
-  if (!heroContainer) return;
-});
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  const slider = document.getElementById("heroSlider");
-  if (!slider) return;
-
-  let currentSlide = 0;
-  const totalSlides = slider.children.length;
-  const AUTO_INTERVAL = 6000;
-
- window.goToSlide = function(i) {
-    currentSlide = i;
-    slider.scrollTo({
-      left: slider.clientWidth * currentSlide,
-      behavior: "smooth"
-    });
-  }
-
-  function nextSlide() {
-    currentSlide = (currentSlide + 1) % totalSlides;
-    goToSlide(currentSlide);
-  }
-
-  window.scrollHero = function(dir) {
-    currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
-    goToSlide(currentSlide);
-  };
-
-  setInterval(nextSlide, AUTO_INTERVAL);
-
-});
-</script>
-<script src="assets/indexbehovsanalys.js"></script>
-<script src="assets/global.js"></script>
   <script>
-  function openCart() {
-  document.getElementById("cartDrawer").classList.remove("hidden");
-}
+    function openCart() {
+      document.getElementById("cartDrawer")?.classList.remove("hidden");
+    }
 
-function closeCart() {
-  document.getElementById("cartDrawer").classList.add("hidden");
-}
+    function closeCart() {
+      document.getElementById("cartDrawer")?.classList.add("hidden");
+    }
 
-document.getElementById("closeCart").onclick = closeCart;
-document.getElementById("cartOverlay").onclick = closeCart;
-</script>
-<script src="assets/cart.js"></script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const headerRes = await fetch("partials/header.html");
+      if (headerRes.ok) {
+        document.getElementById("header-placeholder").innerHTML = await headerRes.text();
+      }
+
+      const chatRes = await fetch("partials/chat.html");
+      if (chatRes.ok) {
+        document.body.insertAdjacentHTML("beforeend", await chatRes.text());
+      }
+
+      const footerRes = await fetch("partials/footer.html");
+      if (footerRes.ok) {
+        document.body.insertAdjacentHTML("beforeend", await footerRes.text());
+      }
+
+      const cartRes = await fetch("partials/cart.html");
+      if (cartRes.ok) {
+        document.body.insertAdjacentHTML("beforeend", await cartRes.text());
+
+        const close = document.getElementById("closeCart");
+        const overlay = document.getElementById("cartOverlay");
+
+        if (close) close.onclick = closeCart;
+        if (overlay) overlay.onclick = closeCart;
+      }
+
+      const chatRoot = document.getElementById("dealett-chat");
+      const openBtn = document.getElementById("open-chat");
+      const modal = document.getElementById("chat-modal");
+      const closeBtn = document.getElementById("close-chat");
+      const modalBody = document.getElementById("chat-modal-body");
+
+      if (openBtn && modal && closeBtn && chatRoot && modalBody) {
+        openBtn.onclick = () => {
+          window.chatInModal = true;
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+          modalBody.appendChild(chatRoot);
+          document.getElementById("chat-panel")?.classList.remove("closed");
+        };
+
+        closeBtn.onclick = () => {
+          window.chatInModal = false;
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          document.body.appendChild(chatRoot);
+        };
+      }
+
+      const script = document.createElement("script");
+      script.src = "./assets/chat.js";
+      script.defer = true;
+      script.onload = () => {
+        if (typeof initHeroChatMovement === "function") {
+          initHeroChatMovement();
+        }
+      };
+      document.body.appendChild(script);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const slider = document.getElementById("heroSlider");
+      if (!slider) return;
+
+      let currentSlide = 0;
+      const totalSlides = slider.children.length;
+      const AUTO_INTERVAL = 6000;
+
+      window.goToSlide = function (i) {
+        currentSlide = i;
+        slider.scrollTo({
+          left: slider.clientWidth * currentSlide,
+          behavior: "smooth"
+        });
+      };
+
+      function nextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        window.goToSlide(currentSlide);
+      }
+
+      window.scrollHero = function (dir) {
+        currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
+        window.goToSlide(currentSlide);
+      };
+
+      setInterval(nextSlide, AUTO_INTERVAL);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const mapEl = document.getElementById("map");
+      if (!mapEl || typeof L === "undefined") return;
+
+      const SWEDEN_BOUNDS = [
+        [55.0, 10.0],
+        [69.5, 24.5]
+      ];
+
+      const map = L.map("map", {
+        zoomControl: false,
+        attributionControl: false,
+        maxBounds: SWEDEN_BOUNDS,
+        maxBoundsViscosity: 1.0,
+        minZoom: 5
+      }).setView([62.0, 15.0], 5);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18
+      }).addTo(map);
+
+      let searchMarker = null;
+
+      async function searchAddress(query) {
+        if (!query) return;
+
+        const res = await fetch(
+          "https://nominatim.openstreetmap.org/search?format=json&q=" +
+          encodeURIComponent(query)
+        );
+
+        const data = await res.json();
+        if (!data.length) return;
+
+        const lat = parseFloat(data[0].lat);
+        const lon = parseFloat(data[0].lon);
+
+        map.setView([lat, lon], 14, { animate: true });
+
+        if (searchMarker) {
+          map.removeLayer(searchMarker);
+        }
+
+        searchMarker = L.marker([lat, lon]).addTo(map);
+      }
+
+      document.getElementById("mapSearchBtn")?.addEventListener("click", () => {
+        const value = document.getElementById("mapSearchInput")?.value.trim();
+        searchAddress(value);
+      });
+
+      document.getElementById("mapSearchInput")?.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          searchAddress(e.target.value.trim());
+        }
+      });
+
+      document.getElementById("zoomInBtn")?.addEventListener("click", () => map.zoomIn());
+      document.getElementById("zoomOutBtn")?.addEventListener("click", () => map.zoomOut());
+
+      window.addEventListener("resize", () => {
+        map.invalidateSize();
+      });
+
+      setTimeout(() => {
+        map.invalidateSize();
+      }, 250);
+    });
+  </script>
+
+  <style>
+    #map,
+    .coverage-map {
+      height: 520px;
+      min-height: 520px;
+      width: 100%;
+    }
+
+    .coverage-map-card {
+      position: relative;
+    }
+
+    .map-ui {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .map-search {
+      display: flex;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      pointer-events: all;
+    }
+
+    .map-search input {
+      border: none;
+      outline: none;
+      padding: 10px 14px;
+      width: 240px;
+      font-size: 14px;
+    }
+
+    .map-search button {
+      background: #0f766e;
+      color: white;
+      border: none;
+      padding: 0 14px;
+      cursor: pointer;
+    }
+
+    .map-zoom {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: all;
+    }
+
+    .map-zoom button {
+      width: 42px;
+      height: 42px;
+      border: none;
+      background: white;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 640px) {
+      #map,
+      .coverage-map {
+        height: 420px;
+        min-height: 420px;
+      }
+
+      .map-ui {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        gap: 12px;
+      }
+
+      .map-search input {
+        width: 170px;
+      }
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+  if (!document.getElementById("map")) return;
+
+  const SWEDEN_BOUNDS = [
+    [55.0, 10.0],
+    [69.5, 24.5]
+  ];
+
+  const map = L.map("map", {
+    zoomControl: false,
+    attributionControl: false,
+    maxBounds: SWEDEN_BOUNDS,
+    maxBoundsViscosity: 1.0,
+    minZoom: 5
+  }).setView([62.0, 15.0], 5);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 18
+  }).addTo(map);
+
+  let searchMarker = null;
+
+  async function searchAddress(query) {
+    if (!query) return;
+
+    const res = await fetch(
+      "https://nominatim.openstreetmap.org/search?format=json&q=" +
+      encodeURIComponent(query)
+    );
+
+    const data = await res.json();
+    if (!data.length) return;
+
+    const lat = +data[0].lat;
+    const lon = +data[0].lon;
+
+    map.setView([lat, lon], 14);
+
+    if (searchMarker) map.removeLayer(searchMarker);
+    searchMarker = L.marker([lat, lon]).addTo(map);
+  }
+
+  document.getElementById("mapSearchBtn")?.addEventListener("click", () => {
+    searchAddress(document.getElementById("mapSearchInput").value.trim());
+  });
+
+  document.getElementById("mapSearchInput")?.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      searchAddress(e.target.value.trim());
+    }
+  });
+
+  document.getElementById("zoomInBtn")?.onclick = () => map.zoomIn();
+  document.getElementById("zoomOutBtn")?.onclick = () => map.zoomOut();
+
+  document.getElementById("resetViewBtn")?.onclick = () => {
+    map.setView([62.0, 15.0], 5);
+  };
+
+  document.getElementById("clearLayerBtn")?.onclick = () => {
+    if (searchMarker) {
+      map.removeLayer(searchMarker);
+      searchMarker = null;
+    }
+  };
+
+  setTimeout(() => map.invalidateSize(), 200);
+});
+  </script>
 </body>
 </html>
