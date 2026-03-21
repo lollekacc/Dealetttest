@@ -179,28 +179,30 @@
 
           </aside>
 
-          <!-- MAP AREA -->
           <section class="coverage-map-area">
-            <div class="coverage-map-card">
-  <div class="map-search-overlay">
-    <input
-      id="mapSearchInput"
-      type="text"
-      placeholder="Sök adress eller stad..."
-      autocomplete="off"
-    >
-    <button id="mapSearchBtn" type="button">🔍</button>
-  </div>
+                      <!-- MAP AREA -->
 
-  <!-- map -->
-  
+                      <div class="coverage-map-card">
 
-</div>
-              <div class="coverage-map-toolbar">
-
-
-              <div id="map" class="coverage-map"></div>
-            </div>
+                        <!-- UI ON TOP OF MAP -->
+                        <div class="map-ui">
+                      
+                          <div class="map-search">
+                            <input id="mapSearchInput" type="text" placeholder="Sök adress eller stad...">
+                            <button id="mapSearchBtn">🔍</button>
+                          </div>
+                      
+                          <div class="map-zoom">
+                            <button id="zoomInBtn">+</button>
+                            <button id="zoomOutBtn">−</button>
+                          </div>
+                      
+                        </div>
+                      
+                        <!-- MAP -->
+                        <div id="map" class="coverage-map"></div>
+                      
+                      </div>
 
             <div class="coverage-legend">
               <div class="coverage-legend__item">
@@ -245,11 +247,20 @@
       center: [62.0, 15.0],
       zoom: 5
     };
-
-    const map = L.map("map", {
-      zoomControl: false,
-      attributionControl: false
-    }).setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom);
+    const SWEDEN_BOUNDS = [
+  [55.0, 10.0],  // southwest
+  [69.5, 24.5]   // northeast
+];
+const map = L.map("map", {
+  zoomControl: false,
+  attributionControl: false,
+  maxBounds: SWEDEN_BOUNDS,
+  maxBoundsViscosity: 1.0, // strong lock
+  minZoom: 4               // max zoom OUT limit
+}).setView([62.0, 15.0], 5);
+map.on("drag", () => {
+  map.panInsideBounds(SWEDEN_BOUNDS, { animate: false });
+});
 
     let activeOverlay = null;
     let activeOperatorKey = null;
@@ -466,5 +477,62 @@ searchInput.addEventListener("keydown", e => {
   }
 });
   </script>
+  <style>
+    .map-ui {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* SEARCH */
+.map-search {
+  display: flex;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  pointer-events: all;
+}
+
+.map-search input {
+  border: none;
+  outline: none;
+  padding: 10px 14px;
+  width: 220px;
+  font-size: 14px;
+}
+
+.map-search button {
+  background: #0f766e;
+  color: white;
+  border: none;
+  padding: 0 14px;
+  cursor: pointer;
+}
+
+/* ZOOM */
+.map-zoom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: all;
+}
+
+.map-zoom button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: white;
+  font-size: 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+  </style>
 </body>
 </html>
