@@ -72,10 +72,17 @@ background:
 
     /* HERO */
     .hero-slider-wrap {
+      position: relative;
       width: 100%;
-      max-width: none; 
-      margin: 0;         
-      border-radius: 0;   
+      max-width: none;
+      margin: 0;
+      min-height: 640px;
+    
+      border-radius: 0;
+      overflow: visible;
+    
+      background: #081221;
+      box-shadow: var(--shadow-lg);
     }
 
     .hero-slider{
@@ -1144,18 +1151,6 @@ background:
       padding: 32px 0 10px; /* remove side padding */
     }
     
-    .hero-slider-wrap {
-      position: relative;
-      max-width: 14800px;
-      min-height: 640px;
-      margin: 0 auto;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #081221;
-      box-shadow: var(--shadow-lg);
-      isolation: isolate;
-    }
-    
     .hero-slider {
       position: absolute;
       inset: 0;
@@ -1202,9 +1197,9 @@ background:
     .hero-content {
       align-self: center;
       width: min(760px, 100%);
-      padding: 38px;
+      padding: 32px;
       border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 30px;
+      border-radius: 0px;
       background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.04));
       backdrop-filter: blur(14px);
       box-shadow: 0 25px 80px rgba(0,0,0,0.24);
@@ -2024,7 +2019,6 @@ background:
     
       .hero-slider-wrap {
         min-height: auto;
-        border-radius: 28px;
       }
     
       .hero-panel {
@@ -2117,7 +2111,6 @@ background:
       }
     
       .hero-slider-wrap {
-        border-radius: 22px;
       }
     
       .hero-content {
