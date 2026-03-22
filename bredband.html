@@ -64,7 +64,7 @@
       </div>
     </div>
   </section>
-<div id="filtersBar" class="bb-filters hidden">
+<div id="filtersBar" class="bb-filters">
 
   <div class="bb-filter-left">
 
@@ -98,7 +98,7 @@
   <!-- RESULTS -->
   <section class="bb-results-section">
     <div class="bb-results-shell">
-      <div id="offersTop" class="bb-results-top hidden">
+      <div id="offersTop" class="bb-results-top">
         <div>
           <p class="bb-results-label">Resultat</p>
           <h2>Tillgängliga bredband</h2>
@@ -218,11 +218,6 @@
     function renderOffers() {
       const address = els.addressInput.value.trim();
 
-      if (!address) {
-        els.searchMsg.textContent = "Ange en giltig adress för att söka.";
-        els.searchMsg.className = "bb-search-msg error";
-        return;
-      }
 
       if (!bredbandPlans.length) {
         els.searchMsg.textContent = "Kunde inte ladda bredbandsdata.";
@@ -267,7 +262,7 @@ if (sort === "value") {
         els.searchMsg.textContent = "Vi hittade inga bredband på den adressen.";
         els.searchMsg.className = "bb-search-msg error";
         els.offers.innerHTML = "";
-        els.offersTop.classList.add("hidden");
+        els.offersTop.classList.remove("hidden");
         return;
       }
 
@@ -277,7 +272,7 @@ if (sort === "value") {
       const recommended = getRecommendedPlan(offers);
       els.resultsCount.textContent = `${offers.length} erbjudanden`;
       els.offersTop.classList.remove("hidden");
-      document.getElementById("filtersBar").classList.remove("hidden");
+document.getElementById("filtersBar").classList.remove("hidden");
 
       els.offers.innerHTML = offers.map(plan => {
         const reward = calculateReward(plan.price);
@@ -349,9 +344,7 @@ if (sort === "value") {
       }).join("");
 
       restoreSelection();
-      setTimeout(() => {
-        document.getElementById("offersTop")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 120);
+
     }
 
     function selectPlanById(planId) {
@@ -425,10 +418,8 @@ if (sort === "value") {
         .then(data => {
           bredbandPlans = data;
 
-          if (location.hash === "#offers") {
-            els.addressInput.value = "Stockholm";
-            renderOffers();
-          }
+            els.addressInput.value = ""; // or any default
+  renderOffers();
         })
         .catch(err => {
           console.error("Kunde inte ladda 5Gbredband.json", err);
