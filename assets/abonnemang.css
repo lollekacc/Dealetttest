@@ -623,11 +623,17 @@ background:
       box-shadow:0 12px 24px rgba(12,74,60,0.08);
     }
 
-    .operator-btn img{
-      max-height:32px;
-      width:auto;
-      object-fit:contain;
-    }
+.operator-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.operator-btn img{
+  width:50%;
+  height:80%;
+  object-fit:contain;
+}
 
     /* RESULT AREAS */
     .result-shell{
