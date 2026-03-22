@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./assets/bredband.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<link rel="stylesheet" href="./assets/jamfor.css" />
 </head>
 
 <body class="min-h-screen font-[Inter] bg-[#f6f8fb] text-slate-900">
@@ -16,6 +19,7 @@
 
   <!-- HERO -->
   <section class="bb-hero">
+    
     <img
       src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=2070&auto=format&fit=crop"
       alt="Bredband"
@@ -30,7 +34,9 @@
         <p>
           Jämför hastighet, pris, bindningstid och eventuella TV-paket på ett ställe.
         </p>
-
+        <button id="openCoverageModal" class="bb-search-btn">
+  Visa täckning
+</button>
         <div class="bb-trust-row">
           <div class="bb-trust-pill"><i class="fa-solid fa-wifi"></i><span>Fiber & 5G</span></div>
           <div class="bb-trust-pill"><i class="fa-solid fa-bolt"></i><span>Snabb jämförelse</span></div>
@@ -549,5 +555,330 @@ document.getElementById("filtersBar").classList.remove("hidden");
     closeBtn?.addEventListener("click", closeCart);
   });
   </script>
+  <div id="coverageModal" class="fixed inset-0 z-[9999] hidden">
+  <div id="coverageOverlay" class="absolute inset-0 bg-black/50"></div>
+
+  <div class="absolute inset-0 flex items-center justify-center p-6">
+    <div class="w-full max-w-[1400px] h-[85vh] bg-white rounded-2xl overflow-hidden relative">
+
+      <!-- CLOSE -->
+      <button id="closeCoverageModal"
+        class="absolute top-4 right-4 z-10 bg-white/90 px-3 py-1 rounded-lg shadow">
+        ✕
+      </button>
+
+      <!-- YOUR CODE -->
+      <div class="h-full overflow-auto">
+  <!-- MAP SECTION -->
+<section class="coverage-main py-16" id="coverageApp">
+  <div class="content-wrapper">
+    <section class="coverage-shell">
+
+      <!-- TOPBAR -->
+      <div class="coverage-topbar">
+        <div>
+          <p class="coverage-topbar__eyebrow">Täckningskarta</p>
+          <h2>Välj operatör och utforska kartan</h2>
+        </div>
+
+        <div class="coverage-topbar__right">
+          <button id="resetViewBtn" class="coverage-btn coverage-btn--soft" type="button">
+            Återställ vy
+          </button>
+          <button id="clearLayerBtn" class="coverage-btn coverage-btn--soft" type="button">
+            Ta bort lager
+          </button>
+        </div>
+      </div>
+
+      <div class="coverage-grid">
+
+        <!-- SIDEBAR -->
+        <aside class="coverage-sidebar">
+
+          <section class="coverage-card coverage-card--sidebar">
+            <div class="coverage-card__head">
+              <div>
+                <p class="coverage-section-label">Operatörer</p>
+                <h3>Välj nät</h3>
+              </div>
+            </div>
+
+            <div class="operator-list">
+              <button class="operator-card" data-operator="telia" type="button">
+                <div class="operator-card__logo">
+                  <img src="images/telia.png" alt="Telia">
+                </div>
+                <div class="operator-card__text"><strong>Telia</strong></div>
+              </button>
+
+              <button class="operator-card" data-operator="tele2" type="button">
+                <div class="operator-card__logo">
+                  <img src="images/tele2.jpg" alt="Tele2">
+                </div>
+                <div class="operator-card__text"><strong>Tele2</strong></div>
+              </button>
+
+              <button class="operator-card" data-operator="telenor" type="button">
+                <div class="operator-card__logo">
+                  <img src="images/telenor.jpg" alt="Telenor">
+                </div>
+                <div class="operator-card__text"><strong>Telenor</strong></div>
+              </button>
+
+              <button class="operator-card" data-operator="tre" type="button">
+                <div class="operator-card__logo">
+                  <img src="images/tre.jpg" alt="Tre">
+                </div>
+                <div class="operator-card__text"><strong>Tre</strong></div>
+              </button>
+
+              <button class="operator-card" data-operator="halebop" type="button">
+                <div class="operator-card__logo">
+                  <img src="images/halebop.webp" alt="Halebop">
+                </div>
+                <div class="operator-card__text"><strong>Halebop</strong></div>
+              </button>
+            </div>
+          </section>
+
+
+        </aside>
+
+        <!-- MAP AREA -->
+        <section class="coverage-map-area">
+
+          <div class="coverage-map-card">
+
+            <!-- MAP UI -->
+            <div class="map-ui">
+
+              <div class="map-search">
+                <input id="mapSearchInput" type="text" placeholder="Sök adress eller stad..." />
+                <button id="mapSearchBtn" type="button">🔍</button>
+              </div>
+
+              <div class="map-zoom">
+                <button id="zoomInBtn" type="button">+</button>
+                <button id="zoomOutBtn" type="button">−</button>
+              </div>
+
+            </div>
+
+            <!-- MAP -->
+            <div id="map" class="coverage-map"></div>
+
+          </div>
+
+          <!-- LEGEND -->
+          <div class="coverage-legend">
+            <div class="coverage-legend__item">
+              <span class="legend-swatch legend-swatch--base"></span>
+              <span>Bakgrundskarta</span>
+            </div>
+            <div class="coverage-legend__item">
+              <span class="legend-swatch legend-swatch--overlay"></span>
+              <span>Aktivt täckningslager</span>
+            </div>
+            <div class="coverage-legend__item">
+              <span class="legend-swatch legend-swatch--focus"></span>
+              <span>Vald operatör</span>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+    </section>
+  </div>
+</section>
+      </div>
+
+    </div>
+  </div>
+</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+  if (!document.getElementById("map")) return;
+
+  const SWEDEN_BOUNDS = [
+    [55.0, 10.0],
+    [69.5, 24.5]
+  ];
+
+  window.map = L.map("map", {
+    zoomControl: false,
+    attributionControl: false,
+    maxBounds: SWEDEN_BOUNDS,
+    maxBoundsViscosity: 1.0,
+    minZoom: 5
+  }).setView([62.0, 15.0], 5);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 18
+  }).addTo(map);
+
+  let searchMarker = null;
+
+  async function searchAddress(query) {
+    if (!query) return;
+
+    const res = await fetch(
+      "https://nominatim.openstreetmap.org/search?format=json&q=" +
+      encodeURIComponent(query)
+    );
+
+    const data = await res.json();
+    if (!data.length) return;
+
+    const lat = +data[0].lat;
+    const lon = +data[0].lon;
+
+    map.setView([lat, lon], 14);
+
+    if (searchMarker) map.removeLayer(searchMarker);
+    searchMarker = L.marker([lat, lon]).addTo(map);
+  }
+
+  document.getElementById("mapSearchBtn")?.addEventListener("click", () => {
+    searchAddress(document.getElementById("mapSearchInput").value.trim());
+  });
+
+  document.getElementById("mapSearchInput")?.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      searchAddress(e.target.value.trim());
+    }
+  });
+
+  document.getElementById("zoomInBtn")?.onclick = () => map.zoomIn();
+  document.getElementById("zoomOutBtn")?.onclick = () => map.zoomOut();
+
+  document.getElementById("resetViewBtn")?.onclick = () => {
+    map.setView([62.0, 15.0], 5);
+  };
+
+  document.getElementById("clearLayerBtn")?.onclick = () => {
+    if (searchMarker) {
+      map.removeLayer(searchMarker);
+      searchMarker = null;
+    }
+  };
+
+  setTimeout(() => map.invalidateSize(), 200);
+});
+  </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("coverageModal");
+  const openBtn = document.getElementById("openCoverageModal");
+  const closeBtn = document.getElementById("closeCoverageModal");
+  const overlay = document.getElementById("coverageOverlay");
+
+  if (!modal) return;
+
+openBtn?.addEventListener("click", () => {
+  modal.classList.remove("hidden");
+  document.body.classList.add("overflow-hidden");
+
+  setTimeout(() => {
+    if (window.map) window.map.invalidateSize();
+  }, 200);
+});
+
+  function closeModal() {
+    modal.classList.add("hidden");
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  closeBtn?.addEventListener("click", closeModal);
+  overlay?.addEventListener("click", closeModal);
+});
+</script>
+  <style>
+    #map,
+    .coverage-map {
+      height: 520px;
+      min-height: 520px;
+      width: 100%;
+    }
+
+    .coverage-map-card {
+      position: relative;
+    }
+
+    .map-ui {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    .map-search {
+      display: flex;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      pointer-events: all;
+    }
+
+    .map-search input {
+      border: none;
+      outline: none;
+      padding: 10px 14px;
+      width: 240px;
+      font-size: 14px;
+    }
+
+    .map-search button {
+      background: #0f766e;
+      color: white;
+      border: none;
+      padding: 0 14px;
+      cursor: pointer;
+    }
+
+    .map-zoom {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: all;
+    }
+
+    .map-zoom button {
+      width: 42px;
+      height: 42px;
+      border: none;
+      background: white;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 640px) {
+      #map,
+      .coverage-map {
+        height: 420px;
+        min-height: 420px;
+      }
+
+      .map-ui {
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        gap: 12px;
+      }
+
+      .map-search input {
+        width: 170px;
+      }
+    }
+  </style>
 </body>
 </html>
