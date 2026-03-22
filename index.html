@@ -713,172 +713,239 @@
   <script src="assets/cart.js"></script>
 
   <script>
-    function openCart() {
-      document.getElementById("cartDrawer")?.classList.remove("hidden");
+    const DEFAULT_VIEW = {
+      center: [62.0, 15.0],
+      zoom: 5
+    };
+    const SWEDEN_BOUNDS = [
+  [55.0, 10.0],  // southwest
+  [69.5, 24.5]   // northeast
+];
+const map = L.map("map", {
+  zoomControl: false,
+  attributionControl: false,
+  maxBounds: SWEDEN_BOUNDS,
+  maxBoundsViscosity: 1.0, // strong lock
+  minZoom: 4               // max zoom OUT limit
+}).setView([62.0, 15.0], 5);
+map.on("drag", () => {
+  map.panInsideBounds(SWEDEN_BOUNDS, { animate: false });
+});
+
+    let activeOverlay = null;
+    let activeOperatorKey = null;
+
+    const operatorMeta = {
+      telia: {
+        label: "Telia",
+        theme: "#6d28d9"
+      },
+      tele2: {
+        label: "Tele2",
+        theme: "#111827"
+      },
+      telenor: {
+        label: "Telenor",
+        theme: "#1d4ed8"
+      },
+      tre: {
+        label: "Tre",
+        theme: "#047857"
+      },
+      halebop: {
+        label: "Halebop",
+        theme: "#15803d"
+      }
+    };
+
+    const overlays = {
+      tele2: L.tileLayer(
+        "https://mim.tele2.com/MIMCore/api/Tile/GetOverlay?x={x}&y={y}&z={z}&viewType=1&serviceThresholdIds=14,15,16,18,35,36,37,39,56,57,58,60,69,80,82,90,101,103,111,122,124&countryCode=SWE&currentServiceLayerNo=100",
+        { opacity: 0.78 }
+      ),
+
+      telia: L.tileLayer.wms(
+        "https://coverage.ddc.teliasonera.net/coverageportal_se/map/tile",
+        {
+          format: "image/png",
+          transparent: true,
+          opacity: 0.78
+        }
+      ),
+
+      tre: L.tileLayer(
+        "https://coverage.tre.se/MIMCore/api/Tile/GetOverlay?locale=se&countryCode=swe&z={z}&x={x}&y={y}&viewType=1&serviceThresholdIds=14,35,56,15,36,57,17,38,59,13,34,55,64,85,106,67,88,109,65,86,107&currentServiceLayerNo=100",
+        { opacity: 0.78 }
+      ),
+
+      telenor: L.tileLayer.wms(
+        "https://mboss.telenor.se/coverageportal/map/tile",
+        {
+          services: "NR3500_DATASA,NR_DATANSA,LTE_DATA",
+          qualities: "1,2,3",
+          serviceGroup: "mobile_broadband",
+          format: "image/png",
+          transparent: true,
+          opacity: 0.78
+        }
+      ),
+
+      halebop: L.tileLayer.wms(
+        "https://coverage.ddc.teliasonera.net/coverageportal_se/map/tile",
+        {
+          format: "image/png",
+          transparent: true,
+          opacity: 0.78
+        }
+      )
+    };
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18
+    }).addTo(map);
+
+    const operatorButtons = document.querySelectorAll(".operator-card");
+    const activeOperatorLabel = document.getElementById("activeOperatorLabel");
+    const heroActiveOperator = document.getElementById("heroActiveOperator");
+    const mapToolbarLabel = document.getElementById("mapToolbarLabel");
+    const zoomLabel = document.getElementById("zoomLabel");
+    const coordsLabel = document.getElementById("coordsLabel");
+    const mapElement = document.getElementById("map");
+
+    function setActiveOperatorUI(key) {
+      operatorButtons.forEach(btn => {
+        btn.classList.toggle("is-active", btn.dataset.operator === key);
+      });
+
+      const label = key ? operatorMeta[key].label : "Ingen vald";
+
+      activeOperatorLabel.textContent = label;
+      heroActiveOperator.textContent = label;
+      mapToolbarLabel.textContent = key
+        ? operatorMeta[key].label + " aktiv"
+        : "Ingen operatör vald";
+
+      if (key) {
+        document.documentElement.style.setProperty("--coverage-accent", operatorMeta[key].theme);
+      } else {
+        document.documentElement.style.setProperty("--coverage-accent", "#0f766e");
+      }
     }
 
-    function closeCart() {
-      document.getElementById("cartDrawer")?.classList.add("hidden");
+    function clearActiveOverlay() {
+      if (activeOverlay) {
+        map.removeLayer(activeOverlay);
+        activeOverlay = null;
+      }
+      activeOperatorKey = null;
+      setActiveOperatorUI(null);
     }
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      const headerRes = await fetch("partials/header.html");
-      if (headerRes.ok) {
-        document.getElementById("header-placeholder").innerHTML = await headerRes.text();
+    function activateOperator(key) {
+      if (!overlays[key]) return;
+
+      if (activeOverlay) {
+        map.removeLayer(activeOverlay);
       }
 
-      const chatRes = await fetch("partials/chat.html");
-      if (chatRes.ok) {
-        document.body.insertAdjacentHTML("beforeend", await chatRes.text());
-      }
+      activeOverlay = overlays[key];
+      activeOverlay.addTo(map);
+      activeOperatorKey = key;
+      setActiveOperatorUI(key);
+    }
 
-      const footerRes = await fetch("partials/footer.html");
-      if (footerRes.ok) {
-        document.body.insertAdjacentHTML("beforeend", await footerRes.text());
-      }
+    operatorButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.operator;
 
-      const cartRes = await fetch("partials/cart.html");
-      if (cartRes.ok) {
-        document.body.insertAdjacentHTML("beforeend", await cartRes.text());
-
-        const close = document.getElementById("closeCart");
-        const overlay = document.getElementById("cartOverlay");
-
-        if (close) close.onclick = closeCart;
-        if (overlay) overlay.onclick = closeCart;
-      }
-
-      const chatRoot = document.getElementById("dealett-chat");
-      const openBtn = document.getElementById("open-chat");
-      const modal = document.getElementById("chat-modal");
-      const closeBtn = document.getElementById("close-chat");
-      const modalBody = document.getElementById("chat-modal-body");
-
-      if (openBtn && modal && closeBtn && chatRoot && modalBody) {
-        openBtn.onclick = () => {
-          window.chatInModal = true;
-          modal.classList.remove("hidden");
-          modal.classList.add("flex");
-          modalBody.appendChild(chatRoot);
-          document.getElementById("chat-panel")?.classList.remove("closed");
-        };
-
-        closeBtn.onclick = () => {
-          window.chatInModal = false;
-          modal.classList.add("hidden");
-          modal.classList.remove("flex");
-          document.body.appendChild(chatRoot);
-        };
-      }
-
-      const script = document.createElement("script");
-      script.src = "./assets/chat.js";
-      script.defer = true;
-      script.onload = () => {
-        if (typeof initHeroChatMovement === "function") {
-          initHeroChatMovement();
-        }
-      };
-      document.body.appendChild(script);
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const slider = document.getElementById("heroSlider");
-      if (!slider) return;
-
-      let currentSlide = 0;
-      const totalSlides = slider.children.length;
-      const AUTO_INTERVAL = 6000;
-
-      window.goToSlide = function (i) {
-        currentSlide = i;
-        slider.scrollTo({
-          left: slider.clientWidth * currentSlide,
-          behavior: "smooth"
-        });
-      };
-
-      function nextSlide() {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        window.goToSlide(currentSlide);
-      }
-
-      window.scrollHero = function (dir) {
-        currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
-        window.goToSlide(currentSlide);
-      };
-
-      setInterval(nextSlide, AUTO_INTERVAL);
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const mapEl = document.getElementById("map");
-      if (!mapEl || typeof L === "undefined") return;
-
-      const SWEDEN_BOUNDS = [
-        [55.0, 10.0],
-        [69.5, 24.5]
-      ];
-
-      const map = L.map("map", {
-        zoomControl: false,
-        attributionControl: false,
-        maxBounds: SWEDEN_BOUNDS,
-        maxBoundsViscosity: 1.0,
-        minZoom: 5
-      }).setView([62.0, 15.0], 5);
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 18
-      }).addTo(map);
-
-      let searchMarker = null;
-
-      async function searchAddress(query) {
-        if (!query) return;
-
-        const res = await fetch(
-          "https://nominatim.openstreetmap.org/search?format=json&q=" +
-          encodeURIComponent(query)
-        );
-
-        const data = await res.json();
-        if (!data.length) return;
-
-        const lat = parseFloat(data[0].lat);
-        const lon = parseFloat(data[0].lon);
-
-        map.setView([lat, lon], 14, { animate: true });
-
-        if (searchMarker) {
-          map.removeLayer(searchMarker);
+        if (activeOperatorKey === key) {
+          clearActiveOverlay();
+          return;
         }
 
-        searchMarker = L.marker([lat, lon]).addTo(map);
-      }
-
-      document.getElementById("mapSearchBtn")?.addEventListener("click", () => {
-        const value = document.getElementById("mapSearchInput")?.value.trim();
-        searchAddress(value);
+        activateOperator(key);
       });
-
-      document.getElementById("mapSearchInput")?.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          searchAddress(e.target.value.trim());
-        }
-      });
-
-      document.getElementById("zoomInBtn")?.addEventListener("click", () => map.zoomIn());
-      document.getElementById("zoomOutBtn")?.addEventListener("click", () => map.zoomOut());
-
-      window.addEventListener("resize", () => {
-        map.invalidateSize();
-      });
-
-      setTimeout(() => {
-        map.invalidateSize();
-      }, 250);
     });
+
+    document.getElementById("resetViewBtn").addEventListener("click", () => {
+      map.setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom, {
+        animate: true
+      });
+    });
+
+    document.getElementById("clearLayerBtn").addEventListener("click", () => {
+      clearActiveOverlay();
+    });
+
+    document.getElementById("zoomInBtn").addEventListener("click", () => {
+      map.zoomIn();
+    });
+
+    document.getElementById("zoomOutBtn").addEventListener("click", () => {
+      map.zoomOut();
+    });
+
+    map.on("zoomend", () => {
+      zoomLabel.textContent = map.getZoom();
+    });
+
+    map.on("moveend", () => {
+      const center = map.getCenter();
+      coordsLabel.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
+    });
+
+    map.on("load", () => {
+      zoomLabel.textContent = map.getZoom();
+      const center = map.getCenter();
+      coordsLabel.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
+    });
+
+    setTimeout(() => {
+      map.invalidateSize();
+      zoomLabel.textContent = map.getZoom();
+      const center = map.getCenter();
+      coordsLabel.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
+    }, 250);
+
+    window.addEventListener("resize", () => {
+      map.invalidateSize();
+    });
+    let searchMarker = null;
+
+async function searchAddress(query) {
+
+  if (!query) return;
+
+  const url =
+    "https://nominatim.openstreetmap.org/search?format=json&q=" +
+    encodeURIComponent(query);
+
+  const res = await fetch(url);
+  const data = await res.json();
+
+  if (!data.length) return;
+
+  const lat = parseFloat(data[0].lat);
+  const lon = parseFloat(data[0].lon);
+
+  map.setView([lat, lon], 14, { animate: true });
+
+  if (searchMarker) map.removeLayer(searchMarker);
+
+  searchMarker = L.marker([lat, lon]).addTo(map);
+}
+const searchInput = document.getElementById("mapSearchInput");
+const searchBtn = document.getElementById("mapSearchBtn");
+
+searchBtn.addEventListener("click", () => {
+  searchAddress(searchInput.value.trim());
+});
+
+searchInput.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    searchAddress(searchInput.value.trim());
+  }
+});
   </script>
 
   <style>
@@ -966,75 +1033,7 @@
       }
     }
   </style>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-  if (!document.getElementById("map")) return;
 
-  const SWEDEN_BOUNDS = [
-    [55.0, 10.0],
-    [69.5, 24.5]
-  ];
 
-  const map = L.map("map", {
-    zoomControl: false,
-    attributionControl: false,
-    maxBounds: SWEDEN_BOUNDS,
-    maxBoundsViscosity: 1.0,
-    minZoom: 5
-  }).setView([62.0, 15.0], 5);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 18
-  }).addTo(map);
-
-  let searchMarker = null;
-
-  async function searchAddress(query) {
-    if (!query) return;
-
-    const res = await fetch(
-      "https://nominatim.openstreetmap.org/search?format=json&q=" +
-      encodeURIComponent(query)
-    );
-
-    const data = await res.json();
-    if (!data.length) return;
-
-    const lat = +data[0].lat;
-    const lon = +data[0].lon;
-
-    map.setView([lat, lon], 14);
-
-    if (searchMarker) map.removeLayer(searchMarker);
-    searchMarker = L.marker([lat, lon]).addTo(map);
-  }
-
-  document.getElementById("mapSearchBtn")?.addEventListener("click", () => {
-    searchAddress(document.getElementById("mapSearchInput").value.trim());
-  });
-
-  document.getElementById("mapSearchInput")?.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      searchAddress(e.target.value.trim());
-    }
-  });
-
-  document.getElementById("zoomInBtn")?.onclick = () => map.zoomIn();
-  document.getElementById("zoomOutBtn")?.onclick = () => map.zoomOut();
-
-  document.getElementById("resetViewBtn")?.onclick = () => {
-    map.setView([62.0, 15.0], 5);
-  };
-
-  document.getElementById("clearLayerBtn")?.onclick = () => {
-    if (searchMarker) {
-      map.removeLayer(searchMarker);
-      searchMarker = null;
-    }
-  };
-
-  setTimeout(() => map.invalidateSize(), 200);
-});
-  </script>
 </body>
 </html>
