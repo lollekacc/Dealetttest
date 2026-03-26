@@ -1,98 +1,35 @@
-<!-- DATA -->
-<script>
-  window.__PLANS__ = [];
-</script>
+<div id="dealett-chat" data-chat-root>
 
-<script type="module">
-  const res = await fetch("./data/plans.json");
-  window.__PLANS__ = await res.json();
-</script>
-
-<!-- LOGIC -->
-<script src="./assets/offers.js"></script>
-<script src="./assets/front.js"></script>
-
-<!-- STYLES -->
-<link rel="stylesheet" href="./assets/chat.css" />
-
-<div id="dealett-chat" class="dealett-chat" data-chat-root>
-  <button id="chat-toggle" class="chat-toggle" type="button" aria-label="Öppna Dealett-AI">
-    <span class="chat-toggle__icon">✦</span>
-    <span class="chat-toggle__text">Dealett-AI</span>
+  <button id="chat-toggle">
+    <span>Dealett-AI</span>
   </button>
 
-  <section id="chat-panel" class="chat-panel closed" aria-label="Dealett-AI chatt">
-    <div class="chat-panel__glow"></div>
+  <div id="chat-panel" class="chat-panel closed">
 
-    <header class="chat-header">
-      <div class="chat-header__left">
-        <div class="chat-avatar">D</div>
-        <div class="chat-header__meta">
-          <strong>Dealett-AI</strong>
-          <span>Jämför abonnemang smartare</span>
-        </div>
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <strong>Dealett-AI</strong>
       </div>
 
-      <div class="chat-header__right">
-        <button
-          id="chat-reset"
-          class="chat-action chat-action--soft"
-          type="button"
-        >
+      <div class="chat-header-right">
+        <button id="chat-reset" class="chat-reset-btn-header" type="button">
           Starta fräscht
         </button>
-
-        <button
-          id="chat-close"
-          class="chat-action chat-action--icon"
-          type="button"
-          aria-label="Stäng chatt"
-        >
-          ✕
-        </button>
-      </div>
-    </header>
-
-    <div class="chat-body">
-      <div class="chat-body__topfade"></div>
-
-      <div id="chat-messages" class="chat-messages">
-        <div class="chat-welcome">
-          <div class="chat-welcome__badge">AI-assistent</div>
-          <h3>Hej, vad vill du jämföra idag?</h3>
-          <p>
-            Jag kan hjälpa dig hitta bättre mobilabonnemang, bredband och erbjudanden.
-          </p>
-
-          <div class="chat-suggestions">
-            <button class="chat-suggestion" type="button">Billigaste mobilabonnemang</button>
-            <button class="chat-suggestion" type="button">Bästa familjeabonnemang</button>
-            <button class="chat-suggestion" type="button">Jämför bredband</button>
-          </div>
-        </div>
+        <button id="chat-close" aria-label="Stäng chatt">✕</button>
       </div>
     </div>
 
-    <form id="chat-form" class="chat-form">
-      <div class="chat-input-wrap">
-        <input
-          id="chat-input"
-          class="chat-input"
-          type="text"
-          inputmode="text"
-          enterkeyhint="send"
-          placeholder="Skriv vad du behöver hjälp med här..."
-          autocomplete="off"
-        />
+    <div id="chat-messages"></div>
 
-        <button class="chat-send" type="submit" aria-label="Skicka">
-          <span>Skicka</span>
-        </button>
-      </div>
-
-      <p class="chat-footnote">
-        Dealett-AI ger vägledning och jämförelser baserat på tillgänglig data.
-      </p>
+    <form id="chat-form">
+      <input
+        id="chat-input"
+        type="text"
+        placeholder="Skriv vad du behöver hjälp med här..."
+        autocomplete="off"
+      />
+      <button type="submit">Skicka</button>
     </form>
-  </section>
+
+  </div>
 </div>

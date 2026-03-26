@@ -1,258 +1,180 @@
+// assets/quiz.js (renamed from indexbehovsanalys.js)
+
 document.addEventListener("DOMContentLoaded", () => {
-  const intro = document.getElementById("quiz-intro");
-  const wrapper = document.getElementById("quiz-steps-wrapper");
-  const startBtn = document.getElementById("quiz-start");
-  const backBtn = document.getElementById("quiz-back");
-  const stepCurrentEl = document.getElementById("quiz-step-current");
-  const stepTotalEl = document.getElementById("quiz-step-total");
-  const stepLabel = document.getElementById("quiz-step-label");
-  const progress = document.getElementById("quiz-progress");
+  const Quiz = createQuiz();
+  Quiz.init();
+});
 
-  const steps = [
-    document.getElementById("step0"),
-    document.getElementById("step1"),
-    document.getElementById("step2"),
-    document.getElementById("step3"),
-    document.getElementById("step4"),
-    document.getElementById("step5"),
-  ].filter(Boolean);
-
-  const TOTAL_QUESTIONS = 5; // step0..step4 are questions, step5 is result
-
-  let currentStep = 0;
-  let firstRender = true;
-
-  window.abonState = window.abonState || {
+function createQuiz() {
+  const state = {
+    currentStep: 0,
     persons: null,
-    data: null,
-    operator: null,
-    operators: []
+    operators: [],
+    data: null
   };
 
-  const state = window.abonState;
-  const operatorContainer = document.getElementById("operator-per-person");
-  const operatorTpl = document.getElementById("operator-picker-template");
+  const DOM = {
+    intro: document.getElementById("quiz-intro"),
+    wrapper: document.getElementById("quiz-steps-wrapper"),
+    slot: document.getElementById("quiz-slot"),
+    startBtn: document.getElementById("quiz-start"),
+    backBtn: document.getElementById("quiz-back"),
+    progress: document.getElementById("quiz-progress"),
+    stepCurrent: document.getElementById("quiz-step-current"),
+    stepTotal: document.getElementById("quiz-step-total"),
+    operatorContainer: document.getElementById("operator-per-person"),
+    operatorTpl: document.getElementById("operator-picker-template")
+  };
 
-  if (stepTotalEl) stepTotalEl.textContent = String(TOTAL_QUESTIONS);
+  const steps = [...document.querySelectorAll(".quiz-step-card")];
+  const TOTAL = steps.length - 1;
 
-  function renderOperatorPickers(persons) {
-    if (!operatorContainer || !operatorTpl) return;
+  function init() {
+    DOM.stepTotal.textContent = TOTAL;
+    bindEvents();
+  }
 
-    operatorContainer.innerHTML = "";
-    state.operators = Array.from({ length: persons }, () => null);
+  function bindEvents() {
+    DOM.startBtn?.addEventListener("click", start);
+    DOM.backBtn?.addEventListener("click", goBack);
 
-    for (let i = 0; i < persons; i++) {
-      const node = operatorTpl.content.cloneNode(true);
+    DOM.wrapper?.addEventListener("click", handleClick);
+  }
 
-      const personNumberEl = node.querySelector("[data-person-number]");
-      if (personNumberEl) personNumberEl.textContent = i + 1;
+  function handleClick(e) {
+    const btn = e.target.closest(".quiz-option");
+    if (!btn) return;
 
-      node.querySelectorAll(".quiz-option[data-operator]").forEach(btn => {
+    const stepId = steps[state.currentStep]?.id;
+
+    if (stepId === "step0") {
+      handlePersons(btn);
+      return;
+    }
+
+    if (stepId === "step1") {
+      handleOperator(btn);
+      return;
+    }
+
+    if (stepId === "step2") {
+      state.data = btn.dataset.data;
+      next();
+      return;
+    }
+
+    next();
+  }
+
+  function handlePersons(btn) {
+    if (!btn.dataset.persons) return;
+
+    state.persons = Number(btn.dataset.persons);
+    state.operators = Array(state.persons).fill(null);
+
+    renderOperators();
+    next();
+  }
+
+  function handleOperator(btn) {
+    if (!btn.dataset.operator) return;
+
+    const index = Number(btn.dataset.personIndex);
+    if (Number.isNaN(index)) return;
+
+    state.operators[index] = btn.dataset.operator;
+
+    highlightSelection(btn);
+
+    if (state.operators.every(Boolean)) {
+      next();
+    }
+  }
+
+  function highlightSelection(btn) {
+    const group = btn.closest(".rounded-xl");
+    group?.querySelectorAll(".quiz-option")
+      .forEach(b => b.classList.remove("ring-2","ring-emerald-500"));
+
+    btn.classList.add("ring-2","ring-emerald-500");
+  }
+
+  function renderOperators() {
+    if (!DOM.operatorContainer || !DOM.operatorTpl) return;
+
+    DOM.operatorContainer.innerHTML = "";
+
+    state.operators.forEach((_, i) => {
+      const node = DOM.operatorTpl.content.cloneNode(true);
+      node.querySelector("[data-person-number]").textContent = i + 1;
+
+      node.querySelectorAll("[data-operator]").forEach(btn => {
         btn.dataset.personIndex = i;
       });
 
-      operatorContainer.appendChild(node);
-    }
-  }
-
-  function updateProgress() {
-    const isResultStep = currentStep >= TOTAL_QUESTIONS;
-    const visibleStep = isResultStep ? TOTAL_QUESTIONS : currentStep + 1;
-
-    document.querySelectorAll(".quiz-step-current")
-  .forEach(el => el.textContent = visibleStep);
-
-document.querySelectorAll(".quiz-step-total")
-  .forEach(el => el.textContent = TOTAL_QUESTIONS);
-
-    if (stepLabel) {
-      if (isResultStep) {
-        stepLabel.textContent = "Resultat";
-      } else {
-        stepLabel.innerHTML = `Steg <span id="quiz-step-current">${visibleStep}</span> / <span id="quiz-step-total">${TOTAL_QUESTIONS}</span>`;
-      }
-    }
-
-const percent = (Math.min(currentStep, TOTAL_QUESTIONS) / TOTAL_QUESTIONS) * 100;
-
-document.querySelectorAll(".quiz-progress-inline")
-  .forEach(el => el.style.width = percent + "%");
-
-if (progress) {
-  progress.style.width = percent + "%"; // keeps global working if used
-}
-
-    if (backBtn) {
-      backBtn.disabled = currentStep === 0;
-    }
-
-if (typeof updateInlineStepUI === "function") {
-  updateInlineStepUI(visibleStep, TOTAL_QUESTIONS);
-}
-  }
-
-  function renderStack() {
-    const STACK_GAP = 48;
-
-    steps.forEach((step, index) => {
-      if (!step) return;
-
-      if (firstRender) {
-        step.style.transition = "none";
-      }
-
-      step.className = "quiz-step-card";
-
-      const offset = Math.min(index, currentStep) * STACK_GAP;
-      step.style.setProperty("--card-top", `${offset}px`);
-
-      if (index < currentStep) {
-        step.classList.add("stacked-card");
-        step.style.zIndex = 100 + index;
-        step.dataset.stepIndex = index;
-        step.style.pointerEvents = "auto";
-      } else if (index === currentStep) {
-        step.classList.add("active-step");
-        step.style.zIndex = 200;
-        step.style.pointerEvents = "auto";
-        step.dataset.stepIndex = index;
-      } else {
-        step.classList.add("upcoming-card");
-        step.style.zIndex = 50 - index;
-        step.style.pointerEvents = "none";
-        step.dataset.stepIndex = index;
-      }
-    });
-
-    updateProgress();
-
-    if (firstRender) {
-      requestAnimationFrame(() => {
-        steps.forEach(step => {
-          if (step) step.style.transition = "";
-        });
-      });
-      firstRender = false;
-    }
-  }
-
-  function goToStep(nextIndex) {
-    if (nextIndex < 0 || nextIndex >= steps.length) return;
-
-    currentStep = nextIndex;
-    renderStack();
-
-    if (nextIndex === 5) {
-      loadOffersScript().then(() => {
-        if (typeof window.filterOffers === "function") {
-          window.filterOffers();
-        }
-      });
-    }
-  }
-
-  function handleOptionClick(option) {
-    const activeStep = steps[currentStep];
-    if (!activeStep) return;
-
-    // STEP 0: persons
-    if (activeStep.id === "step0" && option.dataset.persons) {
-      state.persons = Number(option.dataset.persons);
-      window.abonState.persons = state.persons;
-      renderOperatorPickers(state.persons);
-      goToStep(currentStep + 1);
-      return;
-    }
-
-    // STEP 1: operator per person
-    if (activeStep.id === "step1" && option.dataset.operator) {
-      const idx = Number(option.dataset.personIndex);
-
-      if (!Number.isNaN(idx)) {
-        state.operators[idx] = option.dataset.operator;
-        window.abonState.operator = option.dataset.operator;
-
-        const group = option.closest(".rounded-xl");
-        group?.querySelectorAll(".quiz-option[data-operator]").forEach(btn => {
-          btn.classList.remove("ring-2", "ring-emerald-500");
-        });
-        option.classList.add("ring-2", "ring-emerald-500");
-      }
-
-      const done = state.operators.length > 0 && state.operators.every(Boolean);
-      if (done) goToStep(currentStep + 1);
-      return;
-    }
-
-    // STEP 2: data
-    if (activeStep.id === "step2" && option.dataset.data) {
-      state.data = option.dataset.data;
-      window.abonState.data = option.dataset.data;
-      goToStep(currentStep + 1);
-      return;
-    }
-
-    // Default auto-advance for remaining quiz options
-    if (currentStep < steps.length - 1) {
-      goToStep(currentStep + 1);
-    }
-  }
-
-  if (startBtn && intro && wrapper) {
-    startBtn.addEventListener("click", () => {
-      intro.classList.add("hidden");
-      wrapper.classList.remove("hidden");
-      requestAnimationFrame(() => wrapper.classList.remove("opacity-0"));
-      goToStep(0);
+      DOM.operatorContainer.appendChild(node);
     });
   }
 
-  document.addEventListener("click", (e) => {
-    const oldCard = e.target.closest(".stacked-card");
-    if (oldCard && oldCard.dataset.stepIndex) {
-      goToStep(Number(oldCard.dataset.stepIndex));
-      return;
-    }
+  function start() {
+    DOM.intro?.classList.add("hidden");
+    DOM.wrapper?.classList.remove("hidden");
 
-    const option = e.target.closest(".quiz-option");
-    if (!option) return;
-
-    handleOptionClick(option);
-  });
-
-  if (backBtn) {
-    backBtn.addEventListener("click", () => {
-      if (currentStep > 0) goToStep(currentStep - 1);
-    });
+    showStep(0);
   }
 
-  renderStack();
-  document.querySelectorAll(".quiz-back-inline").forEach(btn => {
-  btn.addEventListener("click", () => {
-    if (currentStep > 0) {
-      goToStep(currentStep - 1);
+  function next() {
+    if (state.currentStep < TOTAL) {
+      showStep(state.currentStep + 1);
+    } else {
+      onComplete();
     }
-  });
-});
-});
+  }
 
-function loadOffersScript() {
-  return new Promise((resolve) => {
-    if (window.filterOffers) {
-      resolve();
-      return;
+  function goBack() {
+    if (state.currentStep > 0) {
+      showStep(state.currentStep - 1);
+    }
+  }
+
+  function showStep(index) {
+    steps[state.currentStep]?.classList.add("hidden");
+    steps[index]?.classList.remove("hidden");
+
+    state.currentStep = index;
+    updateUI();
+
+    if (index === TOTAL) {
+      onComplete();
+    }
+  }
+
+  function updateUI() {
+    const step = state.currentStep + 1;
+
+    DOM.stepCurrent.textContent = step;
+    DOM.progress.style.width = `${(step / TOTAL) * 100}%`;
+
+    if (DOM.backBtn) {
+      DOM.backBtn.disabled = state.currentStep === 0;
+    }
+  }
+
+  function onComplete() {
+    console.log("Quiz result:", state);
+
+    window.abonState = state; // controlled export
+
+    loadOffers();
+  }
+
+  async function loadOffers() {
+    if (!window.filterOffers) {
+      await import("./offers.js");
     }
 
-    const existing = document.getElementById("offers-script");
-    if (existing) {
-      existing.addEventListener("load", resolve, { once: true });
-      return;
-    }
+    window.filterOffers?.();
+  }
 
-    const script = document.createElement("script");
-    script.id = "offers-script";
-    script.src = "./assets/offers.js";
-    script.onload = resolve;
-    document.body.appendChild(script);
-  });
+  return { init };
 }
