@@ -1,251 +1,182 @@
-console.log("chat.js EXECUTED");
-const chatMode = document.body.dataset.chat || "default";
-document.body.classList.add(`chat-${chatMode}`);
-const toggle = document.getElementById("chat-toggle");
-const panel = document.getElementById("chat-panel");
-const close = document.getElementById("chat-close");
-const form = document.getElementById("chat-form");
-const input = document.getElementById("chat-input");
-const messages = document.getElementById("chat-messages");
-const CHAT_OPEN_KEY = "chat_open";
-const CHAT_HISTORY_KEY = "chat_history";
-const isIndexPage =
-  window.location.pathname.endsWith("index.html") ||
-  window.location.pathname === "/" ||
-  window.location.pathname === "";
-const quizState = {
-  persons: null,
-  data: null
-};
-if (!localStorage.getItem("chat_sid")) {
-  localStorage.setItem(
-  "chat_sid",
-  (window.crypto && crypto.randomUUID)
-    ? crypto.randomUUID()
-    : Math.random().toString(36).slice(2)
-);
+// assets/chat.js
 
-}
-async function waitForPlans() {
-  while (!window.__PLANS__ || !window.__PLANS__.length) {
-    await new Promise(r => setTimeout(r, 50));
-  }
-}
+export function initChat({ plans }) {
+  console.log("Chat initialized");
 
-function restoreMessages() {
-  const savedMessages =
-    JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || "[]");
+  const root = document.querySelector("[data-chat-root]");
+  if (!root) return;
 
-  messages.innerHTML = "";
+  const toggle = root.querySelector("#chat-toggle");
+  const panel = root.querySelector("#chat-panel");
+  const close = root.querySelector("#chat-close");
+  const form = root.querySelector("#chat-form");
+  const input = root.querySelector("#chat-input");
+  const messages = root.querySelector("#chat-messages");
+  const resetBtn = root.querySelector("#chat-reset");
 
-  savedMessages.forEach(m => {
-    const div = document.createElement("div");
-    div.className = `chat-msg ${m.type}`;
-    div.innerHTML = m.text;
-    messages.appendChild(div);
-  });
+  const CHAT_HISTORY_KEY = "chat_history";
+  const CHAT_OPEN_KEY = "chat_open";
 
-  messages.scrollTop = messages.scrollHeight;
-}
-const resetBtn = document.getElementById("chat-reset");
-if (resetBtn) {
-  resetBtn.onclick = () => {
-  messages.innerHTML = "";
-  localStorage.removeItem(CHAT_HISTORY_KEY);
+  const state = {
+    quiz: { persons: null, data: null }
+  };
 
-  const sid = (window.crypto && crypto.randomUUID)
-    ? crypto.randomUUID()
-    : Math.random().toString(36).slice(2);
-  localStorage.setItem("chat_sid", sid);
+  ensureSession();
 
-  quizState.persons = null;
-  quizState.data = null;
+  restoreMessages();
 
-  addMessage("Hej! Vad kan jag hjälpa dig med?", "ai");
-};
+  bindUI();
+  bindForm();
+  bindQuizButtons();
 
-}
+  // ---------------------
 
-if (!toggle || !panel || !close || !form || !input || !messages) {
-  console.error("Chat elements missing");
-} else {
-  
-if (!isIndexPage) {
-  // Normal pages
-  if (localStorage.getItem(CHAT_OPEN_KEY) === "true") {
-    panel.classList.remove("closed");
-  } else {
-    panel.classList.add("closed");
-  }
-} else {
-  const saved = localStorage.getItem(CHAT_OPEN_KEY);
-  if (saved === "false") {
-    panel.classList.add("closed");
-  } else {
-    panel.classList.remove("closed");
-  }
-}
-
-toggle.onclick = () => {
-  panel.classList.toggle("closed");
-
-  if (!isIndexPage) {
-    localStorage.setItem(
-      CHAT_OPEN_KEY,
-      !panel.classList.contains("closed")
-    );
-  }
-};
-let lastScrollY = window.scrollY;
-
-close.onclick = () => {
-  panel.classList.add("closed");
-
-  if (!isIndexPage) {
-    localStorage.setItem(CHAT_OPEN_KEY, "false");
-  }
-};
-restoreMessages();
-
-
-function addMessage(text, type) {
-  const div = document.createElement("div");
-  div.className = `chat-msg ${type}`;
-  div.innerHTML = text;  
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-
-  const history =
-    JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || "[]");
-
-  history.push({ text, type });
-  if (history.length > 100) history.shift();
-  localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history));
-  
-}
-async function renderOfferInChat(payload) {
-  await waitForPlans();
-
-  const plan = window.__PLANS__?.find(p => p.id === payload.planId);
-
-  if (!plan || !window.renderSingleOfferCard) {
-    addMessage("Kunde inte visa erbjudandet som kort. Öppnar sidan istället.", "ai");
-    addMessage(
-      `<button class="chat-plan-btn" onclick="window.location.href='/abonnemang.html?op=${encodeURIComponent(payload.operator)}'">
-        Visa erbjudanden
-      </button>`,
-      "ai"
-    );
-    return;
+  function ensureSession() {
+    if (!localStorage.getItem("chat_sid")) {
+      localStorage.setItem(
+        "chat_sid",
+        crypto.randomUUID?.() || Math.random().toString(36).slice(2)
+      );
+    }
   }
 
-  const wrapper = document.createElement("div");
-  wrapper.className = "chat-msg ai";
-  wrapper.style.maxWidth = "100%";
-  wrapper.style.width = "100%";
+  function bindUI() {
+    toggle?.addEventListener("click", () => {
+      panel.classList.toggle("closed");
+      localStorage.setItem(
+        CHAT_OPEN_KEY,
+        !panel.classList.contains("closed")
+      );
+    });
 
-  const card = window.renderSingleOfferCard(plan, payload);
+    close?.addEventListener("click", () => {
+      panel.classList.add("closed");
+      localStorage.setItem(CHAT_OPEN_KEY, "false");
+    });
 
-  wrapper.appendChild(card);
-  messages.appendChild(wrapper);
-  messages.scrollTop = messages.scrollHeight;
-
-  const history =
-    JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || "[]");
-  history.push({ text: wrapper.innerHTML, type: "ai" });
-  localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history));
-}
-
-document.addEventListener("click", e => {
-  const btn = e.target.closest(".chat-quiz-btn");
-  if (!btn) return;
-
-  if (btn.dataset.persons) {
-    quizState.persons = btn.dataset.persons;
+    resetBtn?.addEventListener("click", resetChat);
   }
 
-  if (btn.dataset.data) {
-    quizState.data = btn.dataset.data;
+  function resetChat() {
+    messages.innerHTML = "";
+    localStorage.removeItem(CHAT_HISTORY_KEY);
+    ensureSession();
+    addMessage("Hej! Vad kan jag hjälpa dig med?", "ai");
   }
 
-  // visual feedback (optional but recommended)
-  btn.classList.add("selected");
+  function bindForm() {
+    form?.addEventListener("submit", async e => {
+      e.preventDefault();
 
-  // only send when BOTH answers exist
-  if (quizState.persons && quizState.data) {
-    const msg = `persons:${quizState.persons} data:${quizState.data}`;
+      const text = input.value.trim();
+      if (!text) return;
 
-    addMessage(
-      `${quizState.persons} personer, ${quizState.data} surf`,
-      "user"
-    );
+      addMessage(text, "user");
+      input.value = "";
 
+      const data = await sendMessage(text);
+
+      handleResponse(data);
+    });
+  }
+
+  function bindQuizButtons() {
+    document.addEventListener("click", async e => {
+      const btn = e.target.closest(".chat-quiz-btn");
+      if (!btn) return;
+
+      if (btn.dataset.persons) state.quiz.persons = btn.dataset.persons;
+      if (btn.dataset.data) state.quiz.data = btn.dataset.data;
+
+      if (state.quiz.persons && state.quiz.data) {
+        const msg = `persons:${state.quiz.persons} data:${state.quiz.data}`;
+
+        addMessage(
+          `${state.quiz.persons} personer, ${state.quiz.data} surf`,
+          "user"
+        );
+
+        const data = await sendMessage(msg);
+        handleResponse(data);
+
+        state.quiz = { persons: null, data: null };
+      }
+    });
+  }
+
+  async function sendMessage(message) {
     const sid = localStorage.getItem("chat_sid");
-const headers = { "Content-Type": "application/json" };
-if (sid) headers["X-Chat-Session"] = sid;
 
-fetch("https://dealett-backend.onrender.com/api/chat", {
-  method: "POST",
-  headers,
-      body: JSON.stringify({ message: msg })
-      
-    })
-      .then(res => res.json())
-.then(data => {
-  if (data.type === "offer") {
-    renderOfferInChat(data.payload);
-    return;
-  }
-  addMessage(data.reply, "ai");
-});
-
-    quizState.persons = null;
-    quizState.data = null;
-  }
-});
-form.onsubmit = async e => {
-  e.preventDefault();
-
-  const text = input.value.trim();
-  if (!text) return;
-
-  addMessage(text, "user");
-  input.value = "";
-
-  try {
-    const sid = localStorage.getItem("chat_sid");
     const headers = { "Content-Type": "application/json" };
     if (sid) headers["X-Chat-Session"] = sid;
 
-    const response = await fetch("https://dealett-backend.onrender.com/api/chat", {
-      method: "POST",
-      headers,
-      body: JSON.stringify({ message: text })
-    });
+    try {
+      const res = await fetch("https://dealett-backend.onrender.com/api/chat", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ message })
+      });
 
-    if (!response.ok) {
-      addMessage("Server error. Try again.", "ai");
-      return;
+      if (!res.ok) throw new Error("Server error");
+
+      return await res.json();
+
+    } catch (err) {
+      console.error(err);
+      return { reply: "Connection error." };
     }
-
-    const data = await response.json();
-
-    if (data.type === "offer") {
-      renderOfferInChat(data.payload);
-      return;
-    }
-
-    if (typeof data.reply === "string") {
-      addMessage(data.reply, "ai");
-      return;
-    }
-
-    addMessage("No AI response.", "ai");
-
-  } catch (err) {
-    console.error("Chat fetch failed:", err);
-    addMessage("Connection error.", "ai");
   }
-};
 
+  function handleResponse(data) {
+    if (data.type === "offer") {
+      renderOffer(data.payload);
+      return;
+    }
+
+    addMessage(data.reply || "No response", "ai");
+  }
+
+  function renderOffer(payload) {
+    const plan = plans.find(p => p.id === payload.planId);
+
+    if (!plan || !window.renderSingleOfferCard) {
+      addMessage("Kunde inte visa erbjudandet.", "ai");
+      return;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "chat-msg ai";
+
+    const card = window.renderSingleOfferCard(plan, payload);
+    wrapper.appendChild(card);
+
+    messages.appendChild(wrapper);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function addMessage(text, type) {
+    const div = document.createElement("div");
+    div.className = `chat-msg ${type}`;
+    div.textContent = text; // 🔐 SAFE
+    messages.appendChild(div);
+
+    messages.scrollTop = messages.scrollHeight;
+
+    saveHistory({ text, type });
+  }
+
+  function saveHistory(msg) {
+    const history = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || "[]");
+
+    history.push(msg);
+    if (history.length > 100) history.shift();
+
+    localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history));
+  }
+
+  function restoreMessages() {
+    const history = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || "[]");
+
+    history.forEach(m => addMessage(m.text, m.type));
+  }
 }
