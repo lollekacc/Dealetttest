@@ -1,0 +1,1674 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dealett — Få rätt abonnemang. Få mer tillbaka.</title>
+  <meta name="description" content="Jämför mobilabonnemang för hela hushållet och få presentkort istället för rabatt." />
+  <style>
+    :root {
+      --bg: #000000;
+      --bg-soft: #0a0a0a;
+      --surface: rgba(255, 255, 255, 0.06);
+      --surface-2: rgba(255, 255, 255, 0.08);
+      --surface-3: rgba(255, 255, 255, 0.12);
+      --line: rgba(255, 255, 255, 0.12);
+      --text: #f5f5f7;
+      --muted: rgba(245, 245, 247, 0.7);
+      --muted-2: rgba(245, 245, 247, 0.5);
+      --accent: #ffffff;
+      --accent-dark: #0f0f10;
+      --blue: #2997ff;
+      --green: #27c93f;
+      --shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --container: 1240px;
+      --nav-h: 76px;
+      --ease: cubic-bezier(.2, .8, .2, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top center, rgba(41, 151, 255, 0.14), transparent 0 32%),
+        radial-gradient(circle at 20% 25%, rgba(255,255,255,0.08), transparent 0 28%),
+        linear-gradient(180deg, #050505 0%, #000 25%, #030303 100%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    img { max-width: 100%; display: block; }
+    button, input, textarea, select { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(calc(100% - 40px), var(--container));
+      margin: 0 auto;
+    }
+
+    .section {
+      padding: 110px 0;
+      position: relative;
+    }
+
+    .eyebrow,
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255,255,255,0.8);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    h1, h2, h3, h4, p { margin: 0; }
+
+    h1 {
+      font-size: clamp(52px, 7vw, 92px);
+      line-height: 0.96;
+      letter-spacing: -0.06em;
+      font-weight: 700;
+    }
+
+    h2.section-title {
+      font-size: clamp(36px, 4.4vw, 64px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      font-weight: 700;
+      margin-top: 18px;
+    }
+
+    h3 {
+      font-size: 28px;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 650;
+    }
+
+    p.section-sub,
+    .hero-copy p,
+    .surface p,
+    .faq-answer,
+    .detail,
+    .result-copy,
+    .stat span {
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 17px;
+    }
+
+    .btn,
+    .btn-white,
+    .btn-dark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 54px;
+      padding: 0 24px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform .35s var(--ease), background .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease), opacity .35s var(--ease);
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .btn:hover,
+    .btn-white:hover,
+    .btn-dark:hover,
+    .option:hover,
+    .coverage-op:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-white {
+      background: #fff;
+      color: #000;
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.16);
+    }
+
+    .btn-dark {
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      border-color: rgba(255,255,255,0.12);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .btn-dark:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    .nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 14px 0;
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      background: linear-gradient(180deg, rgba(0,0,0,.78), rgba(0,0,0,.48));
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .nav {
+      min-height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 0 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(20,20,20,.7);
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    }
+
+    .nav-left,
+    .nav-right,
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 750;
+      letter-spacing: -0.05em;
+    }
+
+    .logo::before {
+      content: "◉";
+      color: var(--blue);
+      margin-right: 10px;
+      font-size: 12px;
+      vertical-align: middle;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,.78);
+      font-size: 15px;
+      transition: color .25s ease, opacity .25s ease;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 42px;
+      align-items: center;
+      min-height: calc(100vh - 130px);
+      padding: 48px 0 40px;
+    }
+
+    .hero-copy {
+      max-width: 720px;
+    }
+
+    .hero-copy p {
+      max-width: 620px;
+      margin-top: 24px;
+      font-size: 21px;
+      line-height: 1.65;
+      color: rgba(245,245,247,.78);
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 34px;
+    }
+
+    .hero-note {
+      margin-top: 18px;
+      color: var(--muted-2);
+      font-size: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 42px;
+    }
+
+    .stat,
+    .surface,
+    .glass-card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      box-shadow: var(--shadow);
+    }
+
+    .stat {
+      padding: 24px;
+      border-radius: 26px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 26px;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      margin-bottom: 10px;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 640px;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .stage-back,
+    .stage-mid {
+      position: absolute;
+      inset: auto;
+      border-radius: 999px;
+      filter: blur(10px);
+      opacity: .95;
+    }
+
+    .stage-back {
+      width: 620px;
+      height: 620px;
+      background: radial-gradient(circle, rgba(41,151,255,.34), rgba(255,255,255,.08) 48%, transparent 70%);
+      animation: pulse 8s infinite ease-in-out;
+    }
+
+    .stage-mid {
+      width: 440px;
+      height: 440px;
+      background: radial-gradient(circle, rgba(255,255,255,.16), transparent 70%);
+      animation: float 6s infinite ease-in-out;
+    }
+
+    .device-stack {
+      position: relative;
+      width: min(560px, 100%);
+      aspect-ratio: 1 / 1.1;
+      display: grid;
+      place-items: center;
+    }
+
+    .phone,
+    .card-visual,
+    .mini-panel {
+      position: absolute;
+      border-radius: 34px;
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 30px 90px rgba(0,0,0,.42);
+      overflow: hidden;
+    }
+
+    .phone {
+      width: 280px;
+      height: 560px;
+      background: linear-gradient(180deg, #141519 0%, #08090b 100%);
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.9);
+      z-index: 4;
+    }
+
+    .phone.screen-left {
+      transform: translate(-105px, 6px) rotate(-12deg);
+      opacity: .9;
+    }
+
+    .phone.screen-right {
+      transform: translate(100px, 24px) rotate(13deg);
+      opacity: .86;
+    }
+
+    .phone-main {
+      position: relative;
+      width: 320px;
+      height: 640px;
+      z-index: 5;
+      background: linear-gradient(180deg, #111215, #050506);
+      transform: rotate(-2deg);
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      padding: 30px 22px 24px;
+      background:
+        radial-gradient(circle at top left, rgba(41,151,255,.16), transparent 28%),
+        linear-gradient(180deg, #111215 0%, #07080a 100%);
+    }
+
+    .statusbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: rgba(255,255,255,.82);
+      margin-bottom: 28px;
+      padding-top: 6px;
+    }
+
+    .app-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+      border: 1px solid rgba(255,255,255,.1);
+      margin-bottom: 14px;
+    }
+
+    .app-card strong {
+      display: block;
+      font-size: 28px;
+      letter-spacing: -0.05em;
+      margin-top: 8px;
+    }
+
+    .meter {
+      height: 10px;
+      width: 100%;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+      margin-top: 16px;
+    }
+
+    .meter > span {
+      display: block;
+      height: 100%;
+      width: 72%;
+      background: linear-gradient(90deg, #fff, #2997ff);
+      border-radius: inherit;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .mini-grid .app-card {
+      margin: 0;
+      min-height: 120px;
+    }
+
+    .card-visual {
+      width: 360px;
+      aspect-ratio: 1.58 / 1;
+      padding: 28px;
+      z-index: 6;
+      transform: translate(70px, 190px) rotate(-7deg);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.04)),
+        linear-gradient(135deg, #0f1116, #1d2431 48%, #0f1116);
+    }
+
+    .card-brand {
+      font-size: 28px;
+      font-weight: 750;
+      letter-spacing: -0.06em;
+    }
+
+    .chip {
+      width: 62px;
+      height: 46px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f5f5f7, #8b8d94);
+      margin-top: 34px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.15);
+    }
+
+    .card-badge {
+      margin-top: 54px;
+      display: inline-flex;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .mini-panel {
+      width: 220px;
+      padding: 18px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+      z-index: 7;
+    }
+
+    .panel-top {
+      transform: translate(-170px, -170px);
+    }
+
+    .panel-bottom {
+      transform: translate(170px, -150px);
+    }
+
+    .mini-panel strong {
+      display: block;
+      font-size: 30px;
+      letter-spacing: -0.05em;
+    }
+
+    .cards-2,
+    .cards-3,
+    .package-grid,
+    .result-grid,
+    .option-grid,
+    .coverage-layout,
+    .analysis-layout {
+      display: grid;
+      gap: 22px;
+    }
+
+    .cards-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cards-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .package-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 34px; }
+    .result-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 22px; }
+    .coverage-layout { grid-template-columns: 360px minmax(0, 1fr); align-items: start; }
+    .analysis-layout { grid-template-columns: .95fr 1.05fr; align-items: start; }
+
+    .surface {
+      padding: 28px;
+      border-radius: var(--radius-xl);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .surface::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent 30%);
+      pointer-events: none;
+    }
+
+    .surface > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .package-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .package-card h3 {
+      font-size: 34px;
+      margin-top: 18px;
+    }
+
+    .package-card p { margin-top: 12px; }
+
+    .price {
+      margin-top: 26px;
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 750;
+      letter-spacing: -0.06em;
+    }
+
+    .gift {
+      margin-top: 12px;
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.1);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .details {
+      display: grid;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .detail {
+      padding-left: 18px;
+      position: relative;
+      font-size: 15px;
+    }
+
+    .detail::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.7);
+    }
+
+    .analysis-box {
+      min-height: 840px;
+    }
+
+    .progress {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .progress-rail {
+      width: 280px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #fff, #2997ff);
+      transition: width .35s var(--ease);
+    }
+
+    .step { display: none; }
+    .step.active { display: block; animation: fadeUp .5s var(--ease); }
+
+    .option-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 24px; }
+    .option-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .option-grid.auto-fit { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+
+    .option,
+    .coverage-op,
+    select.operator-select,
+    .field {
+      width: 100%;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: #fff;
+      padding: 22px;
+      transition: transform .25s var(--ease), border-color .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+    }
+
+    .option {
+      text-align: left;
+      min-height: 114px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 650;
+      letter-spacing: -0.03em;
+    }
+
+    .option small {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      font-weight: 500;
+      letter-spacing: normal;
+    }
+
+    .option.active,
+    .coverage-op.active,
+    select.operator-select:focus,
+    .field:focus {
+      border-color: rgba(41,151,255,.75);
+      background: rgba(41,151,255,.12);
+      box-shadow: 0 0 0 4px rgba(41,151,255,.12);
+      outline: none;
+    }
+
+    textarea.field,
+    input.field {
+      margin-top: 12px;
+      min-height: 58px;
+      resize: vertical;
+    }
+
+    textarea.field {
+      min-height: 128px;
+    }
+
+    .operator-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .operator-row label {
+      font-weight: 650;
+      color: rgba(255,255,255,.9);
+    }
+
+    select.operator-select {
+      appearance: none;
+      background-image:
+        linear-gradient(45deg, transparent 50%, rgba(255,255,255,.8) 50%),
+        linear-gradient(135deg, rgba(255,255,255,.8) 50%, transparent 50%);
+      background-position:
+        calc(100% - 26px) calc(50% - 3px),
+        calc(100% - 20px) calc(50% - 3px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+    }
+
+    .loader {
+      display: none;
+      text-align: center;
+      padding: 90px 20px;
+    }
+
+    .loader.active { display: block; }
+
+    .loader-ring {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      border: 3px solid rgba(255,255,255,.12);
+      border-top-color: #fff;
+      animation: spin 1s linear infinite;
+    }
+
+    .result-card {
+      padding: 24px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.1);
+      background: rgba(255,255,255,.04);
+    }
+
+    .result-card strong {
+      display: block;
+      font-size: 16px;
+      color: rgba(255,255,255,.72);
+      margin-bottom: 10px;
+    }
+
+    .result-card .big {
+      font-size: 36px;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      font-weight: 750;
+    }
+
+    .map-surface {
+      position: relative;
+      min-height: 680px;
+      border-radius: 30px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(41,151,255,.16), transparent 0 26%),
+        linear-gradient(180deg, #101114, #070708);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .map-grid,
+    #coverageLayer {
+      position: absolute;
+      inset: 0;
+    }
+
+    .map-grid {
+      background-image:
+        linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.055) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: .5;
+    }
+
+    .coverage-shape {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(12px);
+      opacity: .65;
+      mix-blend-mode: screen;
+      transition: opacity .3s ease;
+    }
+
+    .faq-item {
+      padding: 26px 28px;
+      border-radius: 24px;
+    }
+
+    .faq-toggle {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 0;
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: 650;
+      letter-spacing: -0.03em;
+    }
+
+    .faq-toggle .plus {
+      font-size: 30px;
+      transition: transform .3s ease;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .35s ease, opacity .35s ease, margin-top .35s ease;
+      opacity: 0;
+      margin-top: 0;
+      max-width: 90ch;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 200px;
+      opacity: 1;
+      margin-top: 16px;
+    }
+
+    .faq-item.active .plus {
+      transform: rotate(45deg);
+    }
+
+    footer {
+      padding: 34px 0 80px;
+      color: var(--muted-2);
+      font-size: 14px;
+    }
+
+    footer .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding-top: 28px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s var(--ease), transform .7s var(--ease);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: .8; }
+      50% { transform: scale(1.06); opacity: 1; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-16px); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1200px) {
+      .hero,
+      .analysis-layout,
+      .coverage-layout,
+      .package-grid,
+      .cards-3,
+      .cards-2,
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 28px;
+      }
+
+      .hero-visual {
+        min-height: 560px;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .nav {
+        padding: 14px 18px;
+        border-radius: 28px;
+        align-items: stretch;
+      }
+
+      .nav,
+      .nav-left,
+      .nav-right {
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .nav-right {
+        width: 100%;
+      }
+
+      .nav-right > * {
+        width: 100%;
+      }
+
+      .hero-stats,
+      .option-grid,
+      .option-grid.cols-3,
+      .result-grid,
+      .cards-3,
+      .cards-2,
+      .package-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .device-stack {
+        transform: scale(.86);
+      }
+
+      .operator-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .section { padding: 84px 0; }
+      .container { width: min(calc(100% - 24px), var(--container)); }
+      .surface { padding: 22px; border-radius: 24px; }
+      .hero-copy p { font-size: 18px; }
+      .analysis-box { min-height: auto; }
+      .progress {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .progress-rail { width: 100%; }
+      .device-stack { transform: scale(.68); }
+      .hero-visual { min-height: 410px; }
+      .phone-main { transform: none; }
+      .card-visual { transform: translate(60px, 170px) rotate(-7deg); }
+      .panel-top { transform: translate(-110px, -165px); }
+      .panel-bottom { transform: translate(120px, -150px); }
+      .map-surface { min-height: 520px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav-wrap">
+    <div class="container nav">
+      <div class="nav-left">
+        <a class="logo" href="#top">Dealett</a>
+        <nav class="nav-links">
+          <a href="#paket">Paket</a>
+          <a href="#analys">Analys</a>
+          <a href="#coverage">Täckning</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+      </div>
+      <div class="nav-right">
+        <a class="btn-dark" href="#analys">Starta analys</a>
+        <a class="btn-white" href="#paket">Välj paket</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="container">
+      <div class="hero">
+        <div class="hero-copy reveal visible">
+          <div class="eyebrow">Starta här • Hela hushållet på ett ställe</div>
+          <h1>Få rätt abonnemang.<br>Få mer tillbaka.</h1>
+          <p>Behåll mobilen. Få presentkort istället för rabatt. Ett smartare, mer premium sätt att välja abonnemang för hela hushållet.</p>
+          <div class="hero-actions">
+            <a href="#analys" class="btn-white" style="padding: 0 32px; min-height: 60px; font-size: 17px;">Kom igång</a>
+            <a href="#paket" class="btn-dark">Se färdiga paket</a>
+          </div>
+          <div class="hero-note">Tar mindre än 2 minuter • Helt gratis • Ingen ny mobil behövs</div>
+          <div class="hero-stats">
+            <div class="stat">
+              <strong>2 min</strong>
+              <span>Snabb analys med tydligt resultat direkt.</span>
+            </div>
+            <div class="stat">
+              <strong>1000–3500 kr</strong>
+              <span>Exempel på presentkort beroende på upplägg.</span>
+            </div>
+            <div class="stat">
+              <strong>0 kr</strong>
+              <span>Ingen kostnad för analysen och inget köpkrav.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal visible" aria-hidden="true">
+          <div class="stage-back"></div>
+          <div class="stage-mid"></div>
+
+          <div class="device-stack">
+            <div class="phone screen-left">
+              <div class="screen"></div>
+            </div>
+
+            <div class="phone screen-right">
+              <div class="screen"></div>
+            </div>
+
+            <div class="phone phone-main">
+              <div class="screen">
+                <div class="statusbar">
+                  <span>09:41</span>
+                  <span>5G ⟂ 87%</span>
+                </div>
+                <div class="pill">Dealett Analys</div>
+                <div class="app-card" style="margin-top:16px;">
+                  <span style="color:rgba(255,255,255,.72);font-size:14px;">Rekommenderat paket</span>
+                  <strong>4 abonnemang</strong>
+                  <div style="margin-top:12px;color:rgba(255,255,255,.8);">786 kr / mån</div>
+                  <div class="meter"><span></span></div>
+                </div>
+                <div class="mini-grid">
+                  <div class="app-card">
+                    <div style="color:rgba(255,255,255,.68);font-size:13px;">Presentkort</div>
+                    <strong style="font-size:24px;margin-top:8px;">2500 kr</strong>
+                  </div>
+                  <div class="app-card">
+                    <div style="color:rgba(255,255,255,.68);font-size:13px;">Surfprofil</div>
+                    <strong style="font-size:24px;margin-top:8px;">Mixad</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mini-panel panel-top">
+              <span style="display:block;color:rgba(255,255,255,.68);font-size:13px;">Belöning</span>
+              <strong>2500 kr</strong>
+              <span style="display:block;margin-top:6px;color:rgba(255,255,255,.66);">Presentkort istället för rabatt</span>
+            </div>
+
+            <div class="mini-panel panel-bottom">
+              <span style="display:block;color:rgba(255,255,255,.68);font-size:13px;">Tidsåtgång</span>
+              <strong>2 min</strong>
+              <span style="display:block;margin-top:6px;color:rgba(255,255,255,.66);">Från frågor till konkret rekommendation</span>
+            </div>
+
+            <div class="card-visual">
+              <div class="card-brand">Dealett</div>
+              <div class="chip"></div>
+              <div class="card-badge">Presentkort</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container cards-3">
+        <article class="surface reveal">
+          <div class="pill">Behåll telefonen</div>
+          <h3 style="margin-top:18px;">Byt inte i onödan</h3>
+          <p style="margin-top:14px;">Du behöver inte byta en mobil som redan fungerar för att få ett bättre erbjudande. Dealett fokuserar på abonnemanget och värdet omkring det.</p>
+        </article>
+        <article class="surface reveal">
+          <div class="pill">Få presentkort istället</div>
+          <h3 style="margin-top:18px;">Mer konkret värde</h3>
+          <p style="margin-top:14px;">Belöningen blir friare, tydligare och ofta mer användbar än klassisk telefonrabatt. Det ger en rakare upplevelse och bättre upplevt värde.</p>
+        </article>
+        <article class="surface reveal">
+          <div class="pill">Analysera hela hushållet</div>
+          <h3 style="margin-top:18px;">En totalbild, inte gissningar</h3>
+          <p style="margin-top:14px;">Om flera personer har olika operatörer, surfbehov eller prisnivåer tar vi hänsyn till det innan rekommendationen visas.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="paket" class="section">
+      <div class="container">
+        <div class="reveal">
+          <div class="pill">Färdiga paket</div>
+          <h2 class="section-title">Välj direkt utan analys</h2>
+          <p class="section-sub" style="max-width:760px;margin-top:18px;">För dig som redan vet vad du vill ha. Välj ett färdigt paket och gå direkt vidare till intresseanmälan eller offertförfrågan.</p>
+        </div>
+
+        <div class="package-grid">
+          <article class="surface package-card reveal">
+            <div class="pill">Standard</div>
+            <h3>2 abonnemang</h3>
+            <p>Balanserad surf för två personer. Ett rent och tydligt upplägg för mindre hushåll.</p>
+            <div class="price">598 kr</div>
+            <div style="color:rgba(255,255,255,.72);margin-top:6px;">/ mån</div>
+            <div class="gift">1400 kr presentkort</div>
+            <div class="details">
+              <div class="detail">Perfekt för par eller mindre hushåll.</div>
+              <div class="detail">Enkel start med förutsägbar kostnad.</div>
+              <div class="detail">Låg komplexitet, tydligt värde.</div>
+            </div>
+            <button class="btn-white" style="margin-top: 28px; width: 100%;" onclick="openCheckout('2 abonnemang','598 kr / mån','1400 kr presentkort')">Välj paket</button>
+          </article>
+
+          <article class="surface package-card reveal">
+            <div class="pill">Populärt</div>
+            <h3>4 abonnemang</h3>
+            <p>Tre personer med medelsurf och en person med låg surf. Det mest balanserade familjeupplägget.</p>
+            <div class="price">786 kr</div>
+            <div style="color:rgba(255,255,255,.72);margin-top:6px;">/ mån</div>
+            <div class="gift">2500 kr presentkort</div>
+            <div class="details">
+              <div class="detail">Bra familjeupplägg med tydlig totalbild.</div>
+              <div class="detail">Hög upplevd belöning utan att byta mobil.</div>
+              <div class="detail">Passar de flesta hushåll bäst.</div>
+            </div>
+            <button class="btn-white" style="margin-top: 28px; width: 100%;" onclick="openCheckout('4 abonnemang','786 kr / mån','2500 kr presentkort')">Välj paket</button>
+          </article>
+
+          <article class="surface package-card reveal">
+            <div class="pill">Familj</div>
+            <h3>5 abonnemang</h3>
+            <p>Hög surf för större hushåll med fler användare, fler behov och större krav på enkelhet.</p>
+            <div class="price">1290 kr</div>
+            <div style="color:rgba(255,255,255,.72);margin-top:6px;">/ mån</div>
+            <div class="gift">3500 kr presentkort</div>
+            <div class="details">
+              <div class="detail">Byggt för hushåll med hög förbrukning.</div>
+              <div class="detail">Tydligt premiumupplägg med stark belöning.</div>
+              <div class="detail">Bra för familjer som vill samla allt.</div>
+            </div>
+            <button class="btn-white" style="margin-top: 28px; width: 100%;" onclick="openCheckout('5 abonnemang','1290 kr / mån','3500 kr presentkort')">Välj paket</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="analys" class="section">
+      <div class="container analysis-layout">
+        <div class="surface reveal">
+          <div class="pill">Gratis behovsanalys</div>
+          <h2 class="section-title">Få en tydlig rekommendation för hushållet</h2>
+          <p class="section-sub" style="margin-top:18px;">Vi samlar in hushållets storlek, operatör per person, surfbehov, prisnivå och bindningstid. Du kan också skriva egna önskemål i fri text, till exempel “surf i Turkiet”. Sedan får du ett konkret resultat med abonnemangsnivå, uppskattad kostnad och presentkort.</p>
+
+          <div class="cards-3" style="margin-top:28px;">
+            <div class="surface" style="padding:20px; border-radius:22px;">
+              <div class="pill">Snabbt</div>
+              <h3 style="font-size:24px;margin-top:16px;">Få svar direkt</h3>
+            </div>
+            <div class="surface" style="padding:20px; border-radius:22px;">
+              <div class="pill">Smart</div>
+              <h3 style="font-size:24px;margin-top:16px;">Operatör per person</h3>
+            </div>
+            <div class="surface" style="padding:20px; border-radius:22px;">
+              <div class="pill">Flexibelt</div>
+              <h3 style="font-size:24px;margin-top:16px;">Fri text + paket</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="surface analysis-box reveal">
+          <div class="progress">
+            <button id="backBtn" class="btn-dark" style="visibility: hidden;">← Tillbaka</button>
+            <div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;flex-wrap:wrap;">
+              <div class="progress-rail"><div id="progressFill" class="progress-fill" style="width: 20%;"></div></div>
+              <div style="font-size:14px;font-weight:800;color:rgba(255,255,255,.72)">Steg <span id="stepNumber">1</span> / 5</div>
+            </div>
+          </div>
+
+          <div id="quizIntro" style="text-align:center;padding:48px 0 6px;">
+            <div class="pill">Starta analysen</div>
+            <h3 style="font-size: clamp(34px, 5vw, 52px); margin-top: 18px;">Jämför smartare på riktigt</h3>
+            <p style="margin:16px auto 0;max-width:640px;color:var(--muted);line-height:1.8;font-size:17px;">Svara på några frågor och få ett konkret resultat med pris, paketnivå och möjlig presentkortsnivå.</p>
+            <button id="startQuiz" class="btn-white" style="margin-top:26px;">Starta analys</button>
+          </div>
+
+          <div id="quizFlow" style="display:none;margin-top:22px;">
+            <div class="step active" data-step="0">
+              <div class="pill">Hushåll</div>
+              <h3 style="font-size: clamp(28px, 4vw, 42px); margin-top: 18px;">Hur många personer ingår?</h3>
+              <div class="option-grid cols-3">
+                <button class="option" data-field="persons" data-value="1">1 person</button>
+                <button class="option" data-field="persons" data-value="2">2 personer</button>
+                <button class="option" data-field="persons" data-value="3">3 personer</button>
+                <button class="option" data-field="persons" data-value="4">4 personer</button>
+                <button class="option" data-field="persons" data-value="5">5 personer</button>
+                <button class="option" data-field="persons" data-value="6">6+ personer</button>
+              </div>
+            </div>
+
+            <div class="step" data-step="1">
+              <div class="pill">Operatör</div>
+              <h3 style="font-size: clamp(28px, 4vw, 42px); margin-top: 18px;">Vilken operatör har varje person idag?</h3>
+              <p style="margin-top:12px;color:var(--muted)">Välj operatör för alla personer i hushållet.</p>
+              <div id="operatorsContainer" style="margin-top:22px;display:grid;gap:14px"></div>
+              <button id="operatorsNext" class="btn-white" style="margin-top:22px">Fortsätt</button>
+            </div>
+
+            <div class="step" data-step="2">
+              <div class="pill">Surf &amp; önskemål</div>
+              <h3 style="font-size: clamp(28px, 4vw, 42px); margin-top: 18px;">Hur mycket surf behövs ungefär?</h3>
+              <div class="option-grid">
+                <button class="option" data-field="data" data-value="low">Låg surf<small>Mest wifi, sociala medier och lätt användning</small></button>
+                <button class="option" data-field="data" data-value="medium">Medel surf<small>Streaming, video och daglig användning</small></button>
+                <button class="option" data-field="data" data-value="high">Hög surf<small>Stor förbrukning eller flera tunga användare</small></button>
+              </div>
+              <div style="margin-top:22px;">
+                <label for="freeTextNeed" style="display:block;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.44)">Skriv egna önskemål</label>
+                <textarea id="freeTextNeed" rows="4" class="field" placeholder="Till exempel: surf i Turkiet, fria samtal, viktigt med låg kostnad..."></textarea>
+              </div>
+            </div>
+
+            <div class="step" data-step="3">
+              <div class="pill">Pris</div>
+              <h3 style="font-size: clamp(28px, 4vw, 42px); margin-top: 18px;">Vad betalar ni ungefär idag per abonnemang?</h3>
+              <div class="option-grid cols-3">
+                <button class="option" data-field="price" data-value="under300">Under 300 kr</button>
+                <button class="option" data-field="price" data-value="300-400">300–400 kr</button>
+                <button class="option" data-field="price" data-value="400+">400+ kr</button>
+              </div>
+            </div>
+
+            <div class="step" data-step="4">
+              <div class="pill">Bindningstid</div>
+              <h3 style="font-size: clamp(28px, 4vw, 42px); margin-top: 18px;">Har ni bindningstid kvar?</h3>
+              <div class="option-grid cols-3">
+                <button class="option" data-field="binding" data-value="no">Nej</button>
+                <button class="option" data-field="binding" data-value="yes">Ja</button>
+                <button class="option" data-field="binding" data-value="unknown">Vet inte</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="loader" class="loader">
+            <div class="loader-ring"></div>
+            <h3 style="font-size:34px;">Tar fram ert bästa upplägg...</h3>
+            <p style="margin-top:12px;color:var(--muted)">Räknar på operatörer, surf, pris och möjlig presentkortsnivå.</p>
+          </div>
+
+          <div id="result" style="display:none;margin-top:18px;">
+            <div style="text-align:center;">
+              <div class="pill">Rekommendationen är klar</div>
+              <h3 style="font-size: clamp(34px, 5vw, 52px); margin-top: 18px;">Här är ert bästa nästa steg</h3>
+              <p id="resultLead" style="margin:16px auto 0;max-width:760px;color:var(--muted);line-height:1.8"></p>
+            </div>
+            <div id="packageCards" class="option-grid auto-fit" style="margin-top:28px;"></div>
+            <div id="resultCards" class="result-grid"></div>
+            <div style="margin-top:24px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
+              <button id="restartQuiz" class="btn-dark">Gör om analys</button>
+              <a href="#coverage" class="btn-white">Se täckning</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top: 20px;">
+      <div class="container cards-2">
+        <div class="surface reveal">
+          <div class="pill">Därför väljer kunder Dealett</div>
+          <h3 style="margin-top:18px;">Ett enklare sätt att hitta rätt abonnemang och få något tillbaka.</h3>
+          <p style="margin-top:14px;">Istället för att jämföra flera sidor själv får kunden ett tydligt upplägg som tar hänsyn till hela hushållet och visar ett konkret mervärde. Designen är gjord för att kännas modern, premium och lätt att förstå.</p>
+        </div>
+        <div class="surface reveal">
+          <div class="pill">Kundröster</div>
+          <div style="display:grid;gap:12px;margin-top:18px;">
+            <div class="surface" style="padding:18px;border-radius:22px;">
+              <strong style="display:block;font-size:18px;">Emma, 29</strong>
+              <p style="margin-top:10px;">“Mycket enklare än att jämföra allt själv. Jag gillade att jag kunde behålla min telefon.”</p>
+            </div>
+            <div class="surface" style="padding:18px;border-radius:22px;">
+              <strong style="display:block;font-size:18px;">Johan, 35</strong>
+              <p style="margin-top:10px;">“Tydligt resultat direkt. Presentkort kändes mer värt än telefonrabatt.”</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="coverage" class="section">
+      <div class="container">
+        <div class="reveal">
+          <div class="pill">Täckning</div>
+          <h2 class="section-title">Se nätens täckning i en elegant översikt</h2>
+          <p class="section-sub" style="max-width:760px;margin-top:18px;">Det här är en stiliserad täckningsvy för demo. Byt lager, sök område och skapa en mer premium känsla runt jämförelsen.</p>
+        </div>
+
+        <div class="coverage-layout" style="margin-top:34px;">
+          <div class="surface reveal">
+            <div class="pill">Täckningskarta</div>
+            <h3 style="margin-top:18px;">Välj operatör</h3>
+            <div style="display:grid;gap:12px;margin-top:22px" id="coverageOps">
+              <button class="coverage-op btn-dark" data-op="Telia">Telia</button>
+              <button class="coverage-op btn-dark" data-op="Tele2">Tele2</button>
+              <button class="coverage-op btn-dark" data-op="Telenor">Telenor</button>
+              <button class="coverage-op btn-dark" data-op="Tre">Tre</button>
+              <button class="coverage-op btn-dark" data-op="Halebop">Halebop</button>
+            </div>
+            <div class="surface" style="padding:18px;margin-top:18px;border-radius:22px;">
+              <div style="font-size:14px;color:var(--muted-2)">Aktivt lager</div>
+              <div id="activeCoverageLabel" style="margin-top:6px;font-weight:800">Ingen operatör vald</div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+              <button id="resetCoverage" class="btn-dark">Återställ</button>
+              <button id="clearCoverage" class="btn-dark">Ta bort lager</button>
+            </div>
+          </div>
+
+          <div class="surface reveal" style="padding:18px;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;">
+              <div style="display:flex;overflow:hidden;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);width:100%;max-width:440px;">
+                <input id="coverageSearch" placeholder="Sök adress eller stad..." class="field" style="margin:0;border:none;border-radius:0;background:transparent;min-height:56px;">
+                <button id="coverageSearchBtn" class="btn-white" style="border-radius:0;min-height:56px;">🔍</button>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button id="zoomIn" class="btn-dark">+</button>
+                <button id="zoomOut" class="btn-dark">−</button>
+              </div>
+            </div>
+            <div class="map-surface" style="margin-top:18px;">
+              <div class="map-grid"></div>
+              <div id="coverageLayer"></div>
+              <div style="position:absolute;left:18px;bottom:18px;padding:14px 16px;border-radius:18px;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px);font-size:14px;">
+                <div style="display:flex;flex-wrap:wrap;gap:14px;">
+                  <span>Bakgrundsnät</span>
+                  <span>•</span>
+                  <span>Aktivt lager</span>
+                  <span>•</span>
+                  <span>Demo-visning</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section" style="padding-bottom:110px;">
+      <div class="container" style="max-width:980px;">
+        <div style="text-align:center;" class="reveal">
+          <div class="pill">FAQ</div>
+          <h2 class="section-title">Vanliga frågor</h2>
+        </div>
+        <div style="display:grid;gap:14px;margin-top:26px;">
+          <div class="surface faq-item reveal">
+            <button class="faq-toggle">Kostar analysen något?<span class="plus">+</span></button>
+            <div class="faq-answer">Nej, analysen är helt kostnadsfri. Du kan gå igenom hela flödet och få en rekommendation utan att binda dig.</div>
+          </div>
+          <div class="surface faq-item reveal">
+            <button class="faq-toggle">Måste jag byta telefon?<span class="plus">+</span></button>
+            <div class="faq-answer">Nej. Upplägget är byggt för att du ska kunna behålla din nuvarande telefon och ändå få ett bättre erbjudande.</div>
+          </div>
+          <div class="surface faq-item reveal">
+            <button class="faq-toggle">Hur fungerar presentkortet?<span class="plus">+</span></button>
+            <div class="faq-answer">Presentkortet ges istället för telefonrabatt och är tänkt att göra värdet mer konkret. Exakt nivå beror på vilket upplägg som väljs.</div>
+          </div>
+          <div class="surface faq-item reveal">
+            <button class="faq-toggle">Kan jag analysera flera operatörer samtidigt?<span class="plus">+</span></button>
+            <div class="faq-answer">Ja. I analysen kan du ange operatör för varje person i hushållet, så rekommendationen blir mer träffsäker.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© 2026 Dealett</div>
+      <div>Premium redesign • Single-file HTML • Inspired by clean consumer-tech landing pages</div>
+    </div>
+  </footer>
+
+  <script>
+    const state = {
+      step: 0,
+      persons: null,
+      operators: [],
+      data: null,
+      price: null,
+      binding: null,
+      freeTextNeed: ""
+    };
+
+    const startQuiz = document.getElementById('startQuiz');
+    const quizIntro = document.getElementById('quizIntro');
+    const quizFlow = document.getElementById('quizFlow');
+    const steps = [...document.querySelectorAll('.step')];
+    const backBtn = document.getElementById('backBtn');
+    const progressFill = document.getElementById('progressFill');
+    const stepNumber = document.getElementById('stepNumber');
+    const operatorsContainer = document.getElementById('operatorsContainer');
+    const operatorsNext = document.getElementById('operatorsNext');
+    const loader = document.getElementById('loader');
+    const result = document.getElementById('result');
+    const resultLead = document.getElementById('resultLead');
+    const resultCards = document.getElementById('resultCards');
+    const packageCards = document.getElementById('packageCards');
+    const restartQuiz = document.getElementById('restartQuiz');
+    const freeTextNeed = document.getElementById('freeTextNeed');
+
+    const operatorList = ['Telia', 'Tele2', 'Telenor', 'Tre', 'Halebop', 'Comviq', 'Vimla', 'Fello', 'Chilimobil', 'Annan'];
+
+    const packages = [
+      {
+        title: '2 abonnemang',
+        monthly: '598 kr / mån',
+        gift: '1400 kr presentkort',
+        tag: 'Standard',
+        desc: 'Bra för mindre hushåll med balanserad användning.'
+      },
+      {
+        title: '4 abonnemang',
+        monthly: '786 kr / mån',
+        gift: '2500 kr presentkort',
+        tag: 'Populärt',
+        desc: 'Starkast totalvärde för familjer och blandade behov.'
+      },
+      {
+        title: '5 abonnemang',
+        monthly: '1290 kr / mån',
+        gift: '3500 kr presentkort',
+        tag: 'Familj',
+        desc: 'För större hushåll med hög surf och fler användare.'
+      }
+    ];
+
+    function showStep(index) {
+      state.step = index;
+      steps.forEach((step, i) => step.classList.toggle('active', i === index));
+      backBtn.style.visibility = index > 0 ? 'visible' : 'hidden';
+      progressFill.style.width = `${((index + 1) / 5) * 100}%`;
+      stepNumber.textContent = String(index + 1);
+    }
+
+    function renderOperators(count) {
+      operatorsContainer.innerHTML = '';
+      state.operators = Array.from({ length: count }, (_, i) => state.operators[i] || '');
+
+      state.operators.forEach((value, index) => {
+        const row = document.createElement('div');
+        row.className = 'operator-row';
+        row.innerHTML = `
+          <label for="operator-${index}">Person ${index + 1}</label>
+          <select id="operator-${index}" class="operator-select">
+            <option value="">Välj operatör</option>
+            ${operatorList.map(op => `<option value="${op}" ${op === value ? 'selected' : ''}>${op}</option>`).join('')}
+          </select>
+        `;
+        const select = row.querySelector('select');
+        select.addEventListener('change', (e) => {
+          state.operators[index] = e.target.value;
+        });
+        operatorsContainer.appendChild(row);
+      });
+    }
+
+    function nextStep() {
+      if (state.step < 4) showStep(state.step + 1);
+      else runAnalysis();
+    }
+
+    function previousStep() {
+      if (state.step > 0) showStep(state.step - 1);
+    }
+
+    function scorePackage() {
+      const persons = Number(state.persons || 1);
+      const data = state.data;
+      const price = state.price;
+      const binding = state.binding;
+      const needs = (state.freeTextNeed || '').toLowerCase();
+
+      let picked = packages[0];
+      if (persons >= 4 || data === 'high') picked = packages[2];
+      else if (persons >= 3 || data === 'medium') picked = packages[1];
+
+      if (price === 'under300' && persons <= 2) picked = packages[0];
+      if (price === '300-400' && persons >= 3 && persons <= 4) picked = packages[1];
+      if (needs.includes('turkiet') || needs.includes('resa') || needs.includes('utland')) picked = packages[1];
+      if (binding === 'yes' && picked.title === '5 abonnemang' && persons < 4) picked = packages[1];
+
+      return picked;
+    }
+
+    function runAnalysis() {
+      quizFlow.style.display = 'none';
+      result.style.display = 'none';
+      loader.classList.add('active');
+      state.freeTextNeed = freeTextNeed.value.trim();
+
+      setTimeout(() => {
+        const picked = scorePackage();
+        const persons = Number(state.persons || 1);
+        const dataText = state.data === 'low' ? 'låg surf' : state.data === 'high' ? 'hög surf' : 'medelsurf';
+        const bindingText = state.binding === 'yes' ? 'med kvarvarande bindningstid' : state.binding === 'no' ? 'utan bindningstid' : 'med oklar bindningstid';
+
+        resultLead.textContent = `Baserat på ${persons} ${persons === 1 ? 'person' : 'personer'}, ${dataText}, vald prisnivå och nuvarande operatörer rekommenderar vi ${picked.title.toLowerCase()} som ett starkt nästa steg. Upplägget passar hushåll ${bindingText} och maximerar upplevt värde genom ${picked.gift.toLowerCase()}.`;
+
+        packageCards.innerHTML = packages.map(pkg => `
+          <div class="result-card" style="${pkg.title === picked.title ? 'border-color: rgba(41,151,255,.65); background: rgba(41,151,255,.12); box-shadow: 0 0 0 4px rgba(41,151,255,.08);' : ''}">
+            <strong>${pkg.tag}</strong>
+            <div class="big" style="font-size:30px;">${pkg.title}</div>
+            <div style="margin-top:12px;color:rgba(255,255,255,.78);">${pkg.monthly}</div>
+            <div style="margin-top:8px;color:#fff;">${pkg.gift}</div>
+            <div style="margin-top:14px;color:var(--muted);line-height:1.65;">${pkg.desc}</div>
+          </div>
+        `).join('');
+
+        resultCards.innerHTML = `
+          <div class="result-card">
+            <strong>Rekommenderat upplägg</strong>
+            <div class="big">${picked.title}</div>
+            <div class="result-copy" style="margin-top:12px;">Ett upplägg som balanserar hushållets storlek och surfprofil.</div>
+          </div>
+          <div class="result-card">
+            <strong>Uppskattad kostnad</strong>
+            <div class="big">${picked.monthly.replace(' / mån','')}</div>
+            <div class="result-copy" style="margin-top:12px;">Månadsnivå baserad på valt paket och typisk profil.</div>
+          </div>
+          <div class="result-card">
+            <strong>Möjligt mervärde</strong>
+            <div class="big">${picked.gift.replace(' presentkort','')}</div>
+            <div class="result-copy" style="margin-top:12px;">Presentkort istället för traditionell telefonrabatt.</div>
+          </div>
+        `;
+
+        loader.classList.remove('active');
+        result.style.display = 'block';
+      }, 1500);
+    }
+
+    startQuiz.addEventListener('click', () => {
+      quizIntro.style.display = 'none';
+      quizFlow.style.display = 'block';
+      showStep(0);
+    });
+
+    backBtn.addEventListener('click', previousStep);
+
+    document.querySelectorAll('.option').forEach(button => {
+      button.addEventListener('click', () => {
+        const field = button.dataset.field;
+        const value = button.dataset.value;
+        const scope = button.closest('.step');
+        scope.querySelectorAll(`.option[data-field="${field}"]`).forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        state[field] = value;
+
+        if (field === 'persons') {
+          renderOperators(Number(value));
+          setTimeout(() => showStep(1), 180);
+        } else if (field === 'data' || field === 'price') {
+          setTimeout(nextStep, 180);
+        } else if (field === 'binding') {
+          setTimeout(runAnalysis, 180);
+        }
+      });
+    });
+
+    operatorsNext.addEventListener('click', () => {
+      const complete = state.operators.every(Boolean);
+      if (!complete) {
+        alert('Välj operatör för alla personer innan du fortsätter.');
+        return;
+      }
+      showStep(2);
+    });
+
+    restartQuiz.addEventListener('click', () => {
+      state.step = 0;
+      state.persons = null;
+      state.operators = [];
+      state.data = null;
+      state.price = null;
+      state.binding = null;
+      state.freeTextNeed = '';
+      freeTextNeed.value = '';
+      result.style.display = 'none';
+      quizIntro.style.display = 'block';
+      quizFlow.style.display = 'none';
+      progressFill.style.width = '20%';
+      stepNumber.textContent = '1';
+      backBtn.style.visibility = 'hidden';
+      document.querySelectorAll('.option.active').forEach(el => el.classList.remove('active'));
+      operatorsContainer.innerHTML = '';
+    });
+
+    const faqItems = document.querySelectorAll('.faq-item');
+    faqItems.forEach(item => {
+      item.querySelector('.faq-toggle').addEventListener('click', () => {
+        item.classList.toggle('active');
+      });
+    });
+
+    const coverageLayer = document.getElementById('coverageLayer');
+    const activeCoverageLabel = document.getElementById('activeCoverageLabel');
+    const coverageButtons = [...document.querySelectorAll('.coverage-op')];
+    const coverageSearch = document.getElementById('coverageSearch');
+
+    const coveragePresets = {
+      Telia: ['rgba(41,151,255,.38)', 'rgba(255,255,255,.18)'],
+      Tele2: ['rgba(180,120,255,.34)', 'rgba(255,255,255,.16)'],
+      Telenor: ['rgba(60,210,180,.32)', 'rgba(255,255,255,.16)'],
+      Tre: ['rgba(145,120,255,.34)', 'rgba(255,255,255,.15)'],
+      Halebop: ['rgba(70,220,120,.3)', 'rgba(255,255,255,.14)']
+    };
+
+    function drawCoverage(op) {
+      coverageLayer.innerHTML = '';
+      if (!op) {
+        activeCoverageLabel.textContent = 'Ingen operatör vald';
+        coverageButtons.forEach(btn => btn.classList.remove('active'));
+        return;
+      }
+
+      coverageButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.op === op));
+      activeCoverageLabel.textContent = op;
+      const [primary, secondary] = coveragePresets[op];
+
+      const shapes = [
+        { top: '8%', left: '12%', width: 280, height: 220, color: primary },
+        { top: '28%', left: '48%', width: 320, height: 260, color: secondary },
+        { top: '52%', left: '20%', width: 360, height: 300, color: primary },
+        { top: '18%', left: '62%', width: 240, height: 220, color: primary },
+        { top: '62%', left: '58%', width: 220, height: 180, color: secondary }
+      ];
+
+      shapes.forEach(shape => {
+        const el = document.createElement('div');
+        el.className = 'coverage-shape';
+        el.style.top = shape.top;
+        el.style.left = shape.left;
+        el.style.width = `${shape.width}px`;
+        el.style.height = `${shape.height}px`;
+        el.style.background = `radial-gradient(circle, ${shape.color}, transparent 70%)`;
+        coverageLayer.appendChild(el);
+      });
+    }
+
+    coverageButtons.forEach(btn => {
+      btn.addEventListener('click', () => drawCoverage(btn.dataset.op));
+    });
+
+    document.getElementById('clearCoverage').addEventListener('click', () => drawCoverage(null));
+    document.getElementById('resetCoverage').addEventListener('click', () => drawCoverage('Telia'));
+    document.getElementById('coverageSearchBtn').addEventListener('click', () => {
+      const value = coverageSearch.value.trim();
+      activeCoverageLabel.textContent = value ? `Sökning: ${value}` : 'Ingen operatör vald';
+    });
+    document.getElementById('zoomIn').addEventListener('click', () => {
+      coverageLayer.style.transform = 'scale(1.08)';
+    });
+    document.getElementById('zoomOut').addEventListener('click', () => {
+      coverageLayer.style.transform = 'scale(.94)';
+    });
+
+    function openCheckout(title, price, gift) {
+      alert(`${title}\n${price}\n${gift}\n\nHär kopplar du vidare till din checkout eller intresseanmälan.`);
+    }
+
+    window.openCheckout = openCheckout;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.16 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    drawCoverage('Telia');
+  </script>
+</body>
+</html>

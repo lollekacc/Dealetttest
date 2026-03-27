@@ -3,28 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dealett — Få rätt abonnemang. Få mer tillbaka.</title>
-  <meta name="description" content="Jämför mobilabonnemang för hela hushållet och få presentkort istället för rabatt." />
+  <title>Dealett</title>
   <style>
     :root {
       --bg: #000000;
       --bg-soft: #0a0a0a;
-      --surface: rgba(255, 255, 255, 0.06);
+      --bg-elevated: #111214;
+      --surface: rgba(255, 255, 255, 0.05);
       --surface-2: rgba(255, 255, 255, 0.08);
       --surface-3: rgba(255, 255, 255, 0.12);
-      --line: rgba(255, 255, 255, 0.12);
+      --line: rgba(255, 255, 255, 0.11);
+      --line-strong: rgba(255, 255, 255, 0.16);
       --text: #f5f5f7;
-      --muted: rgba(245, 245, 247, 0.7);
-      --muted-2: rgba(245, 245, 247, 0.5);
+      --muted: rgba(245, 245, 247, 0.72);
+      --muted-2: rgba(245, 245, 247, 0.48);
       --accent: #ffffff;
       --accent-dark: #0f0f10;
       --blue: #2997ff;
+      --blue-soft: rgba(41, 151, 255, 0.14);
       --green: #27c93f;
       --shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
+      --shadow-strong: 0 32px 120px rgba(0, 0, 0, 0.58);
       --radius-xl: 32px;
       --radius-lg: 24px;
       --radius-md: 18px;
       --radius-sm: 14px;
+      --radius-pill: 999px;
       --container: 1240px;
       --nav-h: 76px;
       --ease: cubic-bezier(.2, .8, .2, 1);
@@ -42,11 +46,19 @@
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
     img { max-width: 100%; display: block; }
     button, input, textarea, select { font: inherit; }
     a { color: inherit; text-decoration: none; }
+    h1, h2, h3, h4, p { margin: 0; }
+
+    ::selection {
+      background: rgba(41, 151, 255, 0.28);
+      color: #fff;
+    }
 
     .container {
       width: min(calc(100% - 40px), var(--container));
@@ -62,34 +74,35 @@
     .pill {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
       padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.05);
-      color: rgba(255,255,255,0.8);
+      color: rgba(255,255,255,0.82);
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 750;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
+      white-space: nowrap;
     }
 
-    h1, h2, h3, h4, p { margin: 0; }
-
     h1 {
-      font-size: clamp(52px, 7vw, 92px);
-      line-height: 0.96;
-      letter-spacing: -0.06em;
-      font-weight: 700;
+      font-size: clamp(54px, 7vw, 96px);
+      line-height: 0.95;
+      letter-spacing: -0.065em;
+      font-weight: 760;
+      max-width: 10ch;
     }
 
     h2.section-title {
-      font-size: clamp(36px, 4.4vw, 64px);
+      font-size: clamp(36px, 4.5vw, 64px);
       line-height: 0.98;
-      letter-spacing: -0.05em;
-      font-weight: 700;
+      letter-spacing: -0.055em;
+      font-weight: 760;
       margin-top: 18px;
     }
 
@@ -97,7 +110,7 @@
       font-size: 28px;
       line-height: 1.05;
       letter-spacing: -0.04em;
-      font-weight: 650;
+      font-weight: 700;
     }
 
     p.section-sub,
@@ -106,7 +119,10 @@
     .faq-answer,
     .detail,
     .result-copy,
-    .stat span {
+    .stat span,
+    .package-sub,
+    .result-list li,
+    .mini-note {
       color: var(--muted);
       line-height: 1.75;
       font-size: 17px;
@@ -114,37 +130,53 @@
 
     .btn,
     .btn-white,
-    .btn-dark {
+    .btn-dark,
+    .btn-ghost {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       min-height: 54px;
       padding: 0 24px;
-      border-radius: 999px;
+      border-radius: var(--radius-pill);
       border: 1px solid transparent;
       cursor: pointer;
-      transition: transform .35s var(--ease), background .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease), opacity .35s var(--ease);
-      font-weight: 650;
+      transition:
+        transform .35s var(--ease),
+        background .35s var(--ease),
+        border-color .35s var(--ease),
+        box-shadow .35s var(--ease),
+        opacity .35s var(--ease),
+        color .35s var(--ease);
+      font-weight: 700;
       letter-spacing: -0.02em;
       white-space: nowrap;
+      position: relative;
+      isolation: isolate;
     }
 
     .btn:hover,
     .btn-white:hover,
     .btn-dark:hover,
+    .btn-ghost:hover,
     .option:hover,
-    .coverage-op:hover {
+    .coverage-op:hover,
+    .surface-hover:hover {
       transform: translateY(-2px);
     }
 
     .btn-white {
       background: #fff;
       color: #000;
-      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.16);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.14);
     }
 
-    .btn-dark {
+    .btn-white:hover {
+      box-shadow: 0 16px 40px rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-dark,
+    .btn-ghost {
       background: rgba(255,255,255,0.05);
       color: #fff;
       border-color: rgba(255,255,255,0.12);
@@ -152,9 +184,14 @@
       -webkit-backdrop-filter: blur(14px);
     }
 
-    .btn-dark:hover {
+    .btn-dark:hover,
+    .btn-ghost:hover {
       background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.16);
+      border-color: rgba(255,255,255,0.18);
+    }
+
+    .btn-ghost {
+      background: transparent;
     }
 
     .nav-wrap {
@@ -164,8 +201,8 @@
       padding: 14px 0;
       backdrop-filter: blur(22px);
       -webkit-backdrop-filter: blur(22px);
-      background: linear-gradient(180deg, rgba(0,0,0,.78), rgba(0,0,0,.48));
-      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, rgba(0,0,0,.78), rgba(0,0,0,.46));
+      border-bottom: 1px solid rgba(255,255,255,.05);
     }
 
     .nav {
@@ -175,9 +212,9 @@
       justify-content: space-between;
       gap: 20px;
       padding: 0 20px;
-      border-radius: 999px;
+      border-radius: var(--radius-pill);
       border: 1px solid rgba(255,255,255,.08);
-      background: rgba(20,20,20,.7);
+      background: rgba(18,18,18,.72);
       box-shadow: 0 20px 60px rgba(0,0,0,.3);
     }
 
@@ -191,8 +228,10 @@
 
     .logo {
       font-size: 20px;
-      font-weight: 750;
+      font-weight: 780;
       letter-spacing: -0.05em;
+      display: inline-flex;
+      align-items: center;
     }
 
     .logo::before {
@@ -200,17 +239,34 @@
       color: var(--blue);
       margin-right: 10px;
       font-size: 12px;
-      vertical-align: middle;
     }
 
     .nav-links a {
-      color: rgba(255,255,255,.78);
+      color: rgba(255,255,255,.76);
       font-size: 15px;
       transition: color .25s ease, opacity .25s ease;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 100%;
+      height: 1px;
+      background: rgba(255,255,255,.7);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .28s var(--ease);
     }
 
     .nav-links a:hover {
       color: #fff;
+    }
+
+    .nav-links a:hover::after {
+      transform: scaleX(1);
     }
 
     .hero {
@@ -231,7 +287,7 @@
       margin-top: 24px;
       font-size: 21px;
       line-height: 1.65;
-      color: rgba(245,245,247,.78);
+      color: rgba(245,245,247,.8);
     }
 
     .hero-actions {
@@ -266,9 +322,35 @@
       box-shadow: var(--shadow);
     }
 
+    .surface-hover {
+      transition: transform .35s var(--ease), border-color .35s var(--ease), background .35s var(--ease), box-shadow .35s var(--ease);
+    }
+
+    .surface-hover:hover {
+      border-color: rgba(255,255,255,.18);
+      box-shadow: var(--shadow-strong);
+    }
+
     .stat {
       padding: 24px;
       border-radius: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat::before,
+    .surface::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent 34%);
+      pointer-events: none;
+    }
+
+    .stat > *,
+    .surface > * {
+      position: relative;
+      z-index: 1;
     }
 
     .stat strong {
@@ -290,10 +372,10 @@
     .stage-back,
     .stage-mid {
       position: absolute;
-      inset: auto;
       border-radius: 999px;
       filter: blur(10px);
       opacity: .95;
+      pointer-events: none;
     }
 
     .stage-back {
@@ -310,139 +392,55 @@
       animation: float 6s infinite ease-in-out;
     }
 
-    .device-stack {
-      position: relative;
-      width: min(560px, 100%);
-      aspect-ratio: 1 / 1.1;
-      display: grid;
-      place-items: center;
-    }
-
-    .phone,
-    .card-visual,
-    .mini-panel {
-      position: absolute;
-      border-radius: 34px;
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 30px 90px rgba(0,0,0,.42);
-      overflow: hidden;
-    }
-
-    .phone {
-      width: 280px;
-      height: 560px;
-      background: linear-gradient(180deg, #141519 0%, #08090b 100%);
-    }
-
-    .phone::before {
-      content: "";
-      position: absolute;
-      top: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120px;
-      height: 24px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.9);
-      z-index: 4;
-    }
-
-    .phone.screen-left {
-      transform: translate(-105px, 6px) rotate(-12deg);
-      opacity: .9;
-    }
-
-    .phone.screen-right {
-      transform: translate(100px, 24px) rotate(13deg);
-      opacity: .86;
-    }
-
-    .phone-main {
-      position: relative;
-      width: 320px;
-      height: 640px;
-      z-index: 5;
-      background: linear-gradient(180deg, #111215, #050506);
-      transform: rotate(-2deg);
-    }
-
-    .screen {
+    .hero-orbit {
       position: absolute;
       inset: 0;
-      padding: 30px 22px 24px;
-      background:
-        radial-gradient(circle at top left, rgba(41,151,255,.16), transparent 28%),
-        linear-gradient(180deg, #111215 0%, #07080a 100%);
+      pointer-events: none;
     }
 
-    .statusbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      color: rgba(255,255,255,.82);
-      margin-bottom: 28px;
-      padding-top: 6px;
-    }
-
-    .app-card {
-      padding: 18px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
-      border: 1px solid rgba(255,255,255,.1);
-      margin-bottom: 14px;
-    }
-
-    .app-card strong {
-      display: block;
-      font-size: 28px;
-      letter-spacing: -0.05em;
-      margin-top: 8px;
-    }
-
-    .meter {
+    .glow-dot {
+      position: absolute;
+      width: 10px;
       height: 10px;
-      width: 100%;
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      overflow: hidden;
-      margin-top: 16px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.85);
+      box-shadow: 0 0 24px rgba(255,255,255,.55);
+      animation: orbit 12s linear infinite;
     }
 
-    .meter > span {
-      display: block;
-      height: 100%;
-      width: 72%;
-      background: linear-gradient(90deg, #fff, #2997ff);
-      border-radius: inherit;
-    }
-
-    .mini-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .mini-grid .app-card {
-      margin: 0;
-      min-height: 120px;
-    }
+    .glow-dot:nth-child(1) { top: 12%; left: 72%; animation-duration: 11s; }
+    .glow-dot:nth-child(2) { top: 70%; left: 20%; animation-duration: 14s; opacity: .75; }
+    .glow-dot:nth-child(3) { top: 30%; left: 14%; animation-duration: 9s; opacity: .6; }
 
     .card-visual {
+      position: relative;
       width: 360px;
       aspect-ratio: 1.58 / 1;
       padding: 28px;
       z-index: 6;
-      transform: translate(70px, 190px) rotate(-7deg);
+      transform: translate(34px, 82px) rotate(-7deg);
+      border-radius: 34px;
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 30px 90px rgba(0,0,0,.42);
+      overflow: hidden;
       background:
         linear-gradient(135deg, rgba(255,255,255,.18), rgba(255,255,255,.04)),
         linear-gradient(135deg, #0f1116, #1d2431 48%, #0f1116);
     }
 
+    .card-visual::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.18), transparent 24%),
+        linear-gradient(120deg, transparent 0%, rgba(255,255,255,.08) 40%, transparent 68%);
+      pointer-events: none;
+    }
+
     .card-brand {
       font-size: 28px;
-      font-weight: 750;
+      font-weight: 780;
       letter-spacing: -0.06em;
     }
 
@@ -462,31 +460,19 @@
       border-radius: 999px;
       background: rgba(255,255,255,.12);
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: .08em;
       text-transform: uppercase;
     }
 
-    .mini-panel {
-      width: 220px;
-      padding: 18px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
-      z-index: 7;
-    }
-
-    .panel-top {
-      transform: translate(-170px, -170px);
-    }
-
-    .panel-bottom {
-      transform: translate(170px, -150px);
-    }
-
-    .mini-panel strong {
-      display: block;
-      font-size: 30px;
-      letter-spacing: -0.05em;
+    .card-value {
+      position: absolute;
+      right: 28px;
+      bottom: 28px;
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,255,255,.78);
+      letter-spacing: -0.02em;
     }
 
     .cards-2,
@@ -514,19 +500,6 @@
       overflow: hidden;
     }
 
-    .surface::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,.04), transparent 30%);
-      pointer-events: none;
-    }
-
-    .surface > * {
-      position: relative;
-      z-index: 1;
-    }
-
     .package-card {
       display: flex;
       flex-direction: column;
@@ -540,11 +513,27 @@
 
     .package-card p { margin-top: 12px; }
 
+    .package-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      padding: 8px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.86);
+    }
+
     .price {
       margin-top: 26px;
       font-size: 42px;
       line-height: 1;
-      font-weight: 750;
+      font-weight: 780;
       letter-spacing: -0.06em;
     }
 
@@ -581,7 +570,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(255,255,255,.7);
+      background: rgba(255,255,255,.76);
     }
 
     .analysis-box {
@@ -596,12 +585,20 @@
       margin-bottom: 28px;
     }
 
+    .progress-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
     .progress-rail {
       width: 280px;
       height: 8px;
       border-radius: 999px;
       background: rgba(255,255,255,.08);
       overflow: hidden;
+      position: relative;
     }
 
     .progress-fill {
@@ -609,12 +606,23 @@
       border-radius: inherit;
       background: linear-gradient(90deg, #fff, #2997ff);
       transition: width .35s var(--ease);
+      width: 20%;
+    }
+
+    .progress-meta {
+      font-size: 14px;
+      font-weight: 800;
+      color: rgba(255,255,255,.72);
     }
 
     .step { display: none; }
     .step.active { display: block; animation: fadeUp .5s var(--ease); }
 
-    .option-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 24px; }
+    .option-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-top: 24px;
+    }
+
     .option-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .option-grid.auto-fit { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 
@@ -628,7 +636,11 @@
       background: rgba(255,255,255,.04);
       color: #fff;
       padding: 22px;
-      transition: transform .25s var(--ease), border-color .25s var(--ease), background .25s var(--ease), box-shadow .25s var(--ease);
+      transition:
+        transform .25s var(--ease),
+        border-color .25s var(--ease),
+        background .25s var(--ease),
+        box-shadow .25s var(--ease);
     }
 
     .option {
@@ -640,7 +652,7 @@
       justify-content: center;
       gap: 10px;
       font-size: 20px;
-      font-weight: 650;
+      font-weight: 700;
       letter-spacing: -0.03em;
     }
 
@@ -682,8 +694,8 @@
     }
 
     .operator-row label {
-      font-weight: 650;
-      color: rgba(255,255,255,.9);
+      font-weight: 700;
+      color: rgba(255,255,255,.92);
     }
 
     select.operator-select {
@@ -696,6 +708,12 @@
         calc(100% - 20px) calc(50% - 3px);
       background-size: 6px 6px, 6px 6px;
       background-repeat: no-repeat;
+      padding-right: 44px;
+    }
+
+    select.operator-select option {
+      color: #000;
+      background: #fff;
     }
 
     .loader {
@@ -716,25 +734,105 @@
       animation: spin 1s linear infinite;
     }
 
+    .result-summary {
+      margin-top: 28px;
+      display: grid;
+      gap: 16px;
+    }
+
     .result-card {
       padding: 24px;
       border-radius: 26px;
       border: 1px solid rgba(255,255,255,.1);
       background: rgba(255,255,255,.04);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
     .result-card strong {
       display: block;
-      font-size: 16px;
+      font-size: 14px;
       color: rgba(255,255,255,.72);
       margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
     .result-card .big {
       font-size: 36px;
       letter-spacing: -0.05em;
       line-height: 1;
-      font-weight: 750;
+      font-weight: 780;
+    }
+
+    .recommendation-card {
+      padding: 24px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.12);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04)),
+        rgba(255,255,255,.02);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .recommendation-card .top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .recommendation-card h4 {
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      margin: 0;
+    }
+
+    .recommendation-card .tag {
+      display: inline-flex;
+      align-items: center;
+      align-self: flex-start;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .recommendation-card .meta {
+      display: grid;
+      gap: 10px;
+    }
+
+    .recommendation-card .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 15px;
+      color: var(--muted);
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+
+    .recommendation-card .row strong {
+      color: #fff;
+      font-size: 15px;
+      margin: 0;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .result-list {
+      display: grid;
+      gap: 8px;
+      padding-left: 18px;
+      margin: 0;
     }
 
     .map-surface {
@@ -766,9 +864,48 @@
       position: absolute;
       border-radius: 999px;
       filter: blur(12px);
-      opacity: .65;
+      opacity: .62;
       mix-blend-mode: screen;
-      transition: opacity .3s ease;
+      transition: opacity .3s ease, transform .3s ease;
+      animation: pulseSoft 8s ease-in-out infinite;
+    }
+
+    .coverage-pin {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: #fff;
+      box-shadow: 0 0 0 8px rgba(255,255,255,.08), 0 0 24px rgba(255,255,255,.3);
+      transform: translate(-50%, -50%);
+    }
+
+    .coverage-pin::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 34px;
+      height: 34px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+
+    .map-label {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 18px;
+      background: rgba(0,0,0,.34);
+      border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      font-size: 14px;
+      color: rgba(255,255,255,.82);
     }
 
     .faq-item {
@@ -787,14 +924,16 @@
       gap: 18px;
       padding: 0;
       cursor: pointer;
-      font-size: 22px;
-      font-weight: 650;
+      font-size: 20px;
+      font-weight: 700;
       letter-spacing: -0.03em;
+      text-align: left;
     }
 
     .faq-toggle .plus {
       font-size: 30px;
       transition: transform .3s ease;
+      line-height: 1;
     }
 
     .faq-answer {
@@ -807,7 +946,7 @@
     }
 
     .faq-item.active .faq-answer {
-      max-height: 200px;
+      max-height: 220px;
       opacity: 1;
       margin-top: 16px;
     }
@@ -843,9 +982,67 @@
       transform: translateY(0);
     }
 
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0,0,0,.62);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .modal.active {
+      display: flex;
+      animation: fadeIn .28s ease;
+    }
+
+    .modal-panel {
+      width: min(100%, 560px);
+      padding: 28px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(22,22,24,.96), rgba(10,10,12,.94));
+      box-shadow: var(--shadow-strong);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 42px;
+      height: 42px;
+      min-height: 42px;
+      padding: 0;
+      border-radius: 50%;
+    }
+
+    .modal-grid {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
     @keyframes pulse {
       0%, 100% { transform: scale(1); opacity: .8; }
       50% { transform: scale(1.06); opacity: 1; }
+    }
+
+    @keyframes pulseSoft {
+      0%, 100% { transform: scale(1); opacity: .56; }
+      50% { transform: scale(1.04); opacity: .68; }
     }
 
     @keyframes float {
@@ -860,6 +1057,17 @@
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(18px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes orbit {
+      0% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-10px) scale(1.08); }
+      100% { transform: translateY(0px) scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     @media (max-width: 1200px) {
@@ -880,6 +1088,10 @@
 
       .hero-visual {
         min-height: 560px;
+      }
+
+      h1 {
+        max-width: none;
       }
     }
 
@@ -920,12 +1132,12 @@
         grid-template-columns: 1fr;
       }
 
-      .device-stack {
-        transform: scale(.86);
-      }
-
       .operator-row {
         grid-template-columns: 1fr;
+      }
+
+      .hero-copy p {
+        font-size: 19px;
       }
     }
 
@@ -939,22 +1151,33 @@
         flex-direction: column;
         align-items: stretch;
       }
+      .progress-left {
+        align-items: stretch;
+      }
       .progress-rail { width: 100%; }
-      .device-stack { transform: scale(.68); }
-      .hero-visual { min-height: 410px; }
-      .phone-main { transform: none; }
-      .card-visual { transform: translate(60px, 170px) rotate(-7deg); }
-      .panel-top { transform: translate(-110px, -165px); }
-      .panel-bottom { transform: translate(120px, -150px); }
+      .hero-visual { min-height: 390px; }
+      .card-visual { transform: translate(0, 30px) rotate(-6deg) scale(.92); }
       .map-surface { min-height: 520px; }
+      .faq-toggle { font-size: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 <body>
+
   <header class="nav-wrap">
     <div class="container nav">
       <div class="nav-left">
-        <a class="logo" href="#top">Dealett</a>
+        <a class="logo" href="#">Dealett</a>
         <nav class="nav-links">
           <a href="#paket">Paket</a>
           <a href="#analys">Analys</a>
@@ -969,112 +1192,49 @@
     </div>
   </header>
 
-  <main id="top">
+  <main>
     <section class="container">
       <div class="hero">
-        <div class="hero-copy reveal visible">
+        <div class="hero-copy reveal">
           <div class="eyebrow">Starta här • Hela hushållet på ett ställe</div>
           <h1>Få rätt abonnemang.<br>Få mer tillbaka.</h1>
-          <p>Behåll mobilen. Få presentkort istället för rabatt. Ett smartare, mer premium sätt att välja abonnemang för hela hushållet.</p>
+          <p>Behåll mobilen. Få presentkort istället för rabatt. Ett smartare sätt att välja abonnemang för hela hushållet.</p>
           <div class="hero-actions">
-            <a href="#analys" class="btn-white" style="padding: 0 32px; min-height: 60px; font-size: 17px;">Kom igång</a>
+            <a href="#analys" class="btn-white">Kom igång</a>
             <a href="#paket" class="btn-dark">Se färdiga paket</a>
           </div>
-          <div class="hero-note">Tar mindre än 2 minuter • Helt gratis • Ingen ny mobil behövs</div>
+          <div class="hero-note">Tar mindre än 2 minuter • Helt gratis</div>
           <div class="hero-stats">
             <div class="stat">
               <strong>2 min</strong>
-              <span>Snabb analys med tydligt resultat direkt.</span>
+              <span>Snabb analys</span>
             </div>
             <div class="stat">
               <strong>1000–3500 kr</strong>
-              <span>Exempel på presentkort beroende på upplägg.</span>
+              <span>Exempel på presentkort</span>
             </div>
             <div class="stat">
-              <strong>0 kr</strong>
-              <span>Ingen kostnad för analysen och inget köpkrav.</span>
+              <strong>0 krav</strong>
+              <span>Ingen ny mobil behövs</span>
             </div>
           </div>
         </div>
 
-        <div class="hero-visual reveal visible" aria-hidden="true">
+        <div class="hero-visual reveal" aria-hidden="true">
           <div class="stage-back"></div>
           <div class="stage-mid"></div>
-
-          <div class="device-stack">
-            <div class="phone screen-left">
-              <div class="screen"></div>
-            </div>
-
-            <div class="phone screen-right">
-              <div class="screen"></div>
-            </div>
-
-            <div class="phone phone-main">
-              <div class="screen">
-                <div class="statusbar">
-                  <span>09:41</span>
-                  <span>5G ⟂ 87%</span>
-                </div>
-                <div class="pill">Dealett Analys</div>
-                <div class="app-card" style="margin-top:16px;">
-                  <span style="color:rgba(255,255,255,.72);font-size:14px;">Rekommenderat paket</span>
-                  <strong>4 abonnemang</strong>
-                  <div style="margin-top:12px;color:rgba(255,255,255,.8);">786 kr / mån</div>
-                  <div class="meter"><span></span></div>
-                </div>
-                <div class="mini-grid">
-                  <div class="app-card">
-                    <div style="color:rgba(255,255,255,.68);font-size:13px;">Presentkort</div>
-                    <strong style="font-size:24px;margin-top:8px;">2500 kr</strong>
-                  </div>
-                  <div class="app-card">
-                    <div style="color:rgba(255,255,255,.68);font-size:13px;">Surfprofil</div>
-                    <strong style="font-size:24px;margin-top:8px;">Mixad</strong>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mini-panel panel-top">
-              <span style="display:block;color:rgba(255,255,255,.68);font-size:13px;">Belöning</span>
-              <strong>2500 kr</strong>
-              <span style="display:block;margin-top:6px;color:rgba(255,255,255,.66);">Presentkort istället för rabatt</span>
-            </div>
-
-            <div class="mini-panel panel-bottom">
-              <span style="display:block;color:rgba(255,255,255,.68);font-size:13px;">Tidsåtgång</span>
-              <strong>2 min</strong>
-              <span style="display:block;margin-top:6px;color:rgba(255,255,255,.66);">Från frågor till konkret rekommendation</span>
-            </div>
-
-            <div class="card-visual">
-              <div class="card-brand">Dealett</div>
-              <div class="chip"></div>
-              <div class="card-badge">Presentkort</div>
-            </div>
+          <div class="hero-orbit">
+            <span class="glow-dot"></span>
+            <span class="glow-dot"></span>
+            <span class="glow-dot"></span>
+          </div>
+          <div class="card-visual">
+            <div class="card-brand">Dealett</div>
+            <div class="chip"></div>
+            <div class="card-badge">Presentkort</div>
+            <div class="card-value">Smartare byte</div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container cards-3">
-        <article class="surface reveal">
-          <div class="pill">Behåll telefonen</div>
-          <h3 style="margin-top:18px;">Byt inte i onödan</h3>
-          <p style="margin-top:14px;">Du behöver inte byta en mobil som redan fungerar för att få ett bättre erbjudande. Dealett fokuserar på abonnemanget och värdet omkring det.</p>
-        </article>
-        <article class="surface reveal">
-          <div class="pill">Få presentkort istället</div>
-          <h3 style="margin-top:18px;">Mer konkret värde</h3>
-          <p style="margin-top:14px;">Belöningen blir friare, tydligare och ofta mer användbar än klassisk telefonrabatt. Det ger en rakare upplevelse och bättre upplevt värde.</p>
-        </article>
-        <article class="surface reveal">
-          <div class="pill">Analysera hela hushållet</div>
-          <h3 style="margin-top:18px;">En totalbild, inte gissningar</h3>
-          <p style="margin-top:14px;">Om flera personer har olika operatörer, surfbehov eller prisnivåer tar vi hänsyn till det innan rekommendationen visas.</p>
-        </article>
       </div>
     </section>
 
@@ -1083,194 +1243,217 @@
         <div class="reveal">
           <div class="pill">Färdiga paket</div>
           <h2 class="section-title">Välj direkt utan analys</h2>
-          <p class="section-sub" style="max-width:760px;margin-top:18px;">För dig som redan vet vad du vill ha. Välj ett färdigt paket och gå direkt vidare till intresseanmälan eller offertförfrågan.</p>
+          <p class="section-sub">För dig som redan vet vad du vill ha. Välj ett färdigt paket och gå direkt vidare till intresseanmälan.</p>
         </div>
 
         <div class="package-grid">
-          <article class="surface package-card reveal">
+          <article class="surface surface-hover package-card reveal" style="background:linear-gradient(180deg,#17181d,#111317)">
             <div class="pill">Standard</div>
             <h3>2 abonnemang</h3>
-            <p>Balanserad surf för två personer. Ett rent och tydligt upplägg för mindre hushåll.</p>
-            <div class="price">598 kr</div>
-            <div style="color:rgba(255,255,255,.72);margin-top:6px;">/ mån</div>
+            <p class="package-sub">Balanserad surf för två personer.</p>
+            <div class="price">598 kr / mån</div>
             <div class="gift">1400 kr presentkort</div>
             <div class="details">
               <div class="detail">Perfekt för par eller mindre hushåll.</div>
-              <div class="detail">Enkel start med förutsägbar kostnad.</div>
-              <div class="detail">Låg komplexitet, tydligt värde.</div>
+              <div class="detail">Tydlig kostnad och enkel start.</div>
+              <div class="detail">Bra nivå för normal användning.</div>
             </div>
-            <button class="btn-white" style="margin-top: 28px; width: 100%;" onclick="openCheckout('2 abonnemang','598 kr / mån','1400 kr presentkort')">Välj paket</button>
+            <button class="btn-white" style="margin-top:22px;width:100%" onclick="openCheckout('2 abonnemang','598 kr / mån','1400 kr presentkort')">Välj paket</button>
           </article>
 
-          <article class="surface package-card reveal">
+          <article class="surface surface-hover package-card reveal" style="background:linear-gradient(180deg,#1b1c22,#121316)">
             <div class="pill">Populärt</div>
             <h3>4 abonnemang</h3>
-            <p>Tre personer med medelsurf och en person med låg surf. Det mest balanserade familjeupplägget.</p>
-            <div class="price">786 kr</div>
-            <div style="color:rgba(255,255,255,.72);margin-top:6px;">/ mån</div>
+            <p class="package-sub">Tre personer med medelsurf + en med låg surf.</p>
+            <div class="price">786 kr / mån</div>
             <div class="gift">2500 kr presentkort</div>
             <div class="details">
               <div class="detail">Bra familjeupplägg med tydlig totalbild.</div>
-              <div class="detail">Hög upplevd belöning utan att byta mobil.</div>
-              <div class="detail">Passar de flesta hushåll bäst.</div>
+              <div class="detail">Låg tröskel och hög upplevd belöning.</div>
+              <div class="detail">Passar blandade surfbehov i vardagen.</div>
             </div>
-            <button class="btn-white" style="margin-top: 28px; width: 100%;" onclick="openCheckout('4 abonnemang','786 kr / mån','2500 kr presentkort')">Välj paket</button>
+            <button class="btn-white" style="margin-top:22px;width:100%" onclick="openCheckout('4 abonnemang','786 kr / mån','2500 kr presentkort')">Välj paket</button>
           </article>
 
-          <article class="surface package-card reveal">
+          <article class="surface surface-hover package-card reveal" style="background:linear-gradient(180deg,#17181d,#101215)">
             <div class="pill">Familj</div>
             <h3>5 abonnemang</h3>
-            <p>Hög surf för större hushåll med fler användare, fler behov och större krav på enkelhet.</p>
-            <div class="price">1290 kr</div>
-            <div style="color:rgba(255,255,255,.72);margin-top:6px;">/ mån</div>
+            <p class="package-sub">Hög surf för större hushåll.</p>
+            <div class="price">1290 kr / mån</div>
             <div class="gift">3500 kr presentkort</div>
             <div class="details">
-              <div class="detail">Byggt för hushåll med hög förbrukning.</div>
-              <div class="detail">Tydligt premiumupplägg med stark belöning.</div>
-              <div class="detail">Bra för familjer som vill samla allt.</div>
+              <div class="detail">Passar hushåll med fler användare.</div>
+              <div class="detail">Byggt för surf, enkelhet och värde.</div>
+              <div class="detail">Starkare upplägg för tung användning.</div>
             </div>
-            <button class="btn-white" style="margin-top: 28px; width: 100%;" onclick="openCheckout('5 abonnemang','1290 kr / mån','3500 kr presentkort')">Välj paket</button>
+            <button class="btn-white" style="margin-top:22px;width:100%" onclick="openCheckout('5 abonnemang','1290 kr / mån','3500 kr presentkort')">Välj paket</button>
           </article>
         </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container cards-3">
+        <article class="surface surface-hover reveal">
+          <div class="pill">Flexibelt</div>
+          <h3 style="margin-top:18px">Behåll telefonen</h3>
+          <p style="margin-top:14px">Du behöver inte byta en mobil som redan fungerar för att få ett bättre erbjudande.</p>
+        </article>
+        <article class="surface surface-hover reveal">
+          <div class="pill">Mervärde</div>
+          <h3 style="margin-top:18px">Få presentkort istället</h3>
+          <p style="margin-top:14px">Belöningen blir mer konkret, friare och mer användbar än klassisk telefonrabatt.</p>
+        </article>
+        <article class="surface surface-hover reveal">
+          <div class="pill">Helhetsbild</div>
+          <h3 style="margin-top:18px">Analysera hela hushållet</h3>
+          <p style="margin-top:14px">Om flera personer har olika operatörer tar vi hänsyn till det innan rekommendationen visas.</p>
+        </article>
       </div>
     </section>
 
     <section id="analys" class="section">
-      <div class="container analysis-layout">
-        <div class="surface reveal">
-          <div class="pill">Gratis behovsanalys</div>
-          <h2 class="section-title">Få en tydlig rekommendation för hushållet</h2>
-          <p class="section-sub" style="margin-top:18px;">Vi samlar in hushållets storlek, operatör per person, surfbehov, prisnivå och bindningstid. Du kan också skriva egna önskemål i fri text, till exempel “surf i Turkiet”. Sedan får du ett konkret resultat med abonnemangsnivå, uppskattad kostnad och presentkort.</p>
+      <div class="container">
+        <div class="analysis-layout">
+          <div class="surface reveal">
+            <div class="pill">Gratis behovsanalys</div>
+            <h2 class="section-title">Få en tydlig rekommendation för hushållet</h2>
+            <p class="section-sub">Vi samlar in hushållets storlek, operatör per person, surfbehov, prisnivå och bindningstid. Du kan också skriva egna önskemål i fri text, till exempel “surf i Turkiet”. Sedan får du ett konkret resultat med abonnemangsnivå, uppskattad kostnad och presentkort.</p>
 
-          <div class="cards-3" style="margin-top:28px;">
-            <div class="surface" style="padding:20px; border-radius:22px;">
-              <div class="pill">Snabbt</div>
-              <h3 style="font-size:24px;margin-top:16px;">Få svar direkt</h3>
-            </div>
-            <div class="surface" style="padding:20px; border-radius:22px;">
-              <div class="pill">Smart</div>
-              <h3 style="font-size:24px;margin-top:16px;">Operatör per person</h3>
-            </div>
-            <div class="surface" style="padding:20px; border-radius:22px;">
-              <div class="pill">Flexibelt</div>
-              <h3 style="font-size:24px;margin-top:16px;">Fri text + paket</h3>
-            </div>
-          </div>
-        </div>
-
-        <div class="surface analysis-box reveal">
-          <div class="progress">
-            <button id="backBtn" class="btn-dark" style="visibility: hidden;">← Tillbaka</button>
-            <div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;flex-wrap:wrap;">
-              <div class="progress-rail"><div id="progressFill" class="progress-fill" style="width: 20%;"></div></div>
-              <div style="font-size:14px;font-weight:800;color:rgba(255,255,255,.72)">Steg <span id="stepNumber">1</span> / 5</div>
-            </div>
-          </div>
-
-          <div id="quizIntro" style="text-align:center;padding:48px 0 6px;">
-            <div class="pill">Starta analysen</div>
-            <h3 style="font-size: clamp(34px, 5vw, 52px); margin-top: 18px;">Jämför smartare på riktigt</h3>
-            <p style="margin:16px auto 0;max-width:640px;color:var(--muted);line-height:1.8;font-size:17px;">Svara på några frågor och få ett konkret resultat med pris, paketnivå och möjlig presentkortsnivå.</p>
-            <button id="startQuiz" class="btn-white" style="margin-top:26px;">Starta analys</button>
-          </div>
-
-          <div id="quizFlow" style="display:none;margin-top:22px;">
-            <div class="step active" data-step="0">
-              <div class="pill">Hushåll</div>
-              <h3 style="font-size: clamp(28px, 4vw, 42px); margin-top: 18px;">Hur många personer ingår?</h3>
-              <div class="option-grid cols-3">
-                <button class="option" data-field="persons" data-value="1">1 person</button>
-                <button class="option" data-field="persons" data-value="2">2 personer</button>
-                <button class="option" data-field="persons" data-value="3">3 personer</button>
-                <button class="option" data-field="persons" data-value="4">4 personer</button>
-                <button class="option" data-field="persons" data-value="5">5 personer</button>
-                <button class="option" data-field="persons" data-value="6">6+ personer</button>
+            <div class="cards-3" style="margin-top:26px">
+              <div class="surface" style="padding:20px">
+                <div class="pill">Snabbt</div>
+                <h3 style="font-size:22px;margin-top:16px">Få svar direkt</h3>
               </div>
-            </div>
-
-            <div class="step" data-step="1">
-              <div class="pill">Operatör</div>
-              <h3 style="font-size: clamp(28px, 4vw, 42px); margin-top: 18px;">Vilken operatör har varje person idag?</h3>
-              <p style="margin-top:12px;color:var(--muted)">Välj operatör för alla personer i hushållet.</p>
-              <div id="operatorsContainer" style="margin-top:22px;display:grid;gap:14px"></div>
-              <button id="operatorsNext" class="btn-white" style="margin-top:22px">Fortsätt</button>
-            </div>
-
-            <div class="step" data-step="2">
-              <div class="pill">Surf &amp; önskemål</div>
-              <h3 style="font-size: clamp(28px, 4vw, 42px); margin-top: 18px;">Hur mycket surf behövs ungefär?</h3>
-              <div class="option-grid">
-                <button class="option" data-field="data" data-value="low">Låg surf<small>Mest wifi, sociala medier och lätt användning</small></button>
-                <button class="option" data-field="data" data-value="medium">Medel surf<small>Streaming, video och daglig användning</small></button>
-                <button class="option" data-field="data" data-value="high">Hög surf<small>Stor förbrukning eller flera tunga användare</small></button>
+              <div class="surface" style="padding:20px">
+                <div class="pill">Smart</div>
+                <h3 style="font-size:22px;margin-top:16px">Operatör per person</h3>
               </div>
-              <div style="margin-top:22px;">
-                <label for="freeTextNeed" style="display:block;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.44)">Skriv egna önskemål</label>
-                <textarea id="freeTextNeed" rows="4" class="field" placeholder="Till exempel: surf i Turkiet, fria samtal, viktigt med låg kostnad..."></textarea>
-              </div>
-            </div>
-
-            <div class="step" data-step="3">
-              <div class="pill">Pris</div>
-              <h3 style="font-size: clamp(28px, 4vw, 42px); margin-top: 18px;">Vad betalar ni ungefär idag per abonnemang?</h3>
-              <div class="option-grid cols-3">
-                <button class="option" data-field="price" data-value="under300">Under 300 kr</button>
-                <button class="option" data-field="price" data-value="300-400">300–400 kr</button>
-                <button class="option" data-field="price" data-value="400+">400+ kr</button>
-              </div>
-            </div>
-
-            <div class="step" data-step="4">
-              <div class="pill">Bindningstid</div>
-              <h3 style="font-size: clamp(28px, 4vw, 42px); margin-top: 18px;">Har ni bindningstid kvar?</h3>
-              <div class="option-grid cols-3">
-                <button class="option" data-field="binding" data-value="no">Nej</button>
-                <button class="option" data-field="binding" data-value="yes">Ja</button>
-                <button class="option" data-field="binding" data-value="unknown">Vet inte</button>
+              <div class="surface" style="padding:20px">
+                <div class="pill">Flexibelt</div>
+                <h3 style="font-size:22px;margin-top:16px">Fri text + paket</h3>
               </div>
             </div>
           </div>
 
-          <div id="loader" class="loader">
-            <div class="loader-ring"></div>
-            <h3 style="font-size:34px;">Tar fram ert bästa upplägg...</h3>
-            <p style="margin-top:12px;color:var(--muted)">Räknar på operatörer, surf, pris och möjlig presentkortsnivå.</p>
-          </div>
-
-          <div id="result" style="display:none;margin-top:18px;">
-            <div style="text-align:center;">
-              <div class="pill">Rekommendationen är klar</div>
-              <h3 style="font-size: clamp(34px, 5vw, 52px); margin-top: 18px;">Här är ert bästa nästa steg</h3>
-              <p id="resultLead" style="margin:16px auto 0;max-width:760px;color:var(--muted);line-height:1.8"></p>
+          <div class="surface analysis-box reveal">
+            <div class="progress">
+              <button id="backBtn" class="btn-dark" style="visibility:hidden">← Tillbaka</button>
+              <div class="progress-left">
+                <div class="progress-rail">
+                  <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div class="progress-meta">Steg <span id="stepNumber">1</span> / 5</div>
+              </div>
             </div>
-            <div id="packageCards" class="option-grid auto-fit" style="margin-top:28px;"></div>
-            <div id="resultCards" class="result-grid"></div>
-            <div style="margin-top:24px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px;">
-              <button id="restartQuiz" class="btn-dark">Gör om analys</button>
-              <a href="#coverage" class="btn-white">Se täckning</a>
+
+            <div id="quizIntro" style="text-align:center;padding:42px 0 10px">
+              <div class="pill">Starta analysen</div>
+              <h3 style="font-size:40px;margin-top:18px;letter-spacing:-.04em">Jämför smartare på riktigt</h3>
+              <p style="margin:16px auto 0;max-width:620px;color:var(--muted);line-height:1.8">Svara på några frågor och få ett konkret resultat med pris och presentkort.</p>
+              <button id="startQuiz" class="btn-white" style="margin-top:24px">Starta analys</button>
+            </div>
+
+            <div id="quizFlow" style="display:none;margin-top:22px">
+              <div class="step active" data-step="0">
+                <div class="pill">👥 Hushåll</div>
+                <h3 style="font-size:34px;margin-top:18px;letter-spacing:-.04em">Hur många personer ingår?</h3>
+                <div class="option-grid cols-3" style="margin-top:22px">
+                  <button class="option" data-field="persons" data-value="1">1 person</button>
+                  <button class="option" data-field="persons" data-value="2">2 personer</button>
+                  <button class="option" data-field="persons" data-value="3">3 personer</button>
+                  <button class="option" data-field="persons" data-value="4">4 personer</button>
+                  <button class="option" data-field="persons" data-value="5">5 personer</button>
+                  <button class="option" data-field="persons" data-value="6">6+ personer</button>
+                </div>
+              </div>
+
+              <div class="step" data-step="1">
+                <div class="pill">📶 Operatör</div>
+                <h3 style="font-size:34px;margin-top:18px;letter-spacing:-.04em">Vilken operatör har varje person idag?</h3>
+                <p style="margin-top:12px;color:var(--muted)">Välj operatör för alla personer i hushållet.</p>
+                <div id="operatorsContainer" style="margin-top:22px;display:grid;gap:14px"></div>
+                <button id="operatorsNext" class="btn-white" style="margin-top:22px">Fortsätt</button>
+              </div>
+
+              <div class="step" data-step="2">
+                <div class="pill">📡 Surf &amp; önskemål</div>
+                <h3 style="font-size:34px;margin-top:18px;letter-spacing:-.04em">Hur mycket surf behövs ungefär?</h3>
+                <div class="option-grid" style="margin-top:22px">
+                  <button class="option" data-field="data" data-value="low">Låg surf<small>Mest wifi, sociala medier och lätt användning</small></button>
+                  <button class="option" data-field="data" data-value="medium">Medel surf<small>Streaming, video och daglig användning</small></button>
+                  <button class="option" data-field="data" data-value="high">Hög surf<small>Stor förbrukning eller flera tunga användare</small></button>
+                </div>
+                <div style="margin-top:22px">
+                  <label for="freeTextNeed" style="display:block;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.44)">Skriv egna önskemål</label>
+                  <textarea id="freeTextNeed" rows="4" class="field" placeholder="Till exempel: surf i Turkiet, fria samtal, viktigt med låg kostnad..."></textarea>
+                </div>
+              </div>
+
+              <div class="step" data-step="3">
+                <div class="pill">💳 Pris</div>
+                <h3 style="font-size:34px;margin-top:18px;letter-spacing:-.04em">Vad betalar ni ungefär idag per abonnemang?</h3>
+                <div class="option-grid cols-3" style="margin-top:22px">
+                  <button class="option" data-field="price" data-value="under300">Under 300 kr</button>
+                  <button class="option" data-field="price" data-value="300-400">300–400 kr</button>
+                  <button class="option" data-field="price" data-value="400+">400+ kr</button>
+                </div>
+              </div>
+
+              <div class="step" data-step="4">
+                <div class="pill">🔗 Bindningstid</div>
+                <h3 style="font-size:34px;margin-top:18px;letter-spacing:-.04em">Har ni bindningstid kvar?</h3>
+                <div class="option-grid cols-3" style="margin-top:22px">
+                  <button class="option" data-field="binding" data-value="no">Nej</button>
+                  <button class="option" data-field="binding" data-value="yes">Ja</button>
+                  <button class="option" data-field="binding" data-value="unknown">Vet inte</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="loader" class="loader">
+              <div class="loader-ring"></div>
+              <h3 style="font-size:30px;letter-spacing:-.04em">Tar fram ert bästa upplägg...</h3>
+              <p style="margin-top:12px;color:var(--muted)">Räknar på operatörer, surf, pris och möjlig presentkortsnivå.</p>
+            </div>
+
+            <div id="result" style="display:none;margin-top:18px">
+              <div style="text-align:center">
+                <div class="pill">✅ Rekommendationen är klar</div>
+                <h3 style="font-size:40px;margin-top:18px;letter-spacing:-.04em">Här är ert bästa nästa steg</h3>
+                <p id="resultLead" style="margin:16px auto 0;max-width:760px;color:var(--muted);line-height:1.8"></p>
+              </div>
+
+              <div id="packageCards" class="option-grid auto-fit" style="margin-top:28px"></div>
+              <div id="resultCards" class="result-grid"></div>
+
+              <div style="margin-top:24px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px">
+                <button id="restartQuiz" class="btn-dark">Gör om analys</button>
+                <a href="#coverage" class="btn-white">Se täckning</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section" style="padding-top: 20px;">
+    <section class="section" style="padding-top:0">
       <div class="container cards-2">
-        <div class="surface reveal">
+        <div class="surface surface-hover reveal">
           <div class="pill">Därför väljer kunder Dealett</div>
-          <h3 style="margin-top:18px;">Ett enklare sätt att hitta rätt abonnemang och få något tillbaka.</h3>
-          <p style="margin-top:14px;">Istället för att jämföra flera sidor själv får kunden ett tydligt upplägg som tar hänsyn till hela hushållet och visar ett konkret mervärde. Designen är gjord för att kännas modern, premium och lätt att förstå.</p>
+          <h3 style="margin-top:18px">Ett enklare sätt att hitta rätt abonnemang och få något tillbaka.</h3>
+          <p style="margin-top:14px">Istället för att jämföra flera sidor själv får kunden ett tydligt upplägg som tar hänsyn till hela hushållet och visar ett konkret mervärde.</p>
         </div>
-        <div class="surface reveal">
+        <div class="surface surface-hover reveal">
           <div class="pill">Kundröster</div>
-          <div style="display:grid;gap:12px;margin-top:18px;">
-            <div class="surface" style="padding:18px;border-radius:22px;">
-              <strong style="display:block;font-size:18px;">Emma, 29</strong>
-              <p style="margin-top:10px;">“Mycket enklare än att jämföra allt själv. Jag gillade att jag kunde behålla min telefon.”</p>
+          <div style="display:grid;gap:12px;margin-top:18px">
+            <div class="surface" style="padding:18px">
+              <strong style="display:block;font-size:18px;letter-spacing:-.03em">Emma, 29</strong>
+              <p style="margin-top:8px">“Mycket enklare än att jämföra allt själv. Jag gillade att jag kunde behålla min telefon.”</p>
             </div>
-            <div class="surface" style="padding:18px;border-radius:22px;">
-              <strong style="display:block;font-size:18px;">Johan, 35</strong>
-              <p style="margin-top:10px;">“Tydligt resultat direkt. Presentkort kändes mer värt än telefonrabatt.”</p>
+            <div class="surface" style="padding:18px">
+              <strong style="display:block;font-size:18px;letter-spacing:-.03em">Johan, 35</strong>
+              <p style="margin-top:8px">“Tydligt resultat direkt. Presentkort kändes mer värt än telefonrabatt.”</p>
             </div>
           </div>
         </div>
@@ -1279,16 +1462,10 @@
 
     <section id="coverage" class="section">
       <div class="container">
-        <div class="reveal">
-          <div class="pill">Täckning</div>
-          <h2 class="section-title">Se nätens täckning i en elegant översikt</h2>
-          <p class="section-sub" style="max-width:760px;margin-top:18px;">Det här är en stiliserad täckningsvy för demo. Byt lager, sök område och skapa en mer premium känsla runt jämförelsen.</p>
-        </div>
-
-        <div class="coverage-layout" style="margin-top:34px;">
+        <div class="coverage-layout">
           <div class="surface reveal">
             <div class="pill">Täckningskarta</div>
-            <h3 style="margin-top:18px;">Välj operatör</h3>
+            <h3 style="margin-top:18px">Välj operatör</h3>
             <div style="display:grid;gap:12px;margin-top:22px" id="coverageOps">
               <button class="coverage-op btn-dark" data-op="Telia">Telia</button>
               <button class="coverage-op btn-dark" data-op="Tele2">Tele2</button>
@@ -1296,37 +1473,40 @@
               <button class="coverage-op btn-dark" data-op="Tre">Tre</button>
               <button class="coverage-op btn-dark" data-op="Halebop">Halebop</button>
             </div>
-            <div class="surface" style="padding:18px;margin-top:18px;border-radius:22px;">
+            <div class="surface" style="padding:18px;margin-top:18px">
               <div style="font-size:14px;color:var(--muted-2)">Aktivt lager</div>
               <div id="activeCoverageLabel" style="margin-top:6px;font-weight:800">Ingen operatör vald</div>
             </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
               <button id="resetCoverage" class="btn-dark">Återställ</button>
               <button id="clearCoverage" class="btn-dark">Ta bort lager</button>
             </div>
           </div>
 
-          <div class="surface reveal" style="padding:18px;">
-            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;">
-              <div style="display:flex;overflow:hidden;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);width:100%;max-width:440px;">
-                <input id="coverageSearch" placeholder="Sök adress eller stad..." class="field" style="margin:0;border:none;border-radius:0;background:transparent;min-height:56px;">
-                <button id="coverageSearchBtn" class="btn-white" style="border-radius:0;min-height:56px;">🔍</button>
+          <div class="surface reveal" style="padding:18px">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap">
+              <div style="display:flex;overflow:hidden;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.05);width:100%;max-width:440px">
+                <input id="coverageSearch" placeholder="Sök adress eller stad..." class="field" style="margin:0;border:none;border-radius:0;background:transparent;min-height:56px">
+                <button id="coverageSearchBtn" class="btn-white" style="border-radius:0;min-height:56px">🔍</button>
               </div>
-              <div style="display:flex;gap:8px;">
+              <div style="display:flex;gap:8px">
                 <button id="zoomIn" class="btn-dark">+</button>
                 <button id="zoomOut" class="btn-dark">−</button>
               </div>
             </div>
-            <div class="map-surface" style="margin-top:18px;">
+
+            <div class="map-surface" id="mapSurface" style="margin-top:18px">
               <div class="map-grid"></div>
               <div id="coverageLayer"></div>
-              <div style="position:absolute;left:18px;bottom:18px;padding:14px 16px;border-radius:18px;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px);font-size:14px;">
-                <div style="display:flex;flex-wrap:wrap;gap:14px;">
-                  <span>Bakgrundsnät</span>
-                  <span>•</span>
+              <div class="map-label">
+                <span>Interaktiv översikt</span>
+                <span id="zoomLabel" style="color:var(--muted)">100%</span>
+              </div>
+              <div style="position:absolute;left:18px;bottom:18px;padding:14px 16px;border-radius:18px;background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.08);backdrop-filter:blur(10px);font-size:14px">
+                <div style="display:flex;flex-wrap:wrap;gap:14px">
+                  <span>Bakgrund</span>
                   <span>Aktivt lager</span>
-                  <span>•</span>
-                  <span>Demo-visning</span>
+                  <span>Vald operatör</span>
                 </div>
               </div>
             </div>
@@ -1335,28 +1515,33 @@
       </div>
     </section>
 
-    <section id="faq" class="section" style="padding-bottom:110px;">
-      <div class="container" style="max-width:980px;">
-        <div style="text-align:center;" class="reveal">
+    <section id="faq" class="section" style="padding-bottom:110px">
+      <div class="container" style="max-width:980px">
+        <div style="text-align:center" class="reveal">
           <div class="pill">FAQ</div>
           <h2 class="section-title">Vanliga frågor</h2>
         </div>
-        <div style="display:grid;gap:14px;margin-top:26px;">
+        <div style="display:grid;gap:14px;margin-top:26px">
           <div class="surface faq-item reveal">
-            <button class="faq-toggle">Kostar analysen något?<span class="plus">+</span></button>
-            <div class="faq-answer">Nej, analysen är helt kostnadsfri. Du kan gå igenom hela flödet och få en rekommendation utan att binda dig.</div>
+            <button class="faq-toggle">
+              <span>Kostar analysen något?</span>
+              <span class="plus">+</span>
+            </button>
+            <div class="faq-answer">Nej, analysen är helt kostnadsfri.</div>
           </div>
           <div class="surface faq-item reveal">
-            <button class="faq-toggle">Måste jag byta telefon?<span class="plus">+</span></button>
-            <div class="faq-answer">Nej. Upplägget är byggt för att du ska kunna behålla din nuvarande telefon och ändå få ett bättre erbjudande.</div>
+            <button class="faq-toggle">
+              <span>Måste jag byta telefon?</span>
+              <span class="plus">+</span>
+            </button>
+            <div class="faq-answer">Nej, du kan behålla din nuvarande telefon och ändå få ett attraktivt erbjudande.</div>
           </div>
           <div class="surface faq-item reveal">
-            <button class="faq-toggle">Hur fungerar presentkortet?<span class="plus">+</span></button>
-            <div class="faq-answer">Presentkortet ges istället för telefonrabatt och är tänkt att göra värdet mer konkret. Exakt nivå beror på vilket upplägg som väljs.</div>
-          </div>
-          <div class="surface faq-item reveal">
-            <button class="faq-toggle">Kan jag analysera flera operatörer samtidigt?<span class="plus">+</span></button>
-            <div class="faq-answer">Ja. I analysen kan du ange operatör för varje person i hushållet, så rekommendationen blir mer träffsäker.</div>
+            <button class="faq-toggle">
+              <span>Hur fungerar presentkortet?</span>
+              <span class="plus">+</span>
+            </button>
+            <div class="faq-answer">Presentkortet ges istället för telefonrabatt och kan användas hos utvalda partners.</div>
           </div>
         </div>
       </div>
@@ -1365,310 +1550,569 @@
 
   <footer>
     <div class="container footer-inner">
-      <div>© 2026 Dealett</div>
-      <div>Premium redesign • Single-file HTML • Inspired by clean consumer-tech landing pages</div>
+      <span>© Dealett</span>
+      <span>Smartare abonnemang för hela hushållet</span>
     </div>
   </footer>
 
+  <div id="checkoutModal" class="modal" aria-hidden="true">
+    <div class="modal-panel">
+      <button id="closeModal" class="btn-dark modal-close" aria-label="Stäng">✕</button>
+      <div class="pill">Valt paket</div>
+      <h3 id="modalTitle" style="margin-top:18px;font-size:34px">Paket</h3>
+      <p id="modalText" style="margin-top:14px" class="muted"></p>
+
+      <div class="modal-grid">
+        <input id="modalName" class="field" type="text" placeholder="Ditt namn" />
+        <input id="modalEmail" class="field" type="email" placeholder="Din e-post" />
+        <button id="sendInterestBtn" class="btn-white">Skicka intresseanmälan</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const state = {
-      step: 0,
-      persons: null,
-      operators: [],
-      data: null,
-      price: null,
-      binding: null,
-      freeTextNeed: ""
+      currentStep: 0,
+      answers: {
+        persons: null,
+        operators: [],
+        data: null,
+        price: null,
+        binding: null,
+        note: ''
+      },
+      coverage: {
+        op: null,
+        zoom: 1
+      }
     };
 
-    const startQuiz = document.getElementById('startQuiz');
-    const quizIntro = document.getElementById('quizIntro');
-    const quizFlow = document.getElementById('quizFlow');
-    const steps = [...document.querySelectorAll('.step')];
-    const backBtn = document.getElementById('backBtn');
-    const progressFill = document.getElementById('progressFill');
-    const stepNumber = document.getElementById('stepNumber');
-    const operatorsContainer = document.getElementById('operatorsContainer');
-    const operatorsNext = document.getElementById('operatorsNext');
-    const loader = document.getElementById('loader');
-    const result = document.getElementById('result');
-    const resultLead = document.getElementById('resultLead');
-    const resultCards = document.getElementById('resultCards');
-    const packageCards = document.getElementById('packageCards');
-    const restartQuiz = document.getElementById('restartQuiz');
-    const freeTextNeed = document.getElementById('freeTextNeed');
+    const operators = ['Telia', 'Tele2', 'Telenor', 'Tre', 'Halebop', 'Vimla', 'Comviq', 'Fello', 'Chilimobil', 'Annan'];
 
-    const operatorList = ['Telia', 'Tele2', 'Telenor', 'Tre', 'Halebop', 'Comviq', 'Vimla', 'Fello', 'Chilimobil', 'Annan'];
-
-    const packages = [
+    const packageCatalog = [
       {
+        id: '2 abonnemang',
         title: '2 abonnemang',
-        monthly: '598 kr / mån',
-        gift: '1400 kr presentkort',
+        price: 598,
+        priceLabel: '598 kr / mån',
+        gift: 1400,
+        giftLabel: '1400 kr presentkort',
         tag: 'Standard',
-        desc: 'Bra för mindre hushåll med balanserad användning.'
+        desc: 'Balanserad surf för två personer.'
       },
       {
+        id: '4 abonnemang',
         title: '4 abonnemang',
-        monthly: '786 kr / mån',
-        gift: '2500 kr presentkort',
+        price: 786,
+        priceLabel: '786 kr / mån',
+        gift: 2500,
+        giftLabel: '2500 kr presentkort',
         tag: 'Populärt',
-        desc: 'Starkast totalvärde för familjer och blandade behov.'
+        desc: 'Bra familjeupplägg för blandad användning.'
       },
       {
+        id: '5 abonnemang',
         title: '5 abonnemang',
-        monthly: '1290 kr / mån',
-        gift: '3500 kr presentkort',
+        price: 1290,
+        priceLabel: '1290 kr / mån',
+        gift: 3500,
+        giftLabel: '3500 kr presentkort',
         tag: 'Familj',
-        desc: 'För större hushåll med hög surf och fler användare.'
+        desc: 'Hög surf för större hushåll.'
       }
     ];
 
-    function showStep(index) {
-      state.step = index;
-      steps.forEach((step, i) => step.classList.toggle('active', i === index));
-      backBtn.style.visibility = index > 0 ? 'visible' : 'hidden';
-      progressFill.style.width = `${((index + 1) / 5) * 100}%`;
-      stepNumber.textContent = String(index + 1);
+    const coverageData = {
+      Telia: {
+        color: 'rgba(255,255,255,.45)',
+        shapes: [
+          { left: '16%', top: '18%', width: '280px', height: '220px', bg: 'radial-gradient(circle, rgba(255,255,255,.45), transparent 68%)' },
+          { left: '46%', top: '28%', width: '360px', height: '260px', bg: 'radial-gradient(circle, rgba(255,255,255,.34), transparent 70%)' },
+          { left: '62%', top: '58%', width: '260px', height: '220px', bg: 'radial-gradient(circle, rgba(255,255,255,.26), transparent 70%)' }
+        ]
+      },
+      Tele2: {
+        color: 'rgba(41,151,255,.55)',
+        shapes: [
+          { left: '20%', top: '24%', width: '320px', height: '260px', bg: 'radial-gradient(circle, rgba(41,151,255,.50), transparent 68%)' },
+          { left: '54%', top: '20%', width: '300px', height: '240px', bg: 'radial-gradient(circle, rgba(41,151,255,.40), transparent 70%)' },
+          { left: '36%', top: '56%', width: '420px', height: '280px', bg: 'radial-gradient(circle, rgba(41,151,255,.28), transparent 72%)' }
+        ]
+      },
+      Telenor: {
+        color: 'rgba(117, 205, 255, .48)',
+        shapes: [
+          { left: '26%', top: '14%', width: '280px', height: '220px', bg: 'radial-gradient(circle, rgba(117,205,255,.40), transparent 70%)' },
+          { left: '50%', top: '38%', width: '360px', height: '240px', bg: 'radial-gradient(circle, rgba(117,205,255,.34), transparent 70%)' },
+          { left: '14%', top: '58%', width: '260px', height: '220px', bg: 'radial-gradient(circle, rgba(117,205,255,.24), transparent 72%)' }
+        ]
+      },
+      Tre: {
+        color: 'rgba(168,132,255,.46)',
+        shapes: [
+          { left: '20%', top: '26%', width: '260px', height: '220px', bg: 'radial-gradient(circle, rgba(168,132,255,.34), transparent 68%)' },
+          { left: '56%', top: '18%', width: '380px', height: '280px', bg: 'radial-gradient(circle, rgba(168,132,255,.38), transparent 70%)' },
+          { left: '44%', top: '56%', width: '260px', height: '220px', bg: 'radial-gradient(circle, rgba(168,132,255,.24), transparent 72%)' }
+        ]
+      },
+      Halebop: {
+        color: 'rgba(39,201,63,.48)',
+        shapes: [
+          { left: '24%', top: '18%', width: '300px', height: '240px', bg: 'radial-gradient(circle, rgba(39,201,63,.34), transparent 68%)' },
+          { left: '48%', top: '34%', width: '320px', height: '260px', bg: 'radial-gradient(circle, rgba(39,201,63,.30), transparent 70%)' },
+          { left: '62%', top: '62%', width: '250px', height: '200px', bg: 'radial-gradient(circle, rgba(39,201,63,.22), transparent 72%)' }
+        ]
+      }
+    };
+
+    const els = {
+      startQuiz: document.getElementById('startQuiz'),
+      quizIntro: document.getElementById('quizIntro'),
+      quizFlow: document.getElementById('quizFlow'),
+      steps: [...document.querySelectorAll('.step')],
+      progressFill: document.getElementById('progressFill'),
+      stepNumber: document.getElementById('stepNumber'),
+      backBtn: document.getElementById('backBtn'),
+      operatorsContainer: document.getElementById('operatorsContainer'),
+      operatorsNext: document.getElementById('operatorsNext'),
+      loader: document.getElementById('loader'),
+      result: document.getElementById('result'),
+      resultLead: document.getElementById('resultLead'),
+      resultCards: document.getElementById('resultCards'),
+      packageCards: document.getElementById('packageCards'),
+      restartQuiz: document.getElementById('restartQuiz'),
+      freeTextNeed: document.getElementById('freeTextNeed'),
+      coverageLayer: document.getElementById('coverageLayer'),
+      activeCoverageLabel: document.getElementById('activeCoverageLabel'),
+      coverageButtons: [...document.querySelectorAll('.coverage-op')],
+      resetCoverage: document.getElementById('resetCoverage'),
+      clearCoverage: document.getElementById('clearCoverage'),
+      zoomIn: document.getElementById('zoomIn'),
+      zoomOut: document.getElementById('zoomOut'),
+      zoomLabel: document.getElementById('zoomLabel'),
+      mapSurface: document.getElementById('mapSurface'),
+      coverageSearch: document.getElementById('coverageSearch'),
+      coverageSearchBtn: document.getElementById('coverageSearchBtn'),
+      faqItems: [...document.querySelectorAll('.faq-item')],
+      reveals: [...document.querySelectorAll('.reveal')],
+      checkoutModal: document.getElementById('checkoutModal'),
+      closeModal: document.getElementById('closeModal'),
+      modalTitle: document.getElementById('modalTitle'),
+      modalText: document.getElementById('modalText'),
+      modalName: document.getElementById('modalName'),
+      modalEmail: document.getElementById('modalEmail'),
+      sendInterestBtn: document.getElementById('sendInterestBtn')
+    };
+
+    function updateProgress() {
+      const totalSteps = 5;
+      const percent = ((state.currentStep + 1) / totalSteps) * 100;
+      els.progressFill.style.width = percent + '%';
+      els.stepNumber.textContent = String(state.currentStep + 1);
+      els.backBtn.style.visibility = state.currentStep > 0 ? 'visible' : 'hidden';
     }
 
-    function renderOperators(count) {
-      operatorsContainer.innerHTML = '';
-      state.operators = Array.from({ length: count }, (_, i) => state.operators[i] || '');
+    function showStep(index) {
+      state.currentStep = index;
+      els.steps.forEach((step, i) => {
+        step.classList.toggle('active', i === index);
+      });
+      updateProgress();
+    }
 
-      state.operators.forEach((value, index) => {
-        const row = document.createElement('div');
-        row.className = 'operator-row';
-        row.innerHTML = `
-          <label for="operator-${index}">Person ${index + 1}</label>
-          <select id="operator-${index}" class="operator-select">
+    function goNext() {
+      if (state.currentStep < els.steps.length - 1) {
+        showStep(state.currentStep + 1);
+      } else {
+        runAnalysis();
+      }
+    }
+
+    function goBack() {
+      if (state.currentStep > 0) showStep(state.currentStep - 1);
+    }
+
+    function renderOperators() {
+      const persons = Number(state.answers.persons || 0);
+      const count = persons >= 6 ? 6 : persons;
+      state.answers.operators = Array.from({ length: count }, (_, index) => state.answers.operators[index] || '');
+
+      els.operatorsContainer.innerHTML = Array.from({ length: count }, (_, index) => `
+        <div class="operator-row">
+          <label for="person-${index}">Person ${index + 1}</label>
+          <select id="person-${index}" class="operator-select" data-index="${index}">
             <option value="">Välj operatör</option>
-            ${operatorList.map(op => `<option value="${op}" ${op === value ? 'selected' : ''}>${op}</option>`).join('')}
+            ${operators.map(op => `<option value="${op}" ${state.answers.operators[index] === op ? 'selected' : ''}>${op}</option>`).join('')}
           </select>
-        `;
-        const select = row.querySelector('select');
+        </div>
+      `).join('');
+
+      [...els.operatorsContainer.querySelectorAll('.operator-select')].forEach(select => {
         select.addEventListener('change', (e) => {
-          state.operators[index] = e.target.value;
+          const idx = Number(e.currentTarget.dataset.index);
+          state.answers.operators[idx] = e.currentTarget.value;
         });
-        operatorsContainer.appendChild(row);
       });
     }
 
-    function nextStep() {
-      if (state.step < 4) showStep(state.step + 1);
-      else runAnalysis();
+    function validateOperators() {
+      return state.answers.operators.length > 0 && state.answers.operators.every(Boolean);
     }
 
-    function previousStep() {
-      if (state.step > 0) showStep(state.step - 1);
+    function normalizePersons(personsValue) {
+      const n = Number(personsValue);
+      if (n >= 6) return 6;
+      return n || 1;
     }
 
-    function scorePackage() {
-      const persons = Number(state.persons || 1);
-      const data = state.data;
-      const price = state.price;
-      const binding = state.binding;
-      const needs = (state.freeTextNeed || '').toLowerCase();
+    function getPriceFactor(price) {
+      if (price === 'under300') return 0.92;
+      if (price === '300-400') return 1;
+      return 1.12;
+    }
 
-      let picked = packages[0];
-      if (persons >= 4 || data === 'high') picked = packages[2];
-      else if (persons >= 3 || data === 'medium') picked = packages[1];
+    function getDataFactor(data) {
+      if (data === 'low') return 0.88;
+      if (data === 'medium') return 1;
+      return 1.22;
+    }
 
-      if (price === 'under300' && persons <= 2) picked = packages[0];
-      if (price === '300-400' && persons >= 3 && persons <= 4) picked = packages[1];
-      if (needs.includes('turkiet') || needs.includes('resa') || needs.includes('utland')) picked = packages[1];
-      if (binding === 'yes' && picked.title === '5 abonnemang' && persons < 4) picked = packages[1];
+    function getBindingCopy(binding) {
+      if (binding === 'yes') return 'Det kan finnas bindningstid att ta hänsyn till innan byte.';
+      if (binding === 'unknown') return 'Bindningstid behöver kontrolleras innan slutligt byte.';
+      return 'Ni verkar kunna byta utan känd bindningstid.';
+    }
 
-      return picked;
+    function calculateRecommendation() {
+      const persons = normalizePersons(state.answers.persons);
+      const dataFactor = getDataFactor(state.answers.data);
+      const priceFactor = getPriceFactor(state.answers.price);
+      const baseMonthly = Math.round((persons * 210) * dataFactor * priceFactor);
+      const estMonthly = Math.max(349, Math.round(baseMonthly / 10) * 10);
+
+      let suggested;
+      if (persons <= 2) suggested = packageCatalog[0];
+      else if (persons <= 4) suggested = packageCatalog[1];
+      else suggested = packageCatalog[2];
+
+      const operatorSpread = new Set(state.answers.operators.filter(Boolean)).size;
+      const complexityBonus = operatorSpread >= 3 ? 300 : operatorSpread === 2 ? 150 : 0;
+      const dataBonus = state.answers.data === 'high' ? 400 : state.answers.data === 'medium' ? 200 : 0;
+      const giftEstimate = Math.max(suggested.gift, suggested.gift + complexityBonus + dataBonus);
+      const confidence = state.answers.binding === 'unknown' ? 'Hög, med kontroll av bindningstid' : 'Hög träffsäkerhet';
+
+      const note = (state.answers.note || '').trim().toLowerCase();
+      let customNeed = '';
+      if (note.includes('turkiet')) customNeed = 'Önskemål om surf utomlands bör vägas in i slutligt val.';
+      else if (note.includes('billig') || note.includes('låg kostnad')) customNeed = 'Fokus på låg kostnad kan ge en enklare prisstruktur med lägre månadsavgift.';
+      else if (note.includes('fria samtal')) customNeed = 'Fria samtal bör säkerställas i det slutliga upplägget.';
+      else if (note) customNeed = 'Egna önskemål har vägts in i rekommendationen.';
+
+      return {
+        persons,
+        suggested,
+        estMonthly,
+        giftEstimate,
+        confidence,
+        operatorSpread,
+        bindingCopy: getBindingCopy(state.answers.binding),
+        customNeed
+      };
+    }
+
+    function buildRecommendationCards(reco) {
+      const candidates = [
+        {
+          title: reco.suggested.title,
+          tag: 'Bäst match',
+          monthly: `${reco.estMonthly} kr / mån`,
+          gift: `${reco.giftEstimate} kr presentkort`,
+          note: reco.suggested.desc
+        },
+        ...packageCatalog
+          .filter(pkg => pkg.id !== reco.suggested.id)
+          .slice(0, 2)
+          .map(pkg => ({
+            title: pkg.title,
+            tag: 'Alternativ',
+            monthly: pkg.priceLabel,
+            gift: pkg.giftLabel,
+            note: pkg.desc
+          }))
+      ];
+
+      els.packageCards.innerHTML = candidates.map(item => `
+        <article class="recommendation-card">
+          <div class="top">
+            <div>
+              <span class="tag">${item.tag}</span>
+              <h4 style="margin-top:14px">${item.title}</h4>
+            </div>
+          </div>
+          <p class="mini-note">${item.note}</p>
+          <div class="meta">
+            <div class="row"><span>Kostnad</span><strong>${item.monthly}</strong></div>
+            <div class="row"><span>Presentkort</span><strong>${item.gift}</strong></div>
+          </div>
+          <button class="btn-white" style="margin-top:8px" onclick="openCheckout('${item.title}','${item.monthly}','${item.gift}')">Välj paket</button>
+        </article>
+      `).join('');
+    }
+
+    function buildResultCards(reco) {
+      const cards = [
+        {
+          label: 'Rekommenderad nivå',
+          value: reco.suggested.title
+        },
+        {
+          label: 'Uppskattad kostnad',
+          value: `${reco.estMonthly} kr`
+        },
+        {
+          label: 'Möjligt presentkort',
+          value: `${reco.giftEstimate} kr`
+        }
+      ];
+
+      els.resultCards.innerHTML = cards.map(card => `
+        <div class="result-card">
+          <strong>${card.label}</strong>
+          <div class="big">${card.value}</div>
+        </div>
+      `).join('');
     }
 
     function runAnalysis() {
-      quizFlow.style.display = 'none';
-      result.style.display = 'none';
-      loader.classList.add('active');
-      state.freeTextNeed = freeTextNeed.value.trim();
+      els.quizFlow.style.display = 'none';
+      els.loader.classList.add('active');
+      els.result.style.display = 'none';
+
+      const recommendation = calculateRecommendation();
 
       setTimeout(() => {
-        const picked = scorePackage();
-        const persons = Number(state.persons || 1);
-        const dataText = state.data === 'low' ? 'låg surf' : state.data === 'high' ? 'hög surf' : 'medelsurf';
-        const bindingText = state.binding === 'yes' ? 'med kvarvarande bindningstid' : state.binding === 'no' ? 'utan bindningstid' : 'med oklar bindningstid';
+        els.loader.classList.remove('active');
+        els.result.style.display = 'block';
 
-        resultLead.textContent = `Baserat på ${persons} ${persons === 1 ? 'person' : 'personer'}, ${dataText}, vald prisnivå och nuvarande operatörer rekommenderar vi ${picked.title.toLowerCase()} som ett starkt nästa steg. Upplägget passar hushåll ${bindingText} och maximerar upplevt värde genom ${picked.gift.toLowerCase()}.`;
+        const notePart = recommendation.customNeed ? ` ${recommendation.customNeed}` : '';
+        els.resultLead.textContent = `Baserat på ${recommendation.persons} personer, valt surfbehov och nuvarande prisnivå rekommenderar vi ${recommendation.suggested.title}. ${recommendation.bindingCopy} ${notePart}`.trim();
 
-        packageCards.innerHTML = packages.map(pkg => `
-          <div class="result-card" style="${pkg.title === picked.title ? 'border-color: rgba(41,151,255,.65); background: rgba(41,151,255,.12); box-shadow: 0 0 0 4px rgba(41,151,255,.08);' : ''}">
-            <strong>${pkg.tag}</strong>
-            <div class="big" style="font-size:30px;">${pkg.title}</div>
-            <div style="margin-top:12px;color:rgba(255,255,255,.78);">${pkg.monthly}</div>
-            <div style="margin-top:8px;color:#fff;">${pkg.gift}</div>
-            <div style="margin-top:14px;color:var(--muted);line-height:1.65;">${pkg.desc}</div>
-          </div>
-        `).join('');
-
-        resultCards.innerHTML = `
-          <div class="result-card">
-            <strong>Rekommenderat upplägg</strong>
-            <div class="big">${picked.title}</div>
-            <div class="result-copy" style="margin-top:12px;">Ett upplägg som balanserar hushållets storlek och surfprofil.</div>
-          </div>
-          <div class="result-card">
-            <strong>Uppskattad kostnad</strong>
-            <div class="big">${picked.monthly.replace(' / mån','')}</div>
-            <div class="result-copy" style="margin-top:12px;">Månadsnivå baserad på valt paket och typisk profil.</div>
-          </div>
-          <div class="result-card">
-            <strong>Möjligt mervärde</strong>
-            <div class="big">${picked.gift.replace(' presentkort','')}</div>
-            <div class="result-copy" style="margin-top:12px;">Presentkort istället för traditionell telefonrabatt.</div>
-          </div>
-        `;
-
-        loader.classList.remove('active');
-        result.style.display = 'block';
-      }, 1500);
+        buildRecommendationCards(recommendation);
+        buildResultCards(recommendation);
+      }, 1400);
     }
 
-    startQuiz.addEventListener('click', () => {
-      quizIntro.style.display = 'none';
-      quizFlow.style.display = 'block';
+    function resetQuiz() {
+      state.currentStep = 0;
+      state.answers = {
+        persons: null,
+        operators: [],
+        data: null,
+        price: null,
+        binding: null,
+        note: ''
+      };
+
+      document.querySelectorAll('.option.active').forEach(btn => btn.classList.remove('active'));
+      els.quizIntro.style.display = '';
+      els.quizFlow.style.display = 'none';
+      els.loader.classList.remove('active');
+      els.result.style.display = 'none';
+      els.freeTextNeed.value = '';
       showStep(0);
-    });
+    }
 
-    backBtn.addEventListener('click', previousStep);
+    function handleOptionClick(button) {
+      const { field, value } = button.dataset;
+      if (!field) return;
 
-    document.querySelectorAll('.option').forEach(button => {
-      button.addEventListener('click', () => {
-        const field = button.dataset.field;
-        const value = button.dataset.value;
-        const scope = button.closest('.step');
-        scope.querySelectorAll(`.option[data-field="${field}"]`).forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-        state[field] = value;
+      const step = button.closest('.step');
+      if (!step) return;
 
-        if (field === 'persons') {
-          renderOperators(Number(value));
-          setTimeout(() => showStep(1), 180);
-        } else if (field === 'data' || field === 'price') {
-          setTimeout(nextStep, 180);
-        } else if (field === 'binding') {
-          setTimeout(runAnalysis, 180);
-        }
-      });
-    });
+      step.querySelectorAll(`.option[data-field="${field}"]`).forEach(opt => opt.classList.remove('active'));
+      button.classList.add('active');
 
-    operatorsNext.addEventListener('click', () => {
-      const complete = state.operators.every(Boolean);
-      if (!complete) {
-        alert('Välj operatör för alla personer innan du fortsätter.');
+      state.answers[field] = value;
+
+      if (field === 'persons') {
+        renderOperators();
+      }
+
+      if (field === 'binding') {
+        runAnalysis();
         return;
       }
-      showStep(2);
-    });
 
-    restartQuiz.addEventListener('click', () => {
-      state.step = 0;
-      state.persons = null;
-      state.operators = [];
-      state.data = null;
-      state.price = null;
-      state.binding = null;
-      state.freeTextNeed = '';
-      freeTextNeed.value = '';
-      result.style.display = 'none';
-      quizIntro.style.display = 'block';
-      quizFlow.style.display = 'none';
-      progressFill.style.width = '20%';
-      stepNumber.textContent = '1';
-      backBtn.style.visibility = 'hidden';
-      document.querySelectorAll('.option.active').forEach(el => el.classList.remove('active'));
-      operatorsContainer.innerHTML = '';
-    });
+      if (field !== 'persons') {
+        setTimeout(goNext, 200);
+      } else {
+        setTimeout(goNext, 220);
+      }
+    }
 
-    const faqItems = document.querySelectorAll('.faq-item');
-    faqItems.forEach(item => {
-      item.querySelector('.faq-toggle').addEventListener('click', () => {
-        item.classList.toggle('active');
+    function setupQuiz() {
+      els.startQuiz.addEventListener('click', () => {
+        els.quizIntro.style.display = 'none';
+        els.quizFlow.style.display = 'block';
+        showStep(0);
       });
-    });
 
-    const coverageLayer = document.getElementById('coverageLayer');
-    const activeCoverageLabel = document.getElementById('activeCoverageLabel');
-    const coverageButtons = [...document.querySelectorAll('.coverage-op')];
-    const coverageSearch = document.getElementById('coverageSearch');
+      document.addEventListener('click', (e) => {
+        const option = e.target.closest('.option');
+        if (option) handleOptionClick(option);
+      });
 
-    const coveragePresets = {
-      Telia: ['rgba(41,151,255,.38)', 'rgba(255,255,255,.18)'],
-      Tele2: ['rgba(180,120,255,.34)', 'rgba(255,255,255,.16)'],
-      Telenor: ['rgba(60,210,180,.32)', 'rgba(255,255,255,.16)'],
-      Tre: ['rgba(145,120,255,.34)', 'rgba(255,255,255,.15)'],
-      Halebop: ['rgba(70,220,120,.3)', 'rgba(255,255,255,.14)']
+      els.backBtn.addEventListener('click', goBack);
+
+      els.operatorsNext.addEventListener('click', () => {
+        if (!validateOperators()) {
+          alert('Välj operatör för alla personer först.');
+          return;
+        }
+        goNext();
+      });
+
+      els.freeTextNeed.addEventListener('input', (e) => {
+        state.answers.note = e.target.value;
+      });
+
+      els.restartQuiz.addEventListener('click', resetQuiz);
+      updateProgress();
+    }
+
+    function setupFAQ() {
+      els.faqItems.forEach(item => {
+        const toggle = item.querySelector('.faq-toggle');
+        toggle.addEventListener('click', () => {
+          els.faqItems.forEach(other => {
+            if (other !== item) other.classList.remove('active');
+          });
+          item.classList.toggle('active');
+        });
+      });
+    }
+
+    function renderCoverage(opName) {
+      state.coverage.op = opName;
+      els.coverageButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.op === opName));
+      els.activeCoverageLabel.textContent = opName ? `${opName} aktivt` : 'Ingen operatör vald';
+
+      els.coverageLayer.innerHTML = '';
+
+      if (!opName || !coverageData[opName]) return;
+
+      coverageData[opName].shapes.forEach(shape => {
+        const div = document.createElement('div');
+        div.className = 'coverage-shape';
+        div.style.left = shape.left;
+        div.style.top = shape.top;
+        div.style.width = shape.width;
+        div.style.height = shape.height;
+        div.style.background = shape.bg;
+        els.coverageLayer.appendChild(div);
+      });
+    }
+
+    function setZoom(value) {
+      state.coverage.zoom = Math.max(0.8, Math.min(1.5, value));
+      els.coverageLayer.style.transform = `scale(${state.coverage.zoom})`;
+      els.coverageLayer.style.transformOrigin = 'center center';
+      els.zoomLabel.textContent = `${Math.round(state.coverage.zoom * 100)}%`;
+    }
+
+    function resetCoverageMap() {
+      renderCoverage('Tele2');
+      setZoom(1);
+    }
+
+    function clearCoverage() {
+      state.coverage.op = null;
+      els.coverageButtons.forEach(btn => btn.classList.remove('active'));
+      els.activeCoverageLabel.textContent = 'Ingen operatör vald';
+      els.coverageLayer.innerHTML = '';
+    }
+
+    function fakeSearchCoverage() {
+      const query = els.coverageSearch.value.trim();
+      if (!query) return;
+      const pin = document.createElement('div');
+      pin.className = 'coverage-pin';
+      pin.style.left = `${30 + Math.random() * 40}%`;
+      pin.style.top = `${30 + Math.random() * 40}%`;
+      els.coverageLayer.appendChild(pin);
+    }
+
+    function setupCoverage() {
+      els.coverageButtons.forEach(button => {
+        button.addEventListener('click', () => renderCoverage(button.dataset.op));
+      });
+
+      els.resetCoverage.addEventListener('click', resetCoverageMap);
+      els.clearCoverage.addEventListener('click', clearCoverage);
+
+      els.zoomIn.addEventListener('click', () => setZoom(state.coverage.zoom + 0.1));
+      els.zoomOut.addEventListener('click', () => setZoom(state.coverage.zoom - 0.1));
+
+      els.coverageSearchBtn.addEventListener('click', fakeSearchCoverage);
+      els.coverageSearch.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') fakeSearchCoverage();
+      });
+
+      resetCoverageMap();
+    }
+
+    function setupReveal() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      els.reveals.forEach(el => observer.observe(el));
+    }
+
+    function setupModal() {
+      els.closeModal.addEventListener('click', closeCheckout);
+      els.checkoutModal.addEventListener('click', (e) => {
+        if (e.target === els.checkoutModal) closeCheckout();
+      });
+
+      els.sendInterestBtn.addEventListener('click', () => {
+        const name = els.modalName.value.trim();
+        const email = els.modalEmail.value.trim();
+
+        if (!name || !email) {
+          alert('Fyll i namn och e-post först.');
+          return;
+        }
+
+        alert(`Tack ${name}. Intresseanmälan är registrerad för ${email}.`);
+        closeCheckout();
+      });
+    }
+
+    function closeCheckout() {
+      els.checkoutModal.classList.remove('active');
+      els.checkoutModal.setAttribute('aria-hidden', 'true');
+    }
+
+    window.openCheckout = function(title, price, gift) {
+      els.modalTitle.textContent = title;
+      els.modalText.textContent = `Valt upplägg: ${title} • ${price} • ${gift}`;
+      els.checkoutModal.classList.add('active');
+      els.checkoutModal.setAttribute('aria-hidden', 'false');
+      els.modalName.value = '';
+      els.modalEmail.value = '';
     };
 
-    function drawCoverage(op) {
-      coverageLayer.innerHTML = '';
-      if (!op) {
-        activeCoverageLabel.textContent = 'Ingen operatör vald';
-        coverageButtons.forEach(btn => btn.classList.remove('active'));
-        return;
-      }
-
-      coverageButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.op === op));
-      activeCoverageLabel.textContent = op;
-      const [primary, secondary] = coveragePresets[op];
-
-      const shapes = [
-        { top: '8%', left: '12%', width: 280, height: 220, color: primary },
-        { top: '28%', left: '48%', width: 320, height: 260, color: secondary },
-        { top: '52%', left: '20%', width: 360, height: 300, color: primary },
-        { top: '18%', left: '62%', width: 240, height: 220, color: primary },
-        { top: '62%', left: '58%', width: 220, height: 180, color: secondary }
-      ];
-
-      shapes.forEach(shape => {
-        const el = document.createElement('div');
-        el.className = 'coverage-shape';
-        el.style.top = shape.top;
-        el.style.left = shape.left;
-        el.style.width = `${shape.width}px`;
-        el.style.height = `${shape.height}px`;
-        el.style.background = `radial-gradient(circle, ${shape.color}, transparent 70%)`;
-        coverageLayer.appendChild(el);
-      });
-    }
-
-    coverageButtons.forEach(btn => {
-      btn.addEventListener('click', () => drawCoverage(btn.dataset.op));
-    });
-
-    document.getElementById('clearCoverage').addEventListener('click', () => drawCoverage(null));
-    document.getElementById('resetCoverage').addEventListener('click', () => drawCoverage('Telia'));
-    document.getElementById('coverageSearchBtn').addEventListener('click', () => {
-      const value = coverageSearch.value.trim();
-      activeCoverageLabel.textContent = value ? `Sökning: ${value}` : 'Ingen operatör vald';
-    });
-    document.getElementById('zoomIn').addEventListener('click', () => {
-      coverageLayer.style.transform = 'scale(1.08)';
-    });
-    document.getElementById('zoomOut').addEventListener('click', () => {
-      coverageLayer.style.transform = 'scale(.94)';
-    });
-
-    function openCheckout(title, price, gift) {
-      alert(`${title}\n${price}\n${gift}\n\nHär kopplar du vidare till din checkout eller intresseanmälan.`);
-    }
-
-    window.openCheckout = openCheckout;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, { threshold: 0.16 });
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-    drawCoverage('Telia');
+    setupQuiz();
+    setupFAQ();
+    setupCoverage();
+    setupReveal();
+    setupModal();
   </script>
 </body>
 </html>
