@@ -1,3 +1,4 @@
+const API_BASE = window.DEALETT_API_BASE || "/api";
 let offersContainer = null;
 let offersSection = null;
 let ALL_PLANS = [];
@@ -166,7 +167,7 @@ function initHeroSlider() {
 
 async function loadPlans() {
   if (ALL_PLANS.length) return ALL_PLANS;
-  const res = await fetch("./data/plans.json");
+  const res = await fetch(`${API_BASE}/plans`);
   ALL_PLANS = await res.json();
   return ALL_PLANS;
 }
