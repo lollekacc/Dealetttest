@@ -1,3 +1,4 @@
+const API_BASE = window.DEALETT_API_BASE || "/api";
 window.offerChosen = false;
 window.beloningChosen = false;
 function stopOffersScroll() {
@@ -24,7 +25,7 @@ renderOffers(offers);
 async function loadPlans() {
   if (ALL_PLANS.length) return ALL_PLANS;
 
-  const res = await fetch("./data/plans.json");
+  const res = await fetch(`${API_BASE}/plans`);
   ALL_PLANS = await res.json();
   return ALL_PLANS;
 }
