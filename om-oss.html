@@ -268,7 +268,7 @@
         document.body.insertAdjacentHTML("beforeend", chatHTML);
 
         const checkChatLoaded = setInterval(() => {
-          if (document.getElementById("chatSend")) {
+          if (document.querySelector("[data-chat-root]")) {
             clearInterval(checkChatLoaded);
             const script = document.createElement("script");
             script.src = "assets/chat.js";

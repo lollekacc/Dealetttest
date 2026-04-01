@@ -1,16 +1,21 @@
-import { initChat } from "./chat.js";
-import { initOffers } from "./offers.controller.js";
-import { loadPlans } from "./offers.service.js";
-
 async function initApp() {
-  const plans = await loadPlans();
+  if (typeof window.initChat === "function") {
+    await window.initChat();
+    return;
+  }
 
-  window.APP = {
-    plans
-  };
+  const chatScript = document.querySelector('script[data-chat-script="true"]');
+  if (!chatScript) return;
 
-  initChat({ plans });
-  initOffers();
+  chatScript.addEventListener(
+    "load",
+    () => {
+      window.initChat?.();
+    },
+    { once: true }
+  );
 }
 
-initApp();
+initApp().catch((error) => {
+  console.error("Main app init failed:", error);
+});

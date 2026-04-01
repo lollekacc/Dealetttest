@@ -273,7 +273,7 @@
       await loadPartial("partials/chat.html", "body", "beforeend");
       await loadPartial("partials/footer.html", "body", "beforeend");
 
-      if (document.getElementById("chatSend")) {
+      if (document.querySelector("[data-chat-root]")) {
         const script = document.createElement("script");
         script.src = "assets/chat.js";
         script.defer = true;

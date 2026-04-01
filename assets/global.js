@@ -12,6 +12,23 @@ async function loadSharedPartials() {
       if (res.ok) header.innerHTML = await res.text();
     }
 
+    if (!document.querySelector("[data-chat-root]")) {
+      const res = await fetch("./partials/chat.html");
+      if (res.ok) {
+        document.body.insertAdjacentHTML("beforeend", await res.text());
+      }
+    }
+
+    if (!document.querySelector('script[data-chat-script="true"]')) {
+      const chatScript = document.createElement("script");
+      chatScript.src = "./assets/chat.js";
+      chatScript.defer = true;
+      chatScript.dataset.chatScript = "true";
+      document.body.appendChild(chatScript);
+    } else {
+      window.initChat?.();
+    }
+
     const footer = document.getElementById("footer-placeholder");
     if (footer) {
       const res = await fetch("./partials/footer.html");
