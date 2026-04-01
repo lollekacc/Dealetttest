@@ -565,13 +565,31 @@
     opacity: 1;
   }
 }
-:root {
-    --adeala-green: #0F4C3A;
-    --adeala-teal:  #0A7C66;
-    --adeala-blue:  #0B4E9A;
-    --adeala-beige: #F5EEDF;
-    --adeala-dark:  #0F2D24;
-  }
+:root{
+  --bg-page: #f4f7f8;
+  --bg-surface: rgba(255,255,255,0.92);
+  --bg-surface-strong: #ffffff;
+
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+
+  --brand: #0f766e;
+  --brand-dark: #0b5c56;
+  --brand-light: rgba(15,118,110,0.08);
+
+  --border: rgba(15,23,42,0.08);
+  --border-strong: rgba(15,23,42,0.14);
+
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 32px;
+
+  --shadow-sm: 0 8px 24px rgba(15,23,42,0.05);
+  --shadow-md: 0 20px 50px rgba(15,23,42,0.08);
+  --shadow-lg: 0 32px 80px rgba(15,23,42,0.12);
+
+  --section-gap: 96px;
+}
   
   *,
   *::before,

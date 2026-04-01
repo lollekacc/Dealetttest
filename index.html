@@ -35,7 +35,7 @@
 >
   <!-- Header -->
   <div id="header-placeholder"></div>
-
+  
   <!-- HERO -->
     <section class="container">
       <div class="hero">
@@ -1747,14 +1747,11 @@ section.container{
 .quiz-shell{
   position: relative;
   overflow: hidden;
-  border-radius: var(--about-radius-lg);
-  border: 1px solid var(--about-line);
-  background:
-    radial-gradient(circle at 12% 10%, var(--about-brand-soft), transparent 28%),
-    radial-gradient(circle at 88% 0%, var(--about-blue-soft), transparent 24%),
-    linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,251,252,0.96) 100%);
-  backdrop-filter: blur(18px);
-  box-shadow: var(--about-shadow-md);
+  border-radius: 36px;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(22px);
+  border: 1px solid rgba(255,255,255,0.7);
+  box-shadow: 0 30px 80px rgba(15,23,42,0.10);
 }
 
 .quiz-shell::before{
@@ -1873,13 +1870,10 @@ section.container{
 
 /* quiz cards */
 .quiz-card{
-  position: relative;
-  overflow: hidden;
-  border-radius: 2rem;
-  border: 1px solid var(--about-line) !important;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,251,252,0.98) 100%) !important;
-  box-shadow: var(--about-shadow-md);
+  border-radius: 28px;
+  background: linear-gradient(180deg, #ffffff 0%, #fafcfc 100%);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .quiz-card::before{
@@ -1888,8 +1882,9 @@ section.container{
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at top right, rgba(15,118,110,0.06), transparent 28%),
-    linear-gradient(135deg, rgba(255,255,255,0.4), transparent 45%);
+    background:
+    radial-gradient(circle at top left, rgba(15,118,110,0.04), transparent 30%),
+    linear-gradient(180deg, #f7fafb 0%, #eef3f5 100%);
 }
 
 /* step card transitions */
@@ -2099,5 +2094,6 @@ section.container{
   }
 }
 </style>
+<div id="footer-placeholder"></div>
 </body>
 </html>

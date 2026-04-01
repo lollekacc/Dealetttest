@@ -2,15 +2,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <header id="mainHeader"
-class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 z-50 transition-all duration-300">
+  class="fixed top-0 left-0 w-full bg-white/85 backdrop-blur-md border-b border-gray-100 z-50 transition-all duration-300">
 
-
-  <!-- FULL-WIDTH ROW -->
-  <div class="relative w-full h-20 transition-all duration-300 ease-out">
+  <!-- TOP ROW -->
+  <div id="topRow"
+       class="relative w-full h-20 transition-all duration-300 ease-out">
 
 
     <!-- LEFT: viewport edge -->
-<div class="absolute left-4  inset-y-0 flex items-stretch gap-2 text-sm font-semibold">
+<div class="absolute left-4 inset-y-0 flex items-stretch gap-2 text-sm font-semibold">
 
   <a href="index.html"
      class="relative flex items-center h-full px-1
@@ -145,72 +145,68 @@ class="fixed top-0 left-0 w-full bg-white/80 backdrop-blur-md border-b border-gr
   </nav>
 </div>
 
-  </div>
-  <div class="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
-</header>
+<div class="mx-8 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
 
+
+  </header>
 <!-- Partner Bar (NO LONGER FIXED) -->
-<div id="partnerBar"
-     class="partner-fade max-w-7xl mx-auto px-9 py-2 flex items-center gap-14 bg-white/60 backdrop-blur-sm">
+  <div id="partnerBar"
+       class="max-w-6xl mx-auto px-8 flex items-center gap-28
+              bg-transparent transition-all duration-300">
 
-  <p class="uppercase tracking-wide text-green-900 text-sm font-semibold whitespace-nowrap">
-    I SAMARBETE MED
-  </p>
+    <p class="uppercase tracking-[0.18em] text-green-900 text-xs font-semibold whitespace-nowrap">
+      I SAMARBETE MED
+    </p>
 
-  <div class="flex items-center gap-14">
+    <div class="flex items-center gap-12 overflow-x-auto scrollbar-hide">
 
-<a href="abonnemang.html?op=Tele2">
-  <div class="logo-fade w-[140px] h-[70px] flex items-center justify-center">
-    <img src="images/tele2.jpg"
-     class="h-[55px] w-auto object-contain
-            grayscale-[50%] hover:grayscale-0 hover:scale-105
-            transition-all duration-300"
-     alt="Tele2">
-  </div>
-</a>
+      <a href="abonnemang.html?op=Tele2"
+         class="group w-[120px] h-[55px] flex items-center justify-center rounded-xl
+                hover:bg-emerald-50 transition duration-300">
+        <img src="images/tele2.jpg"
+             alt="Tele2"
+             class="h-[80px] w-auto object-contain grayscale-[40%]
+                    group-hover:grayscale-0 group-hover:scale-105 transition duration-300">
+      </a>
 
-    <a href="abonnemang.html?op=Telia">
-      <div class="w-[140px] h-[70px] flex items-center justify-center rounded-md transition duration-300">
+      <a href="abonnemang.html?op=Telia"
+         class="group w-[120px] h-[55px] flex items-center justify-center rounded-xl
+                hover:bg-emerald-50 transition duration-300">
         <img src="images/telia.png"
-     class="h-[55px] w-auto object-contain
-            grayscale-[50%] hover:grayscale-0 hover:scale-105
-            transition-all duration-300"
-     alt="Telia">
-      </div>
-    </a>
+             alt="Telia"
+             class="h-[80px] w-auto object-contain grayscale-[40%]
+                    group-hover:grayscale-0 group-hover:scale-105 transition duration-300">
+      </a>
 
-    <a href="abonnemang.html?op=Telenor">
-      <div class="w-[140px] h-[70px] flex items-center justify-center rounded-md transition duration-300">
+      <a href="abonnemang.html?op=Telenor"
+         class="group w-[120px] h-[55px] flex items-center justify-center rounded-xl
+                hover:bg-emerald-50 transition duration-300">
         <img src="images/telenor.jpg"
-     class="h-[55px] w-auto object-contain
-            grayscale-[50%] hover:grayscale-0 hover:scale-105
-            transition-all duration-300"
-     alt="Telenor">
-      </div>
-    </a>
+             alt="Telenor"
+             class="h-[80px] w-auto object-contain grayscale-[40%]
+                    group-hover:grayscale-0 group-hover:scale-105 transition duration-300">
+      </a>
 
-    <a href="abonnemang.html?op=Tre">
-      <div class="w-[140px] h-[70px] flex items-center justify-center rounded-md transition duration-300">
+      <a href="abonnemang.html?op=Tre"
+         class="group w-[120px] h-[55px] flex items-center justify-center rounded-xl
+                hover:bg-emerald-50 transition duration-300">
         <img src="images/tre.jpg"
-     class="h-[55px] w-auto object-contain
-            grayscale-[50%] hover:grayscale-0 hover:scale-105
-            transition-all duration-300"
-     alt="Tre">
-      </div>
-    </a>
+             alt="Tre"
+             class="h-[80px] w-auto object-contain grayscale-[40%]
+                    group-hover:grayscale-0 group-hover:scale-105 transition duration-300">
+      </a>
 
-    <a href="abonnemang.html?op=Halebop">
-      <div class="w-[140px] h-[70px] flex items-center justify-center rounded-md transition duration-300">
+      <a href="abonnemang.html?op=Halebop"
+         class="group w-[120px] h-[55px] flex items-center justify-center rounded-xl
+                hover:bg-emerald-50 transition duration-300">
         <img src="images/halebop.webp"
-     class="h-[55px] w-auto object-contain
-            grayscale-[50%] hover:grayscale-0 hover:scale-105
-            transition-all duration-300"
-     alt="Halebop">
-      </div>
-    </a>
-
+             alt="Halebop"
+             class="h-[80px] w-auto object-contain grayscale-[40%]
+                    group-hover:grayscale-0 group-hover:scale-105 transition duration-300">
+      </a>
+    </div>
   </div>
-</div>
+
 <script>
 window.addEventListener("scroll", () => {
   const header = document.getElementById("mainHeader");
