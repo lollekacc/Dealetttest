@@ -241,7 +241,7 @@
                 </div>
 
                 <!-- STEP 1 -->
-                <div id="step1" class="quiz-step-card hidden-step">
+                <div id="step1" class="quiz-step-card upcoming-card">
                   <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
                     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <button
@@ -321,7 +321,7 @@
                 </template>
 
                 <!-- STEP 2 -->
-                <div id="step2" class="quiz-step-card hidden-step">
+                <div id="step2" class="quiz-step-card upcoming-card">
                   <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
                     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <button
@@ -374,7 +374,7 @@
                 </div>
 
                 <!-- STEP 3 -->
-                <div id="step3" class="quiz-step-card hidden-step">
+                <div id="step3" class="quiz-step-card upcoming-card">
                   <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
                     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <button
@@ -422,7 +422,7 @@
                 </div>
 
                 <!-- STEP 4 -->
-                <div id="step4" class="quiz-step-card hidden-step">
+                <div id="step4" class="quiz-step-card upcoming-card">
                   <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
                     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <button
@@ -470,7 +470,7 @@
                 </div>
 
                 <!-- STEP 5 -->
-                <div id="step5" class="quiz-step-card hidden-step">
+                <div id="step5" class="quiz-step-card upcoming-card">
                   <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col text-center">
                     <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <button
@@ -1885,30 +1885,6 @@ section.container{
     background:
     radial-gradient(circle at top left, rgba(15,118,110,0.04), transparent 30%),
     linear-gradient(180deg, #f7fafb 0%, #eef3f5 100%);
-}
-
-/* step card transitions */
-.quiz-step-card{
-  position: absolute;
-  inset: 0;
-  transition:
-    opacity 0.35s ease,
-    transform 0.35s ease,
-    visibility 0.35s ease;
-}
-
-.quiz-step-card.active-step{
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-  z-index: 2;
-}
-
-.quiz-step-card.hidden-step{
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(18px);
-  z-index: 1;
 }
 
 /* back button */
