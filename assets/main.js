@@ -19,3 +19,18 @@ async function initApp() {
 initApp().catch((error) => {
   console.error("Main app init failed:", error);
 });
+
+window.addEventListener("scroll", () => {
+  const header = document.getElementById("mainHeader");
+  const row = header.querySelector(".relative.w-full");
+
+  if (window.scrollY > 20) {
+    header.classList.add("shadow-md");
+    row.classList.remove("h-16");
+    row.classList.add("h-14");
+  } else {
+    header.classList.remove("shadow-md");
+    row.classList.remove("h-14");
+    row.classList.add("h-16");
+  }
+});
