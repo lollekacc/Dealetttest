@@ -125,6 +125,7 @@
         const btn = event.target.closest(".chat-quiz-btn");
         if (!btn) return;
 
+        // Abonnemang quiz
         if (btn.dataset.persons) state.quiz.persons = btn.dataset.persons;
         if (btn.dataset.data) state.quiz.data = btn.dataset.data;
 
@@ -140,6 +141,24 @@
           await handleResponse(data);
 
           state.quiz = { persons: null, data: null };
+        }
+
+        // Bredband quiz
+        if (btn.dataset.speed) state.quiz.speed = btn.dataset.speed;
+        if (btn.dataset.bredbandtype) state.quiz.bredbandtype = btn.dataset.bredbandtype;
+
+        if (state.quiz.speed && state.quiz.bredbandtype) {
+          const msg = `speed:${state.quiz.speed} bredbandtype:${state.quiz.bredbandtype}`;
+
+          addMessage(
+            `${btn.textContent}`,
+            "user"
+          );
+
+          const data = await sendMessage(msg);
+          await handleResponse(data);
+
+          state.quiz = { speed: null, bredbandtype: null };
         }
       });
     }
@@ -196,7 +215,12 @@
       if (sid) headers["X-Chat-Session"] = sid;
 
       try {
-        const res = await fetch("https://dealett-backend.onrender.com/api/chat", {
+        // Try local backend first (for testing), fall back to production
+        const apiUrl = window.location.hostname === "localhost" 
+          ? "http://localhost:3000/api/chat"
+          : "https://dealett-backend.onrender.com/api/chat";
+        
+        const res = await fetch(apiUrl, {
           method: "POST",
           headers,
           body: JSON.stringify({ message })
