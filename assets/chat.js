@@ -87,6 +87,18 @@
       document.querySelectorAll("#open-chat").forEach((btn) => {
         btn.addEventListener("click", openPanel);
       });
+
+      // Bind suggestion buttons
+      document.addEventListener("click", (event) => {
+        const btn = event.target.closest(".chat-suggestion-btn");
+        if (!btn) return;
+
+        const text = btn.dataset.suggest;
+        if (text) {
+          input.value = text;
+          form.dispatchEvent(new Event('submit'));
+        }
+      });
     }
 
     function bindForm() {
@@ -98,6 +110,10 @@
 
         addMessage(text, "user");
         input.value = "";
+
+        // Hide suggestions after first message
+        const suggestions = document.getElementById("chat-suggestions");
+        if (suggestions) suggestions.style.display = "none";
 
         const data = await sendMessage(text);
         await handleResponse(data);

@@ -16,7 +16,7 @@ Replace your current markup with the slightly improved version below, then add t
         <div class="chat-avatar">D</div>
         <div>
           <strong>Dealett-AI</strong>
-          <div class="chat-subtitle">Hjälper dig hitta rätt abonnemang</div>
+          <div class="chat-subtitle">Hjälper dig hitta rätt abonnemang eller bredband</div>
         </div>
       </div>
 
@@ -30,11 +30,17 @@ Replace your current markup with the slightly improved version below, then add t
 
     <div id="chat-messages"></div>
 
+    <div id="chat-suggestions" class="chat-suggestions">
+      <button class="chat-suggestion-btn" data-suggest="Vilket mobilabonnemang passar mig?">Vilket mobilabonnemang passar mig?</button>
+      <button class="chat-suggestion-btn" data-suggest="Vilket bredband passar en familj?">Vilket bredband passar en familj?</button>
+      <button class="chat-suggestion-btn" data-suggest="Vad är skillnaden mellan fiber och mobilt bredband?">Vad är skillnaden mellan fiber och mobilt bredband?</button>
+    </div>
+
     <form id="chat-form">
       <input
         id="chat-input"
         type="text"
-        placeholder="Skriv vad du behöver hjälp med här..."
+        placeholder="Fråga om abonnemang eller bredband..."
         autocomplete="off"
       />
       <button type="submit">Skicka</button>
@@ -306,5 +312,31 @@ css
     right: 16px;
     bottom: 16px;
   }
+}
+
+.chat-suggestions {
+  padding: 12px;
+  border-top: 1px solid rgba(226, 232, 240, 0.5);
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-suggestion-btn {
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: #fff;
+  color: #334155;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.chat-suggestion-btn:hover {
+  background: #f1f5f9;
+  border-color: rgba(148, 163, 184, 0.5);
 }
 </style>
