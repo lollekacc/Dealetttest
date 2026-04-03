@@ -216,9 +216,15 @@
 
       try {
         // Try local backend first (for testing), fall back to production
-        const apiUrl = window.location.hostname === "localhost" 
-          ? "http://localhost:3000/api/chat"
-          : "https://dealett-backend.onrender.com/api/chat";
+const isLocal =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1";
+
+const apiUrl = isLocal
+  ? "http://localhost:3000/api/chat"
+  : "https://dealett-backend.onrender.com/api/chat";
+        
+        console.log("CHAT API URL:", apiUrl);
         
         const res = await fetch(apiUrl, {
           method: "POST",
