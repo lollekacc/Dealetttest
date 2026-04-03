@@ -1085,7 +1085,7 @@ section.container{
 }
 
 /* hero layout */
-.hero{ display: grid; grid-template-columns: 1.05fr 0.95fr; align-items: center; gap: 56px; border-radius: 0; box-shadow: var(--about-shadow-md); padding: 56px; position: relative; overflow: hidden; }
+.hero{ display: grid; grid-template-columns: 1.05fr 0.95fr; align-items: center; gap: 6px; border-radius: 0; box-shadow: var(--about-shadow-md); padding: 56px; position: relative; overflow: hidden; }
 
 .hero::before{
   content: "";
@@ -1102,7 +1102,7 @@ section.container{
   position: relative;
   z-index: 2;
   max-width: 620px;
-  left: 70px;
+  left: 80px;
 }
 
 .eyebrow{
@@ -1144,7 +1144,91 @@ section.container{
   gap: 14px;
   margin-top: 28px;
 }
+/* =========================================================
+   HERO UNDER HEADER
+========================================================= */
 
+#mainHeader {
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition:
+    background-color 0.28s ease,
+    backdrop-filter 0.28s ease,
+    border-color 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+/* transparent state over hero */
+#mainHeader.header-overlay {
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
+}
+
+/* white state after scrolling */
+#mainHeader.header-solid {
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(15,23,42,0.08);
+  box-shadow: 0 10px 30px rgba(15,23,42,0.06);
+}
+
+/* nav text when hero is underneath */
+#mainHeader.header-overlay a,
+#mainHeader.header-overlay span,
+#mainHeader.header-overlay i {
+  color: #ffffff !important;
+}
+
+/* logo a bit brighter over hero */
+#mainHeader.header-overlay img {
+  filter: brightness(0) invert(1);
+}
+
+/* hover styles while transparent */
+#mainHeader.header-overlay a:hover {
+  color: #ffffff !important;
+  background: rgba(255,255,255,0.08) !important;
+}
+
+/* revert to dark text after scroll */
+#mainHeader.header-solid a,
+#mainHeader.header-solid span,
+#mainHeader.header-solid i {
+  color: #4b5563 !important;
+}
+
+#mainHeader.header-solid a:hover {
+  color: #000 !important;
+}
+
+/* make the hero start under the fixed header */
+section.container {
+  padding-top: 0;
+}
+
+.hero {
+  margin-top: 0;
+  min-height: 10vh;
+
+  /* top padding = header height + breathing room */
+  padding-top: 120px;
+}
+
+/* allow the hero background to visually reach behind the header */
+.hero::after {
+  content: "";
+  position: absolute;
+  top: -100px;
+  left: 0;
+  right: 0;
+  height: 140px;
+  background: inherit;
+  z-index: -1;
+}
 .btn-white,
 .btn-dark{
   display: inline-flex;
@@ -2056,6 +2140,21 @@ p
 }
 </style>
 <div id="footer-placeholder"></div>
+<script>
+  const header = document.getElementById('mainHeader');
 
+  function updateHeaderState() {
+    if (window.scrollY <= 40) {
+      header.classList.add('header-overlay');
+      header.classList.remove('header-solid');
+    } else {
+      header.classList.remove('header-overlay');
+      header.classList.add('header-solid');
+    }
+  }
+
+  updateHeaderState();
+  window.addEventListener('scroll', updateHeaderState);
+</script>
 </body>
 </html>

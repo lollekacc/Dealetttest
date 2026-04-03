@@ -598,12 +598,12 @@
   
   html { font-size: 100%; }
   
-  body {
-    font-family: 'Inter', sans-serif;
-    color: var(--adeala-dark);
-    overflow-x: hidden;
-    padding-top: 70px;
-  }
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--adeala-dark);
+  overflow-x: hidden;
+  padding-top: 0;
+}
   
   img, video {
     max-width: 100%;
