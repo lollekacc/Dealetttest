@@ -153,6 +153,7 @@
     const candidates = [];
     const explicitApi =
       typeof window.APP?.chatApi === "string" ? window.APP.chatApi.trim() : "";
+    const allowProductionFallback = window.APP?.allowProductionFallback === true;
     const protocol = window.location.protocol;
     const host = window.location.hostname;
     const origin = window.location.origin;
@@ -170,14 +171,18 @@
 
     if (protocol === "file:") {
       addCandidate(localApi);
-      addCandidate(productionApi);
+      if (allowProductionFallback) {
+        addCandidate(productionApi);
+      }
       return candidates;
     }
 
     if (host === "localhost" || host === "127.0.0.1") {
       addCandidate(sameOriginApi);
       addCandidate(localApi);
-      addCandidate(productionApi);
+      if (allowProductionFallback) {
+        addCandidate(productionApi);
+      }
       return candidates;
     }
 
@@ -185,6 +190,17 @@
     addCandidate(productionApi);
 
     return candidates;
+  }
+
+  function isLocalDevContext() {
+    const protocol = window.location.protocol;
+    const host = window.location.hostname;
+
+    return (
+      protocol === "file:" ||
+      host === "localhost" ||
+      host === "127.0.0.1"
+    );
   }
 
   async function initChat({ plans } = {}) {
@@ -453,6 +469,14 @@
       }
 
       console.error("All chat endpoints failed:", lastError);
+      if (isLocalDevContext()) {
+        return {
+          reply:
+            "Local backend unavailable. Start the backend on http://localhost:3000 to use the latest bredband chat logic.",
+          format: "text"
+        };
+      }
+
       return {
         reply: "Connection error. Backend could not be reached.",
         format: "text"
