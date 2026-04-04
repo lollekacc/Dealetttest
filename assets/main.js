@@ -25,11 +25,15 @@ window.addEventListener("scroll", () => {
   const row = header.querySelector(".relative.w-full");
 
   if (window.scrollY > 20) {
-    header.classList.add("shadow-md");
+    header.classList.add("shadow-md", "bg-white");
+    header.classList.remove("bg-transparent");
+
     row.classList.remove("h-16");
     row.classList.add("h-14");
   } else {
-    header.classList.remove("shadow-md");
+    header.classList.remove("shadow-md", "bg-white");
+    header.classList.add("bg-transparent");
+
     row.classList.remove("h-14");
     row.classList.add("h-16");
   }
