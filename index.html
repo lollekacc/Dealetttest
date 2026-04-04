@@ -5,10 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dealett – Välkommen</title>
 
-  <!-- Frameworks & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet"
   />
   <link
@@ -17,760 +16,2165 @@
     crossorigin="anonymous"
     referrerpolicy="no-referrer"
   />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="assets/indexbehovsanalys.js"></script>
-  <script src="assets/global.js"></script>
-  <script src="assets/cart.js"></script>
-  <script type="module" src="./assets/main.js"></script>
-  <!-- Shared CSS -->
-  <link rel="stylesheet" href="./assets/style.css" />
-  <link rel="stylesheet" href="./assets/jamfor.css" />
-
-  <!-- Leaflet -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script src="assets/indexbehovsanalys.js"></script>
+  <script src="assets/global.js"></script>
+  <script src="assets/cart.js"></script>
+  <script type="module" src="./assets/main.js"></script>
+
+  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="stylesheet" href="./assets/jamfor.css" />
+
+  <style>
+    :root{
+      --bg: #f4f7fb;
+      --bg-soft: #f8fbfd;
+      --surface: rgba(255,255,255,0.84);
+      --surface-strong: #ffffff;
+      --surface-dark: rgba(255,255,255,0.08);
+
+      --text: #0f172a;
+      --muted: #64748b;
+      --muted-2: #475569;
+
+      --brand: #0f766e;
+      --brand-dark: #0b5c56;
+      --brand-soft: rgba(15,118,110,0.08);
+      --brand-soft-2: rgba(15,118,110,0.14);
+      --blue: #0b57a4;
+
+      --line: rgba(15,23,42,0.08);
+      --line-strong: rgba(15,23,42,0.14);
+      --white-line: rgba(255,255,255,0.12);
+
+      --shadow-sm: 0 10px 28px rgba(15,23,42,0.05);
+      --shadow-md: 0 24px 60px rgba(15,23,42,0.08);
+      --shadow-lg: 0 38px 90px rgba(15,23,42,0.14);
+
+      --radius-sm: 18px;
+      --radius-md: 28px;
+      --radius-lg: 38px;
+
+      --max: 1360px;
+      --max-narrow: 1160px;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    html,body{ margin:0; padding:0; }
+
+    body.home-page{
+      font-family:"Inter",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(16,185,129,0.06), transparent 30%),
+        radial-gradient(circle at top right, rgba(59,130,246,0.06), transparent 26%),
+        linear-gradient(180deg, #f8fbff 0%, #f2f6fa 100%);
+      overflow-x:hidden;
+    }
+
+    img{
+      display:block;
+      max-width:100%;
+      height:auto;
+    }
+
+    a{
+      text-decoration:none;
+    }
+
+    #header-placeholder{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      z-index:1000;
+      min-height:0;
+      pointer-events:none;
+    }
+
+    #header-placeholder > *{
+      pointer-events:auto;
+    }
+
+    .page-shell{
+      width:min(calc(100% - 40px), var(--max));
+      margin:0 auto;
+    }
+
+    .page-shell-narrow{
+      width:min(calc(100% - 40px), var(--max-narrow));
+      margin:0 auto;
+    }
+
+    .section-space{
+      padding:92px 0;
+    }
+
+    .section-head{
+      margin-bottom:42px;
+    }
+
+    .section-head.center{
+      text-align:center;
+    }
+
+    .section-kicker{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:38px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:var(--brand-soft);
+      color:var(--brand-dark);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .section-head h2{
+      margin:18px 0 12px;
+      font-size:clamp(2rem, 4vw, 3.7rem);
+      line-height:.98;
+      letter-spacing:-.05em;
+      font-weight:900;
+      color:var(--text);
+    }
+
+    .section-head p{
+      max-width:760px;
+      margin:0 auto;
+      color:var(--muted);
+      font-size:1.02rem;
+      line-height:1.8;
+    }
+
+    /* HEADER OVER HERO */
+    #mainHeader{
+      background:transparent;
+      border-bottom:1px solid transparent;
+      backdrop-filter:blur(0px);
+      -webkit-backdrop-filter:blur(0px);
+      transition:
+        background-color .28s ease,
+        backdrop-filter .28s ease,
+        border-color .28s ease,
+        box-shadow .28s ease;
+    }
+
+    #mainHeader.header-overlay{
+      background:transparent;
+      border-bottom-color:transparent;
+      box-shadow:none;
+    }
+
+    #mainHeader.header-solid{
+      background:rgba(255,255,255,0.94);
+      border-bottom:1px solid rgba(15,23,42,0.08);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      box-shadow:0 10px 30px rgba(15,23,42,0.06);
+    }
+
+    #mainHeader.header-overlay a,
+    #mainHeader.header-overlay span,
+    #mainHeader.header-overlay i{
+      color:#fff !important;
+    }
+
+    #mainHeader.header-overlay a:hover{
+      background:rgba(255,255,255,0.08) !important;
+      color:#fff !important;
+    }
+
+    #mainHeader.header-overlay img{
+      filter:brightness(0) invert(1);
+    }
+
+    #mainHeader.header-solid a,
+    #mainHeader.header-solid span,
+    #mainHeader.header-solid i{
+      color:#4b5563 !important;
+    }
+
+    #mainHeader.header-solid a:hover{
+      color:#000 !important;
+    }
+
+    /* HERO */
+    .home-hero{
+      position:relative;
+      overflow:hidden;
+      padding:138px 0 110px;
+      background:
+        linear-gradient(135deg, #08111f 0%, #0f172a 58%, #10283b 100%);
+    }
+
+    .home-hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(16,185,129,0.18), transparent 28%),
+        radial-gradient(circle at 82% 16%, rgba(59,130,246,0.18), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+      pointer-events:none;
+    }
+
+    .hero-grid{
+      position:relative;
+      z-index:2;
+      display:grid;
+      grid-template-columns:minmax(0, 1.05fr) minmax(360px, .95fr);
+      gap:56px;
+      align-items:center;
+    }
+
+    .hero-copy{
+      max-width:660px;
+    }
+
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      min-height:42px;
+      padding:10px 16px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.12);
+      color:rgba(255,255,255,0.86);
+      font-size:13px;
+      font-weight:700;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+    }
+
+    .hero-badge-dot{
+      width:10px;
+      height:10px;
+      border-radius:999px;
+      background:#34d399;
+      box-shadow:0 0 0 6px rgba(52,211,153,0.15);
+    }
+
+    .hero-copy h1{
+      margin:22px 0 18px;
+      font-size:clamp(3rem, 5vw, 5.6rem);
+      line-height:.91;
+      letter-spacing:-.06em;
+      font-weight:900;
+      color:#fff;
+    }
+
+    .hero-copy h1 span{
+      display:block;
+      color:#a7f3d0;
+    }
+
+    .hero-copy p{
+      margin:0;
+      max-width:620px;
+      color:rgba(255,255,255,0.74);
+      font-size:1.08rem;
+      line-height:1.85;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:32px;
+    }
+
+    .btn-primary,
+    .btn-secondary{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:58px;
+      padding:0 26px;
+      border-radius:18px;
+      font-size:1rem;
+      font-weight:800;
+      transition:.2s ease;
+    }
+
+    .btn-primary{
+      color:#fff;
+      background:linear-gradient(135deg, var(--brand-dark), var(--brand));
+      box-shadow:0 18px 34px rgba(15,118,110,0.22);
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-2px);
+      box-shadow:0 24px 42px rgba(15,118,110,0.28);
+    }
+
+    .btn-secondary{
+      color:#fff;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.14);
+      backdrop-filter:blur(12px);
+    }
+
+    .btn-secondary:hover{
+      transform:translateY(-2px);
+      background:rgba(255,255,255,0.12);
+    }
+
+    .hero-note{
+      margin-top:16px;
+      color:rgba(255,255,255,0.58);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .hero-stats{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:16px;
+      margin-top:38px;
+    }
+
+    .hero-stat{
+      padding:22px 20px;
+      border-radius:24px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      backdrop-filter:blur(16px);
+      box-shadow:0 20px 40px rgba(0,0,0,0.12);
+    }
+
+    .hero-stat strong{
+      display:block;
+      color:#fff;
+      font-size:1.3rem;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-.03em;
+      margin-bottom:8px;
+    }
+
+    .hero-stat span{
+      display:block;
+      color:rgba(255,255,255,0.68);
+      font-size:.93rem;
+      line-height:1.5;
+    }
+
+    .hero-visual{
+      position:relative;
+      min-height:560px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .hero-glow{
+      position:absolute;
+      inset:auto;
+      width:520px;
+      height:520px;
+      border-radius:999px;
+      background:radial-gradient(circle, rgba(16,185,129,0.18) 0%, rgba(16,185,129,0.08) 34%, transparent 70%);
+      filter:blur(18px);
+      z-index:0;
+    }
+
+    .hero-frame{
+      position:relative;
+      z-index:1;
+      width:min(100%, 560px);
+      min-height:470px;
+      border-radius:32px;
+      padding:24px;
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.10);
+      backdrop-filter:blur(20px);
+      box-shadow:var(--shadow-lg);
+      overflow:hidden;
+    }
+
+    .hero-frame::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.08), transparent 38%),
+        radial-gradient(circle at 90% 10%, rgba(59,130,246,0.14), transparent 22%);
+      pointer-events:none;
+    }
+
+    .hero-panel{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:16px;
+    }
+
+    .hero-panel-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .hero-panel-title{
+      color:rgba(255,255,255,0.78);
+      font-size:.92rem;
+      font-weight:700;
+    }
+
+    .hero-status-pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:36px;
+      padding:0 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.10);
+      color:#fff;
+      font-size:.86rem;
+      font-weight:700;
+    }
+
+    .hero-big-card{
+      padding:28px;
+      border-radius:30px;
+      background:linear-gradient(135deg, #0f766e 0%, #16a394 60%, #1da7a1 100%);
+      border:1px solid rgba(255,255,255,0.18);
+      box-shadow:0 28px 54px rgba(15,118,110,0.28);
+      color:#fff;
+    }
+
+    .hero-big-card-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:22px;
+    }
+
+    .hero-big-card-brand{
+      font-size:1rem;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .hero-big-card-chip{
+      width:34px;
+      height:24px;
+      border-radius:8px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.45));
+    }
+
+    .hero-big-card-value{
+      font-size:3.2rem;
+      line-height:.95;
+      letter-spacing:-.06em;
+      font-weight:900;
+    }
+
+    .hero-big-card-sub{
+      margin-top:12px;
+      color:rgba(255,255,255,0.82);
+      font-size:.98rem;
+      line-height:1.7;
+      max-width:34ch;
+    }
+
+    .hero-partners{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+      margin-top:22px;
+    }
+
+    .hero-partner-pill{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:56px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.12);
+      border:1px solid rgba(255,255,255,0.12);
+      font-weight:800;
+      font-size:.95rem;
+      color:#fff;
+      backdrop-filter:blur(8px);
+    }
+
+    .hero-mini-strip{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .hero-mini-card{
+      padding:16px 14px;
+      border-radius:20px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      color:#fff;
+      text-align:center;
+    }
+
+    .hero-mini-card strong{
+      display:block;
+      font-size:1rem;
+      font-weight:800;
+      margin-bottom:4px;
+    }
+
+    .hero-mini-card span{
+      display:block;
+      color:rgba(255,255,255,0.66);
+      font-size:.8rem;
+      line-height:1.4;
+    }
+
+    /* PARTNER BAR */
+    #partnerBar{
+      position:relative;
+      z-index:12;
+      width:min(calc(100% - 40px), 1180px);
+      margin:-42px auto 0;
+      padding:20px 28px;
+      display:flex;
+      align-items:center;
+      gap:28px;
+      border-radius:28px;
+      background:rgba(255,255,255,0.84);
+      border:1px solid rgba(255,255,255,0.9);
+      backdrop-filter:blur(20px);
+      box-shadow:var(--shadow-md);
+    }
+
+    .partner-bar-label{
+      flex:0 0 auto;
+      color:var(--brand-dark);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .partner-bar-logos{
+      display:grid;
+      grid-template-columns:repeat(5, minmax(0,1fr));
+      gap:16px;
+      width:100%;
+    }
+
+    .partner-bar-logo{
+      min-height:70px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:20px;
+      background:#fff;
+      border:1px solid var(--line);
+      transition:.2s ease;
+      box-shadow:0 8px 20px rgba(15,23,42,0.04);
+    }
+
+    .partner-bar-logo:hover{
+      transform:translateY(-2px);
+      border-color:rgba(15,118,110,0.18);
+      box-shadow:0 14px 24px rgba(15,23,42,0.07);
+    }
+
+    .partner-bar-logo img{
+      height:34px;
+      width:auto;
+      max-width:80%;
+      object-fit:contain;
+      opacity:.82;
+      transition:.2s ease;
+    }
+
+    .partner-bar-logo:hover img{
+      opacity:1;
+      transform:scale(1.03);
+    }
+
+    /* STEPS */
+    .steps-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:22px;
+    }
+
+    .step-card-v2{
+      position:relative;
+      padding:32px 30px;
+      border-radius:30px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.86));
+      border:1px solid rgba(255,255,255,0.8);
+      box-shadow:
+        0 18px 50px rgba(15,23,42,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.85);
+      overflow:hidden;
+    }
+
+    .step-card-v2::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at top right, rgba(15,118,110,0.05), transparent 30%),
+        linear-gradient(135deg, rgba(255,255,255,0.4), transparent 42%);
+      pointer-events:none;
+    }
+
+    .step-number{
+      position:relative;
+      z-index:1;
+      width:56px;
+      height:56px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:18px;
+      background:var(--brand-soft);
+      color:var(--brand-dark);
+      font-size:1rem;
+      font-weight:900;
+      letter-spacing:.02em;
+      margin-bottom:22px;
+    }
+
+    .step-card-v2 h3{
+      position:relative;
+      z-index:1;
+      margin:0 0 10px;
+      color:var(--text);
+      font-size:1.35rem;
+      line-height:1.15;
+      letter-spacing:-.03em;
+      font-weight:800;
+    }
+
+    .step-card-v2 p{
+      position:relative;
+      z-index:1;
+      margin:0;
+      color:var(--muted);
+      line-height:1.75;
+      font-size:.98rem;
+    }
+
+    /* QUIZ SHELL */
+    .quiz-section{
+      padding-top:14px;
+    }
+
+    .quiz-shell{
+      position:relative;
+      width:min(calc(100% - 40px), 1160px);
+      margin:0 auto;
+      overflow:hidden;
+      border-radius:34px;
+      background:rgba(255,255,255,0.82);
+      border:1px solid rgba(255,255,255,0.85);
+      backdrop-filter:blur(24px);
+      box-shadow:var(--shadow-lg);
+    }
+
+    .quiz-shell::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.55), transparent 45%),
+        radial-gradient(circle at 90% 10%, rgba(15,118,110,0.05), transparent 20%);
+    }
+
+    .quiz-shell > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .quiz-shell .border-b{
+      border-bottom:1px solid var(--line) !important;
+    }
+
+    .quiz-shell .text-emerald-700{
+      color:var(--brand-dark) !important;
+    }
+
+    .quiz-shell .bg-slate-100{
+      background:rgba(15,23,42,0.05) !important;
+    }
+
+    .quiz-shell .text-slate-600{
+      color:var(--muted) !important;
+    }
+
+    .quiz-shell .text-slate-700{
+      color:var(--muted-2) !important;
+    }
+
+    .quiz-shell .text-slate-800,
+    .quiz-shell .text-slate-950{
+      color:var(--text) !important;
+    }
+
+    .quiz-shell h2,
+    .quiz-shell h3{
+      letter-spacing:-.04em;
+    }
+
+    .quiz-shell .mt-10.grid > div{
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,0.76);
+      box-shadow:var(--shadow-sm);
+    }
+
+    .adeala-btn{
+      position:relative;
+      border:0;
+      border-radius:20px;
+      background:linear-gradient(135deg, var(--brand-dark), var(--brand));
+      color:#fff;
+      box-shadow:
+        0 18px 34px rgba(15,118,110,0.22),
+        inset 0 1px 0 rgba(255,255,255,0.18);
+      transition:.2s ease;
+    }
+
+    .adeala-btn:hover{
+      transform:translateY(-2px);
+      box-shadow:
+        0 24px 42px rgba(15,118,110,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+
+    #quiz-slot{
+      min-height:560px;
+    }
+
+    .quiz-card{
+      position:relative;
+      border-radius:30px;
+      background:linear-gradient(180deg, #ffffff 0%, #f9fbfc 100%);
+      border:1px solid rgba(15,23,42,0.07);
+      box-shadow:
+        0 18px 50px rgba(15,23,42,0.07),
+        inset 0 1px 0 rgba(255,255,255,0.85);
+    }
+
+    .quiz-back-inline{
+      border:1px solid transparent;
+      background:rgba(255,255,255,0.76);
+      color:var(--text);
+    }
+
+    .quiz-back-inline:hover{
+      background:rgba(15,23,42,0.05);
+      border-color:rgba(15,23,42,0.08);
+    }
+
+    .quiz-progress-inline{
+      background:linear-gradient(90deg, var(--brand), #18a798) !important;
+      box-shadow:0 0 18px rgba(15,118,110,0.22);
+    }
+
+    .quiz-title{
+      color:var(--text);
+      line-height:1.08;
+      letter-spacing:-.04em;
+    }
+
+    .quiz-option{
+      position:relative;
+      border:1px solid var(--line) !important;
+      background:rgba(255,255,255,0.94) !important;
+      box-shadow:0 10px 24px rgba(15,23,42,0.05);
+      transition:
+        transform .18s ease,
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
+    }
+
+    .quiz-option:hover{
+      transform:translateY(-3px);
+      border-color:rgba(15,118,110,0.24) !important;
+      box-shadow:0 20px 36px rgba(15,23,42,0.08);
+    }
+
+    .quiz-option.active,
+    .quiz-option.selected,
+    .quiz-option[aria-pressed="true"]{
+      background:linear-gradient(135deg, #0b57a4 0%, #0c6b63 100%) !important;
+      color:#fff !important;
+      border-color:transparent !important;
+      box-shadow:
+        0 16px 30px rgba(12,74,60,0.20),
+        inset 0 1px 0 rgba(255,255,255,0.14);
+    }
+
+    .quiz-option.active span,
+    .quiz-option.selected span{
+      color:rgba(255,255,255,0.80) !important;
+    }
+
+    .partner-wrapper{
+      min-height:84px;
+    }
+
+    .partner-logo{
+      max-height:42px;
+      width:auto;
+      object-fit:contain;
+    }
+
+    #operator-per-person > div{
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,0.84);
+      box-shadow:var(--shadow-sm);
+    }
+
+    #offers-container > *{
+      border-radius:26px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,0.96);
+      box-shadow:var(--shadow-sm);
+      transition:.2s ease;
+    }
+
+    #offers-container > *:hover{
+      transform:translateY(-3px);
+      box-shadow:var(--shadow-md);
+    }
+
+    /* PROMOS */
+    .promo-grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:26px;
+    }
+
+    .promo-card{
+      position:relative;
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      align-items:center;
+      gap:24px;
+      min-height:390px;
+      padding:34px;
+      border-radius:34px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.86));
+      border:1px solid rgba(255,255,255,0.8);
+      box-shadow:
+        0 18px 50px rgba(15,23,42,0.06),
+        inset 0 1px 0 rgba(255,255,255,0.85);
+      overflow:hidden;
+    }
+
+    .promo-card::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.55), transparent 45%),
+        radial-gradient(circle at 80% 20%, rgba(15,118,110,0.06), transparent 18%);
+      pointer-events:none;
+    }
+
+    .promo-card > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .promo-card h3{
+      margin:16px 0 12px;
+      font-size:clamp(1.75rem, 3vw, 2.4rem);
+      line-height:1.03;
+      letter-spacing:-.04em;
+      font-weight:900;
+      color:var(--text);
+    }
+
+    .promo-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:1rem;
+      line-height:1.8;
+      max-width:42ch;
+    }
+
+    .promo-actions{
+      margin-top:24px;
+    }
+
+    .promo-image-wrap{
+      position:relative;
+      height:100%;
+      min-height:300px;
+      border-radius:28px;
+      overflow:hidden;
+      background:linear-gradient(180deg, #f8fafc, #eef4f8);
+      border:1px solid var(--line);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+
+    .promo-image-wrap img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .promo-ribbon{
+      position:absolute;
+      top:18px;
+      right:-44px;
+      min-width:220px;
+      height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transform:rotate(35deg);
+      background:linear-gradient(135deg, #15803d 0%, #22c55e 55%, #86efac 100%);
+      color:#fff;
+      font-size:14px;
+      font-weight:800;
+      letter-spacing:.01em;
+      box-shadow:0 12px 28px rgba(21,128,61,0.18);
+      z-index:2;
+    }
+
+    /* COVERAGE */
+    .coverage-main{
+      position:relative;
+      z-index:2;
+      padding:0;
+      margin:0;
+      background:none;
+    }
+
+    .coverage-shell{
+      padding:28px;
+      border-radius:34px;
+      background:rgba(255,255,255,0.70);
+      border:1px solid rgba(255,255,255,0.85);
+      backdrop-filter:blur(20px);
+      box-shadow:var(--shadow-lg);
+    }
+
+    .coverage-topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:24px;
+    }
+
+    .coverage-topbar h2{
+      margin:0;
+      color:var(--text);
+      font-size:1.5rem;
+      letter-spacing:-.03em;
+      font-weight:900;
+    }
+
+    .coverage-topbar__eyebrow{
+      margin:0 0 6px;
+      color:var(--brand-dark);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .coverage-topbar__right{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .coverage-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      font-size:.95rem;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s ease;
+      box-shadow:0 10px 24px rgba(15,23,42,0.05);
+    }
+
+    .coverage-btn:hover{
+      transform:translateY(-1px);
+      border-color:rgba(15,118,110,0.22);
+      box-shadow:0 16px 28px rgba(15,23,42,0.08);
+    }
+
+    .coverage-summary{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:16px;
+      margin-bottom:20px;
+    }
+
+    .coverage-summary-item{
+      padding:18px 20px;
+      border-radius:22px;
+      background:rgba(255,255,255,0.84);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-sm);
+    }
+
+    .coverage-summary-item span{
+      display:block;
+      color:var(--muted);
+      font-size:.85rem;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    .coverage-summary-item strong{
+      display:block;
+      color:var(--text);
+      font-size:1rem;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    .coverage-grid{
+      display:grid;
+      grid-template-columns:310px minmax(0,1fr);
+      gap:24px;
+    }
+
+    .coverage-sidebar{
+      padding:20px;
+      border-radius:28px;
+      background:rgba(255,255,255,0.88);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-sm);
+    }
+
+    .coverage-card__head{
+      margin-bottom:18px;
+    }
+
+    .coverage-section-label{
+      margin:0 0 6px;
+      color:var(--brand-dark);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .coverage-card__head h3{
+      margin:0;
+      color:var(--text);
+      font-size:1.2rem;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    .operator-list{
+      display:grid;
+      gap:12px;
+    }
+
+    .operator-card{
+      width:100%;
+      display:grid;
+      grid-template-columns:64px minmax(0,1fr);
+      align-items:center;
+      gap:14px;
+      padding:14px;
+      border-radius:20px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      transition:.2s ease;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(15,23,42,0.04);
+    }
+
+    .operator-card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(15,118,110,0.22);
+      box-shadow:0 16px 28px rgba(15,23,42,0.08);
+    }
+
+    .operator-card.is-active{
+      background:linear-gradient(135deg, rgba(15,118,110,0.10), rgba(255,255,255,1));
+      border-color:rgba(15,118,110,0.20);
+      box-shadow:0 18px 30px rgba(15,118,110,0.10);
+    }
+
+    .operator-card__logo{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:58px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid rgba(15,23,42,0.06);
+      overflow:hidden;
+    }
+
+    .operator-card__logo img{
+      max-width:44px;
+      max-height:28px;
+      object-fit:contain;
+    }
+
+    .operator-card__text{
+      text-align:left;
+    }
+
+    .operator-card__text strong{
+      display:block;
+      color:var(--text);
+      font-size:.98rem;
+      font-weight:800;
+    }
+
+    .coverage-map-area{
+      min-width:0;
+    }
+
+    .coverage-map-card{
+      position:relative;
+      overflow:hidden;
+      border-radius:30px;
+      background:#fff;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-md);
+    }
+
+    .map-ui{
+      position:absolute;
+      top:16px;
+      left:16px;
+      right:16px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      pointer-events:none;
+      z-index:1000;
+      gap:14px;
+    }
+
+    .map-search{
+      display:flex;
+      align-items:center;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      overflow:hidden;
+      height:46px;
+      box-shadow:0 10px 26px rgba(15,23,42,0.10);
+      pointer-events:auto;
+    }
+
+    .map-search input{
+      border:none;
+      outline:none;
+      height:100%;
+      width:260px;
+      padding:0 14px;
+      font-size:.94rem;
+      color:var(--text);
+      background:transparent;
+    }
+
+    .map-search input::placeholder{
+      color:#94a3b8;
+    }
+
+    .map-search button{
+      height:100%;
+      min-width:52px;
+      border:none;
+      background:linear-gradient(135deg, var(--brand-dark), var(--brand));
+      color:#fff;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .map-zoom{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      pointer-events:auto;
+    }
+
+    .map-zoom button{
+      width:44px;
+      height:44px;
+      border:none;
+      border-radius:12px;
+      background:#fff;
+      color:var(--text);
+      font-size:20px;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:0 10px 26px rgba(15,23,42,0.10);
+    }
+
+    .coverage-map{
+      width:100%;
+      height:680px;
+      min-height:680px;
+    }
+
+    .coverage-legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:16px;
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.84);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-sm);
+    }
+
+    .coverage-legend__item{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      color:var(--muted);
+      font-size:.9rem;
+      font-weight:700;
+    }
+
+    .legend-swatch{
+      width:14px;
+      height:14px;
+      border-radius:999px;
+      display:inline-block;
+    }
+
+    .legend-swatch--base{ background:#94a3b8; }
+    .legend-swatch--overlay{ background:rgba(37,99,235,.8); }
+    .legend-swatch--focus{ background:var(--brand); }
+
+    .leaflet-control-zoom{ display:none; }
+
+    /* CHAT MODAL */
+    #chat-modal{
+      backdrop-filter:blur(6px);
+    }
+
+    #chat-modal > div{
+      border-radius:24px;
+      box-shadow:var(--shadow-lg);
+      overflow:hidden;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1180px){
+      .hero-grid{
+        grid-template-columns:1fr;
+        gap:40px;
+      }
+
+      .hero-copy{
+        max-width:none;
+      }
+
+      .hero-visual{
+        min-height:460px;
+      }
+
+      .promo-grid{
+        grid-template-columns:1fr;
+      }
+
+      .promo-card{
+        grid-template-columns:1fr;
+      }
+
+      .partner-bar-logos{
+        grid-template-columns:repeat(3, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 980px){
+      .hero-stats,
+      .steps-grid,
+      .coverage-summary,
+      .coverage-grid{
+        grid-template-columns:1fr;
+      }
+
+      .coverage-topbar{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .coverage-topbar__right{
+        width:100%;
+      }
+
+      .coverage-topbar__right .coverage-btn{
+        flex:1 1 auto;
+      }
+
+      .partner-bar-logos{
+        grid-template-columns:repeat(2, minmax(0,1fr));
+      }
+    }
+
+    @media (max-width: 768px){
+      .page-shell,
+      .page-shell-narrow{
+        width:calc(100% - 28px);
+      }
+
+      .section-space{
+        padding:72px 0;
+      }
+
+      .home-hero{
+        padding:120px 0 88px;
+      }
+
+      .hero-actions{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .btn-primary,
+      .btn-secondary{
+        width:100%;
+      }
+
+      .hero-frame{
+        min-height:auto;
+      }
+
+      .hero-big-card-value{
+        font-size:2.6rem;
+      }
+
+      .hero-mini-strip{
+        grid-template-columns:1fr;
+      }
+
+      #partnerBar{
+        margin-top:-30px;
+        padding:18px;
+        gap:18px;
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .partner-bar-label{
+        text-align:center;
+      }
+
+      .partner-bar-logos{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .quiz-shell{
+        width:calc(100% - 28px);
+        border-radius:26px;
+      }
+
+      .coverage-shell{
+        padding:18px;
+        border-radius:24px;
+      }
+
+      .coverage-map{
+        height:500px;
+        min-height:500px;
+      }
+
+      .map-ui{
+        top:12px;
+        left:12px;
+        right:12px;
+      }
+
+      .map-search input{
+        width:170px;
+      }
+    }
+
+    @media (max-width: 520px){
+      .hero-copy h1{
+        font-size:clamp(2.3rem, 10vw, 3.4rem);
+      }
+
+      .hero-stat{
+        padding:18px 16px;
+      }
+
+      .hero-partners{
+        grid-template-columns:1fr;
+      }
+
+      .partner-bar-logos{
+        grid-template-columns:1fr;
+      }
+
+      .step-card-v2,
+      .promo-card{
+        padding:22px;
+      }
+
+      .coverage-map{
+        height:420px;
+        min-height:420px;
+      }
+    }
+  </style>
 </head>
 
-<body
-  class="min-h-screen font-[Inter] bg-[#f8fafc] text-gray-900 scroll-smooth"
-  data-chat="index"
->
-  <!-- Header -->
+<body class="home-page min-h-screen scroll-smooth" data-chat="index">
   <div id="header-placeholder"></div>
-  <!-- Partner Bar (NO LONGER FIXED) -->
-<div id="partnerBar"
-     class="max-w-6xl mx-auto mt-20 px-8 flex items-center gap-28
-            bg-transparent transition-all duration-100">
 
-    <p class="uppercase tracking-[0.18em] text-green-900 text-xs font-extrabold whitespace-nowrap">
-      I SAMARBETE MED
-    </p>
-
-    <div class="flex items-center gap-16 overflow-x-auto scrollbar-hide">
-
-      <a href="abonnemang.html?op=Tele2"
-         class="group w-[100px] h-[45px] flex items-center justify-center rounded-xl
-                hover:bg-emerald-50 transition duration-100 ml-1">
-        <img src="images/tele2.jpg"
-             alt="Tele2"
-             class="h-[45px] w-auto object-contain grayscale-[40%]
-                    group-hover:grayscale-0 group-hover:scale-105 transition duration-100">
-      </a>
-
-      <a href="abonnemang.html?op=Telia"
-         class="group w-[90px] h-[45px] flex items-center justify-center rounded-xl
-                hover:bg-emerald-50 transition duration-100 ml-3">
-        <img src="images/telia.png"
-             alt="Telia"
-             class="h-[45px] w-auto object-contain grayscale-[40%]
-                    group-hover:grayscale-0 group-hover:scale-105 transition duration-100">
-      </a>
-
-      <a href="abonnemang.html?op=Telenor"
-         class="group w-[120px] h-[65px] flex items-center justify-center rounded-xl
-                hover:bg-emerald-50 transition duration-100 ml-5">
-        <img src="images/telenor.jpg"
-             alt="Telenor"
-             class="h-[45px] w-auto object-contain grayscale-[40%]
-                    group-hover:grayscale-0 group-hover:scale-105 transition duration-100">
-      </a>
-
-      <a href="abonnemang.html?op=Tre"
-         class="group w-[90px] h-[45px] flex items-center justify-center rounded-xl
-                hover:bg-emerald-50 transition duration-100 ml-3">
-        <img src="images/tre.jpg"
-             alt="Tre"
-             class="h-[45px] w-auto object-contain grayscale-[40%]
-                    group-hover:grayscale-0 group-hover:scale-105 transition duration-100">
-      </a>
-
-      <a href="abonnemang.html?op=Halebop"
-         class="group w-[90px] h-[45px] flex items-center justify-center rounded-xl
-                hover:bg-emerald-50 transition duration-100 -ml-2">
-        <img src="images/halebop.webp"
-             alt="Halebop"
-             class="h-[200px] w-auto object-contain grayscale-[40%]
-                    group-hover:grayscale-0 group-hover:scale-105 transition duration-100">
-      </a>
-    </div>
-  </div>
-  <!-- HERO -->
-    <section class="container">
-      <div class="hero">
+  <main>
+    <!-- HERO -->
+    <section class="home-hero">
+      <div class="page-shell hero-grid">
         <div class="hero-copy">
-          <div class="eyebrow">Starta här • Hela hushållet på ett ställe</div>
-          <h1>Få rätt prisplan.<br>Få mer tillbaka.</h1>
-          <p>Behåll mobilen. Få presentkort istället för rabatt. Ett smartare sätt att välja mobilplan för hela hushållet.</p>
-
-          <div class="hero-actions">
-            <a href="#analys" class="btn-white" style="padding:18px 34px;font-size:18px">Kom igång</a>
-            <a href="#paket" class="btn-dark">Se färdiga prisplaner</a>
+          <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            Smart abonnemangsjämförelse
           </div>
 
-          <div class="hero-note">Tar mindre än 2 minuter • Helt kostnadsfritt</div>
+          <h1>
+            Få rätt prisplan.
+            <span>Få mer tillbaka.</span>
+          </h1>
+
+          <p>
+            Jämför mobilabonnemang för hela hushållet, behåll mobilen och få presentkort istället för vanlig rabatt.
+            Ett tydligare, modernare och smartare sätt att välja abonnemang.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#analys" class="btn-primary">Starta analys</a>
+            <a href="#coverageApp" class="btn-secondary">Se täckning</a>
+          </div>
+
+          <div class="hero-note">
+            Tar mindre än 2 minuter • Helt kostnadsfritt • Ingen ny mobil krävs
+          </div>
 
           <div class="hero-stats">
-            <div class="stat"><strong>2 min</strong><span>Snabb analys</span></div>
-            <div class="stat"><strong>1000–2500 kr</strong><span>Exempel på bonus</span></div>
-            <div class="stat"><strong>0 krav</strong><span>Ingen ny mobil behövs</span></div>
+            <div class="hero-stat">
+              <strong>2 min</strong>
+              <span>Snabb behovsanalys</span>
+            </div>
+            <div class="hero-stat">
+              <strong>1000–2500 kr</strong>
+              <span>Exempel på möjlig bonus</span>
+            </div>
+            <div class="hero-stat">
+              <strong>0 krav</strong>
+              <span>Behåll mobil och nummer</span>
+            </div>
           </div>
         </div>
 
-        <div class="hero-visual" id="heroVisual" aria-hidden="true">
-          <div class="visual-glow"></div>
-          <div class="hero-bubble b1"></div>
-          <div class="hero-bubble b2"></div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-glow"></div>
 
-          <div class="devices-wrap" id="devicesWrap">
-            <div class="device-laptop">
-              <div class="device-screen">
-                <div class="screen-ui screen-ui--laptop">
-                  <div class="partner-cloud">
-                    <span class="partner-name large partner-ica" style="top:2%;left:4%;">ICA</span>
-                    <span class="partner-name medium partner-mio" style="top:10%;right:6%;">mio</span>
-                    <span class="partner-name large partner-zalando" style="top:34%;left:8%;">zalando</span>
-                    <span class="partner-name medium partner-ving" style="top:58%;right:8%;">VING</span>
-                    <span class="partner-name medium partner-ica" style="bottom:8%;left:14%;">ICA</span>
-                    <span class="partner-name medium partner-mio" style="bottom:12%;left:44%;">mio</span>
-                    <span class="partner-name medium partner-zalando" style="top:18%;left:42%;">zalando</span>
-                  </div>
+          <div class="hero-frame">
+            <div class="hero-panel">
+              <div class="hero-panel-top">
+                <div class="hero-panel-title">Exempel på bonus och partners</div>
+                <div class="hero-status-pill">Aktiv</div>
+              </div>
+
+              <div class="hero-big-card">
+                <div class="hero-big-card-top">
+                  <div class="hero-big-card-brand">Dealett Bonus</div>
+                  <div class="hero-big-card-chip"></div>
                 </div>
 
-                <div class="card-visual card-visual--laptop">
-                  <div class="card-top">
-                    <div class="card-brand">Dealett</div>
-                    <div class="card-chip"></div>
-                  </div>
-                  <div class="card-middle">
-                    <div class="card-value">2 500 kr</div>
-                    <div class="card-badge">Presentkort</div>
-                  </div>
-                  <div class="card-bottom">
-                    <div class="card-sub">Digitalt • Hos partners</div>
-                    <div class="card-pill">Bonus</div>
-                  </div>
+                <div class="hero-big-card-value">2 500 kr</div>
+
+                <div class="hero-big-card-sub">
+                  Få digitalt presentkort när du tecknar abonnemang via Dealett.
+                  Välj själv var du vill använda bonusen.
+                </div>
+
+                <div class="hero-partners">
+                  <div class="hero-partner-pill">ICA</div>
+                  <div class="hero-partner-pill">Mio</div>
+                  <div class="hero-partner-pill">Zalando</div>
+                  <div class="hero-partner-pill">Ving</div>
                 </div>
               </div>
-              <div class="device-base"></div>
-            </div>
 
-            <div class="device-phone">
-              <div class="device-phone__notch"></div>
-              <div class="device-phone__screen">
-                <div class="screen-ui screen-ui--phone">
-                  <div class="partner-cloud">
-                    <span class="partner-name medium partner-ica" style="top:8%;left:8%;">ICA</span>
-                    <span class="partner-name medium partner-mio" style="top:24%;right:8%;">mio</span>
-                    <span class="partner-name medium partner-zalando" style="bottom:28%;left:4%;">zalando</span>
-                    <span class="partner-name medium partner-ving" style="bottom:8%;right:8%;">VING</span>
-                  </div>
+              <div class="hero-mini-strip">
+                <div class="hero-mini-card">
+                  <strong>Flera operatörer</strong>
+                  <span>Jämför på ett ställe</span>
                 </div>
-
-                <div class="card-visual card-visual--phone">
-                  <div class="card-top">
-                    <div class="card-brand">Dealett</div>
-                    <div class="card-chip"></div>
-                  </div>
-                  <div class="card-middle">
-                    <div class="card-value">2500 kr</div>
-                    <div class="card-badge">Presentkort</div>
-                  </div>
-                  <div class="card-bottom">
-                    <div class="card-sub">Digitalt</div>
-                    <div class="card-pill">Bonus</div>
-                  </div>
+                <div class="hero-mini-card">
+                  <strong>Familjeupplägg</strong>
+                  <span>Se hushållets bästa val</span>
+                </div>
+                <div class="hero-mini-card">
+                  <strong>Direkt överblick</strong>
+                  <span>Pris, surf och bonus</span>
                 </div>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
-  <!-- QUIZ -->
-  <section class="px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
-    <div class="mx-auto max-w-7xl">
-      <div class="quiz-shell rounded-[2rem] border border-white/70 bg-white/85 shadow-soft backdrop-blur-xl">
-        <div class="border-b border-slate-100 px-6 py-5 sm:px-8">
-          <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p class="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-                Behovsanalys
-              </p>
-              <h2 class="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
-                Hitta rätt abonnemang på ett mer professionellt sätt
-              </h2>
-            </div>
+    <!-- PARTNER BAR -->
+    <div id="partnerBar">
+      <div class="partner-bar-label">I samarbete med</div>
 
-            <div class="flex flex-wrap gap-2 text-sm font-medium text-slate-600">
-              <span class="rounded-full bg-slate-100 px-3 py-1.5">Mobil</span>
-              <span class="rounded-full bg-slate-100 px-3 py-1.5">Pris</span>
-              <span class="rounded-full bg-slate-100 px-3 py-1.5">Surf</span>
-              <span class="rounded-full bg-slate-100 px-3 py-1.5">Bindningstid</span>
-            </div>
-          </div>
+      <div class="partner-bar-logos">
+        <a href="abonnemang.html?op=Tele2" class="partner-bar-logo">
+          <img src="images/tele2.jpg" alt="Tele2" />
+        </a>
+
+        <a href="abonnemang.html?op=Telia" class="partner-bar-logo">
+          <img src="images/telia.png" alt="Telia" />
+        </a>
+
+        <a href="abonnemang.html?op=Telenor" class="partner-bar-logo">
+          <img src="images/telenor.jpg" alt="Telenor" />
+        </a>
+
+        <a href="abonnemang.html?op=Tre" class="partner-bar-logo">
+          <img src="images/tre.jpg" alt="Tre" />
+        </a>
+
+        <a href="abonnemang.html?op=Halebop" class="partner-bar-logo">
+          <img src="images/halebop.webp" alt="Halebop" />
+        </a>
+      </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="section-space">
+      <div class="page-shell">
+        <div class="section-head center">
+          <span class="section-kicker">Så fungerar det</span>
+          <h2>Tre enkla steg till rätt abonnemang</h2>
+          <p>
+            Ett tydligt flöde från behovsanalys till färdig beställning. Designat för att kännas enkelt,
+            modernt och tryggt från start till avslut.
+          </p>
         </div>
 
-        <div id="quiz-slot" class="px-6 py-8 sm:px-8 sm:py-10 transition-all duration-300 overflow-hidden">
-          <div id="quiz-intro" class="transition-opacity duration-300">
-            <div class="mx-auto max-w-3xl text-center">
-              <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
-                <i class="fa-solid fa-sparkles"></i>
-                Analysera ditt behov
+        <div class="steps-grid">
+          <article class="step-card-v2">
+            <div class="step-number">01</div>
+            <h3>Besvara några frågor</h3>
+            <p>Vi analyserar hushållets behov, nuvarande operatör, surfnivå och prisbild.</p>
+          </article>
+
+          <article class="step-card-v2">
+            <div class="step-number">02</div>
+            <h3>Jämför alternativen</h3>
+            <p>Se abonnemang, familjeupplägg och bonus i ett mer professionellt och överskådligt flöde.</p>
+          </article>
+
+          <article class="step-card-v2">
+            <div class="step-number">03</div>
+            <h3>Beställ direkt</h3>
+            <p>Välj abonnemang som passar bäst och gå vidare utan att behöva byta mobil eller nummer.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUIZ -->
+    <section id="analys" class="quiz-section px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
+      <div class="mx-auto max-w-7xl">
+        <div class="quiz-shell rounded-[2rem] border border-white/70 bg-white/85 shadow-soft backdrop-blur-xl">
+          <div class="border-b border-slate-100 px-6 py-5 sm:px-8">
+            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
+                  Behovsanalys
+                </p>
+                <h2 class="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
+                  Hitta rätt abonnemang på ett mer professionellt sätt
+                </h2>
               </div>
 
-              <h3 class="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-                Se om du kan sänka kostnaden eller få mer för pengarna
-              </h3>
-
-              <div class="mt-8">
-                <button
-                  id="quiz-start"
-                  class="adeala-btn inline-flex items-center justify-center rounded-2xl px-8 py-4 text-base font-bold shadow-lg transition hover:-translate-y-0.5"
-                  type="button"
-                >
-                  <span class="mr-2">👉</span> Se min analys
-                </button>
-              </div>
-
-              <div class="mt-10 grid gap-3 sm:grid-cols-3">
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
-                  ✔️ Transparens
-                </div>
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
-                  ✔️ Kontroll
-                </div>
-                <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
-                  ✔️ Säkerhet
-                </div>
+              <div class="flex flex-wrap gap-2 text-sm font-medium text-slate-600">
+                <span class="rounded-full bg-slate-100 px-3 py-1.5">Mobil</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1.5">Pris</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1.5">Surf</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1.5">Bindningstid</span>
               </div>
             </div>
           </div>
 
-          <div
-            id="quiz-steps-wrapper"
-            class="relative z-10 hidden opacity-0 transition-all duration-300 px-0 sm:px-1 overflow-visible"
-          >
-            <div class="flex flex-col gap-8">
-              <div id="quiz-card-stack" class="relative min-h-[500px]">
-                <!-- STEP 0 -->
-                <div id="step0" class="quiz-step-card active-step">
-                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
-                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                      <button
-                        type="button"
-                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-                      >
-                        <span class="text-base leading-none">←</span>
-                        Tillbaka
-                      </button>
+          <div id="quiz-slot" class="px-6 py-8 sm:px-8 sm:py-10 transition-all duration-300 overflow-hidden">
+            <div id="quiz-intro" class="transition-opacity duration-300">
+              <div class="mx-auto max-w-3xl text-center">
+                <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
+                  <i class="fa-solid fa-sparkles"></i>
+                  Analysera ditt behov
+                </div>
 
-                      <div class="flex items-center gap-4">
-                        <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-                          <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
-                        </div>
+                <h3 class="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
+                  Se om du kan sänka kostnaden eller få mer för pengarna
+                </h3>
 
-                        <div class="text-sm font-bold text-slate-800">
-                          Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+                <div class="mt-8">
+                  <button
+                    id="quiz-start"
+                    class="adeala-btn inline-flex items-center justify-center rounded-2xl px-8 py-4 text-base font-bold shadow-lg transition hover:-translate-y-0.5"
+                    type="button"
+                  >
+                    <span class="mr-2">👉</span> Se min analys
+                  </button>
+                </div>
+
+                <div class="mt-10 grid gap-3 sm:grid-cols-3">
+                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
+                    ✔️ Transparens
+                  </div>
+                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
+                    ✔️ Kontroll
+                  </div>
+                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
+                    ✔️ Säkerhet
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="quiz-steps-wrapper"
+              class="relative z-10 hidden opacity-0 transition-all duration-300 px-0 sm:px-1 overflow-visible"
+            >
+              <div class="flex flex-col gap-8">
+                <div id="quiz-card-stack" class="relative min-h-[500px]">
+                  <!-- STEP 0 -->
+                  <div id="step0" class="quiz-step-card active-step">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <button
+                          type="button"
+                          class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                        >
+                          <span class="text-base leading-none">←</span>
+                          Tillbaka
+                        </button>
+
+                        <div class="flex items-center gap-4">
+                          <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                            <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                          </div>
+
+                          <div class="text-sm font-bold text-slate-800">
+                            Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div class="mx-auto w-full max-w-3xl text-center">
-                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                        <i class="fa-solid fa-users text-emerald-600"></i>
-                        Hushåll
-                      </span>
+                      <div class="mx-auto w-full max-w-3xl text-center">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                          <i class="fa-solid fa-users text-emerald-600"></i>
+                          Hushåll
+                        </span>
 
-                      <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
-                        Hur många personer gäller det?
-                      </p>
+                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                          Hur många personer gäller det?
+                        </p>
 
-                      <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-                        <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="1" type="button">1</button>
-                        <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="2" type="button">2</button>
-                        <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="3" type="button">3</button>
-                        <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="4" type="button">4</button>
-                        <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md col-span-2 sm:col-span-1" data-persons="5" type="button">5+</button>
+                        <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="1" type="button">1</button>
+                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="2" type="button">2</button>
+                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="3" type="button">3</button>
+                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-persons="4" type="button">4</button>
+                          <button class="quiz-option rounded-2xl border border-slate-200 bg-white px-6 py-5 text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md col-span-2 sm:col-span-1" data-persons="5" type="button">5+</button>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- STEP 1 -->
-                <div id="step1" class="quiz-step-card upcoming-card">
-                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
-                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                      <button
-                        type="button"
-                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-                      >
-                        <span class="text-base leading-none">←</span>
-                        Tillbaka
-                      </button>
+                  <!-- STEP 1 -->
+                  <div id="step1" class="quiz-step-card upcoming-card">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <button
+                          type="button"
+                          class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                        >
+                          <span class="text-base leading-none">←</span>
+                          Tillbaka
+                        </button>
 
-                      <div class="flex items-center gap-4">
-                        <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-                          <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                        <div class="flex items-center gap-4">
+                          <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                            <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                          </div>
+
+                          <div class="text-sm font-bold text-slate-800">
+                            Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+                          </div>
                         </div>
+                      </div>
 
-                        <div class="text-sm font-bold text-slate-800">
-                          Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+                      <div class="mx-auto w-full max-w-5xl text-center">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                          <i class="fa-solid fa-tower-cell text-emerald-600"></i>
+                          Operatör
+                        </span>
+
+                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                          Vilken operatör har ni idag?
+                        </p>
+
+                        <p class="mt-3 text-base text-slate-600">
+                          Välj operatör för varje person.
+                        </p>
+
+                        <div
+                          id="operator-per-person"
+                          class="mt-8 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- TEMPLATE -->
+                  <template id="operator-picker-template">
+                    <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
+                      <p class="mb-4 text-left text-base font-bold text-slate-900">
+                        Person <span data-person-number></span>
+                      </p>
+
+                      <div class="grid grid-cols-2 gap-3">
+                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Tele2">
+                          <img src="images/tele2.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Tele2" />
+                        </button>
+
+                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Telia">
+                          <img src="images/telia.png" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Telia" />
+                        </button>
+
+                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Telenor">
+                          <img src="images/telenor.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Telenor" />
+                        </button>
+
+                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Tre">
+                          <img src="images/tre.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Tre" />
+                        </button>
+
+                        <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Halebop">
+                          <img src="images/halebop.webp" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Halebop" />
+                        </button>
+
+                        <button type="button" class="quiz-option familj-opt inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm font-bold text-slate-800 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Other">
+                          Andra
+                        </button>
+                      </div>
+                    </div>
+                  </template>
+
+                  <!-- STEP 2 -->
+                  <div id="step2" class="quiz-step-card upcoming-card">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <button
+                          type="button"
+                          class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                        >
+                          <span class="text-base leading-none">←</span>
+                          Tillbaka
+                        </button>
+
+                        <div class="flex items-center gap-4">
+                          <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                            <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                          </div>
+
+                          <div class="text-sm font-bold text-slate-800">
+                            Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mx-auto w-full max-w-3xl text-center">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                          <i class="fa-solid fa-signal text-emerald-600"></i>
+                          Surfbehov
+                        </span>
+
+                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                          Hur använder ni mobilen mest?
+                        </p>
+
+                        <div class="mt-8 flex flex-col gap-4">
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="low" type="button">
+                            <span class="block text-lg font-bold text-slate-900">Mest wifi & sociala medier</span>
+                            <span class="mt-1 block text-sm text-slate-500">5 GB – 15 GB</span>
+                          </button>
+
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="medium" type="button">
+                            <span class="block text-lg font-bold text-slate-900">Streaming & video</span>
+                            <span class="mt-1 block text-sm text-slate-500">20 GB – 50 GB</span>
+                          </button>
+
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="high" type="button">
+                            <span class="block text-lg font-bold text-slate-900">Vill aldrig tänka på surf</span>
+                            <span class="mt-1 block text-sm text-slate-500">100 GB – Obegränsad</span>
+                          </button>
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    <div class="mx-auto w-full max-w-5xl text-center">
-                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                        <i class="fa-solid fa-tower-cell text-emerald-600"></i>
-                        Operatör
-                      </span>
+                  <!-- STEP 3 -->
+                  <div id="step3" class="quiz-step-card upcoming-card">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <button
+                          type="button"
+                          class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                        >
+                          <span class="text-base leading-none">←</span>
+                          Tillbaka
+                        </button>
 
-                      <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
-                        Vilken operatör har ni idag?
-                      </p>
+                        <div class="flex items-center gap-4">
+                          <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                            <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                          </div>
 
-                      <p class="mt-3 text-base text-slate-600">
-                        Välj operatör för varje person.
-                      </p>
+                          <div class="text-sm font-bold text-slate-800">
+                            Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mx-auto w-full max-w-3xl text-center">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                          <i class="fa-solid fa-wallet text-emerald-600"></i>
+                          Pris
+                        </span>
+
+                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                          Vad betalar du ungefär idag per abonnemang?
+                        </p>
+
+                        <div class="mt-8 flex flex-col gap-4">
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="under300" type="button">
+                            Under 300 kr
+                          </button>
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="300-400" type="button">
+                            300–400 kr
+                          </button>
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="400-500" type="button">
+                            400–500+ kr
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STEP 4 -->
+                  <div id="step4" class="quiz-step-card upcoming-card">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
+                      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <button
+                          type="button"
+                          class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                        >
+                          <span class="text-base leading-none">←</span>
+                          Tillbaka
+                        </button>
+
+                        <div class="flex items-center gap-4">
+                          <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
+                            <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
+                          </div>
+
+                          <div class="text-sm font-bold text-slate-800">
+                            Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mx-auto w-full max-w-3xl text-center">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
+                          <i class="fa-solid fa-link text-emerald-600"></i>
+                          Bindningstid
+                        </span>
+
+                        <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
+                          Har du bindningstid kvar?
+                        </p>
+
+                        <div class="mt-8 flex flex-col gap-4">
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="no" type="button">
+                            Nej
+                          </button>
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="yes" type="button">
+                            Ja
+                          </button>
+                          <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="unknown" type="button">
+                            Vet inte
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- STEP 5 -->
+                  <div id="step5" class="quiz-step-card upcoming-card">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col text-center">
+                      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <button
+                          type="button"
+                          class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
+                        >
+                          <span class="text-base leading-none">←</span>
+                          Tillbaka
+                        </button>
+                      </div>
+
+                      <div class="mx-auto max-w-3xl">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
+                          <i class="fa-solid fa-circle-check"></i>
+                          Analys klar
+                        </span>
+
+                        <h3 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
+                          Din analys är klar
+                        </h3>
+
+                        <p class="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
+                          Baserat på dina svar har vi hittat abonnemang som passar ditt behov bättre.
+                        </p>
+                      </div>
 
                       <div
-                        id="operator-per-person"
-                        class="mt-8 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]"
+                        id="offers-container"
+                        class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
                       ></div>
                     </div>
                   </div>
                 </div>
-
-                <!-- TEMPLATE -->
-                <template id="operator-picker-template">
-                  <div class="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md">
-                    <p class="mb-4 text-left text-base font-bold text-slate-900">
-                      Person <span data-person-number></span>
-                    </p>
-
-                    <div class="grid grid-cols-2 gap-3">
-                      <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Tele2">
-                        <img src="images/tele2.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Tele2" />
-                      </button>
-
-                      <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Telia">
-                        <img src="images/telia.png" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Telia" />
-                      </button>
-
-                      <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Telenor">
-                        <img src="images/telenor.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Telenor" />
-                      </button>
-
-                      <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Tre">
-                        <img src="images/tre.jpg" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Tre" />
-                      </button>
-
-                      <button type="button" class="partner-wrapper quiz-option familj-opt flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Halebop">
-                        <img src="images/halebop.webp" class="partner-logo h-10 w-auto object-contain transition hover:scale-105" alt="Halebop" />
-                      </button>
-
-                      <button type="button" class="quiz-option familj-opt inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm font-bold text-slate-800 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" data-operator="Other">
-                        Andra
-                      </button>
-                    </div>
-                  </div>
-                </template>
-
-                <!-- STEP 2 -->
-                <div id="step2" class="quiz-step-card upcoming-card">
-                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
-                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                      <button
-                        type="button"
-                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-                      >
-                        <span class="text-base leading-none">←</span>
-                        Tillbaka
-                      </button>
-
-                      <div class="flex items-center gap-4">
-                        <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-                          <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
-                        </div>
-
-                        <div class="text-sm font-bold text-slate-800">
-                          Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="mx-auto w-full max-w-3xl text-center">
-                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                        <i class="fa-solid fa-signal text-emerald-600"></i>
-                        Surfbehov
-                      </span>
-
-                      <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
-                        Hur använder ni mobilen mest?
-                      </p>
-
-                      <div class="mt-8 flex flex-col gap-4">
-                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="low" type="button">
-                          <span class="block text-lg font-bold text-slate-900">Mest wifi & sociala medier</span>
-                          <span class="mt-1 block text-sm text-slate-500">5 GB – 15 GB</span>
-                        </button>
-
-                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="medium" type="button">
-                          <span class="block text-lg font-bold text-slate-900">Streaming & video</span>
-                          <span class="mt-1 block text-sm text-slate-500">20 GB – 50 GB</span>
-                        </button>
-
-                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-data="high" type="button">
-                          <span class="block text-lg font-bold text-slate-900">Vill aldrig tänka på surf</span>
-                          <span class="mt-1 block text-sm text-slate-500">100 GB – Obegränsad</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- STEP 3 -->
-                <div id="step3" class="quiz-step-card upcoming-card">
-                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
-                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                      <button
-                        type="button"
-                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-                      >
-                        <span class="text-base leading-none">←</span>
-                        Tillbaka
-                      </button>
-
-                      <div class="flex items-center gap-4">
-                        <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-                          <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
-                        </div>
-
-                        <div class="text-sm font-bold text-slate-800">
-                          Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="mx-auto w-full max-w-3xl text-center">
-                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                        <i class="fa-solid fa-wallet text-emerald-600"></i>
-                        Pris
-                      </span>
-
-                      <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
-                        Vad betalar du ungefär idag per abonnemang?
-                      </p>
-
-                      <div class="mt-8 flex flex-col gap-4">
-                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="under300" type="button">
-                          Under 300 kr
-                        </button>
-                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="300-400" type="button">
-                          300–400 kr
-                        </button>
-                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-price="400-500" type="button">
-                          400–500+ kr
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- STEP 4 -->
-                <div id="step4" class="quiz-step-card upcoming-card">
-                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
-                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                      <button
-                        type="button"
-                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-                      >
-                        <span class="text-base leading-none">←</span>
-                        Tillbaka
-                      </button>
-
-                      <div class="flex items-center gap-4">
-                        <div class="h-2 w-28 overflow-hidden rounded-full bg-slate-200 sm:w-36">
-                          <div class="quiz-progress-inline h-full w-1/4 rounded-full bg-emerald-600 transition-all duration-300"></div>
-                        </div>
-
-                        <div class="text-sm font-bold text-slate-800">
-                          Steg <span class="quiz-step-current">1</span> / <span class="quiz-step-total">5</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="mx-auto w-full max-w-3xl text-center">
-                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">
-                        <i class="fa-solid fa-link text-emerald-600"></i>
-                        Bindningstid
-                      </span>
-
-                      <p class="quiz-title mt-5 text-2xl font-bold text-slate-950 sm:text-3xl">
-                        Har du bindningstid kvar?
-                      </p>
-
-                      <div class="mt-8 flex flex-col gap-4">
-                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="no" type="button">
-                          Nej
-                        </button>
-                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="yes" type="button">
-                          Ja
-                        </button>
-                        <button class="quiz-option rounded-[1.5rem] border border-slate-200 bg-white px-6 py-5 text-left text-lg font-bold text-slate-900 shadow-sm transition hover:-translate-y-1 hover:border-emerald-300 hover:shadow-md" data-binding="unknown" type="button">
-                          Vet inte
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- STEP 5 -->
-                <div id="step5" class="quiz-step-card upcoming-card">
-                  <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col text-center">
-                    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                      <button
-                        type="button"
-                        class="quiz-back-inline inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-800 transition hover:bg-slate-100 active:scale-[0.99]"
-                      >
-                        <span class="text-base leading-none">←</span>
-                        Tillbaka
-                      </button>
-                    </div>
-
-                    <div class="mx-auto max-w-3xl">
-                      <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
-                        <i class="fa-solid fa-circle-check"></i>
-                        Analys klar
-                      </span>
-
-                      <h3 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
-                        Din analys är klar
-                      </h3>
-
-                      <p class="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
-                        Baserat på dina svar har vi hittat abonnemang som passar ditt behov bättre.
-                      </p>
-                    </div>
-
-                    <div
-                      id="offers-container"
-                      class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
-                    ></div>
-                  </div>
-                </div>
               </div>
             </div>
+            <!-- /QUIZ -->
           </div>
-          <!-- /QUIZ -->
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- IMAGE GRID -->
-  <section class="px-4 sm:px-6 lg:px-8 mt-4">
-    <div class="mx-auto max-w-full">
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-5">
-        <button onclick="onHeroImageClick(1)" class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md" type="button">
-          <img
-            src="https://cdn.vectorstock.com/i/1000v/19/95/gold-number-1-one-logo-icon-design-vector-21361995.jpg"
-            class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-            alt="1"
-          />
-          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-        </button>
-
-        <button onclick="onHeroImageClick(2)" class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md" type="button">
-          <img
-            src="https://static.vecteezy.com/ti/gratis-vektor/p1/4655897-3d-gyllene-nummer-tva-2-vektor-2-a-arsjubileumsfirande-bakgrund-andra-position-koncept-guld-logotyp-isolerad-pa-svart-kvadrat-mall-vector.jpg"
-            class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-            alt="2"
-          />
-          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-        </button>
-
-        <button onclick="onHeroImageClick(3)" class="relative h-[240px] rounded-2xl overflow-hidden group shadow-md" type="button">
-          <img
-            src="https://www.shutterstock.com/shutterstock/photos/1890767731/display_1500/stock-photo--d-render-number-three-glowing-in-the-dark-pink-blue-neon-light-1890767731.jpg"
-            class="w-full h-full object-cover transition duration-300 group-hover:scale-105"
-            alt="3"
-          />
-          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition"></div>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ADS -->
-  <section class="scroll-ads bg-gradient-to-b from-white to-gray-50">
-    <div class="ad-container fade-in relative overflow-hidden">
-<div class="absolute top-3 -right-16 rotate-45">
-  <div class="text-white/80 shadow-lg w-[260px] h-[32px] flex items-center justify-center whitespace-nowrap text-[16px] font-semibold relative left-[28px] top-[6px]
-              bg-[linear-gradient(135deg,_#15803d_0%,_#22c55e_55%,_#86efac_100%)]">
-     Rekommenderas
-  </div>
-</div>
-
-      <img src="images/dealett-ai.png" alt="Mobilabonnemang" class="ad-image" />
-
-      <div class="ad-text">
-        <span class="ad-tag">Dealett-AI Chatt</span>
-        <h2>
-          Vår smarta AI-guide analyserar dina behov och matchar dig direkt med det bästa abonnemanget.
-          Snabbt och enkelt
-        </h2>
-        <p>Dealett-AI hittar – du sparar.</p>
-        <button id="open-chat" class="ad-btn adeala-btn" type="button">
-          Chatta Med Dealett-AI
-        </button>
-      </div>
-    </div>
-
-    <div class="ad-container fade-in">
-      <div class="ad-text">
-        <span class="ad-tag">Bonus på alla köp</span>
-        <h2>Få presentkort när du tecknar abonnemang</h2>
-        <p>Hos oss lönar det sig alltid att välja smart. Varje köp ger dig en exklusiv belöning som tack för ditt förtroende.</p>
-        <a href="belöning.html" class="ad-btn adeala-btn">Utforska bonusar</a>
-      </div>
-      <img src="images/p3.jpg" alt="5G-nät" class="ad-image" />
-    </div>
-  </section>
-  
-  <!-- MAP SECTION -->
-<section class="coverage-main py-16" id="coverageApp">
-  <div class="content-wrapper">
-    <section class="coverage-shell">
-
-      <!-- TOPBAR -->
-      <div class="coverage-topbar">
-        <div>
-          <p class="coverage-topbar__eyebrow">Täckningskarta</p>
-          <h2>Välj operatör och utforska kartan</h2>
-        </div>
-
-        <div class="coverage-topbar__right">
-          <button id="resetViewBtn" class="coverage-btn coverage-btn--soft" type="button">
-            Återställ vy
-          </button>
-          <button id="clearLayerBtn" class="coverage-btn coverage-btn--soft" type="button">
-            Ta bort lager
-          </button>
-        </div>
-      </div>
-
-      <div class="coverage-grid">
-
-        <!-- SIDEBAR -->
-        <aside class="coverage-sidebar">
-
-          <section class="coverage-card coverage-card--sidebar">
-            <div class="coverage-card__head">
-              <div>
-                <p class="coverage-section-label">Operatörer</p>
-                <h3>Välj nät</h3>
-              </div>
-            </div>
-
-            <div class="operator-list">
-              <button class="operator-card" data-operator="telia" type="button">
-                <div class="operator-card__logo">
-                  <img src="images/telia.png" alt="Telia">
-                </div>
-                <div class="operator-card__text"><strong>Telia</strong></div>
-              </button>
-
-              <button class="operator-card" data-operator="tele2" type="button">
-                <div class="operator-card__logo">
-                  <img src="images/tele2.jpg" alt="Tele2">
-                </div>
-                <div class="operator-card__text"><strong>Tele2</strong></div>
-              </button>
-
-              <button class="operator-card" data-operator="telenor" type="button">
-                <div class="operator-card__logo">
-                  <img src="images/telenor.jpg" alt="Telenor">
-                </div>
-                <div class="operator-card__text"><strong>Telenor</strong></div>
-              </button>
-
-              <button class="operator-card" data-operator="tre" type="button">
-                <div class="operator-card__logo">
-                  <img src="images/tre.jpg" alt="Tre">
-                </div>
-                <div class="operator-card__text"><strong>Tre</strong></div>
-              </button>
-
-              <button class="operator-card" data-operator="halebop" type="button">
-                <div class="operator-card__logo">
-                  <img src="images/halebop.webp" alt="Halebop">
-                </div>
-                <div class="operator-card__text"><strong>Halebop</strong></div>
-              </button>
-            </div>
-          </section>
-
-
-        </aside>
-
-        <!-- MAP AREA -->
-        <section class="coverage-map-area">
-
-          <div class="coverage-map-card">
-
-            <!-- MAP UI -->
-            <div class="map-ui">
-
-              <div class="map-search">
-                <input id="mapSearchInput" type="text" placeholder="Sök adress eller stad..." />
-                <button id="mapSearchBtn" type="button">🔍</button>
-              </div>
-
-              <div class="map-zoom">
-                <button id="zoomInBtn" type="button">+</button>
-                <button id="zoomOutBtn" type="button">−</button>
-              </div>
-
-            </div>
-
-            <!-- MAP -->
-            <div id="map" class="coverage-map"></div>
-
-          </div>
-
-          <!-- LEGEND -->
-          <div class="coverage-legend">
-            <div class="coverage-legend__item">
-              <span class="legend-swatch legend-swatch--base"></span>
-              <span>Bakgrundskarta</span>
-            </div>
-            <div class="coverage-legend__item">
-              <span class="legend-swatch legend-swatch--overlay"></span>
-              <span>Aktivt täckningslager</span>
-            </div>
-            <div class="coverage-legend__item">
-              <span class="legend-swatch legend-swatch--focus"></span>
-              <span>Vald operatör</span>
-            </div>
-          </div>
-
-        </section>
-
-      </div>
-
     </section>
-  </div>
-</section>
+
+    <!-- PROMOS -->
+    <section class="section-space">
+      <div class="page-shell">
+        <div class="promo-grid">
+          <article class="promo-card">
+            <div>
+              <span class="section-kicker">Dealett-AI Chatt</span>
+              <h3>Vår smarta guide hjälper dig hitta rätt snabbare</h3>
+              <p>
+                Låt Dealett-AI analysera dina behov och guida dig till rätt abonnemang utan onödigt krångel.
+              </p>
+
+              <div class="promo-actions">
+                <button id="open-chat" class="btn-primary" type="button">
+                  Chatta med Dealett-AI
+                </button>
+              </div>
+            </div>
+
+            <div class="promo-image-wrap">
+              <div class="promo-ribbon">Rekommenderas</div>
+              <img src="images/dealett-ai.png" alt="Dealett AI" />
+            </div>
+          </article>
+
+          <article class="promo-card">
+            <div>
+              <span class="section-kicker">Bonus på alla köp</span>
+              <h3>Få presentkort när du tecknar abonnemang</h3>
+              <p>
+                Hos oss lönar det sig att välja smart. Varje köp kan ge dig en exklusiv belöning som tack för ditt val.
+              </p>
+
+              <div class="promo-actions">
+                <a href="belöning.html" class="btn-primary">Utforska bonusar</a>
+              </div>
+            </div>
+
+            <div class="promo-image-wrap">
+              <img src="images/p3.jpg" alt="Bonus och belöningar" />
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- COVERAGE -->
+    <section class="coverage-main section-space" id="coverageApp">
+      <div class="page-shell">
+        <div class="section-head center">
+          <span class="section-kicker">Täckningskarta</span>
+          <h2>Välj operatör och utforska kartan</h2>
+          <p>
+            Se täckning, jämför nät och sök direkt på adress eller stad för att få en tydligare bild av läget där du bor.
+          </p>
+        </div>
+
+        <section class="coverage-shell">
+          <div class="coverage-topbar">
+            <div>
+              <p class="coverage-topbar__eyebrow">Interaktiv karta</p>
+              <h2>Utforska operatörernas täckning</h2>
+            </div>
+
+            <div class="coverage-topbar__right">
+              <button id="resetViewBtn" class="coverage-btn" type="button">
+                Återställ vy
+              </button>
+              <button id="clearLayerBtn" class="coverage-btn" type="button">
+                Ta bort lager
+              </button>
+            </div>
+          </div>
+
+          <div class="coverage-summary">
+            <div class="coverage-summary-item">
+              <span>Vald operatör</span>
+              <strong id="activeOperatorSummary">Ingen vald</strong>
+            </div>
+            <div class="coverage-summary-item">
+              <span>Zoomnivå</span>
+              <strong id="zoomSummary">5</strong>
+            </div>
+            <div class="coverage-summary-item">
+              <span>Kartcentrum</span>
+              <strong id="coordsSummary">62.0000, 15.0000</strong>
+            </div>
+          </div>
+
+          <div class="coverage-grid">
+            <!-- SIDEBAR -->
+            <aside class="coverage-sidebar">
+              <section class="coverage-card coverage-card--sidebar">
+                <div class="coverage-card__head">
+                  <div>
+                    <p class="coverage-section-label">Operatörer</p>
+                    <h3>Välj nät</h3>
+                  </div>
+                </div>
+
+                <div class="operator-list">
+                  <button class="operator-card" data-operator="telia" type="button">
+                    <div class="operator-card__logo">
+                      <img src="images/telia.png" alt="Telia">
+                    </div>
+                    <div class="operator-card__text"><strong>Telia</strong></div>
+                  </button>
+
+                  <button class="operator-card" data-operator="tele2" type="button">
+                    <div class="operator-card__logo">
+                      <img src="images/tele2.jpg" alt="Tele2">
+                    </div>
+                    <div class="operator-card__text"><strong>Tele2</strong></div>
+                  </button>
+
+                  <button class="operator-card" data-operator="telenor" type="button">
+                    <div class="operator-card__logo">
+                      <img src="images/telenor.jpg" alt="Telenor">
+                    </div>
+                    <div class="operator-card__text"><strong>Telenor</strong></div>
+                  </button>
+
+                  <button class="operator-card" data-operator="tre" type="button">
+                    <div class="operator-card__logo">
+                      <img src="images/tre.jpg" alt="Tre">
+                    </div>
+                    <div class="operator-card__text"><strong>Tre</strong></div>
+                  </button>
+
+                  <button class="operator-card" data-operator="halebop" type="button">
+                    <div class="operator-card__logo">
+                      <img src="images/halebop.webp" alt="Halebop">
+                    </div>
+                    <div class="operator-card__text"><strong>Halebop</strong></div>
+                  </button>
+                </div>
+              </section>
+            </aside>
+
+            <!-- MAP AREA -->
+            <section class="coverage-map-area">
+              <div class="coverage-map-card">
+                <div class="map-ui">
+                  <div class="map-search">
+                    <input id="mapSearchInput" type="text" placeholder="Sök adress eller stad..." />
+                    <button id="mapSearchBtn" type="button">🔍</button>
+                  </div>
+
+                  <div class="map-zoom">
+                    <button id="zoomInBtn" type="button">+</button>
+                    <button id="zoomOutBtn" type="button">−</button>
+                  </div>
+                </div>
+
+                <div id="map" class="coverage-map"></div>
+              </div>
+
+              <div class="coverage-legend">
+                <div class="coverage-legend__item">
+                  <span class="legend-swatch legend-swatch--base"></span>
+                  <span>Bakgrundskarta</span>
+                </div>
+                <div class="coverage-legend__item">
+                  <span class="legend-swatch legend-swatch--overlay"></span>
+                  <span>Aktivt täckningslager</span>
+                </div>
+                <div class="coverage-legend__item">
+                  <span class="legend-swatch legend-swatch--focus"></span>
+                  <span>Vald operatör</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
 
   <!-- CHAT MODAL -->
   <div id="chat-modal" class="fixed inset-0 hidden items-center justify-center bg-black/50 z-[9999]">
     <div class="bg-white rounded-2xl w-[95%] max-w-lg h-[80vh] relative">
-      <button id="close-chat" class="absolute top-3 right-3" type="button">✕</button>
+      <button id="close-chat" class="absolute top-3 right-3 z-10" type="button">✕</button>
       <div id="chat-modal-body" class="h-full"></div>
     </div>
   </div>
@@ -781,50 +2185,77 @@
     <iframe id="pchoiceFrame"></iframe>
   </div>
 
+  <div id="footer-placeholder"></div>
+
   <script>
+    // Header overlay / solid state
+    window.addEventListener("scroll", () => {
+      const header = document.getElementById("mainHeader");
+      if (!header) return;
+
+      const row = header.querySelector(".relative.w-full");
+
+      if (window.scrollY > 20) {
+        header.classList.remove("header-overlay");
+        header.classList.add("header-solid");
+        header.classList.add("shadow-md");
+
+        if (row) {
+          row.classList.remove("h-16");
+          row.classList.add("h-14");
+        }
+      } else {
+        header.classList.remove("header-solid");
+        header.classList.add("header-overlay");
+        header.classList.remove("shadow-md");
+
+        if (row) {
+          row.classList.remove("h-14");
+          row.classList.add("h-16");
+        }
+      }
+    });
+
+    window.addEventListener("load", () => {
+      const header = document.getElementById("mainHeader");
+      if (header) {
+        header.classList.add("header-overlay");
+      }
+    });
+
+    // MAP
     const DEFAULT_VIEW = {
       center: [62.0, 15.0],
       zoom: 5
     };
+
     const SWEDEN_BOUNDS = [
-  [55.0, 10.0],  // southwest
-  [69.5, 24.5]   // northeast
-];
-const map = L.map("map", {
-  zoomControl: false,
-  attributionControl: false,
-  maxBounds: SWEDEN_BOUNDS,
-  maxBoundsViscosity: 1.0, // strong lock
-  minZoom: 4               // max zoom OUT limit
-}).setView([62.0, 15.0], 5);
-map.on("drag", () => {
-  map.panInsideBounds(SWEDEN_BOUNDS, { animate: false });
-});
+      [55.0, 10.0],
+      [69.5, 24.5]
+    ];
+
+    const map = L.map("map", {
+      zoomControl: false,
+      attributionControl: false,
+      maxBounds: SWEDEN_BOUNDS,
+      maxBoundsViscosity: 1.0,
+      minZoom: 4
+    }).setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom);
+
+    map.on("drag", () => {
+      map.panInsideBounds(SWEDEN_BOUNDS, { animate: false });
+    });
 
     let activeOverlay = null;
     let activeOperatorKey = null;
+    let searchMarker = null;
 
     const operatorMeta = {
-      telia: {
-        label: "Telia",
-        theme: "#6d28d9"
-      },
-      tele2: {
-        label: "Tele2",
-        theme: "#111827"
-      },
-      telenor: {
-        label: "Telenor",
-        theme: "#1d4ed8"
-      },
-      tre: {
-        label: "Tre",
-        theme: "#047857"
-      },
-      halebop: {
-        label: "Halebop",
-        theme: "#15803d"
-      }
+      telia: { label: "Telia", theme: "#6d28d9" },
+      tele2: { label: "Tele2", theme: "#111827" },
+      telenor: { label: "Telenor", theme: "#1d4ed8" },
+      tre: { label: "Tre", theme: "#047857" },
+      halebop: { label: "Halebop", theme: "#15803d" }
     };
 
     const overlays = {
@@ -874,12 +2305,9 @@ map.on("drag", () => {
     }).addTo(map);
 
     const operatorButtons = document.querySelectorAll(".operator-card");
-    const activeOperatorLabel = document.getElementById("activeOperatorLabel");
-    const heroActiveOperator = document.getElementById("heroActiveOperator");
-    const mapToolbarLabel = document.getElementById("mapToolbarLabel");
-    const zoomLabel = document.getElementById("zoomLabel");
-    const coordsLabel = document.getElementById("coordsLabel");
-    const mapElement = document.getElementById("map");
+    const activeOperatorSummary = document.getElementById("activeOperatorSummary");
+    const zoomSummary = document.getElementById("zoomSummary");
+    const coordsSummary = document.getElementById("coordsSummary");
 
     function setActiveOperatorUI(key) {
       operatorButtons.forEach(btn => {
@@ -887,12 +2315,7 @@ map.on("drag", () => {
       });
 
       const label = key ? operatorMeta[key].label : "Ingen vald";
-
-      activeOperatorLabel.textContent = label;
-      heroActiveOperator.textContent = label;
-      mapToolbarLabel.textContent = key
-        ? operatorMeta[key].label + " aktiv"
-        : "Ingen operatör vald";
+      activeOperatorSummary.textContent = label;
 
       if (key) {
         document.documentElement.style.setProperty("--coverage-accent", operatorMeta[key].theme);
@@ -937,9 +2360,7 @@ map.on("drag", () => {
     });
 
     document.getElementById("resetViewBtn").addEventListener("click", () => {
-      map.setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom, {
-        animate: true
-      });
+      map.setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom, { animate: true });
     });
 
     document.getElementById("clearLayerBtn").addEventListener("click", () => {
@@ -955,1244 +2376,58 @@ map.on("drag", () => {
     });
 
     map.on("zoomend", () => {
-      zoomLabel.textContent = map.getZoom();
+      zoomSummary.textContent = map.getZoom();
     });
 
     map.on("moveend", () => {
       const center = map.getCenter();
-      coordsLabel.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
-    });
-
-    map.on("load", () => {
-      zoomLabel.textContent = map.getZoom();
-      const center = map.getCenter();
-      coordsLabel.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
+      coordsSummary.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
     });
 
     setTimeout(() => {
       map.invalidateSize();
-      zoomLabel.textContent = map.getZoom();
+      zoomSummary.textContent = map.getZoom();
       const center = map.getCenter();
-      coordsLabel.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
+      coordsSummary.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
     }, 250);
 
     window.addEventListener("resize", () => {
       map.invalidateSize();
     });
-    let searchMarker = null;
 
-async function searchAddress(query) {
+    async function searchAddress(query) {
+      if (!query) return;
 
-  if (!query) return;
+      const url =
+        "https://nominatim.openstreetmap.org/search?format=json&q=" +
+        encodeURIComponent(query);
 
-  const url =
-    "https://nominatim.openstreetmap.org/search?format=json&q=" +
-    encodeURIComponent(query);
+      const res = await fetch(url);
+      const data = await res.json();
 
-  const res = await fetch(url);
-  const data = await res.json();
+      if (!data.length) return;
 
-  if (!data.length) return;
+      const lat = parseFloat(data[0].lat);
+      const lon = parseFloat(data[0].lon);
 
-  const lat = parseFloat(data[0].lat);
-  const lon = parseFloat(data[0].lon);
+      map.setView([lat, lon], 14, { animate: true });
 
-  map.setView([lat, lon], 14, { animate: true });
+      if (searchMarker) map.removeLayer(searchMarker);
+      searchMarker = L.marker([lat, lon]).addTo(map);
+    }
 
-  if (searchMarker) map.removeLayer(searchMarker);
+    const searchInput = document.getElementById("mapSearchInput");
+    const searchBtn = document.getElementById("mapSearchBtn");
 
-  searchMarker = L.marker([lat, lon]).addTo(map);
-}
-const searchInput = document.getElementById("mapSearchInput");
-const searchBtn = document.getElementById("mapSearchBtn");
+    searchBtn.addEventListener("click", () => {
+      searchAddress(searchInput.value.trim());
+    });
 
-searchBtn.addEventListener("click", () => {
-  searchAddress(searchInput.value.trim());
-});
-
-searchInput.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    searchAddress(searchInput.value.trim());
-  }
-});
+    searchInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        searchAddress(searchInput.value.trim());
+      }
+    });
   </script>
-
-  <style>
-    #map,
-    .coverage-map {
-      height: 520px;
-      min-height: 520px;
-      width: 100%;
-    }
-
-    .coverage-map-card {
-      position: relative;
-    }
-
-    .map-ui {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      right: 16px;
-      display: flex;
-      justify-content: space-between;
-      pointer-events: none;
-      z-index: 1000;
-    }
-
-    .map-search {
-      display: flex;
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      pointer-events: all;
-    }
-
-    .map-search input {
-      border: none;
-      outline: none;
-      padding: 10px 14px;
-      width: 240px;
-      font-size: 14px;
-    }
-
-    .map-search button {
-      background: #0f766e;
-      color: white;
-      border: none;
-      padding: 0 14px;
-      cursor: pointer;
-    }
-
-    .map-zoom {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      pointer-events: all;
-    }
-
-    .map-zoom button {
-      width: 42px;
-      height: 42px;
-      border: none;
-      background: white;
-      font-size: 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (max-width: 640px) {
-      #map,
-      .coverage-map {
-        height: 420px;
-        min-height: 420px;
-      }
-
-      .map-ui {
-        top: 12px;
-        left: 12px;
-        right: 12px;
-        gap: 12px;
-      }
-
-      .map-search input {
-        width: 170px;
-      }
-    }
-  </style>
-
-<style>
-  :root{
-  --about-bg: #ffffff;
-  --about-bg-soft: #f8fbfc;
-  --about-line: rgba(15, 23, 42, 0.08);
-  --about-line-strong: rgba(15, 23, 42, 0.14);
-  --about-text: #0f172a;
-  --about-muted: #5f6b7a;
-  --about-brand: #0f766e;
-  --about-brand-dark: #0b5c56;
-  --about-brand-soft: rgba(15, 118, 110, 0.08);
-  --about-blue-soft: rgba(59, 130, 246, 0.08);
-  --about-shadow-sm: 0 10px 30px rgba(15, 23, 42, 0.04);
-  --about-shadow-md: 0 22px 60px rgba(15, 23, 42, 0.08);
-  --about-shadow-lg: 0 30px 90px rgba(15, 23, 42, 0.12);
-  --about-radius-sm: 16px;
-  --about-radius-md: 24px;
-  --about-radius-lg: 34px;
-  --about-max: 1280px;
-}
-
-/* section */
-.container{
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding-left: 32px;
-  padding-right: 32px;
-}
-
-section.container{
-  padding: 0px 0 96px;
-}
-
-/* hero layout */
-.hero{ display: grid; grid-template-columns: 1.05fr 0.95fr; align-items: center; gap: 6px; border-radius: 0; box-shadow: var(--about-shadow-md); padding: 56px; position: relative; overflow: hidden; }
-
-.hero::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(135deg, rgba(255,255,255,0.55), transparent 45%),
-    linear-gradient(315deg, rgba(15, 118, 110, 0.03), transparent 50%);
-  pointer-events: none;
-}
-
-/* copy */
-.hero-copy{
-  position: relative;
-  z-index: 2;
-  max-width: 620px;
-  left: 80px;
-}
-
-.eyebrow{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: var(--about-brand-soft);
-  border: 1px solid rgba(15, 118, 110, 0.14);
-  color: var(--about-brand-dark);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-  margin-bottom: 20px;
-}
-
-.hero-copy h1{
-  margin: 0 0 18px;
-  color: var(--about-text);
-  font-size: clamp(2.4rem, 5vw, 4.4rem);
-  line-height: 0.98;
-  letter-spacing: -0.04em;
-  font-weight: 800;
-}
-
-.hero-copy p{
-  margin: 0;
-  max-width: 58ch;
-  color: var(--about-muted);
-  font-size: 18px;
-  line-height: 1.7;
-}
-
-/* buttons */
-.hero-actions{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 28px;
-}
-/* =========================================================
-   HERO UNDER HEADER
-========================================================= */
-
-#mainHeader {
-  background: transparent;
-  border-bottom: 1px solid transparent;
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-  transition:
-    background-color 0.28s ease,
-    backdrop-filter 0.28s ease,
-    border-color 0.28s ease,
-    box-shadow 0.28s ease;
-}
-
-/* transparent state over hero */
-#mainHeader.header-overlay {
-  background: transparent;
-  border-bottom-color: transparent;
-  box-shadow: none;
-}
-
-/* white state after scrolling */
-#mainHeader.header-solid {
-  background: rgba(255,255,255,0.94);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(15,23,42,0.08);
-  box-shadow: 0 10px 30px rgba(15,23,42,0.06);
-}
-
-/* nav text when hero is underneath */
-#mainHeader.header-overlay a,
-#mainHeader.header-overlay span,
-#mainHeader.header-overlay i {
-  color: #ffffff !important;
-}
-
-/* logo a bit brighter over hero */
-#mainHeader.header-overlay img {
-  filter: brightness(0) invert(1);
-}
-
-/* hover styles while transparent */
-#mainHeader.header-overlay a:hover {
-  color: #ffffff !important;
-  background: rgba(255,255,255,0.08) !important;
-}
-
-/* revert to dark text after scroll */
-#mainHeader.header-solid a,
-#mainHeader.header-solid span,
-#mainHeader.header-solid i {
-  color: #4b5563 !important;
-}
-
-#mainHeader.header-solid a:hover {
-  color: #000 !important;
-}
-
-/* make the hero start under the fixed header */
-section.container {
-  padding-top: 0;
-}
-
-.hero {
-  margin-top: 0;
-  min-height: 10vh;
-
-  /* top padding = header height + breathing room */
-  padding-top: 120px;
-}
-
-/* allow the hero background to visually reach behind the header */
-.hero::after {
-  content: "";
-  position: absolute;
-  top: -100px;
-  left: 0;
-  right: 0;
-  height: 140px;
-  background: inherit;
-  z-index: -1;
-}
-.btn-white,
-.btn-dark{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 56px;
-  padding: 16px 28px;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 1;
-  text-decoration: none;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, color 0.18s ease;
-  will-change: transform;
-}
-
-.btn-white{
-  background: #ffffff;
-  color: var(--about-text);
-  border: 1px solid var(--about-line);
-  box-shadow: var(--about-shadow-sm);
-}
-
-.btn-white:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
-}
-
-.btn-dark{
-  background: var(--about-text);
-  color: #ffffff;
-  border: 1px solid transparent;
-  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.16);
-}
-
-.btn-dark:hover{
-  transform: translateY(-2px);
-  background: #111c32;
-}
-
-.hero-note{
-  margin-top: 16px;
-  color: var(--about-muted);
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-/* stats */
-.hero-stats{
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-top: 28px;
-}
-
-.stat{
-  background: rgba(255,255,255,0.72);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--about-line);
-  border-radius: 20px;
-  padding: 18px 18px 16px;
-  box-shadow: var(--about-shadow-sm);
-}
-
-.stat strong{
-  display: block;
-  color: var(--about-text);
-  font-size: 22px;
-  line-height: 1.1;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.stat span{
-  display: block;
-  color: var(--about-muted);
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-/* visual side */
-.hero-visual{
-  position: relative;
-  min-height: 560px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}
-
-.visual-glow{
-  position: absolute;
-  width: 520px;
-  height: 520px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, rgba(15, 118, 110, 0.18) 0%, rgba(15, 118, 110, 0.08) 34%, transparent 68%);
-  filter: blur(14px);
-  z-index: 0;
-}
-
-.hero-bubble{
-  position: absolute;
-  border-radius: 50%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(248,251,252,0.78));
-  border: 1px solid rgba(255,255,255,0.75);
-  box-shadow: var(--about-shadow-md);
-  backdrop-filter: blur(10px);
-}
-
-.hero-bubble.b1{
-  width: 110px;
-  height: 110px;
-  top: 44px;
-  right: 24px;
-}
-
-.hero-bubble.b2{
-  width: 68px;
-  height: 68px;
-  bottom: 58px;
-  left: 26px;
-}
-
-/* devices */
-.devices-wrap{
-  position: relative;
-  width: min(100%, 560px);
-  min-height: 460px;
-  z-index: 2;
-}
-
-.device-laptop{
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-  perspective: 1200px;
-}
-
-.device-screen{
-  position: relative;
-  height: 310px;
-  background: linear-gradient(180deg, #fdfefe 0%, #eef6f6 100%);
-  border: 10px solid #0f172a;
-  border-bottom-width: 12px;
-  border-radius: 24px 24px 14px 14px;
-  overflow: hidden;
-  box-shadow: var(--about-shadow-lg);
-}
-
-.device-screen::before{
-  content: "";
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  width: 80px;
-  height: 8px;
-  transform: translateX(-50%);
-  background: rgba(15, 23, 42, 0.18);
-  border-radius: 999px;
-  z-index: 4;
-}
-
-.device-base{
-  width: 112%;
-  height: 18px;
-  margin-left: -6%;
-  background: linear-gradient(180deg, #cfd8df 0%, #aeb9c2 100%);
-  border-radius: 0 0 22px 22px;
-  box-shadow: 0 18px 30px rgba(15, 23, 42, 0.16);
-  position: relative;
-}
-
-.device-base::before{
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 96px;
-  height: 6px;
-  transform: translateX(-50%);
-  border-radius: 0 0 12px 12px;
-  background: rgba(15, 23, 42, 0.16);
-}
-
-/* phone */
-.device-phone{
-  position: absolute;
-  right: -6px;
-  bottom: 100px;
-  rotate: -10deg;
-  width: 180px;
-  height: 370px;
-  background: linear-gradient(180deg, #152238 0%, #0f172a 100%);
-  border-radius: 34px;
-  padding: 10px;
-  box-shadow: 0 24px 56px rgba(15, 23, 42, 0.24);
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-.device-phone__notch{
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 84px;
-  height: 20px;
-  background: #0b1220;
-  border-radius: 0 0 14px 14px;
-  z-index: 4;
-}
-
-.device-phone__screen{
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 26px;
-  overflow: hidden;
-  background: linear-gradient(180deg, #fdfefe 0%, #eef6f6 100%);
-}
-
-/* background UI inside devices */
-.screen-ui{
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(15, 118, 110, 0.08), transparent 30%),
-    radial-gradient(circle at 80% 30%, rgba(59, 130, 246, 0.08), transparent 28%),
-    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,251,252,0.9));
-}
-
-.screen-ui--laptop{
-  padding: 20px;
-}
-
-.screen-ui--phone{
-  padding: 16px 12px;
-}
-
-.partner-cloud{
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.partner-name{
-  position: absolute;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.8);
-  border: 1px solid var(--about-line);
-  color: var(--about-text);
-  font-weight: 800;
-  line-height: 1;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
-  backdrop-filter: blur(8px);
-  text-transform: none;
-}
-
-.partner-name.large{ font-size: 28px; }
-.partner-name.medium{ font-size: 19px; }
-
-.partner-ica{ color: #d62828; }
-.partner-mio{ color: #1d4ed8; }
-.partner-zalando{ color: #111827; }
-.partner-ving{ color: #7c3aed; }
-
-/* gift card */
-.card-visual{
-  position: absolute;
-  background: linear-gradient(135deg, var(--about-brand) 0%, #16a394 55%, #1ea89d 100%);
-  color: #ffffff;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 24px 50px rgba(15, 118, 110, 0.28);
-  border: 1px solid rgba(255,255,255,0.22);
-}
-
-.card-visual::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), transparent 24%),
-    linear-gradient(135deg, rgba(255,255,255,0.1), transparent 42%);
-  pointer-events: none;
-}
-
-.card-visual--laptop{
-  width: 280px;
-  height: 170px;
-  right: 24px;
-  bottom: 28px;
-  transform: rotate(-8deg);
-  padding: 18px;
-}
-
-.card-visual--phone{
-  width: 126px;
-  height: 156px;
-  left: 50%;
-  bottom: 22px;
-  transform: translateX(-50%) rotate(-8deg);
-  padding: 14px;
-  border-radius: 20px;
-}
-
-.card-top,
-.card-middle,
-.card-bottom{
-  position: relative;
-  z-index: 1;
-}
-
-.card-top{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-}
-
-.card-brand{
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-
-.card-chip{
-  width: 28px;
-  height: 22px;
-  border-radius: 7px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.45));
-}
-
-.card-middle{
-  margin-bottom: 18px;
-}
-
-.card-value{
-  font-size: 34px;
-  line-height: 1;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-}
-
-.card-badge{
-  display: inline-flex;
-  margin-top: 10px;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.16);
-  border: 1px solid rgba(255,255,255,0.2);
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.card-bottom{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.card-sub{
-  font-size: 13px;
-  opacity: 0.92;
-}
-
-.card-pill{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 64px;
-  height: 30px;
-  padding: 0 12px;
-  border-radius: 999px;
-  background: #ffffff;
-  color: var(--about-brand-dark);
-  font-size: 13px;
-  font-weight: 800;
-}
-
-/* phone-specific scaling */
-.device-phone .card-brand{ font-size: 14px; }
-.device-phone .card-value{ font-size: 24px; }
-.device-phone .card-badge,
-.device-phone .card-sub,
-.device-phone .card-pill{ font-size: 11px; }
-.device-phone .card-chip{
-  width: 22px;
-  height: 18px;
-  border-radius: 6px;
-}
-
-/* responsiveness */
-@media (max-width: 1120px){
-  .hero{
-    grid-template-columns: 1fr;
-    gap: 44px;
-    padding: 42px;
-  }
-
-  .hero-copy{
-    max-width: none;
-  }
-
-  .hero-visual{
-    min-height: 500px;
-  }
-
-  .devices-wrap{
-    max-width: 540px;
-    margin: 0 auto;
-  }
-}
-
-@media (max-width: 768px){
-  section.container{
-    padding: 40px 0 64px;
-  }
-
-  .container{
-    width: min(100% - 20px, var(--about-max));
-  }
-
-  .hero{
-    padding: 24px;
-    border-radius: 28px;
-    gap: 28px;
-  }
-
-  .eyebrow{
-    font-size: 13px;
-    padding: 9px 12px;
-  }
-
-  .hero-copy h1{
-    font-size: clamp(2rem, 10vw, 3rem);
-  }
-
-  .hero-copy p{
-    font-size: 16px;
-  }
-
-  .hero-actions{
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-white,
-  .btn-dark{
-    width: 100%;
-  }
-
-  .hero-stats{
-    grid-template-columns: 1fr;
-  }
-
-  .hero-visual{
-    min-height: 400px;
-  }
-
-  .devices-wrap{
-    min-height: 360px;
-  }
-
-  .device-screen{
-    height: 220px;
-    border-radius: 20px 20px 12px 12px;
-  }
-
-  .device-base{
-    height: 14px;
-  }
-p
-  .card-visual--laptop{
-    width: 220px;
-    height: 138px;
-    right: 12px;
-    bottom: 16px;
-    padding: 14px;
-  }
-
-  .card-value{
-    font-size: 28px;
-  }
-
-  .partner-name.large{ font-size: 20px; }
-  .partner-name.medium{ font-size: 15px; }
-
-  .device-phone{
-    width: 132px;
-    height: 270px;
-    right: -4px;
-    bottom: -2px;
-    border-radius: 28px;
-    padding: 8px;
-  }
-
-  .device-phone__screen{
-    border-radius: 20px;
-  }
-
-  .device-phone__notch{
-    width: 66px;
-    height: 16px;
-  }
-
-  .card-visual--phone{
-    width: 102px;
-    height: 128px;
-    bottom: 18px;
-    padding: 12px;
-  }
-
-  .hero-bubble.b1{
-    width: 72px;
-    height: 72px;
-    top: 14px;
-    right: 0;
-  }
-
-  .hero-bubble.b2{
-    width: 48px;
-    height: 48px;
-    left: 0;
-    bottom: 26px;
-  }
-}
-
-@media (max-width: 480px){
-  .hero{
-    padding: 20px;
-  }
-
-  .hero-note{
-    font-size: 13px;
-  }
-
-  .hero-visual{
-    min-height: 320px;
-  }
-
-  .devices-wrap{
-    min-height: 300px;
-  }
-
-  .device-screen{
-    height: 180px;
-    border-width: 8px;
-  }
-
-  .card-visual--laptop{
-    width: 180px;
-    height: 116px;
-  }
-
-  .card-brand{ font-size: 14px; }
-  .card-value{ font-size: 22px; }
-
-  .device-phone{
-    width: 110px;
-    height: 226px;
-  }
-
-  .card-visual--phone{
-    width: 88px;
-    height: 108px;
-  }
-
-  .partner-name.large{ font-size: 16px; }
-  .partner-name.medium{ font-size: 12px; padding: 6px 10px; }
-}
-/* =========================================================
-   QUIZ / ANALYSIS SECTION
-   Matches the same visual language as the hero section
-========================================================= */
-
-.quiz-shell{
-  position: relative;
-  overflow: hidden;
-  border-radius: 36px;
-  background: rgba(255,255,255,0.88);
-  backdrop-filter: blur(22px);
-  border: 1px solid rgba(255,255,255,0.7);
-  box-shadow: 0 30px 80px rgba(15,23,42,0.10);
-}
-
-.quiz-shell::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(135deg, rgba(255,255,255,0.6), transparent 42%),
-    linear-gradient(315deg, rgba(15,118,110,0.03), transparent 55%);
-}
-
-.quiz-shell > div{
-  position: relative;
-  z-index: 1;
-}
-
-/* header area */
-.quiz-shell .border-b{
-  border-bottom: 1px solid var(--about-line) !important;
-}
-
-.quiz-shell h2{
-  color: var(--about-text);
-  letter-spacing: -0.03em;
-  line-height: 1.08;
-}
-
-.quiz-shell .text-emerald-700{
-  color: var(--about-brand-dark) !important;
-}
-
-.quiz-shell .bg-slate-100{
-  background: rgba(15,23,42,0.05) !important;
-}
-
-.quiz-shell .text-slate-600{
-  color: var(--about-muted) !important;
-}
-
-.quiz-shell .text-slate-700{
-  color: #334155 !important;
-}
-
-.quiz-shell .text-slate-800{
-  color: var(--about-text) !important;
-}
-
-.quiz-shell .text-slate-950{
-  color: var(--about-text) !important;
-}
-
-/* top pills */
-.quiz-shell .flex-wrap span{
-  border: 1px solid rgba(15,23,42,0.06);
-  border-radius: 999px;
-  background: rgba(255,255,255,0.75) !important;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 6px 18px rgba(15,23,42,0.04);
-  padding: 0.65rem 1rem;
-}
-
-/* intro section */
-#quiz-intro .inline-flex{
-  border: 1px solid rgba(15,118,110,0.14);
-  background: rgba(15,118,110,0.08) !important;
-  color: var(--about-brand-dark) !important;
-}
-
-#quiz-intro h3{
-  color: var(--about-text);
-  line-height: 1.05;
-  letter-spacing: -0.04em;
-}
-
-#quiz-intro .mt-10 > div{
-  border-radius: 1.5rem;
-  border: 1px solid var(--about-line);
-  background: rgba(255,255,255,0.78);
-  box-shadow: var(--about-shadow-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-#quiz-intro .mt-10 > div:hover{
-  transform: translateY(-2px);
-  box-shadow: 0 16px 28px rgba(15,23,42,0.08);
-}
-
-/* primary CTA button */
-.adeala-btn{
-  position: relative;
-  border: 0;
-  border-radius: 22px;
-  background: linear-gradient(135deg, var(--about-brand) 0%, #159a8d 100%);
-  color: #fff;
-  box-shadow:
-    0 18px 34px rgba(15,118,110,0.22),
-    inset 0 1px 0 rgba(255,255,255,0.18);
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease,
-    filter 0.18s ease;
-}
-
-.adeala-btn:hover{
-  transform: translateY(-2px);
-  filter: brightness(1.03);
-  box-shadow:
-    0 24px 42px rgba(15,118,110,0.28),
-    inset 0 1px 0 rgba(255,255,255,0.2);
-}
-
-.adeala-btn:active{
-  transform: translateY(0);
-}
-
-/* quiz cards */
-.quiz-card{
-  position: relative;
-  z-index: 0;
-  border-radius: 28px;
-  background: linear-gradient(180deg, #ffffff 0%, #fafcfc 100%);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-}
-
-.quiz-card::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at top left, rgba(15,118,110,0.04), transparent 30%),
-    linear-gradient(180deg, #f7fafb 0%, #eef3f5 100%);
-}
-
-/* back button */
-.quiz-back-inline{
-  border: 1px solid transparent;
-  color: var(--about-text);
-  background: rgba(255,255,255,0.75);
-}
-
-.quiz-back-inline:hover{
-  background: rgba(15,23,42,0.05);
-  border-color: rgba(15,23,42,0.08);
-}
-
-/* progress bar */
-.quiz-progress-inline{
-  background: linear-gradient(90deg, var(--about-brand), #18a798) !important;
-  box-shadow: 0 0 18px rgba(15,118,110,0.3);
-}
-
-/* category pill inside each step */
-.quiz-title{
-  color: var(--about-text);
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-}
-
-/* options */
-.quiz-option{
-  position: relative;
-  border: 1px solid var(--about-line) !important;
-  background: rgba(255,255,255,0.9) !important;
-  box-shadow: 0 10px 24px rgba(15,23,42,0.05);
-  transition:
-    transform 0.18s ease,
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    background 0.18s ease;
-}
-
-.quiz-option:hover{
-  transform: translateY(-4px);
-  border-color: rgba(15,118,110,0.28) !important;
-  background: #fff !important;
-  box-shadow: 0 20px 40px rgba(15,23,42,0.08);
-}
-
-.quiz-option:focus-visible{
-  outline: none;
-  border-color: var(--about-brand) !important;
-  box-shadow:
-    0 0 0 4px rgba(15,118,110,0.12),
-    0 16px 30px rgba(15,23,42,0.08);
-}
-
-.quiz-option.selected,
-.quiz-option[aria-pressed="true"]{
-  border-color: var(--about-brand) !important;
-  background: rgba(15,118,110,0.08) !important;
-  box-shadow:
-    0 0 0 1px rgba(15,118,110,0.2),
-    0 18px 36px rgba(15,118,110,0.12);
-}
-
-.quiz-option.selected::after,
-.quiz-option[aria-pressed="true"]::after{
-  content: "✓";
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: var(--about-brand);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* operator cards */
-#operator-per-person > div{
-  border-radius: 1.5rem;
-  border: 1px solid var(--about-line);
-  background: rgba(255,255,255,0.88);
-  box-shadow: var(--about-shadow-sm);
-}
-
-.partner-wrapper{
-  min-height: 84px;
-}
-
-.partner-wrapper img{
-  filter: saturate(0.92);
-  transition: transform 0.18s ease, filter 0.18s ease;
-}
-
-.partner-wrapper:hover img{
-  transform: scale(1.04);
-  filter: saturate(1);
-}
-
-/* offer cards at the end */
-#offers-container > *{
-  border-radius: 1.75rem;
-  border: 1px solid var(--about-line);
-  background: rgba(255,255,255,0.96);
-  box-shadow: var(--about-shadow-sm);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-#offers-container > *:hover{
-  transform: translateY(-4px);
-  box-shadow: var(--about-shadow-md);
-}
-
-/* spacing under section */
-#quiz-slot{
-  min-height: 560px;
-}
-
-/* responsive */
-@media (max-width: 1024px){
-  #quiz-slot{
-    min-height: 620px;
-  }
-
-  .quiz-card{
-    padding: 2rem !important;
-  }
-}
-
-@media (max-width: 768px){
-  .quiz-shell{
-    border-radius: 1.75rem;
-  }
-
-  .quiz-shell .border-b{
-    padding: 1.5rem 1.25rem !important;
-  }
-
-  #quiz-slot{
-    padding: 1.5rem 1.25rem 2rem !important;
-    min-height: auto;
-  }
-
-  .quiz-card{
-    border-radius: 1.5rem;
-    padding: 1.5rem !important;
-  }
-
-  .quiz-title{
-    font-size: 1.7rem !important;
-  }
-
-  .adeala-btn{
-    width: 100%;
-  }
-
-  #operator-per-person{
-    grid-template-columns: 1fr !important;
-  }
-}
-
-@media (max-width: 480px){
-  .quiz-title{
-    font-size: 1.45rem !important;
-  }
-
-  .quiz-option{
-    padding: 1rem !important;
-  }
-
-  .quiz-option.selected::after,
-  .quiz-option[aria-pressed="true"]::after{
-    top: 10px;
-    right: 10px;
-    width: 22px;
-    height: 22px;
-    font-size: 11px;
-  }
-}
-</style>
-<div id="footer-placeholder"></div>
-
 </body>
 </html>
