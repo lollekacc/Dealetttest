@@ -27,45 +27,31 @@
     </div>
 
     <!-- CENTER -->
-    <div class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-10 xl:gap-14">
-      <!-- LOGO -->
-      <a
-        href="index.html"
-        class="relative flex items-center justify-center rounded-2xl px-2 py-2 transition duration-200 hover:scale-[1.02]"
-      >
-        <img
-          src="./images/laga.png"
-          alt="Dealett"
-          class="header-logo h-[62px] w-auto transition duration-300"
-        />
-      </a>
+<div class="absolute left-1/2 top-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center">
+  
+  <a
+    href="index.html"
+    class="relative z-30 flex shrink-0 items-center justify-center rounded-2xl px-3 py-2"
+  >
+    <img
+      src="images/laga.png"
+      alt="Dealett"
+      class="header-logo block h-[62px] w-auto"
+    />
+  </a>
 
-      <!-- NAVIGATION -->
-      <nav
-        class="hidden lg:flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-2 backdrop-blur-md transition duration-300"
-        style="font-family:'Inter',sans-serif;"
-      >
-        <a href="abonnemang.html" class="header-nav-link">
-          Abonnemang
-        </a>
+  <nav
+    class="ml-10 hidden lg:flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-2 backdrop-blur-md"
+    style="font-family:'Inter',sans-serif;"
+  >
+    <a href="abonnemang.html" class="header-nav-link">Abonnemang</a>
+    <a href="bredband.html" class="header-nav-link">5G Bredband</a>
+    <a href="jamfor.html" class="header-nav-link">Jämför täckning</a>
+    <a href="om-oss.html" class="header-nav-link">Om oss</a>
+    <a href="kundservice.html" class="header-nav-link">Kundservice</a>
+  </nav>
 
-        <a href="bredband.html" class="header-nav-link">
-          5G Bredband
-        </a>
-
-        <a href="jamfor.html" class="header-nav-link">
-          Jämför täckning
-        </a>
-
-        <a href="om-oss.html" class="header-nav-link">
-          Om oss
-        </a>
-
-        <a href="kundservice.html" class="header-nav-link">
-          Kundservice
-        </a>
-      </nav>
-    </div>
+</div>
 
     <!-- RIGHT -->
     <div class="flex items-center gap-2">
@@ -89,6 +75,7 @@
 </header>
 
 <style>
+  
   /* ===== HEADER BASE ===== */
   #mainHeader{
     font-family:'Inter',sans-serif;

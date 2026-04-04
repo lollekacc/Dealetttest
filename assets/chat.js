@@ -1,33 +1,190 @@
 // assets/chat.js
 
 (function () {
-  let cachedPlans = null;
+  const CHAT_HISTORY_KEY = "chat_history";
+  const CHAT_OPEN_KEY = "chat_open";
+  const CHAT_SESSION_KEY = "chat_sid";
+  const DEFAULT_GREETING = "Hej! Vad kan jag hj\u00e4lpa dig med?";
 
-  async function loadPlans(providedPlans) {
-    if (Array.isArray(providedPlans) && providedPlans.length) {
-      return providedPlans;
-    }
+  const cachedCatalogs = {
+    mobile: null,
+    broadband: null
+  };
 
-    if (Array.isArray(window.APP?.plans) && window.APP.plans.length) {
-      return window.APP.plans;
-    }
-
-    if (Array.isArray(cachedPlans) && cachedPlans.length) {
-      return cachedPlans;
-    }
-
+  async function loadJsonArray(url) {
     try {
-      const res = await fetch("./data/plans.json");
-      if (!res.ok) {
-        throw new Error(`Failed to load plans: ${res.status}`);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to load ${url}: ${response.status}`);
       }
 
-      cachedPlans = await res.json();
-      return Array.isArray(cachedPlans) ? cachedPlans : [];
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
     } catch (error) {
-      console.error("Could not load chat plans:", error);
+      console.error(`Could not load ${url}:`, error);
       return [];
     }
+  }
+
+  async function loadCatalogs(providedPlans) {
+    if (Array.isArray(providedPlans) && providedPlans.length) {
+      cachedCatalogs.mobile = providedPlans;
+    } else if (Array.isArray(window.APP?.plans) && window.APP.plans.length) {
+      cachedCatalogs.mobile = window.APP.plans;
+    } else if (!Array.isArray(cachedCatalogs.mobile)) {
+      cachedCatalogs.mobile = await loadJsonArray("./data/plans.json");
+    }
+
+    if (!Array.isArray(cachedCatalogs.broadband)) {
+      cachedCatalogs.broadband = await loadJsonArray("./data/5Gbredband.json");
+    }
+
+    return {
+      mobile: Array.isArray(cachedCatalogs.mobile) ? cachedCatalogs.mobile : [],
+      broadband: Array.isArray(cachedCatalogs.broadband) ? cachedCatalogs.broadband : []
+    };
+  }
+
+  function createSessionId() {
+    return crypto.randomUUID?.() || Math.random().toString(36).slice(2);
+  }
+
+  function createEmptyQuizState() {
+    return {
+      persons: null,
+      data: null,
+      speed: null,
+      bredbandtype: null
+    };
+  }
+
+  function readHistory() {
+    try {
+      const raw = localStorage.getItem(CHAT_HISTORY_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      console.warn("Could not restore chat history:", error);
+      return [];
+    }
+  }
+
+  function detectReplyFormat(reply) {
+    if (typeof reply !== "string") {
+      return "text";
+    }
+
+    return /<\/?[a-z][\s\S]*>/i.test(reply) ? "html" : "text";
+  }
+
+  function normalizeHistoryMessage(entry) {
+    if (!entry || typeof entry !== "object") {
+      return null;
+    }
+
+    if (entry.kind === "offer" && entry.payload) {
+      return entry;
+    }
+
+    if (typeof entry.text !== "string" || !entry.type) {
+      return null;
+    }
+
+    return {
+      kind: "message",
+      text: entry.text,
+      type: entry.type === "user" ? "user" : "ai",
+      format: entry.format || detectReplyFormat(entry.text)
+    };
+  }
+
+  function formatDataLabel(level) {
+    if (level === "low") return "Lite surf";
+    if (level === "medium") return "Lagom surf";
+    if (level === "high") return "Obegr\u00e4nsad surf";
+    return level || "";
+  }
+
+  function formatSpeedLabel(level) {
+    if (level === "low") return "Lagom hastighet";
+    if (level === "medium") return "Snabb hastighet";
+    if (level === "high") return "Mycket snabb hastighet";
+    return level || "";
+  }
+
+  function formatBroadbandTypeLabel(type) {
+    if (type === "fiber") return "Fiber";
+    if (type === "mobil") return "Mobilt bredband";
+    if (type === "any") return "B\u00e5da fungerar";
+    return type || "";
+  }
+
+  function formatMoney(value) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) {
+      return null;
+    }
+
+    return `${amount.toLocaleString("sv-SE")} kr/m\u00e5n`;
+  }
+
+  function formatPlanFeature(plan, payload, isBroadband) {
+    if (isBroadband) {
+      const speed = plan?.speed || payload?.speed || plan?.speedMbps;
+      return speed ? `${speed} Mbit/s` : null;
+    }
+
+    const dataAmount = plan?.dataAmount ?? plan?.data;
+    if (dataAmount === undefined || dataAmount === null || dataAmount === "") {
+      return null;
+    }
+
+    const numericDataAmount = Number(dataAmount);
+    if (Number.isFinite(numericDataAmount)) {
+      return numericDataAmount >= 999
+        ? "Obegr\u00e4nsad surf"
+        : `${numericDataAmount} GB surf`;
+    }
+
+    return String(dataAmount);
+  }
+
+  function getChatApiCandidates() {
+    const candidates = [];
+    const explicitApi =
+      typeof window.APP?.chatApi === "string" ? window.APP.chatApi.trim() : "";
+    const protocol = window.location.protocol;
+    const host = window.location.hostname;
+    const origin = window.location.origin;
+    const localApi = "http://localhost:3000/api/chat";
+    const productionApi = "https://dealett-backend.onrender.com/api/chat";
+    const sameOriginApi =
+      origin && origin !== "null" ? `${origin.replace(/\/$/, "")}/api/chat` : "";
+
+    function addCandidate(url) {
+      if (!url || candidates.includes(url)) return;
+      candidates.push(url);
+    }
+
+    addCandidate(explicitApi);
+
+    if (protocol === "file:") {
+      addCandidate(localApi);
+      addCandidate(productionApi);
+      return candidates;
+    }
+
+    if (host === "localhost" || host === "127.0.0.1") {
+      addCandidate(sameOriginApi);
+      addCandidate(localApi);
+      addCandidate(productionApi);
+      return candidates;
+    }
+
+    addCandidate(sameOriginApi);
+    addCandidate(productionApi);
+
+    return candidates;
   }
 
   async function initChat({ plans } = {}) {
@@ -47,36 +204,59 @@
     const input = root.querySelector("#chat-input");
     const messages = root.querySelector("#chat-messages");
     const resetBtn = root.querySelector("#chat-reset");
-    const availablePlans = await loadPlans(plans);
-
-    const CHAT_HISTORY_KEY = "chat_history";
-    const CHAT_OPEN_KEY = "chat_open";
+    const suggestions = root.querySelector("#chat-suggestions");
+    const catalogs = await loadCatalogs(plans);
 
     const state = {
-      plans: availablePlans,
-      quiz: { persons: null, data: null }
+      catalogs,
+      quiz: createEmptyQuizState()
     };
 
     ensureSession();
-    restoreMessages();
+    const restoredHistory = await restoreMessages();
     restoreOpenState();
+    syncSuggestions(restoredHistory);
     bindUI();
     bindForm();
     bindQuizButtons();
 
     if (!messages.children.length) {
-      addMessage("Hej! Vad kan jag hjalpa dig med?", "ai");
+      addMessage(DEFAULT_GREETING, "ai");
+      syncSuggestions([]);
     }
 
+    syncPanelAccessibility();
     return true;
 
-    function ensureSession() {
-      if (!localStorage.getItem("chat_sid")) {
-        localStorage.setItem(
-          "chat_sid",
-          crypto.randomUUID?.() || Math.random().toString(36).slice(2)
-        );
+    function ensureSession(options = {}) {
+      if (options.forceNew) {
+        localStorage.setItem(CHAT_SESSION_KEY, createSessionId());
+        return localStorage.getItem(CHAT_SESSION_KEY);
       }
+
+      if (!localStorage.getItem(CHAT_SESSION_KEY)) {
+        localStorage.setItem(CHAT_SESSION_KEY, createSessionId());
+      }
+
+      return localStorage.getItem(CHAT_SESSION_KEY);
+    }
+
+    function syncPanelAccessibility() {
+      const isOpen = !panel?.classList.contains("closed");
+      toggle?.setAttribute("aria-expanded", String(Boolean(isOpen)));
+    }
+
+    function hasMeaningfulHistory(history) {
+      return history.some((entry) => {
+        if (entry?.kind === "offer") return true;
+        if (entry?.type === "user") return true;
+        return entry?.text && entry.text !== DEFAULT_GREETING;
+      });
+    }
+
+    function syncSuggestions(history = readHistory()) {
+      if (!suggestions) return;
+      suggestions.style.display = hasMeaningfulHistory(history) ? "none" : "";
     }
 
     function bindUI() {
@@ -84,19 +264,22 @@
       close?.addEventListener("click", closePanel);
       resetBtn?.addEventListener("click", resetChat);
 
-      document.querySelectorAll("#open-chat").forEach((btn) => {
-        btn.addEventListener("click", openPanel);
+      document.querySelectorAll("#open-chat").forEach((button) => {
+        button.addEventListener("click", openPanel);
       });
 
-      // Bind suggestion buttons
       document.addEventListener("click", (event) => {
-        const btn = event.target.closest(".chat-suggestion-btn");
-        if (!btn) return;
+        const suggestionButton = event.target.closest(".chat-suggestion-btn");
+        if (!suggestionButton || !root.contains(suggestionButton)) return;
 
-        const text = btn.dataset.suggest;
-        if (text) {
-          input.value = text;
-          form.dispatchEvent(new Event('submit'));
+        const text = suggestionButton.dataset.suggest;
+        if (!text || !form || !input) return;
+
+        input.value = text;
+        if (typeof form.requestSubmit === "function") {
+          form.requestSubmit();
+        } else {
+          form.dispatchEvent(new Event("submit", { cancelable: true }));
         }
       });
     }
@@ -110,10 +293,7 @@
 
         addMessage(text, "user");
         input.value = "";
-
-        // Hide suggestions after first message
-        const suggestions = document.getElementById("chat-suggestions");
-        if (suggestions) suggestions.style.display = "none";
+        syncSuggestions(readHistory());
 
         const data = await sendMessage(text);
         await handleResponse(data);
@@ -122,50 +302,67 @@
 
     function bindQuizButtons() {
       document.addEventListener("click", async (event) => {
-        const btn = event.target.closest(".chat-quiz-btn");
-        if (!btn) return;
+        const button = event.target.closest(".chat-quiz-btn");
+        if (!button || !root.contains(button)) return;
 
-        // Abonnemang quiz
-        if (btn.dataset.persons) state.quiz.persons = btn.dataset.persons;
-        if (btn.dataset.data) state.quiz.data = btn.dataset.data;
+        if (button.dataset.persons) state.quiz.persons = button.dataset.persons;
+        if (button.dataset.data) state.quiz.data = button.dataset.data;
 
         if (state.quiz.persons && state.quiz.data) {
-          const msg = `persons:${state.quiz.persons} data:${state.quiz.data}`;
-
+          const message = `persons:${state.quiz.persons} data:${state.quiz.data}`;
           addMessage(
-            `${state.quiz.persons} personer, ${state.quiz.data} surf`,
+            `${state.quiz.persons} personer, ${formatDataLabel(state.quiz.data)}`,
             "user"
           );
 
-          const data = await sendMessage(msg);
-          await handleResponse(data);
+          state.quiz = createEmptyQuizState();
+          syncSuggestions(readHistory());
 
-          state.quiz = { persons: null, data: null };
+          const data = await sendMessage(message);
+          await handleResponse(data);
+          return;
         }
 
-        // Bredband quiz
-        if (btn.dataset.speed) state.quiz.speed = btn.dataset.speed;
-        if (btn.dataset.bredbandtype) state.quiz.bredbandtype = btn.dataset.bredbandtype;
+        if (button.dataset.speed) state.quiz.speed = button.dataset.speed;
+        if (button.dataset.bredbandtype) {
+          state.quiz.bredbandtype = button.dataset.bredbandtype;
+        }
 
         if (state.quiz.speed && state.quiz.bredbandtype) {
-          const msg = `speed:${state.quiz.speed} bredbandtype:${state.quiz.bredbandtype}`;
+          const message =
+            `speed:${state.quiz.speed} ` +
+            `bredbandtype:${state.quiz.bredbandtype}`;
 
           addMessage(
-            `${btn.textContent}`,
+            `${formatSpeedLabel(state.quiz.speed)}, ` +
+              `${formatBroadbandTypeLabel(state.quiz.bredbandtype)}`,
             "user"
           );
 
-          const data = await sendMessage(msg);
-          await handleResponse(data);
+          state.quiz = createEmptyQuizState();
+          syncSuggestions(readHistory());
 
-          state.quiz = { speed: null, bredbandtype: null };
+          const data = await sendMessage(message);
+          await handleResponse(data);
         }
       });
     }
 
-    function restoreMessages() {
-      const history = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || "[]");
-      history.forEach((message) => appendMessage(message.text, message.type));
+    async function restoreMessages() {
+      const history = readHistory().map(normalizeHistoryMessage).filter(Boolean);
+
+      for (const message of history) {
+        if (message.kind === "offer") {
+          await renderOffer(message.payload, { persist: false });
+          continue;
+        }
+
+        appendMessage(message.text, message.type, {
+          format: message.format || "text"
+        });
+      }
+
+      return history;
     }
 
     function restoreOpenState() {
@@ -183,6 +380,7 @@
         CHAT_OPEN_KEY,
         String(!panel.classList.contains("closed"))
       );
+      syncPanelAccessibility();
     }
 
     function openPanel() {
@@ -190,6 +388,7 @@
 
       panel.classList.remove("closed");
       localStorage.setItem(CHAT_OPEN_KEY, "true");
+      syncPanelAccessibility();
     }
 
     function closePanel() {
@@ -197,6 +396,7 @@
 
       panel.classList.add("closed");
       localStorage.setItem(CHAT_OPEN_KEY, "false");
+      syncPanelAccessibility();
     }
 
     function resetChat() {
@@ -204,41 +404,59 @@
 
       messages.innerHTML = "";
       localStorage.removeItem(CHAT_HISTORY_KEY);
-      ensureSession();
-      addMessage("Hej! Vad kan jag hjalpa dig med?", "ai");
+      ensureSession({ forceNew: true });
+      state.quiz = createEmptyQuizState();
+
+      addMessage(DEFAULT_GREETING, "ai");
+      syncSuggestions([]);
     }
 
     async function sendMessage(message) {
-      const sid = localStorage.getItem("chat_sid");
+      const sid = ensureSession();
       const headers = { "Content-Type": "application/json" };
 
-      if (sid) headers["X-Chat-Session"] = sid;
+      if (sid) {
+        headers["X-Chat-Session"] = sid;
+      }
+
+      const apiCandidates = getChatApiCandidates();
+      let lastError = null;
 
       try {
-        // Try local backend first (for testing), fall back to production
-const isLocal =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1";
+        for (const apiUrl of apiCandidates) {
+          try {
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ message })
+            });
 
-const apiUrl = isLocal
-  ? "http://localhost:3000/api/chat"
-  : "https://dealett-backend.onrender.com/api/chat";
-        
-        console.log("CHAT API URL:", apiUrl);
-        
-        const res = await fetch(apiUrl, {
-          method: "POST",
-          headers,
-          body: JSON.stringify({ message })
-        });
+            if (!response.ok) {
+              lastError = new Error(`Server error ${response.status} from ${apiUrl}`);
+              console.warn("Chat endpoint returned an error:", apiUrl, response.status);
+              continue;
+            }
 
-        if (!res.ok) throw new Error("Server error");
+            const data = await response.json();
+            if (data?.sessionId) {
+              localStorage.setItem(CHAT_SESSION_KEY, data.sessionId);
+            }
 
-        return await res.json();
+            return data;
+          } catch (error) {
+            lastError = error;
+            console.warn("Chat request failed for endpoint:", apiUrl, error);
+          }
+        }
       } catch (error) {
-        console.error(error);
-        return { reply: "Connection error." };
+        lastError = error;
       }
+
+      console.error("All chat endpoints failed:", lastError);
+      return {
+        reply: "Connection error. Backend could not be reached.",
+        format: "text"
+      };
     }
 
     async function handleResponse(data) {
@@ -247,57 +465,168 @@ const apiUrl = isLocal
         return;
       }
 
-      addMessage(data?.reply || "No response", "ai");
+      const reply = typeof data?.reply === "string" ? data.reply : "No response";
+      addMessage(reply, "ai", {
+        format: data?.format || detectReplyFormat(reply)
+      });
     }
 
-    async function renderOffer(payload) {
-      if (!payload) {
+    async function findPlan(planId) {
+      if (!planId) return null;
+
+      const mobilePlans = state.catalogs.mobile || [];
+      const broadbandPlans = state.catalogs.broadband || [];
+
+      return (
+        mobilePlans.find((item) => item.id === planId) ||
+        broadbandPlans.find((item) => item.id === planId) ||
+        null
+      );
+    }
+
+    function isBroadbandPlan(plan, payload) {
+      return Boolean(
+        plan?.speed ||
+          plan?.speedMbps ||
+          payload?.speed ||
+          payload?.category === "bredband"
+      );
+    }
+
+    function buildOfferHref(plan, payload, broadband) {
+      const operator = plan?.operator || payload?.operator || "";
+      const planId = plan?.id || payload?.planId || "";
+      const page = broadband ? "bredband.html" : "abonnemang.html";
+      const params = new URLSearchParams();
+
+      if (operator) params.set("op", operator);
+      if (planId) params.set("plan", planId);
+
+      const query = params.toString();
+      return query ? `./${page}?${query}` : `./${page}`;
+    }
+
+    function buildFallbackOfferCard(plan, payload = {}) {
+      const broadband = isBroadbandPlan(plan, payload);
+      const operator = plan?.operator || payload.operator || "Dealett";
+      const title =
+        plan?.title ||
+        (broadband ? "Rekommenderat bredband" : "Rekommenderat abonnemang");
+      const price = formatMoney(plan?.price ?? payload.price);
+      const feature = formatPlanFeature(plan, payload, broadband);
+      const people =
+        payload.persons && Number(payload.persons) > 1
+          ? `${payload.persons} personer`
+          : null;
+
+      const card = document.createElement("div");
+      card.className = "chat-offer-card";
+
+      const eyebrow = document.createElement("p");
+      eyebrow.className = "chat-offer-eyebrow";
+      eyebrow.textContent = broadband
+        ? "Rekommenderat bredband"
+        : "Rekommenderat abonnemang";
+
+      const titleEl = document.createElement("strong");
+      titleEl.className = "chat-offer-title";
+      titleEl.textContent = `${operator} ${title}`.trim();
+
+      card.append(eyebrow, titleEl);
+
+      [price, feature, people].filter(Boolean).forEach((value) => {
+        const meta = document.createElement("p");
+        meta.className = "chat-offer-meta";
+        meta.textContent = value;
+        card.appendChild(meta);
+      });
+
+      const link = document.createElement("a");
+      link.className = "chat-offer-link";
+      link.href = buildOfferHref(plan, payload, broadband);
+      link.textContent = "\u00d6ppna erbjudandet";
+      card.appendChild(link);
+
+      return card;
+    }
+
+    async function renderOffer(payload, options = {}) {
+      const { persist = true } = options;
+
+      if (!payload || !messages) {
         addMessage("Kunde inte visa erbjudandet.", "ai");
         return;
       }
 
-      if (!state.plans.length) {
-        state.plans = await loadPlans();
+      const plan = await findPlan(payload.planId);
+      const broadband = isBroadbandPlan(plan, payload);
+      let card = null;
+
+      if (!broadband && plan && typeof window.renderSingleOfferCard === "function") {
+        try {
+          card = window.renderSingleOfferCard(plan, payload);
+        } catch (error) {
+          console.warn("Could not render site offer card, using chat fallback:", error);
+        }
       }
 
-      const plan = state.plans.find((item) => item.id === payload.planId);
-
-      if (!plan || !window.renderSingleOfferCard) {
-        addMessage("Kunde inte visa erbjudandet.", "ai");
-        return;
+      if (!card) {
+        card = buildFallbackOfferCard(plan, payload);
       }
 
       const wrapper = document.createElement("div");
       wrapper.className = "chat-msg ai";
-
-      const card = window.renderSingleOfferCard(plan, payload);
       wrapper.appendChild(card);
 
-      messages?.appendChild(wrapper);
-      if (messages) messages.scrollTop = messages.scrollHeight;
+      messages.appendChild(wrapper);
+      messages.scrollTop = messages.scrollHeight;
+      syncSuggestions(readHistory());
+
+      if (persist) {
+        saveHistory({
+          kind: "offer",
+          type: "ai",
+          payload
+        });
+      }
     }
 
-    function addMessage(text, type) {
-      appendMessage(text, type);
-      saveHistory({ text, type });
+    function addMessage(text, type, options = {}) {
+      const format = options.format || "text";
+
+      appendMessage(text, type, { format });
+      saveHistory({
+        kind: "message",
+        text,
+        type,
+        format
+      });
     }
 
-    function appendMessage(text, type) {
+    function appendMessage(text, type, options = {}) {
       if (!messages) return;
 
       const div = document.createElement("div");
       div.className = `chat-msg ${type}`;
-      div.textContent = text;
+
+      if (type === "ai" && options.format === "html") {
+        div.classList.add("rich-text");
+        div.innerHTML = text;
+      } else {
+        div.classList.add("plain-text");
+        div.textContent = text;
+      }
+
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
     }
 
-    function saveHistory(msg) {
-      const history = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || "[]");
-      history.push(msg);
+    function saveHistory(entry) {
+      const history = readHistory();
+      history.push(entry);
 
       if (history.length > 100) {
-        history.shift();
+        history.splice(0, history.length - 100);
       }
 
       localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(history));
