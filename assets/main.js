@@ -4,7 +4,9 @@ async function initApp() {
     return;
   }
 
-  const chatScript = document.querySelector('script[data-chat-script="true"]');
+  const chatScript = document.querySelector(
+    'script[data-chat-script="true"], script[src="./assets/chat.js"], script[src="assets/chat.js"], script[src$="/assets/chat.js"]'
+  );
   if (!chatScript) return;
 
   chatScript.addEventListener(

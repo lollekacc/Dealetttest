@@ -171,23 +171,21 @@
 
     if (protocol === "file:") {
       addCandidate(localApi);
-      if (allowProductionFallback) {
-        addCandidate(productionApi);
-      }
+      addCandidate(productionApi);
       return candidates;
     }
 
     if (host === "localhost" || host === "127.0.0.1") {
       addCandidate(sameOriginApi);
       addCandidate(localApi);
-      if (allowProductionFallback) {
-        addCandidate(productionApi);
-      }
+      addCandidate(productionApi);
       return candidates;
     }
 
     addCandidate(sameOriginApi);
-    addCandidate(productionApi);
+    if (allowProductionFallback) {
+      addCandidate(productionApi);
+    }
 
     return candidates;
   }
@@ -448,6 +446,18 @@
             });
 
             if (!response.ok) {
+              if (response.status === 503) {
+                try {
+                  const payload = await response.json();
+                  if (payload?.code === "AI_UNAVAILABLE") {
+                    console.warn("Chat endpoint is reachable but AI is unavailable:", apiUrl);
+                    continue;
+                  }
+                } catch (error) {
+                  console.warn("Could not parse unavailable-AI response:", error);
+                }
+              }
+
               lastError = new Error(`Server error ${response.status} from ${apiUrl}`);
               console.warn("Chat endpoint returned an error:", apiUrl, response.status);
               continue;
