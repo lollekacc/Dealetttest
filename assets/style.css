@@ -18,9 +18,18 @@
 
 /* ===== Header placeholder ===== */
 
-#header-placeholder {
-  min-height: 0px;
-  display: block;
+#header-placeholder{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:1000;
+  min-height:0;
+  pointer-events:none;
+}
+
+#header-placeholder > *{
+  pointer-events:auto;
 }
 
 #chat-panel {
