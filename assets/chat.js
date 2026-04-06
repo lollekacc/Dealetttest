@@ -517,54 +517,91 @@
     try {
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`Failed to load ${url}: ${response.status}`);
+        return null;
       }
 
       const data = await response.json();
-      return Array.isArray(data) ? data : [];
-    } catch (error) {
-      console.error(`Could not load ${url}:`, error);
-      return [];
+      return Array.isArray(data) ? data : null;
+    } catch {
+      return null;
     }
+  }
+
+  function getCatalogCandidates(type) {
+    const candidates = [];
+    const explicitUrl =
+      typeof window.APP?.catalogUrls?.[type] === "string"
+        ? window.APP.catalogUrls[type].trim()
+        : "";
+    const staticUrl = type === "mobile" ? "./data/plans.json" : "./data/5Gbredband.json";
+    const apiPath = type === "mobile" ? "/api/data/plans" : "/api/data/broadband";
+    const allowProductionFallback = window.APP?.allowProductionFallback === true;
+    const protocol = window.location.protocol;
+    const host = window.location.hostname;
+    const port = window.location.port;
+    const origin = window.location.origin;
+    const localApiUrl = `http://localhost:3000${apiPath}`;
+    const productionApiUrl = `https://dealett-backend.onrender.com${apiPath}`;
+    const sameOriginApiUrl =
+      origin && origin !== "null" ? `${origin.replace(/\/$/, "")}${apiPath}` : "";
+
+    function addCandidate(url) {
+      if (!url || candidates.includes(url)) return;
+      candidates.push(url);
+    }
+
+    addCandidate(explicitUrl);
+    addCandidate(staticUrl);
+
+    if (protocol === "file:") {
+      addCandidate(localApiUrl);
+      if (allowProductionFallback) {
+        addCandidate(productionApiUrl);
+      }
+      return candidates;
+    }
+
+    if (host === "localhost" || host === "127.0.0.1") {
+      if (port === "3000") {
+        addCandidate(sameOriginApiUrl);
+      }
+      addCandidate(localApiUrl);
+      if (allowProductionFallback) {
+        addCandidate(productionApiUrl);
+      }
+      return candidates;
+    }
+
+    addCandidate(sameOriginApiUrl);
+    if (allowProductionFallback) {
+      addCandidate(productionApiUrl);
+    }
+
+    return candidates;
+  }
+
+  async function loadCatalog(type) {
+    const candidates = getCatalogCandidates(type);
+
+    for (const url of candidates) {
+      const data = await loadJsonArray(url);
+      if (Array.isArray(data)) {
+        return data;
+      }
+    }
+
+    return [];
   }
 
   async function loadCatalogs(providedPlans) {
     if (Array.isArray(providedPlans) && providedPlans.length) {
       cachedCatalogs.mobile = providedPlans;
-    } else {
-      const apiCandidates = getChatApiCandidates();
-      for (const apiUrl of apiCandidates) {
-        try {
-          const response = await fetch(`${apiUrl.replace('/api/chat', '/api/data/plans')}`);
-          if (response.ok) {
-            cachedCatalogs.mobile = await response.json();
-            break;
-          }
-        } catch (error) {
-          console.warn("Failed to load plans from", apiUrl, error);
-        }
-      }
-      if (!Array.isArray(cachedCatalogs.mobile)) {
-        cachedCatalogs.mobile = [];
-      }
+    } else if (!Array.isArray(cachedCatalogs.mobile)) {
+      cachedCatalogs.mobile = await loadCatalog("mobile");
     }
 
     if (!Array.isArray(cachedCatalogs.broadband)) {
-      const apiCandidates = getChatApiCandidates();
-      for (const apiUrl of apiCandidates) {
-        try {
-          const response = await fetch(`${apiUrl.replace('/api/chat', '/api/data/broadband')}`);
-          if (response.ok) {
-            cachedCatalogs.broadband = await response.json();
-            break;
-          }
-        } catch (error) {
-          console.warn("Failed to load broadband from", apiUrl, error);
-        }
-      }
-      if (!Array.isArray(cachedCatalogs.broadband)) {
-        cachedCatalogs.broadband = [];
-      }
+      cachedCatalogs.broadband = await loadCatalog("broadband");
     }
 
     return {
@@ -684,6 +721,7 @@
     const allowProductionFallback = window.APP?.allowProductionFallback === true;
     const protocol = window.location.protocol;
     const host = window.location.hostname;
+    const port = window.location.port;
     const origin = window.location.origin;
     const localApi = "http://localhost:3000/api/chat";
     const productionApi = "https://dealett-backend.onrender.com/api/chat";
@@ -704,9 +742,13 @@
     }
 
     if (host === "localhost" || host === "127.0.0.1") {
-      addCandidate(sameOriginApi);
+      if (port === "3000") {
+        addCandidate(sameOriginApi);
+      }
       addCandidate(localApi);
-      addCandidate(productionApi);
+      if (allowProductionFallback) {
+        addCandidate(productionApi);
+      }
       return candidates;
     }
 

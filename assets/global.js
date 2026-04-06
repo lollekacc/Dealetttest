@@ -308,16 +308,21 @@ window.replaceDealettCart = function (items) {
   saveCart(safeItems);
 };
 
-  function openCart() {
-  document.getElementById("cartDrawer").classList.remove("hidden");
+const cartDrawer = document.getElementById("cartDrawer");
+const closeCartButton = document.getElementById("closeCart");
+const cartOverlay = document.getElementById("cartOverlay");
+
+function openCart() {
+  cartDrawer?.classList.remove("hidden");
 }
 
 function closeCart() {
-  document.getElementById("cartDrawer").classList.add("hidden");
+  cartDrawer?.classList.add("hidden");
 }
 
-document.getElementById("closeCart").onclick = closeCart;
-document.getElementById("cartOverlay").onclick = closeCart;
+window.openCart = openCart;
+closeCartButton?.addEventListener("click", closeCart);
+cartOverlay?.addEventListener("click", closeCart);
 async function initApp() {
   if (typeof window.initChat === "function") {
     await window.initChat();
