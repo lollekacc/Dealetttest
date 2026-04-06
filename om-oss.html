@@ -263,9 +263,6 @@
         const headerHTML = await fetch("partials/header.html").then(r => r.text());
         document.getElementById("header-placeholder").innerHTML = headerHTML;
 
-        const chatHTML = await fetch("partials/chat.html").then(r => r.text());
-        document.body.insertAdjacentHTML("beforeend", chatHTML);
-
         const checkChatLoaded = setInterval(() => {
           if (document.querySelector("[data-chat-root]")) {
             clearInterval(checkChatLoaded);

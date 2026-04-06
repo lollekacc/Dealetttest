@@ -85,11 +85,6 @@
             await headerRes.text();
         }
 
-        const chatRes = await fetch("partials/chat.html");
-        if (chatRes.ok) {
-          document.body.insertAdjacentHTML("beforeend", await chatRes.text());
-        }
-
         const footerRes = await fetch("partials/footer.html");
         if (footerRes.ok) {
           document.body.insertAdjacentHTML("beforeend", await footerRes.text());

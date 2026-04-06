@@ -85,18 +85,6 @@ async function loadShell() {
   }
 
   try {
-    const chatRes = await fetch("./partials/chat.html");
-    if (chatRes.ok) {
-      document.body.insertAdjacentHTML("beforeend", await chatRes.text());
-      const chatScript = document.createElement("script");
-      chatScript.src = "./assets/chat.js";
-      document.body.appendChild(chatScript);
-    }
-  } catch (err) {
-    console.warn("Chat load failed:", err);
-  }
-
-  try {
     const footerRes = await fetch("./partials/footer.html");
     if (footerRes.ok) {
       document.body.insertAdjacentHTML("beforeend", await footerRes.text());
