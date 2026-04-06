@@ -11,6 +11,508 @@
     broadband: null
   };
 
+  function createChatUI() {
+    if (document.querySelector('[data-chat-root]')) return;
+
+    const chatHTML = `
+<div id="dealett-chat" data-chat-root>
+  <button
+    id="chat-toggle"
+    type="button"
+    aria-controls="chat-panel"
+    aria-expanded="false"
+  >
+    <span class="chat-toggle-dot" aria-hidden="true"></span>
+    <span>Dealett-AI</span>
+  </button>
+
+  <div
+    id="chat-panel"
+    class="chat-panel closed"
+    role="dialog"
+    aria-label="Dealett chat"
+  >
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-avatar" aria-hidden="true">D</div>
+        <div>
+          <strong>Dealett-AI</strong>
+          <div class="chat-subtitle">
+            Hj&auml;lper dig hitta r&auml;tt abonnemang eller bredband
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-header-right">
+        <button id="chat-reset" class="chat-reset-btn-header" type="button">
+          Starta fr&auml;scht
+        </button>
+        <button id="chat-close" type="button" aria-label="St&auml;ng chatt">
+          &times;
+        </button>
+      </div>
+    </div>
+
+    <div id="chat-messages" aria-live="polite" aria-atomic="false"></div>
+
+    <div id="chat-suggestions" class="chat-suggestions">
+      <button
+        type="button"
+        class="chat-suggestion-btn"
+        data-suggest="Vilket mobilabonnemang passar mig?"
+      >
+        Vilket mobilabonnemang passar mig?
+      </button>
+      <button
+        type="button"
+        class="chat-suggestion-btn"
+        data-suggest="Vilket bredband passar en familj?"
+      >
+        Vilket bredband passar en familj?
+      </button>
+      <button
+        type="button"
+        class="chat-suggestion-btn"
+        data-suggest="Vad &auml;r skillnaden mellan fiber och mobilt bredband?"
+      >
+        Vad &auml;r skillnaden mellan fiber och mobilt bredband?
+      </button>
+    </div>
+
+    <form id="chat-form">
+      <input
+        id="chat-input"
+        type="text"
+        placeholder="Fr&aring;ga om abonnemang eller bredband..."
+        autocomplete="off"
+      />
+      <button type="submit">Skicka</button>
+    </form>
+  </div>
+</div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', chatHTML);
+
+    const style = document.createElement('style');
+    style.textContent = `
+  #dealett-chat {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 9999;
+    font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  #chat-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #fff;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow:
+      0 14px 36px rgba(15, 23, 42, 0.24),
+      0 4px 12px rgba(15, 23, 42, 0.16);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  #chat-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 18px 42px rgba(15, 23, 42, 0.28),
+      0 6px 16px rgba(15, 23, 42, 0.18);
+  }
+
+  .chat-toggle-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.18);
+  }
+
+  .chat-panel {
+    position: absolute;
+    right: 0;
+    bottom: 76px;
+    width: min(390px, calc(100vw - 32px));
+    height: min(640px, calc(100vh - 110px));
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 24px;
+    background: #fff;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow:
+      0 30px 60px rgba(15, 23, 42, 0.18),
+      0 8px 24px rgba(15, 23, 42, 0.08);
+    transform-origin: bottom right;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .chat-panel.closed {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+    pointer-events: none;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .chat-header-left,
+  .chat-header-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .chat-header-left {
+    gap: 12px;
+  }
+
+  .chat-header-right {
+    gap: 8px;
+  }
+
+  .chat-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-weight: 700;
+  }
+
+  .chat-header strong {
+    display: block;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+  }
+
+  .chat-subtitle {
+    margin-top: 2px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .chat-reset-btn-header,
+  #chat-close {
+    border: none;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+
+  .chat-reset-btn-header {
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .chat-reset-btn-header:hover,
+  #chat-close:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  #chat-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  #chat-messages {
+    flex: 1;
+    padding: 20px;
+    background:
+      radial-gradient(circle at top right, rgba(59, 130, 246, 0.05), transparent 30%),
+      #f8fafc;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  #chat-messages::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  #chat-messages::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+  }
+
+  .chat-msg {
+    max-width: 100%;
+    padding: 14px 16px;
+    border-radius: 18px;
+    line-height: 1.5;
+    font-size: 14px;
+    word-break: break-word;
+  }
+
+  .chat-msg.plain-text {
+    white-space: pre-wrap;
+  }
+
+  .chat-msg.user {
+    align-self: flex-end;
+    max-width: 82%;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #fff;
+    border-bottom-right-radius: 6px;
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+  }
+
+  .chat-msg.ai {
+    align-self: flex-start;
+    background: #fff;
+    color: #0f172a;
+    border: 1px solid #e2e8f0;
+    border-bottom-left-radius: 6px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+  }
+
+  .chat-msg.ai p,
+  .chat-msg.ai strong,
+  .chat-msg.ai b {
+    margin: 0;
+  }
+
+  .chat-msg.ai .chat-quiz,
+  .chat-msg.ai .chat-operator-plans,
+  .chat-msg.ai .chat-offer-card {
+    width: 100%;
+  }
+
+  .chat-msg.ai .chat-quiz {
+    display: grid;
+    gap: 12px;
+  }
+
+  .chat-msg.ai .quiz-card {
+    padding: 12px;
+    border-radius: 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+
+  .chat-msg.ai .quiz-title {
+    margin: 0 0 10px;
+    font-weight: 700;
+  }
+
+  .chat-msg.ai .flex {
+    display: flex;
+  }
+
+  .chat-msg.ai .flex-col {
+    flex-direction: column;
+  }
+
+  .chat-msg.ai .gap-3 {
+    gap: 12px;
+  }
+
+  .chat-msg.ai .chat-quiz-btn,
+  .chat-msg.ai .chat-plan-btn,
+  .chat-msg.ai .quiz-option {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #0f172a;
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+  }
+
+  .chat-msg.ai .chat-quiz-btn:hover,
+  .chat-msg.ai .chat-plan-btn:hover,
+  .chat-msg.ai .quiz-option:hover {
+    border-color: #2563eb;
+    background: #eff6ff;
+    transform: translateY(-1px);
+  }
+
+  .chat-msg.ai .chat-operator {
+    display: grid;
+    gap: 12px;
+  }
+
+  .chat-msg.ai .chat-operator-logo {
+    width: auto;
+    max-width: 120px;
+    max-height: 36px;
+    object-fit: contain;
+  }
+
+  .chat-offer-card {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
+    border: 1px solid #dbe3ee;
+  }
+
+  .chat-offer-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #2563eb;
+  }
+
+  .chat-offer-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .chat-offer-meta {
+    color: #334155;
+    font-size: 13px;
+  }
+
+  .chat-offer-link {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 12px;
+    background: #0f172a;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .chat-offer-link:hover {
+    background: #1e293b;
+  }
+
+  .chat-suggestions {
+    padding: 12px;
+    border-top: 1px solid rgba(226, 232, 240, 0.5);
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .chat-suggestion-btn {
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: #fff;
+    color: #334155;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .chat-suggestion-btn:hover {
+    background: #f1f5f9;
+    border-color: rgba(148, 163, 184, 0.5);
+  }
+
+  #chat-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    background: #fff;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  #chat-input {
+    flex: 1;
+    height: 52px;
+    border: 1px solid #dbe3ee;
+    border-radius: 16px;
+    padding: 0 16px;
+    font-size: 14px;
+    background: #f8fafc;
+    color: #0f172a;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  }
+
+  #chat-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    background: #fff;
+  }
+
+  #chat-form button[type="submit"] {
+    height: 52px;
+    padding: 0 18px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  #chat-form button[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(37, 99, 235, 0.28);
+  }
+
+  @media (max-width: 520px) {
+    #dealett-chat {
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .chat-panel {
+      width: 100vw;
+      height: 100vh;
+      right: 0;
+      bottom: 0;
+      border-radius: 0;
+    }
+
+    #chat-toggle {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+    }
+  }
+    `;
+    document.head.appendChild(style);
+  }
+
   async function loadJsonArray(url) {
     try {
       const response = await fetch(url);
@@ -29,19 +531,45 @@
   async function loadCatalogs(providedPlans) {
     if (Array.isArray(providedPlans) && providedPlans.length) {
       cachedCatalogs.mobile = providedPlans;
-    } else if (Array.isArray(window.APP?.plans) && window.APP.plans.length) {
-      cachedCatalogs.mobile = window.APP.plans;
-    } else if (!Array.isArray(cachedCatalogs.mobile)) {
-      cachedCatalogs.mobile = await loadJsonArray("./data/plans.json");
+    } else {
+      const apiCandidates = getChatApiCandidates();
+      for (const apiUrl of apiCandidates) {
+        try {
+          const response = await fetch(`${apiUrl.replace('/api/chat', '/api/data/plans')}`);
+          if (response.ok) {
+            cachedCatalogs.mobile = await response.json();
+            break;
+          }
+        } catch (error) {
+          console.warn("Failed to load plans from", apiUrl, error);
+        }
+      }
+      if (!Array.isArray(cachedCatalogs.mobile)) {
+        cachedCatalogs.mobile = [];
+      }
     }
 
     if (!Array.isArray(cachedCatalogs.broadband)) {
-      cachedCatalogs.broadband = await loadJsonArray("./data/5Gbredband.json");
+      const apiCandidates = getChatApiCandidates();
+      for (const apiUrl of apiCandidates) {
+        try {
+          const response = await fetch(`${apiUrl.replace('/api/chat', '/api/data/broadband')}`);
+          if (response.ok) {
+            cachedCatalogs.broadband = await response.json();
+            break;
+          }
+        } catch (error) {
+          console.warn("Failed to load broadband from", apiUrl, error);
+        }
+      }
+      if (!Array.isArray(cachedCatalogs.broadband)) {
+        cachedCatalogs.broadband = [];
+      }
     }
 
     return {
-      mobile: Array.isArray(cachedCatalogs.mobile) ? cachedCatalogs.mobile : [],
-      broadband: Array.isArray(cachedCatalogs.broadband) ? cachedCatalogs.broadband : []
+      mobile: cachedCatalogs.mobile,
+      broadband: cachedCatalogs.broadband
     };
   }
 
@@ -202,6 +730,7 @@
   }
 
   async function initChat({ plans } = {}) {
+    createChatUI();
     const root = document.querySelector("[data-chat-root]");
     if (!root) return false;
 

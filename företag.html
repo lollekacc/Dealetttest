@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/style.css">
   <link rel="stylesheet" href="./assets/design.css">
+  <script src="./assets/chat.js"></script>
 </head>
 
 <body class="min-h-screen font-[Inter] bg-white text-gray-900">
@@ -431,11 +432,6 @@
 
       document.body.insertAdjacentHTML(
         "beforeend",
-        await fetch("partials/chat.html").then(r => r.text())
-      );
-
-      document.body.insertAdjacentHTML(
-        "beforeend",
         await fetch("partials/footer.html").then(r => r.text())
       );
 
@@ -443,10 +439,6 @@
       script.src = "assets/scripts.js";
       script.defer = true;
       document.body.appendChild(script);
-
-      const chatScript = document.createElement("script");
-      chatScript.src = "assets/chat.js";
-      document.body.appendChild(chatScript);
     });
     document.addEventListener("click", e => {
   const btn = e.target.closest(".business-size");
