@@ -38,7 +38,7 @@
         <div>
           <strong>Dealett-AI</strong>
           <div class="chat-subtitle">
-            Hj&auml;lper dig hitta r&auml;tt abonnemang eller bredband
+            Hj&auml;lper dig hitta r&auml;tt abonnemang eller 5G-bredband
           </div>
         </div>
       </div>
@@ -66,16 +66,16 @@
       <button
         type="button"
         class="chat-suggestion-btn"
-        data-suggest="Vilket bredband passar en familj?"
+        data-suggest="Vilket 5G-bredband passar en familj?"
       >
-        Vilket bredband passar en familj?
+        Vilket 5G-bredband passar en familj?
       </button>
       <button
         type="button"
         class="chat-suggestion-btn"
-        data-suggest="Vad &auml;r skillnaden mellan fiber och mobilt bredband?"
+        data-suggest="Hur fungerar 5G-bredband hemma?"
       >
-        Vad &auml;r skillnaden mellan fiber och mobilt bredband?
+        Hur fungerar 5G-bredband hemma?
       </button>
     </div>
 
@@ -83,7 +83,7 @@
       <input
         id="chat-input"
         type="text"
-        placeholder="Fr&aring;ga om abonnemang eller bredband..."
+        placeholder="Fr&aring;ga om abonnemang eller 5G-bredband..."
         autocomplete="off"
       />
       <button type="submit">Skicka</button>
@@ -765,9 +765,9 @@
   }
 
   function formatBroadbandTypeLabel(type) {
-    if (type === "fiber") return "Fiber";
-    if (type === "mobil") return "Mobilt bredband";
-    if (type === "any") return "B\u00e5da fungerar";
+    if (type === "mobil") return "5G-bredband";
+    if (type === "5g") return "5G-bredband";
+    if (type === "any") return "5G-bredband";
     return type || "";
   }
 
@@ -1147,7 +1147,7 @@
       if (isLocalDevContext()) {
         return {
           reply:
-            "Local backend unavailable. Start the backend on http://localhost:3000 to use the latest bredband chat logic.",
+            "Local backend unavailable. Start the backend on http://localhost:3000 to use the latest 5G-bredband chat logic.",
           format: "text"
         };
       }

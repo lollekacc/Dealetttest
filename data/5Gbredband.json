@@ -3,6 +3,7 @@
     "id": "tre-bredband-150",
     "operator": "Tre",
     "category": "bredband",
+    "technology": "5g",
     "title": "Bredband Max 150",
     "speed": "Upp till 150 Mbit/s",
     "speedMbps": 150,
@@ -16,6 +17,7 @@
     "id": "tre-bredband-1000",
     "operator": "Tre",
     "category": "bredband",
+    "technology": "5g",
     "title": "Bredband Max 1000",
     "speed": "Upp till 1000 Mbit/s",
     "speedMbps": 1000,
@@ -129,8 +131,7 @@
   "data": "Obegränsad",
   "isUnlimited": true,
   "routerOptions": ["låna", "köpa"],
-  "fiberRequired": false,
-  "text": "Passar dig som bor i fastighet som saknar fiberanslutning och vill ta med bredbandet vart du vill"
+  "text": "Passar dig som vill ha flexibelt 5G-bredband hemma och kunna flytta med uppkopplingen vid behov"
 },
 {
   "id": "telenor-bredband-5g",
@@ -143,7 +144,6 @@
   "bindingMonths": 24,
   "campaignMonths": 24,
   "satisfactionGuarantee": true,
-  "fiberRequired": false,
   "text": "Testvinnande 5G-bredband med snabb, stabil och säker uppkoppling via Telenors 5G-nät"
 }
 ]
