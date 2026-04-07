@@ -337,7 +337,8 @@
 
   .chat-msg.ai .chat-quiz-btn,
   .chat-msg.ai .chat-plan-btn,
-  .chat-msg.ai .quiz-option {
+  .chat-msg.ai .quiz-option,
+  .chat-msg.ai .chat-answer-btn {
     width: 100%;
     border: 1px solid #cbd5e1;
     background: #fff;
@@ -352,10 +353,17 @@
 
   .chat-msg.ai .chat-quiz-btn:hover,
   .chat-msg.ai .chat-plan-btn:hover,
-  .chat-msg.ai .quiz-option:hover {
+  .chat-msg.ai .quiz-option:hover,
+  .chat-msg.ai .chat-answer-btn:hover {
     border-color: #2563eb;
     background: #eff6ff;
     transform: translateY(-1px);
+  }
+
+  .chat-msg.ai .chat-answer-options {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
   }
 
   .chat-msg.ai .chat-operator {
@@ -413,6 +421,81 @@
 
   .chat-offer-link:hover {
     background: #1e293b;
+  }
+
+  .chat-recommendations {
+    display: grid;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+  .chat-recommendation-card {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #dbe3ee;
+  }
+
+  .chat-recommendation-card--primary {
+    border-color: #2563eb;
+    box-shadow: 0 12px 28px rgba(37, 99, 235, 0.12);
+  }
+
+  .chat-recommendation-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .chat-recommendation-label {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .chat-recommendation-card--primary .chat-recommendation-label {
+    background: #dbeafe;
+  }
+
+  .chat-recommendation-logo {
+    width: auto;
+    max-width: 92px;
+    max-height: 28px;
+    object-fit: contain;
+  }
+
+  .chat-recommendation-title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .chat-recommendation-reason {
+    color: #1e293b;
+    font-size: 13px;
+  }
+
+  .chat-recommendation-meta {
+    display: grid;
+    gap: 6px;
+    color: #334155;
+    font-size: 13px;
+  }
+
+  .chat-recommendation-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
   .chat-suggestions {
@@ -647,6 +730,10 @@
       return null;
     }
 
+    if (entry.kind === "recommendations" && entry.payload) {
+      return entry;
+    }
+
     if (entry.kind === "offer" && entry.payload) {
       return entry;
     }
@@ -854,6 +941,20 @@
       });
 
       document.addEventListener("click", (event) => {
+        const answerButton = event.target.closest(".chat-answer-btn");
+        if (answerButton && root.contains(answerButton)) {
+          const text = answerButton.dataset.chatAnswer;
+          if (text && form && input) {
+            input.value = text;
+            if (typeof form.requestSubmit === "function") {
+              form.requestSubmit();
+            } else {
+              form.dispatchEvent(new Event("submit", { cancelable: true }));
+            }
+          }
+          return;
+        }
+
         const suggestionButton = event.target.closest(".chat-suggestion-btn");
         if (!suggestionButton || !root.contains(suggestionButton)) return;
 
@@ -937,6 +1038,11 @@
       const history = readHistory().map(normalizeHistoryMessage).filter(Boolean);
 
       for (const message of history) {
+        if (message.kind === "recommendations") {
+          await renderRecommendations(message.payload, { persist: false });
+          continue;
+        }
+
         if (message.kind === "offer") {
           await renderOffer(message.payload, { persist: false });
           continue;
@@ -1053,6 +1159,11 @@
     }
 
     async function handleResponse(data) {
+      if (data?.type === "recommendations") {
+        await renderRecommendations(data.payload);
+        return;
+      }
+
       if (data?.type === "offer") {
         await renderOffer(data.payload);
         return;
@@ -1141,6 +1252,156 @@
       card.appendChild(link);
 
       return card;
+    }
+
+    function buildRecommendationCard(offer = {}) {
+      const broadband = offer.category === "bredband" || Boolean(offer.speed);
+      const card = document.createElement("article");
+      card.className = "chat-recommendation-card";
+
+      if (Number(offer.rank) === 1) {
+        card.classList.add("chat-recommendation-card--primary");
+      }
+
+      const top = document.createElement("div");
+      top.className = "chat-recommendation-top";
+
+      const label = document.createElement("span");
+      label.className = "chat-recommendation-label";
+      label.textContent = offer.label || "Alternativ";
+      top.appendChild(label);
+
+      if (offer.logo) {
+        const logo = document.createElement("img");
+        logo.className = "chat-recommendation-logo";
+        logo.src = offer.logo;
+        logo.alt = offer.operator || "Operator";
+        top.appendChild(logo);
+      }
+
+      card.appendChild(top);
+
+      const title = document.createElement("strong");
+      title.className = "chat-recommendation-title";
+      title.textContent = [offer.operator, offer.title].filter(Boolean).join(" ").trim();
+      card.appendChild(title);
+
+      if (offer.reason) {
+        const reason = document.createElement("p");
+        reason.className = "chat-recommendation-reason";
+        reason.textContent = offer.reason;
+        card.appendChild(reason);
+      }
+
+      const meta = document.createElement("div");
+      meta.className = "chat-recommendation-meta";
+
+      if (!broadband) {
+        if (offer.persons && Number(offer.persons) > 1 && offer.totalPrice) {
+          const total = document.createElement("div");
+          total.textContent = `Ca ${formatMoney(offer.totalPrice)} totalt for ${offer.persons} personer`;
+          meta.appendChild(total);
+
+          if (offer.pricePerLine) {
+            const perLine = document.createElement("div");
+            perLine.textContent = `Ca ${formatMoney(offer.pricePerLine)} per abonnemang`;
+            meta.appendChild(perLine);
+          }
+        } else if (offer.price) {
+          const price = document.createElement("div");
+          price.textContent = formatMoney(offer.price);
+          meta.appendChild(price);
+        }
+
+        const dataLabel = formatPlanFeature(
+          {
+            dataAmount: offer.dataAmount,
+            data: offer.data
+          },
+          offer,
+          false
+        );
+        if (dataLabel) {
+          const data = document.createElement("div");
+          data.textContent = dataLabel;
+          meta.appendChild(data);
+        }
+
+        if (offer.familyAddonPrice && offer.persons && Number(offer.persons) > 1) {
+          const family = document.createElement("div");
+          family.textContent = `Extra familjelinje ${formatMoney(offer.familyAddonPrice)}`;
+          meta.appendChild(family);
+        }
+      } else if (offer.price) {
+        const price = document.createElement("div");
+        price.textContent = formatMoney(offer.price);
+        meta.appendChild(price);
+      }
+
+      if (offer.description) {
+        const description = document.createElement("div");
+        description.textContent = offer.description;
+        meta.appendChild(description);
+      }
+
+      card.appendChild(meta);
+
+      const links = document.createElement("div");
+      links.className = "chat-recommendation-links";
+
+      const link = document.createElement("a");
+      link.className = "chat-offer-link";
+      link.href = buildOfferHref(
+        {
+          id: offer.planId,
+          operator: offer.operator
+        },
+        offer,
+        broadband
+      );
+      link.textContent = "Oppna erbjudandet";
+      links.appendChild(link);
+
+      card.appendChild(links);
+      return card;
+    }
+
+    async function renderRecommendations(payload, options = {}) {
+      const { persist = true } = options;
+
+      if (!payload || !messages || !Array.isArray(payload.offers) || !payload.offers.length) {
+        addMessage("Kunde inte visa rekommendationerna.", "ai");
+        return;
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "chat-msg ai";
+
+      if (payload.intro) {
+        const intro = document.createElement("p");
+        intro.textContent = payload.intro;
+        wrapper.appendChild(intro);
+      }
+
+      const list = document.createElement("div");
+      list.className = "chat-recommendations";
+
+      payload.offers.forEach((offer) => {
+        list.appendChild(buildRecommendationCard(offer));
+      });
+
+      wrapper.appendChild(list);
+      messages.appendChild(wrapper);
+      messages.scrollTop = messages.scrollHeight;
+      syncSuggestions(readHistory());
+
+      if (persist) {
+        saveHistory({
+          kind: "recommendations",
+          type: "ai",
+          payload
+        });
+      }
     }
 
     async function renderOffer(payload, options = {}) {

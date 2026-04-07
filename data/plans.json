@@ -221,10 +221,10 @@
     "text": "Miniabonnemang"
   },
   {
-    "id": "halebop-medium",
+    "id": "halebop-high",
     "operator": "Halebop",
     "category": "mobil",
-    "tier": "medium",
+    "tier": "high",
     "isFamilyPlan": false,
     "title": "8 GB",
     "data": "8 GB",
