@@ -730,6 +730,10 @@
       return null;
     }
 
+    if (entry.kind === "selection" && entry.payload) {
+      return entry;
+    }
+
     if (entry.kind === "recommendations" && entry.payload) {
       return entry;
     }
@@ -778,6 +782,47 @@
     }
 
     return `${amount.toLocaleString("sv-SE")} kr/m\u00e5n`;
+  }
+
+  function formatSek(value) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) {
+      return null;
+    }
+
+    return `${Math.round(amount).toLocaleString("sv-SE")} kr`;
+  }
+
+  function formatPricePerPerson(value) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) {
+      return null;
+    }
+
+    return `${Math.round(amount).toLocaleString("sv-SE")} kr/person`;
+  }
+
+  function formatKrPerGb(value) {
+    const amount = Number(value);
+    if (!Number.isFinite(amount)) {
+      return null;
+    }
+
+    return `${amount.toLocaleString("sv-SE", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 1
+    })} kr/GB`;
+  }
+
+  function formatLikelyReward(offer = {}) {
+    const reward = Number(offer.likelyReward);
+    if (!Number.isFinite(reward) || reward <= 0) {
+      return null;
+    }
+
+    const rewardType =
+      offer.likelyRewardType === "renewal" ? "vid f\u00f6rl\u00e4ngning" : "som ny kund";
+    return `Presentkort: ${formatSek(reward)} ${rewardType}`;
   }
 
   function formatPlanFeature(plan, payload, isBroadband) {
@@ -1038,6 +1083,11 @@
       const history = readHistory().map(normalizeHistoryMessage).filter(Boolean);
 
       for (const message of history) {
+        if (message.kind === "selection") {
+          await renderSelection(message.payload, { persist: false });
+          continue;
+        }
+
         if (message.kind === "recommendations") {
           await renderRecommendations(message.payload, { persist: false });
           continue;
@@ -1159,6 +1209,11 @@
     }
 
     async function handleResponse(data) {
+      if (data?.type === "selection") {
+        await renderSelection(data.payload);
+        return;
+      }
+
       if (data?.type === "recommendations") {
         await renderRecommendations(data.payload);
         return;
@@ -1304,7 +1359,7 @@
 
           if (offer.pricePerLine) {
             const perLine = document.createElement("div");
-            perLine.textContent = `Ca ${formatMoney(offer.pricePerLine)} per abonnemang`;
+            perLine.textContent = `Ca ${formatPricePerPerson(offer.pricePerLine)}`;
             meta.appendChild(perLine);
           }
         } else if (offer.price) {
@@ -1331,6 +1386,27 @@
           const family = document.createElement("div");
           family.textContent = `Extra familjelinje ${formatMoney(offer.familyAddonPrice)}`;
           meta.appendChild(family);
+        }
+
+        const valuePerGb = formatKrPerGb(offer.valuePerGb);
+        if (valuePerGb) {
+          const value = document.createElement("div");
+          value.textContent = `V\u00e4rde: ${valuePerGb}`;
+          meta.appendChild(value);
+        }
+
+        const comparisonSummary = offer.currentPlanComparisonSummary;
+        if (comparisonSummary) {
+          const comparison = document.createElement("div");
+          comparison.textContent = `J\u00e4mf\u00f6rt med idag: ${comparisonSummary}`;
+          meta.appendChild(comparison);
+        }
+
+        const rewardSummary = formatLikelyReward(offer);
+        if (rewardSummary) {
+          const reward = document.createElement("div");
+          reward.textContent = rewardSummary;
+          meta.appendChild(reward);
         }
       } else if (offer.price) {
         const price = document.createElement("div");
@@ -1364,6 +1440,95 @@
 
       card.appendChild(links);
       return card;
+    }
+
+    async function renderSelection(payload, options = {}) {
+      const { persist = true } = options;
+
+      if (!payload || !payload.offer || !messages) {
+        addMessage("Kunde inte visa ditt val.", "ai");
+        return;
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "chat-msg ai";
+
+      if (payload.intro) {
+        const intro = document.createElement("p");
+        intro.textContent = payload.intro;
+        wrapper.appendChild(intro);
+      }
+
+      const selectionCard = buildRecommendationCard({
+        ...payload.offer,
+        label: payload.offer.label || "Valt"
+      });
+      selectionCard.classList.add("chat-recommendation-card--primary");
+      wrapper.appendChild(selectionCard);
+
+      if (payload.summary) {
+        const summary = document.createElement("div");
+        summary.className = "chat-recommendation-meta";
+
+        if (payload.summary.provider) {
+          const provider = document.createElement("div");
+          provider.textContent = `Vald operator: ${payload.summary.provider}`;
+          summary.appendChild(provider);
+        }
+
+        if (payload.summary.totalPrice) {
+          const totalPrice = document.createElement("div");
+          totalPrice.textContent = `Totalt: ${formatMoney(payload.summary.totalPrice)}`;
+          summary.appendChild(totalPrice);
+        }
+
+        if (payload.summary.pricePerPerson) {
+          const pricePerPerson = document.createElement("div");
+          pricePerPerson.textContent = formatPricePerPerson(payload.summary.pricePerPerson);
+          summary.appendChild(pricePerPerson);
+        }
+
+        if (payload.summary.includedData) {
+          const data = document.createElement("div");
+          data.textContent = `Surf: ${payload.summary.includedData}`;
+          summary.appendChild(data);
+        }
+
+        if (payload.summary.currentPlanComparisonSummary) {
+          const comparison = document.createElement("div");
+          comparison.textContent = `J\u00e4mf\u00f6rt med idag: ${payload.summary.currentPlanComparisonSummary}`;
+          summary.appendChild(comparison);
+        }
+
+        if (payload.summary.likelyReward) {
+          const reward = document.createElement("div");
+          reward.textContent = formatLikelyReward({
+            likelyReward: payload.summary.likelyReward,
+            likelyRewardType: payload.summary.likelyRewardType
+          });
+          summary.appendChild(reward);
+        }
+
+        if (payload.summary.reason) {
+          const reason = document.createElement("div");
+          reason.textContent = `Varfor det passar: ${payload.summary.reason}`;
+          summary.appendChild(reason);
+        }
+
+        wrapper.appendChild(summary);
+      }
+
+      messages.appendChild(wrapper);
+      messages.scrollTop = messages.scrollHeight;
+      syncSuggestions(readHistory());
+
+      if (persist) {
+        saveHistory({
+          kind: "selection",
+          type: "ai",
+          payload
+        });
+      }
     }
 
     async function renderRecommendations(payload, options = {}) {
