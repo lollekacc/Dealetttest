@@ -1408,10 +1408,25 @@
           reward.textContent = rewardSummary;
           meta.appendChild(reward);
         }
-      } else if (offer.price) {
-        const price = document.createElement("div");
-        price.textContent = formatMoney(offer.price);
-        meta.appendChild(price);
+      } else {
+        if (offer.price) {
+          const price = document.createElement("div");
+          price.textContent = formatMoney(offer.price);
+          meta.appendChild(price);
+        }
+
+        if (offer.speed) {
+          const speed = document.createElement("div");
+          speed.textContent = `${offer.speed} Mbit/s`;
+          meta.appendChild(speed);
+        }
+
+        const rewardSummary = formatLikelyReward(offer);
+        if (rewardSummary) {
+          const reward = document.createElement("div");
+          reward.textContent = rewardSummary;
+          meta.appendChild(reward);
+        }
       }
 
       if (offer.description) {
