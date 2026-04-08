@@ -848,6 +848,7 @@ body {
 }
 
 .reward-hero{
+  text-align: center;
   max-width: 760px;
   margin: 0 auto 30px;
 }
@@ -1125,7 +1126,90 @@ body {
     font-size: 20px;
   }
 
-  .reward-summary-value{
-    font-size: 28px;
+.reward-summary-value{
+  font-size: 28px;
   }
+}
+
+/* ===== Abonnemang premium shell ===== */
+
+body.abon-page #header-placeholder {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  z-index: 1000;
+  min-height: 0;
+  pointer-events: none;
+}
+
+body.abon-page #header-placeholder > * {
+  pointer-events: auto;
+}
+
+body.abon-page .adeala-btn {
+  background: linear-gradient(135deg, #0a4a8f, #0f766e);
+  border: 0;
+  box-shadow: 0 18px 32px rgba(11, 87, 164, 0.2);
+}
+
+body.abon-page .adeala-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 38px rgba(11, 87, 164, 0.24);
+}
+
+body.abon-page .cart-drawer {
+  backdrop-filter: blur(6px);
+}
+
+body.abon-page .cart-drawer-overlay {
+  background: rgba(5, 10, 22, 0.48);
+}
+
+body.abon-page .cart-drawer-panel {
+  border-left: 1px solid rgba(255, 255, 255, 0.38);
+  background:
+    radial-gradient(circle at top left, rgba(11, 87, 164, 0.08), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.08), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 249, 255, 0.94));
+  box-shadow: -30px 0 80px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(22px);
+}
+
+body.abon-page .cart-drawer-head {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+body.abon-page .cart-drawer-close {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: rgba(15, 23, 42, 0.05);
+}
+
+body.abon-page .cart-drawer-close:hover {
+  background: rgba(15, 23, 42, 0.1);
+}
+
+body.abon-page #cartItems > div {
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.05);
+}
+
+body.abon-page #cartItems img {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.94);
+}
+
+body.abon-page .removeItem {
+  font-weight: 700;
+}
+
+body.abon-page .cart-drawer-footer {
+  border-top-color: rgba(15, 23, 42, 0.08);
+  background: rgba(248, 251, 255, 0.8);
 }

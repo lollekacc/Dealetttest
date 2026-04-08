@@ -51,6 +51,401 @@ const REWARD_OPTIONS = [
   { name: "SATS", logo: "https://cdn.sanity.io/images/xkmfhygb/production/7a8c8bd647ab4949343baef3fe30dc92281489e7-1920x1080.jpg" }
 ];
 
+let revealObserver = null;
+let forcedStepGroup = null;
+let cursorGlowEl = null;
+let heroCountAnimated = false;
+let rewardCelebrationTimeout = null;
+
+const JOURNEY_GROUP_LABELS = {
+  1: "Hushall och surf",
+  2: "Operator och bindning",
+  3: "Onskemal",
+  4: "Erbjudanden"
+};
+
+const CARD_GROUPS = {
+  persons: 1,
+  data: 1,
+  operators: 2,
+  binding: 2,
+  wishes: 3
+};
+
+function prefersReducedMotion() {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function hasFinePointer() {
+  return window.matchMedia("(pointer: fine)").matches;
+}
+
+function getCardGroup(cardName) {
+  return CARD_GROUPS[cardName] || 1;
+}
+
+function getCardElement(cardName) {
+  return document.querySelector(`.step-card[data-card="${cardName}"]`);
+}
+
+function getDerivedJourneyGroup() {
+  const offersVisible = offersSection && !offersSection.classList.contains("is-hidden");
+
+  if (!abonState.persons || !abonState.data) return 1;
+  if (!hasAnsweredOperators(abonState) || !hasAnsweredBindings(abonState)) return 2;
+  if (!offersVisible) return 3;
+  if (!abonState.wishes.length && !window.offerChosen) return 3;
+  return 4;
+}
+
+function getCurrentJourneyGroup() {
+  return forcedStepGroup ?? getDerivedJourneyGroup();
+}
+
+function isCardComplete(cardName) {
+  if (cardName === "persons") return Number.isFinite(Number(abonState.persons)) && Number(abonState.persons) > 0;
+  if (cardName === "data") return Boolean(abonState.data);
+  if (cardName === "operators") return hasAnsweredOperators(abonState);
+  if (cardName === "binding") return hasAnsweredBindings(abonState);
+  if (cardName === "wishes") return (abonState.wishes || []).length > 0;
+  return false;
+}
+
+function getCardSummaryText(cardName) {
+  if (cardName === "persons" && abonState.persons) {
+    return `${abonState.persons} ${Number(abonState.persons) === 1 ? "person" : "personer"}`;
+  }
+
+  if (cardName === "data" && abonState.data) {
+    const labels = {
+      low: "Lite surf vald",
+      medium: "Lagom surf vald",
+      high: "Mycket surf vald"
+    };
+    return labels[abonState.data] || "";
+  }
+
+  if (cardName === "operators" && abonState.persons) {
+    const selectedOperators = (abonState.operatorsByPerson || []).filter(Boolean);
+    if (!selectedOperators.length) return "";
+    return `${selectedOperators.length} av ${abonState.persons} operatorer valda`;
+  }
+
+  if (cardName === "binding" && abonState.persons) {
+    const bindings = (abonState.bindingsByPerson || []).slice(0, abonState.persons);
+    if (!bindings.length || !bindings.some(Boolean)) return "";
+
+    const yesCount = bindings.filter(value => value === "yes").length;
+    const noCount = bindings.filter(value => value === "no").length;
+    const parts = [];
+
+    if (yesCount) parts.push(`${yesCount} med bindning`);
+    if (noCount) parts.push(`${noCount} utan bindning`);
+    return parts.join(" · ");
+  }
+
+  if (cardName === "wishes" && abonState.wishes?.length) {
+    return abonState.wishes.slice(0, 2).join(" · ");
+  }
+
+  return "";
+}
+
+function ensureStepSummary(card) {
+  if (!card) return null;
+
+  let summary = card.querySelector(".step-summary");
+  if (summary) return summary;
+
+  summary = document.createElement("div");
+  summary.className = "step-summary";
+  summary.innerHTML = '<i class="fa-solid fa-circle-check"></i><span></span>';
+  card.querySelector(".step-card-head")?.insertAdjacentElement("afterend", summary);
+  return summary;
+}
+
+function getJourneyProgressPercent() {
+  const offersVisible = offersSection && !offersSection.classList.contains("is-hidden");
+  let progress = 0;
+
+  if (abonState.persons) progress += 12.5;
+  if (abonState.data) progress += 12.5;
+  if (hasAnsweredOperators(abonState)) progress += 12.5;
+  if (hasAnsweredBindings(abonState)) progress += 12.5;
+  if ((abonState.wishes || []).length) progress += 12.5;
+  if (offersVisible) progress += 25;
+  if (window.offerChosen) progress += 12.5;
+
+  return Math.max(8, Math.min(100, progress));
+}
+
+function updateQuizProgressUI() {
+  const labelEl = document.getElementById("quizProgressLabel");
+  const fillEl = document.getElementById("quizProgressFill");
+  const currentGroup = getCurrentJourneyGroup();
+  const currentLabel = JOURNEY_GROUP_LABELS[currentGroup] || JOURNEY_GROUP_LABELS[1];
+
+  if (labelEl) {
+    labelEl.textContent = `Steg ${Math.min(currentGroup, 4)} av 4 · ${currentLabel}`;
+  }
+
+  if (fillEl) {
+    fillEl.style.width = `${getJourneyProgressPercent()}%`;
+  }
+}
+
+function bindStepCardInteractions() {
+  document.querySelectorAll(".step-card").forEach(card => {
+    if (card.dataset.stepBound === "true") return;
+    card.dataset.stepBound = "true";
+    ensureStepSummary(card);
+
+    card.addEventListener("click", event => {
+      if (event.target.closest("button, input, label")) return;
+      const group = Number(card.dataset.stepGroup || getCardGroup(card.dataset.card));
+      forcedStepGroup = group;
+      refreshPremiumUI();
+      smoothScrollTo(card);
+    });
+  });
+}
+
+function updateStepJourneyUI() {
+  const currentGroup = getCurrentJourneyGroup();
+  const offersStrip = document.getElementById("offersStrip");
+
+  document.querySelectorAll(".step-card").forEach(card => {
+    const cardName = card.dataset.card;
+    const group = Number(card.dataset.stepGroup || getCardGroup(cardName));
+    const complete = isCardComplete(cardName);
+    const active = group === currentGroup;
+    const upcoming = group > currentGroup;
+    const summaryText = getCardSummaryText(cardName);
+    const summary = ensureStepSummary(card);
+
+    if (summary) {
+      const label = summary.querySelector("span");
+      if (label) label.textContent = summaryText;
+    }
+
+    card.classList.toggle("has-summary", Boolean(summaryText));
+    card.classList.toggle("is-active", active);
+    card.classList.toggle("is-complete", complete);
+    card.classList.toggle("is-upcoming", upcoming);
+  });
+
+  offersStrip?.classList.toggle("is-focus", currentGroup === 4);
+}
+
+function getNextFocusTarget() {
+  if (!abonState.persons) return getCardElement("persons");
+  if (!abonState.data) return getCardElement("data");
+  if (!hasAnsweredOperators(abonState)) return getCardElement("operators");
+  if (!hasAnsweredBindings(abonState)) return getCardElement("binding");
+  if (!(abonState.wishes || []).length && !window.offerChosen) return getCardElement("wishes");
+  if (offersSection && !offersSection.classList.contains("is-hidden") && !window.offerChosen) return offersSection;
+  if (!document.getElementById("rewardSection")?.classList.contains("is-hidden") && !window.beloningChosen) {
+    return document.getElementById("rewardSection");
+  }
+  if (!document.getElementById("contactSection")?.classList.contains("is-hidden")) {
+    return document.getElementById("contactSection");
+  }
+  if (!document.getElementById("numberSection")?.classList.contains("is-hidden")) {
+    return document.getElementById("numberSection");
+  }
+  return null;
+}
+
+function autoAdvanceToNextFocus(sourceCardName = null) {
+  const target = getNextFocusTarget();
+  const source = sourceCardName ? getCardElement(sourceCardName) : null;
+
+  if (!target) return;
+  if (source && target === source) return;
+
+  window.setTimeout(() => {
+    smoothScrollTo(target);
+  }, 120);
+}
+
+function observeRevealElements() {
+  if (!revealObserver) return;
+
+  const dynamicTargets = [
+    ...document.querySelectorAll(".offer-card-pro"),
+    ...document.querySelectorAll(".reward-option-card"),
+    ...document.querySelectorAll(".operator-person-card")
+  ];
+
+  dynamicTargets.forEach((element, index) => {
+    if (!element.classList.contains("reveal")) {
+      element.classList.add("reveal");
+    }
+
+    if (!element.style.transitionDelay) {
+      element.style.transitionDelay = `${Math.min(index * 60, 240)}ms`;
+    }
+  });
+
+  document.querySelectorAll(".reveal").forEach((element, index) => {
+    if (element.dataset.revealBound === "true") return;
+    element.dataset.revealBound = "true";
+    if (!element.style.transitionDelay) {
+      element.style.transitionDelay = `${Math.min(index * 45, 240)}ms`;
+    }
+    revealObserver.observe(element);
+  });
+}
+
+function initRevealSystem() {
+  if (revealObserver) return;
+
+  revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add("is-visible");
+      revealObserver.unobserve(entry.target);
+    });
+  }, {
+    threshold: 0.16,
+    rootMargin: "0px 0px -8% 0px"
+  });
+
+  observeRevealElements();
+}
+
+function initCursorGlow() {
+  if (prefersReducedMotion() || !hasFinePointer() || cursorGlowEl) return;
+
+  cursorGlowEl = document.createElement("div");
+  cursorGlowEl.className = "cursor-glow";
+  document.body.appendChild(cursorGlowEl);
+
+  window.addEventListener("pointermove", event => {
+    cursorGlowEl.style.transform = `translate(${event.clientX - 110}px, ${event.clientY - 110}px)`;
+  }, { passive: true });
+
+  document.body.addEventListener("pointerover", event => {
+    cursorGlowEl.style.opacity = event.target.closest("button, a, input, .offer-card-pro, .reward-option-card")
+      ? "1"
+      : "0";
+  });
+
+  document.body.addEventListener("pointerleave", () => {
+    cursorGlowEl.style.opacity = "0";
+  });
+}
+
+function animateCountTo(element, target, {
+  duration = 900,
+  suffix = "",
+  prefix = ""
+} = {}) {
+  if (!element) return;
+
+  const endValue = Number(target) || 0;
+  const startValue = Number(element.dataset.currentValue || 0);
+  const startTime = performance.now();
+
+  function frame(now) {
+    const progress = Math.min((now - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const nextValue = Math.round(startValue + (endValue - startValue) * eased);
+    element.dataset.currentValue = String(nextValue);
+    element.textContent = `${prefix}${nextValue}${suffix}`;
+
+    if (progress < 1) {
+      requestAnimationFrame(frame);
+    }
+  }
+
+  requestAnimationFrame(frame);
+}
+
+function runHeroCountUps() {
+  if (heroCountAnimated) return;
+  heroCountAnimated = true;
+
+  document.querySelectorAll(".hero-count").forEach(element => {
+    animateCountTo(element, Number(element.dataset.count || 0), {
+      duration: 1100,
+      suffix: element.dataset.suffix || ""
+    });
+  });
+}
+
+function bindTiltCard(card, maxTilt = 8) {
+  if (!card || card.dataset.tiltBound === "true" || prefersReducedMotion() || !hasFinePointer()) return;
+  card.dataset.tiltBound = "true";
+
+  card.addEventListener("mousemove", event => {
+    const rect = card.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
+    const rotateY = x * maxTilt;
+    const rotateX = y * -maxTilt;
+    const lift = card.classList.contains("active") ? -12 : -8;
+
+    card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${lift}px)`;
+  });
+
+  card.addEventListener("mouseleave", () => {
+    card.style.transform = "";
+  });
+}
+
+function refreshTiltCards() {
+  document.querySelectorAll(".offer-card-pro").forEach(card => bindTiltCard(card, 9));
+  document.querySelectorAll(".reward-option-card").forEach(card => bindTiltCard(card, 7));
+}
+
+function initOffersParallax() {
+  const strip = document.getElementById("offersStrip");
+  const container = document.getElementById("offers-container");
+
+  if (!strip || !container || strip.dataset.parallaxBound === "true" || prefersReducedMotion() || !hasFinePointer()) {
+    return;
+  }
+
+  strip.dataset.parallaxBound = "true";
+
+  strip.addEventListener("mousemove", event => {
+    if (window.innerWidth <= 980) return;
+    const rect = strip.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    container.style.transform = `translateX(${x * 14}px)`;
+  });
+
+  strip.addEventListener("mouseleave", () => {
+    container.style.transform = "";
+  });
+}
+
+function refreshPremiumUI() {
+  bindStepCardInteractions();
+  updateQuizProgressUI();
+  updateStepJourneyUI();
+  observeRevealElements();
+  refreshTiltCards();
+  initOffersParallax();
+}
+
+function syncPremiumExperience(sourceCardName = null, { scroll = true } = {}) {
+  forcedStepGroup = null;
+
+  requestAnimationFrame(() => {
+    refreshPremiumUI();
+    if (scroll) autoAdvanceToNextFocus(sourceCardName);
+  });
+}
+
+function initPremiumExperience() {
+  initRevealSystem();
+  initCursorGlow();
+  runHeroCountUps();
+  refreshPremiumUI();
+}
+
 document.addEventListener("DOMContentLoaded", initPage);
 
 async function initPage() {
@@ -69,6 +464,7 @@ async function initPage() {
   updateAvailability();
   bindContactStep();
   bindNumberFlowBase();
+  initPremiumExperience();
 }
 
 function applyQuizLayout() {
@@ -292,27 +688,46 @@ async function loadShell() {
 
 function initHeroSlider() {
   const slider = document.getElementById("heroSlider");
+  const slides = [...slider?.querySelectorAll(".hero-slide") || []];
   const dots = [...document.querySelectorAll(".hero-dot")];
   const prevBtn = document.getElementById("heroPrevBtn");
   const nextBtn = document.getElementById("heroNextBtn");
+  const heroWrap = document.querySelector(".hero-slider-wrap");
+  const heroContent = document.querySelector(".hero-content");
 
-  if (!slider || !dots.length) return;
+  if (!slider || !slides.length || !dots.length) return;
 
-  let currentSlide = 0;
-  const totalSlides = slider.children.length;
-  const autoInterval = 6000;
+  let currentSlide = Math.max(0, slides.findIndex(slide => slide.classList.contains("is-active")));
+  const totalSlides = slides.length;
+  const autoInterval = prefersReducedMotion() ? 8000 : 6200;
   let timer = null;
 
+  function restartDotAnimation(dot) {
+    const fill = dot.querySelector(".hero-dot-fill");
+    if (!fill) return;
+    fill.style.animation = "none";
+    void fill.offsetWidth;
+    fill.style.animation = "";
+  }
+
   function updateDots() {
-    dots.forEach((dot, i) => dot.classList.toggle("active", i === currentSlide));
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("active", i === currentSlide);
+      dot.style.setProperty("--hero-duration", `${autoInterval}ms`);
+
+      if (i === currentSlide) {
+        restartDotAnimation(dot);
+      }
+    });
   }
 
   function goToSlide(index) {
     currentSlide = index;
-    slider.scrollTo({
-      left: slider.clientWidth * currentSlide,
-      behavior: "smooth"
+    slides.forEach((slide, i) => {
+      slide.classList.toggle("is-active", i === currentSlide);
+      slide.setAttribute("aria-hidden", i === currentSlide ? "false" : "true");
     });
+
     updateDots();
   }
 
@@ -343,8 +758,21 @@ function initHeroSlider() {
     });
   });
 
-  window.addEventListener("resize", () => goToSlide(currentSlide));
+  if (!prefersReducedMotion() && hasFinePointer() && heroWrap && heroContent) {
+    heroWrap.addEventListener("mousemove", event => {
+      const rect = heroWrap.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      heroContent.style.transform = `translate3d(${x * 12}px, ${y * 10}px, 0)`;
+    });
+
+    heroWrap.addEventListener("mouseleave", () => {
+      heroContent.style.transform = "";
+    });
+  }
+
   updateDots();
+  goToSlide(currentSlide);
   restartTimer();
 }
 
@@ -382,7 +810,7 @@ function bindPersons() {
 
       persistState();
       updateAvailability();
-      updateOffers();
+      updateOffers().finally(() => syncPremiumExperience("persons"));
     });
   });
 }
@@ -401,7 +829,7 @@ function bindData() {
 
       persistState();
       updateAvailability();
-      updateOffers();
+      updateOffers().finally(() => syncPremiumExperience("data"));
     });
   });
 }
@@ -451,7 +879,7 @@ function initWishInput() {
 
         persistState();
         renderWishList();
-        updateOffers();
+        updateOffers().finally(() => syncPremiumExperience("wishes", { scroll: false }));
       });
 
       item.append(label, remove);
@@ -471,7 +899,7 @@ function initWishInput() {
 
     persistState();
     renderWishList();
-    updateOffers();
+    updateOffers().finally(() => syncPremiumExperience("wishes"));
   }
 
   addBtn.addEventListener("click", () => {
@@ -539,7 +967,7 @@ function renderOperators(count) {
 
         persistState();
         updateAvailability();
-        updateOffers();
+        updateOffers().finally(() => syncPremiumExperience("operators"));
       });
     });
 
@@ -601,7 +1029,7 @@ function renderBindings(count) {
         clearRewardAndNextSteps();
 
         persistState();
-        updateOffers();
+        updateOffers().finally(() => syncPremiumExperience("binding"));
       });
     });
 
@@ -609,6 +1037,7 @@ function renderBindings(count) {
       abonState.bindingEndDatesByPerson[i] = dateInput.value || null;
       syncBindingSummary();
       persistState();
+      syncPremiumExperience("binding", { scroll: false });
     });
 
     wrapper.appendChild(card);
@@ -618,7 +1047,7 @@ function renderBindings(count) {
 function buildOperatorButton(operator, logoPath) {
   return `
     <button type="button" class="quiz-option operator-btn" data-operator="${operator}">
-      <img src="${logoPath}" alt="${operator}">
+      <img src="${logoPath}" alt="${operator}" loading="lazy" decoding="async">
     </button>
   `;
 }
@@ -1091,15 +1520,18 @@ function showInitialOffersIfNeeded() {
 
   offersContainer?.replaceChildren();
   offersSection?.classList.add("is-hidden");
+  refreshPremiumUI();
 }
 
 async function updateOffers() {
   if (!isQuizComplete()) {
     offersSection?.classList.add("is-hidden");
+    refreshPremiumUI();
     return;
   }
   await filterOffers();
   offersSection?.classList.remove("is-hidden");
+  refreshPremiumUI();
 }
 
 async function filterOffers() {
@@ -1284,7 +1716,7 @@ function buildOfferCard(plan, stateOverride = null) {
   const isFamily = (state.persons || 1) > 1;
 
   const card = document.createElement("div");
-  card.className = "offer-choice offer-card-pro";
+  card.className = `offer-choice offer-card-pro${plan.isRecommended ? " recommended" : ""}`;
 
   card.innerHTML = `
     <div class="offer-card-top">
@@ -1314,7 +1746,7 @@ function buildOfferCard(plan, stateOverride = null) {
     <div class="offer-card-body">
       <div class="offer-brand-wrap">
         <div class="offer-logo-wrap">
-          <img src="${plan.logo}" alt="${plan.operator}" class="offer-logo-img">
+          <img src="${plan.logo}" alt="${plan.operator}" class="offer-logo-img" loading="lazy" decoding="async">
         </div>
         <p class="offer-operator">${plan.operator}</p>
       </div>
@@ -1368,6 +1800,22 @@ function buildOfferCard(plan, stateOverride = null) {
   return card;
 }
 
+function syncOfferSelectionLabels() {
+  document.querySelectorAll(".offer-choice").forEach(card => {
+    const label = card.querySelector(".offer-select-text span");
+    if (!label) return;
+
+    if (card.classList.contains("active")) {
+      label.textContent = "Valt erbjudande";
+      return;
+    }
+
+    label.textContent = card.classList.contains("recommended")
+      ? "Välj rekommenderat erbjudande"
+      : "Välj detta erbjudande";
+  });
+}
+
 function renderOffers(offers) {
   if (!offersContainer) hydrateElements();
   if (!offersContainer) return;
@@ -1407,6 +1855,8 @@ function renderOffers(offers) {
   });
 
   offersSection?.classList.remove("is-hidden");
+  syncOfferSelectionLabels();
+  refreshPremiumUI();
 }
 
 function selectOfferCard(card, plan) {
@@ -1414,6 +1864,7 @@ function selectOfferCard(card, plan) {
 
   document.querySelectorAll(".offer-choice").forEach(c => c.classList.remove("active"));
   card.classList.add("active");
+  syncOfferSelectionLabels();
 
   window.offerChosen = true;
   window.beloningChosen = false;
@@ -1436,6 +1887,7 @@ function selectOfferCard(card, plan) {
 
   hideNextSteps();
   openRewardSection(rewardDetails.totalReward, plan.id);
+  syncPremiumExperience(null, { scroll: false });
 }
 
 function openRewardSection(totalReward, offerId) {
@@ -1443,20 +1895,24 @@ function openRewardSection(totalReward, offerId) {
   const rewardGrid = document.getElementById("rewardGrid");
   const totalRewardEl = document.getElementById("totalReward");
   const remainingSumEl = document.getElementById("remainingSum");
+  const remainingSumWrap = document.getElementById("remainingSumWrap");
   const rewardProgressFill = document.getElementById("rewardProgressFill");
   const continueBtn = document.getElementById("rewardContinueBtn");
+  const rewardPanel = document.querySelector(".reward-panel");
 
-  totalRewardEl.textContent = totalReward;
+  animateCountTo(totalRewardEl, totalReward);
   rewardGrid.innerHTML = "";
+  continueBtn.disabled = true;
 
   const selections = {};
   let remaining = totalReward;
+  let hasCelebrated = false;
 
   function updateUI() {
     const used = Object.values(selections).reduce((a, b) => a + b, 0);
     remaining = totalReward - used;
 
-    remainingSumEl.textContent = remaining;
+    remainingElState(remaining, remainingSumEl, remainingSumWrap);
     rewardProgressFill.style.width = `${(used / totalReward) * 100}%`;
 
     const valid =
@@ -1464,6 +1920,19 @@ function openRewardSection(totalReward, offerId) {
       Object.values(selections).every(v => v === 0 || v >= 200);
 
     continueBtn.disabled = !valid;
+
+    if (valid && !hasCelebrated) {
+      rewardPanel?.classList.add("is-celebrating");
+      clearTimeout(rewardCelebrationTimeout);
+      rewardCelebrationTimeout = window.setTimeout(() => {
+        rewardPanel?.classList.remove("is-celebrating");
+      }, 1000);
+      hasCelebrated = true;
+    }
+
+    if (!valid) {
+      hasCelebrated = false;
+    }
   }
 
   REWARD_OPTIONS.forEach(opt => {
@@ -1472,7 +1941,7 @@ function openRewardSection(totalReward, offerId) {
 
     card.innerHTML = `
       <div class="reward-option-logo-wrap">
-        <img src="${opt.logo}" class="reward-option-logo">
+        <img src="${opt.logo}" class="reward-option-logo" loading="lazy" decoding="async">
       </div>
 
       <strong>${opt.name}</strong>
@@ -1503,15 +1972,32 @@ function openRewardSection(totalReward, offerId) {
         selections[opt.name] = val;
       }
 
+      card.classList.toggle("has-value", val >= 200);
       updateUI();
     });
 
     rewardGrid.appendChild(card);
   });
 
+  updateUI();
+
   continueBtn.onclick = () => { 
     const selectedOffer = JSON.parse(localStorage.getItem("selectedOffer") || "null");
     if (!selectedOffer) return;
+
+    const distributedRewards = Object.fromEntries(
+      Object.entries(selections).filter(([, value]) => value > 0)
+    );
+    const primaryReward = Object.entries(distributedRewards)
+      .sort((left, right) => right[1] - left[1])[0];
+
+    localStorage.setItem("rewardDistribution", JSON.stringify(distributedRewards));
+    if (primaryReward) {
+      localStorage.setItem("rewardChoice", JSON.stringify({
+        company: primaryReward[0],
+        value: primaryReward[1]
+      }));
+    }
   
     const cartItem = {
       offerId: selectedOffer.id,
@@ -1522,7 +2008,7 @@ function openRewardSection(totalReward, offerId) {
       pricePerPerson: selectedOffer.pricePerPerson,
       rewardTotal: selectedOffer.rewardTotal || totalReward,
       rewardMixLabel: selectedOffer.rewardMixLabel || "",
-      rewards: selections
+      rewards: distributedRewards
     };
   
     // ✅ use global cart API only
@@ -1542,11 +2028,12 @@ function openRewardSection(totalReward, offerId) {
     checkGoToNumberStep();
   };
   rewardSection.classList.remove("is-hidden");
+  refreshPremiumUI();
   smoothScrollTo(rewardSection);
 }
 
 function remainingElState(value, remainingSumEl, remainingSumWrap) {
-  remainingSumEl.textContent = value;
+  animateCountTo(remainingSumEl, value);
   remainingSumWrap.classList.remove("is-good", "is-negative");
   remainingSumWrap.classList.add(value === 0 ? "is-good" : "is-negative");
 }
@@ -1580,6 +2067,7 @@ function checkGoToNumberStep() {
   if (!contactSection) return;
 
   contactSection.classList.remove("is-hidden");
+  refreshPremiumUI();
   smoothScrollTo(contactSection);
 }
 
@@ -1612,6 +2100,7 @@ function startNumberFlow() {
   const collectedNumbers = {};
 
   renderPersonStep();
+  refreshPremiumUI();
   smoothScrollTo(numberSection);
 
   function renderPersonStep() {
@@ -1849,9 +2338,13 @@ function hideNextSteps() {
 
 function smoothScrollTo(element) {
   if (!element) return;
-  element.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
+
+  const headerOffset = 96;
+  const top = element.getBoundingClientRect().top + window.scrollY - headerOffset;
+
+  window.scrollTo({
+    top: Math.max(0, top),
+    behavior: prefersReducedMotion() ? "auto" : "smooth"
   });
 }
 

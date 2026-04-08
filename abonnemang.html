@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dealett – Abonnemang</title>
+  <title>Dealett - Abonnemang</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -16,15 +16,20 @@
   <div id="header-placeholder"></div>
 
   <main class="abon-main">
-    <!-- HERO -->
     <section class="hero-shell">
       <div class="hero-slider-wrap">
+        <div class="hero-ambient hero-ambient-left" aria-hidden="true"></div>
+        <div class="hero-ambient hero-ambient-right" aria-hidden="true"></div>
+        <div class="hero-noise" aria-hidden="true"></div>
+
         <ul id="heroSlider" class="hero-slider">
           <li class="hero-slide is-active">
             <img
               src="https://images.ctfassets.net/wnyreqeg7zsz/6QnqlXszeR8PTYtoTDBGax/aa1932112dc7c83fab22d2c9fbf6dc37/ViaplayWinterSport26_visuals_Horizontal_platform_AW_NoCTA.jpg"
               alt="Streamingtjänster och sport"
               class="hero-image"
+              fetchpriority="high"
+              decoding="async"
             />
             <div class="hero-overlay"></div>
           </li>
@@ -34,6 +39,8 @@
               src="https://www.dif.se/_next/image?url=https%3A%2F%2Fwww.dif.se%2Fmedia%2Fikhldpq4%2Fdiscovery-1920x1080.jpg&w=3840&q=75"
               alt="Sportstreaming"
               class="hero-image"
+              loading="lazy"
+              decoding="async"
             />
             <div class="hero-overlay"></div>
           </li>
@@ -41,15 +48,17 @@
           <li class="hero-slide">
             <img
               src="https://cdn1-photos.shl.se/photos/24/06/f8e987d9-376f-4452-bb0a-17793a01f53aTV4216x9.jpg?ixlib=js-3.8.0&w=1920&h=1080&auto=format&fp-debug=0&fp-y=0.5&fp-x=0.5&crop=focalpoint&fit=crop&s=9e4a4b6a9060e7cd81aa553c88886206"
-              alt="Live sport"
+              alt="Livesänd sport"
               class="hero-image"
+              loading="lazy"
+              decoding="async"
             />
             <div class="hero-overlay"></div>
           </li>
         </ul>
 
         <div class="hero-panel">
-          <div class="hero-content">
+          <div class="hero-content reveal">
             <div class="hero-badge">
               <span class="hero-badge-dot"></span>
               Smart abonnemangsjämförelse
@@ -62,13 +71,13 @@
 
             <p class="hero-text">
               Jämför operatörer, surf, familjeupplägg, bindningstid och belöningar
-              i ett modernt flöde som känns enkelt från start till avslut.
+              i ett elegant flöde som känns tydligt från första valet till beställning.
             </p>
 
             <div class="hero-points">
               <div class="hero-point">
                 <i class="fa-solid fa-circle-check"></i>
-                <span>Jämför flera operatörer i ett flöde</span>
+                <span>Jämför flera operatörer i ett och samma flöde</span>
               </div>
               <div class="hero-point">
                 <i class="fa-solid fa-circle-check"></i>
@@ -82,16 +91,16 @@
 
             <div class="hero-stats">
               <div class="hero-stat">
-                <strong>Flera</strong>
-                <span>operatörer</span>
+                <strong><span class="hero-count" data-count="5" data-suffix="+">5+</span></strong>
+                <span>operatörer att välja mellan</span>
               </div>
               <div class="hero-stat">
-                <strong>1 flöde</strong>
+                <strong><span class="hero-count" data-count="1">1</span> flöde</strong>
                 <span>från jämförelse till avslut</span>
               </div>
               <div class="hero-stat">
-                <strong>Direkt</strong>
-                <span>belöningsöversikt</span>
+                <strong><span class="hero-count" data-count="100" data-suffix="%">100%</span></strong>
+                <span>tydlig belöningsöversikt</span>
               </div>
             </div>
           </div>
@@ -106,27 +115,37 @@
         </button>
 
         <div class="hero-dots" id="heroDots">
-          <button type="button" class="hero-dot active" data-slide="0" aria-label="Slide 1"></button>
-          <button type="button" class="hero-dot" data-slide="1" aria-label="Slide 2"></button>
-          <button type="button" class="hero-dot" data-slide="2" aria-label="Slide 3"></button>
+          <button type="button" class="hero-dot active" data-slide="0" aria-label="Slide 1"><span class="hero-dot-fill"></span></button>
+          <button type="button" class="hero-dot" data-slide="1" aria-label="Slide 2"><span class="hero-dot-fill"></span></button>
+          <button type="button" class="hero-dot" data-slide="2" aria-label="Slide 3"><span class="hero-dot-fill"></span></button>
         </div>
       </div>
     </section>
 
-    <!-- QUIZ -->
     <section id="abonnemangQuizSection" class="quiz-section">
       <div class="quiz-shell">
-        <div class="section-head center section-head-wide">
+        <div class="section-head center section-head-wide reveal">
           <span class="section-kicker">Abonnemangsguide</span>
           <h2>Berätta vad du söker</h2>
           <p>
-            Ett professionellt steg-för-steg-flöde som samlar hushåll, surf,
+            Ett lugnt steg-för-steg-flöde som samlar hushåll, surf,
             bindningstid, preferenser och nuvarande operatör på ett tydligt sätt.
           </p>
         </div>
 
+        <div class="quiz-progress-shell reveal" aria-hidden="true">
+          <div class="quiz-progress-meta">
+            <span class="quiz-progress-kicker">Progress</span>
+            <span id="quizProgressLabel" class="quiz-progress-label">Steg 1 av 4</span>
+          </div>
+
+          <div class="quiz-progress-bar">
+            <span id="quizProgressFill" class="quiz-progress-fill"></span>
+          </div>
+        </div>
+
         <div class="quiz-steps-grid">
-          <article class="step-card" data-card="persons">
+          <article class="step-card reveal" data-card="persons" data-step-group="1">
             <div class="step-card-topline">
               <span class="card-step">Steg 1</span>
               <span class="card-icon"><i class="fa-solid fa-users"></i></span>
@@ -156,7 +175,7 @@
             </div>
           </article>
 
-          <article class="step-card" data-card="data">
+          <article class="step-card reveal" data-card="data" data-step-group="1">
             <div class="step-card-topline">
               <span class="card-step">Steg 2</span>
               <span class="card-icon"><i class="fa-solid fa-signal"></i></span>
@@ -175,7 +194,7 @@
 
               <button type="button" class="quiz-option abon-opt" data-data="medium">
                 <strong>Lagom</strong>
-                <span>Runt 30–50 GB</span>
+                <span>Runt 30-50 GB</span>
               </button>
 
               <button type="button" class="quiz-option abon-opt" data-data="high">
@@ -185,7 +204,7 @@
             </div>
           </article>
 
-          <article class="step-card" data-card="binding">
+          <article class="step-card reveal" data-card="binding" data-step-group="2">
             <div class="step-card-topline">
               <span class="card-step">Steg 3</span>
               <span class="card-icon"><i class="fa-regular fa-calendar"></i></span>
@@ -207,7 +226,7 @@
             </div>
           </article>
 
-          <article class="step-card" data-card="wishes">
+          <article class="step-card reveal" data-card="wishes" data-step-group="3" data-optional="true">
             <div class="step-card-topline">
               <span class="card-step">Steg 4</span>
               <span class="card-icon"><i class="fa-regular fa-star"></i></span>
@@ -222,7 +241,7 @@
               <input
                 id="operatorFreeInput"
                 type="text"
-                placeholder="Skriv operatör, budget, täckning eller önskemål…"
+                placeholder="Skriv operatör, budget, täckning eller önskemål..."
                 class="wish-input"
               />
               <button type="button" id="wishAddBtn" class="wish-add-btn">
@@ -240,7 +259,7 @@
             <div id="operatorFreeList" class="wish-list"></div>
           </article>
 
-          <article class="step-card step-card-wide" data-card="operators">
+          <article class="step-card step-card-wide reveal" data-card="operators" data-step-group="2">
             <div class="step-card-topline">
               <span class="card-step">Steg 5</span>
               <span class="card-icon"><i class="fa-solid fa-tower-cell"></i></span>
@@ -257,16 +276,15 @@
       </div>
     </section>
 
-    <!-- OFFERS -->
     <section id="offersSection" class="result-section is-hidden">
       <div class="result-shell">
-        <div class="section-head center">
+        <div class="section-head center reveal">
           <span class="section-kicker">Erbjudanden</span>
           <h2>Aktuella förslag</h2>
           <p>Relevanta alternativ baserat på dina val.</p>
         </div>
 
-        <div id="offersStrip" class="offers-strip">
+        <div id="offersStrip" class="offers-strip reveal">
           <div class="offers-strip-top">
             <div class="offers-strip-badge">
               <i class="fa-solid fa-sparkles"></i>
@@ -283,16 +301,15 @@
       </div>
     </section>
 
-    <!-- REWARDS -->
     <section id="rewardSection" class="result-section is-hidden">
       <div class="result-shell result-narrow">
-        <div class="section-head center">
+        <div class="section-head center reveal">
           <span class="section-kicker">Belöningar</span>
-          <h2>Välj Presentkort</h2>
+          <h2>Välj presentkort</h2>
           <p>Fördela hela värdet tydligt innan du går vidare.</p>
         </div>
 
-        <div class="pro-card reward-panel">
+        <div class="pro-card reward-panel reveal">
           <div class="reward-summary-bar">
             <div>
               <span>Totalt belöningsvärde</span>
@@ -318,10 +335,9 @@
       </div>
     </section>
 
-    <!-- CONTACT -->
     <section id="contactSection" class="result-section is-hidden">
       <div class="result-shell result-medium">
-        <div class="pro-card contact-card">
+        <div class="pro-card contact-card reveal">
           <div class="section-head left-tight">
             <span class="section-kicker">Leverans</span>
             <h2>Leverans och bekräftelse</h2>
@@ -345,10 +361,9 @@
       </div>
     </section>
 
-    <!-- NUMBER FLOW -->
     <section id="numberSection" class="result-section is-hidden">
       <div class="result-shell result-medium">
-        <div id="portNumberSection" class="pro-card is-hidden">
+        <div id="portNumberSection" class="pro-card is-hidden reveal">
           <div class="section-head left-tight">
             <span class="section-kicker">Nummerflytt</span>
             <h2 id="numberFlowTitle">Fyll i numren som ska flyttas</h2>
@@ -365,20 +380,19 @@
 
   <script type="module" src="./assets/offers.js"></script>
 
-  <!-- CART DRAWER -->
-  <div id="cartDrawer" class="fixed inset-0 z-[9999] hidden">
-    <div id="cartOverlay" class="absolute inset-0 bg-black/45 backdrop-blur-[2px]"></div>
+  <div id="cartDrawer" class="cart-drawer fixed inset-0 z-[9999] hidden">
+    <div id="cartOverlay" class="cart-drawer-overlay absolute inset-0 bg-black/45 backdrop-blur-[2px]"></div>
 
-    <div class="absolute right-0 top-0 h-full w-full max-w-[440px] bg-white shadow-2xl flex flex-col">
-      <div class="flex items-center justify-between px-6 py-5 border-b border-slate-200">
+    <div class="cart-drawer-panel absolute right-0 top-0 h-full w-full max-w-[440px] bg-white shadow-2xl flex flex-col">
+      <div class="cart-drawer-head flex items-center justify-between px-6 py-5 border-b border-slate-200">
         <h2 class="text-xl font-bold tracking-tight">Din varukorg</h2>
-        <button id="closeCart" class="text-slate-500 text-lg hover:text-slate-900 transition">✕</button>
+        <button id="closeCart" class="cart-drawer-close text-slate-500 text-lg hover:text-slate-900 transition" aria-label="Stäng varukorg">×</button>
       </div>
 
-      <div id="cartItems" class="flex-1 overflow-y-auto px-6 py-6 space-y-4"></div>
+      <div id="cartItems" class="cart-drawer-items flex-1 overflow-y-auto px-6 py-6 space-y-4"></div>
 
-      <div class="border-t border-slate-200 p-6 bg-slate-50">
-        <div id="summaryArea" class="space-y-3 text-sm mb-4"></div>
+      <div class="cart-drawer-footer border-t border-slate-200 p-6 bg-slate-50">
+        <div id="summaryArea" class="cart-drawer-summary space-y-3 text-sm mb-4"></div>
 
         <div class="flex justify-between items-center mb-4">
           <span class="text-slate-600">Totalt</span>
