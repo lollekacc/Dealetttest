@@ -133,10 +133,16 @@
           </p>
         </div>
 
-        <div class="quiz-progress-shell reveal" aria-hidden="true">
+        <div class="quiz-progress-shell reveal">
           <div class="quiz-progress-meta">
-            <span class="quiz-progress-kicker">Progress</span>
-            <span id="quizProgressLabel" class="quiz-progress-label">Steg 1 av 4</span>
+            <div class="quiz-progress-copy">
+              <span class="quiz-progress-kicker">Progress</span>
+              <span id="quizProgressLabel" class="quiz-progress-label">Steg 1 av 3</span>
+            </div>
+
+            <button type="button" id="resetQuizBtn" class="quiz-reset-btn">
+              Börja om
+            </button>
           </div>
 
           <div class="quiz-progress-bar">
@@ -334,48 +340,6 @@
         </div>
       </div>
     </section>
-
-    <section id="contactSection" class="result-section is-hidden">
-      <div class="result-shell result-medium">
-        <div class="pro-card contact-card reveal">
-          <div class="section-head left-tight">
-            <span class="section-kicker">Leverans</span>
-            <h2>Leverans och bekräftelse</h2>
-            <p>Mejl används för orderbekräftelse och mobilnummer för sms-avisering.</p>
-          </div>
-
-          <div class="form-grid">
-            <div class="form-field">
-              <label for="contactEmail">Mejladress</label>
-              <input type="email" id="contactEmail" placeholder="din@email.se" />
-            </div>
-
-            <div class="form-field">
-              <label for="contactPhone">Mobilnummer</label>
-              <input type="tel" id="contactPhone" placeholder="07XXXXXXXX" />
-            </div>
-          </div>
-
-          <button id="contactContinueBtn" class="primary-btn full-btn">Gå vidare</button>
-        </div>
-      </div>
-    </section>
-
-    <section id="numberSection" class="result-section is-hidden">
-      <div class="result-shell result-medium">
-        <div id="portNumberSection" class="pro-card is-hidden reveal">
-          <div class="section-head left-tight">
-            <span class="section-kicker">Nummerflytt</span>
-            <h2 id="numberFlowTitle">Fyll i numren som ska flyttas</h2>
-            <p id="numberFlowText">Vi går igenom en person i taget.</p>
-          </div>
-
-          <div id="phoneInputsContainer" class="phone-inputs"></div>
-
-          <button id="confirmNumbersBtn" class="primary-btn full-btn is-hidden">Bekräfta</button>
-        </div>
-      </div>
-    </section>
   </main>
 
   <script type="module" src="./assets/offers.js"></script>
@@ -399,8 +363,8 @@
           <span id="totalPrice" class="text-2xl font-extrabold tracking-tight">0 kr</span>
         </div>
 
-        <button class="w-full adeala-btn py-4 rounded-2xl font-bold">
-          BankID-signering
+        <button id="goToCartPageBtn" class="w-full adeala-btn py-4 rounded-2xl font-bold">
+          Fortsätt till varukorg
         </button>
       </div>
     </div>

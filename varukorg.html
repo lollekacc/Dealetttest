@@ -1,835 +1,92 @@
-  <!DOCTYPE html>
-  <html lang="sv">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dealett – Varukorg</title>
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dealett - Varukorg</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="./assets/style.css">
+  <link rel="stylesheet" href="./assets/abonnemang.css">
+</head>
+<body class="abon-page">
+  <div id="header-placeholder"></div>
 
-    <link rel="stylesheet" href="./assets/style.css" />
-    <link rel="stylesheet" href="./assets/varukorg.css" />
-  </head>
-
-  <body class="font-[Inter] bg-slate-50 text-slate-900 min-h-screen">
-    <div id="header-placeholder"></div>
-
-  <main>
-
-  <!-- DRAWER -->
-  <div id="cartDrawer" class="fixed inset-0 z-[9999] hidden">
-
-    <!-- OVERLAY -->
-    <div id="cartOverlay" class="absolute inset-0 bg-black/40"></div>
-
-    <!-- PANEL -->
-    <div class="absolute right-0 top-0 h-full w-[420px] bg-white shadow-2xl flex flex-col">
-
-      <!-- HEADER -->
-      <div class="flex items-center justify-between px-6 py-5 border-b">
-        <h2 class="text-xl font-bold">Din varukorg</h2>
-        <button id="closeCart" class="text-gray-500 hover:text-black text-lg">✕</button>
-      </div>
-
-      <!-- BODY -->
-      <div id="cartItems"
-          class="flex-1 overflow-y-auto px-6 py-6 space-y-4">
-      </div>
-
-      <!-- FOOTER -->
-      <div class="border-t p-6">
-
-        <div id="summaryArea" class="space-y-3 text-sm mb-4"></div>
-
-        <div class="flex justify-between items-center mb-4">
-          <span class="text-gray-600">Totalt</span>
-          <span id="totalPrice" class="text-xl font-bold text-[#0C4A3C]">0 kr</span>
+  <main class="abon-main">
+    <section id="cartSummarySection" class="result-section">
+      <div class="result-shell result-medium">
+        <div class="section-head center reveal">
+          <span class="section-kicker">Varukorg</span>
+          <h2>Din beställning</h2>
+          <p>Kontrollera abonnemang och presentkort innan du fortsätter.</p>
         </div>
-
-        <button id="checkoutBtn"
-          class="w-full adeala-btn py-4 rounded-xl font-bold">
-          BankID-signering
-        </button>
-
+        <div id="cartSummaryContainer"></div>
       </div>
+    </section>
 
-    </div>
+    <section id="contactSection" class="result-section">
+      <div class="result-shell result-medium">
+        <div class="pro-card contact-card reveal">
+          <div class="section-head left-tight">
+            <span class="section-kicker">Leverans</span>
+            <h2>Leverans och bekräftelse</h2>
+            <p>Mejl används för orderbekräftelse och mobilnummer för sms-avisering.</p>
+          </div>
 
-  </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="contactEmail">Mejladress</label>
+              <input type="email" id="contactEmail" placeholder="din@email.se" />
+            </div>
 
+            <div class="form-field">
+              <label for="contactPhone">Mobilnummer</label>
+              <input type="tel" id="contactPhone" placeholder="07XXXXXXXX" />
+            </div>
+          </div>
+
+          <button id="contactContinueBtn" class="primary-btn full-btn">Gå vidare</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="numberSection" class="result-section is-hidden">
+      <div class="result-shell result-medium">
+        <div class="pro-card reveal">
+          <div class="section-head left-tight">
+            <span class="section-kicker">Nummerflytt</span>
+            <h2 id="numberFlowTitle">Fyll i numren som ska flyttas</h2>
+            <p id="numberFlowText">Vi går igenom en person i taget.</p>
+          </div>
+
+          <div id="phoneInputsContainer" class="phone-inputs"></div>
+          <button id="confirmNumbersBtn" class="primary-btn full-btn is-hidden">Bekräfta</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="startDateSection" class="result-section is-hidden">
+      <div class="result-shell result-medium">
+        <div class="pro-card reveal">
+          <div class="section-head left-tight">
+            <span class="section-kicker">Startdatum</span>
+            <h2>När vill du börja abonnemanget?</h2>
+            <p>Välj när abonnemanget ska aktiveras.</p>
+          </div>
+
+          <div id="startDateOptions" style="display:grid;gap:12px;"></div>
+          <p id="startDateText" class="is-hidden" style="margin-top:16px;">Startdatum: <strong id="startDateValue"></strong></p>
+
+          <button id="goToSignBtn" class="primary-btn full-btn" style="margin-top:20px;">
+            Fortsätt till signering
+          </button>
+        </div>
+      </div>
+    </section>
   </main>
 
-    <div id="footer-placeholder"></div>
-  <STYle>
-      :root {
-    --cart-bg: #f8fafc;
-    --cart-surface: rgba(255, 255, 255, 0.88);
-    --cart-surface-solid: #ffffff;
-    --cart-border: #e2e8f0;
-    --cart-border-strong: #cbd5e1;
-    --cart-text: #0f172a;
-    --cart-muted: #64748b;
-    --cart-green: #0f766e;
-    --cart-green-dark: #0c4a3c;
-    --cart-green-soft: #ecfdf5;
-    --cart-danger: #dc2626;
-    --cart-danger-soft: #fef2f2;
-    --cart-shadow: 0 18px 60px rgba(15, 23, 42, 0.08);
-    --cart-radius-xl: 28px;
-    --cart-radius-lg: 22px;
-    --cart-radius-md: 16px;
-  }
-
-  body {
-    background:
-      radial-gradient(circle at top left, rgba(16, 185, 129, 0.06), transparent 28%),
-      radial-gradient(circle at top right, rgba(59, 130, 246, 0.06), transparent 25%),
-      linear-gradient(to bottom, #f8fafc, #f1f5f9);
-  }
-
-  .cart-shell {
-    width: min(1440px, calc(100% - 32px));
-    margin: 0 auto;
-  }
-
-  .cart-page {
-    padding: 32px 0 72px;
-  }
-
-  .cart-hero {
-    padding: 8px 0 20px;
-  }
-
-  .cart-hero__inner {
-    display: flex;
-    justify-content: space-between;
-    gap: 24px;
-    align-items: center;
-    padding: 30px;
-    border: 1px solid rgba(255,255,255,0.8);
-    background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(255,255,255,0.72));
-    border-radius: var(--cart-radius-xl);
-    box-shadow: var(--cart-shadow);
-    backdrop-filter: blur(14px);
-  }
-
-  .cart-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--cart-green-soft);
-    color: var(--cart-green);
-    border: 1px solid #bbf7d0;
-    padding: 10px 14px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 700;
-  }
-
-  .cart-title {
-    margin: 16px 0 10px;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    line-height: 1.05;
-    font-weight: 800;
-    color: var(--cart-text);
-  }
-
-  .cart-subtitle {
-    max-width: 740px;
-    color: var(--cart-muted);
-    font-size: 1.05rem;
-    line-height: 1.8;
-  }
-
-  .cart-hero__stat {
-    min-width: 240px;
-    padding: 24px;
-    border-radius: 24px;
-    background: linear-gradient(180deg, #0f766e, #115e59);
-    color: #fff;
-    box-shadow: 0 20px 45px rgba(15, 118, 110, 0.22);
-  }
-
-  .cart-hero__stat-label {
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    opacity: 0.82;
-    font-weight: 700;
-  }
-
-  .cart-hero__stat-value {
-    margin-top: 8px;
-    font-size: 1.9rem;
-    font-weight: 800;
-    line-height: 1.1;
-  }
-
-  .cart-hero__stat-note {
-    margin-top: 10px;
-    font-size: 0.95rem;
-    opacity: 0.92;
-  }
-
-  .cart-main {
-    padding-top: 8px;
-  }
-
-  .cart-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.75fr) minmax(340px, 0.95fr);
-    gap: 28px;
-    align-items: start;
-  }
-
-  .cart-panel,
-  .cart-summary-card {
-    background: var(--cart-surface);
-    border: 1px solid rgba(255,255,255,0.88);
-    box-shadow: var(--cart-shadow);
-    backdrop-filter: blur(14px);
-  }
-
-  .cart-panel {
-    border-radius: var(--cart-radius-xl);
-    padding: 28px;
-  }
-
-  .cart-panel--soft {
-    background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(255,255,255,0.82));
-  }
-
-  .cart-panel__header {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    align-items: flex-start;
-    margin-bottom: 22px;
-  }
-
-  .cart-panel__eyebrow {
-    margin: 0 0 6px;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--cart-green);
-    font-weight: 800;
-  }
-
-  .cart-panel__title {
-    margin: 0;
-    font-size: 1.6rem;
-    line-height: 1.2;
-    font-weight: 800;
-    color: var(--cart-text);
-  }
-
-  .cart-panel__actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .cart-secondary-btn,
-  .cart-danger-btn {
-    border: 1px solid var(--cart-border);
-    background: #fff;
-    color: var(--cart-text);
-    font-size: 0.95rem;
-    font-weight: 700;
-    padding: 12px 16px;
-    border-radius: 14px;
-    transition: 0.2s ease;
-  }
-
-  .cart-secondary-btn:hover {
-    border-color: var(--cart-border-strong);
-    transform: translateY(-1px);
-  }
-
-  .cart-danger-btn {
-    color: var(--cart-danger);
-    background: var(--cart-danger-soft);
-    border-color: #fecaca;
-  }
-
-  .cart-danger-btn:hover {
-    transform: translateY(-1px);
-  }
-
-  .cart-items {
-    display: grid;
-    gap: 18px;
-  }
-
-  .cart-item {
-    border: 1px solid var(--cart-border);
-    border-radius: var(--cart-radius-lg);
-    background: var(--cart-surface-solid);
-    padding: 22px;
-    transition: 0.22s ease;
-  }
-
-  .cart-item:hover {
-    border-color: var(--cart-border-strong);
-    box-shadow: 0 16px 35px rgba(15, 23, 42, 0.06);
-  }
-
-  .cart-item__top {
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    align-items: flex-start;
-    margin-bottom: 18px;
-  }
-
-  .cart-item__title {
-    margin: 0 0 4px;
-    font-size: 1.18rem;
-    font-weight: 800;
-    color: var(--cart-text);
-  }
-
-  .cart-item__meta {
-    margin: 0;
-    color: var(--cart-muted);
-    font-size: 0.92rem;
-    line-height: 1.6;
-  }
-
-  .cart-remove-btn {
-    border: 0;
-    background: transparent;
-    color: var(--cart-danger);
-    font-size: 0.92rem;
-    font-weight: 700;
-    padding: 4px 0;
-    cursor: pointer;
-  }
-
-  .cart-remove-btn:hover {
-    opacity: 0.78;
-  }
-
-  .cart-item__grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  .cart-info-box {
-    border: 1px solid var(--cart-border);
-    background: #f8fafc;
-    border-radius: 18px;
-    padding: 16px;
-  }
-
-  .cart-info-box__label {
-    margin: 0 0 8px;
-    color: var(--cart-muted);
-    font-size: 0.82rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-
-  .cart-info-box__value {
-    margin: 0;
-    font-size: 1.02rem;
-    font-weight: 800;
-    color: var(--cart-text);
-  }
-
-  .cart-reward-list {
-    display: grid;
-    gap: 8px;
-  }
-
-  .cart-reward-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    color: var(--cart-text);
-    font-size: 0.95rem;
-  }
-
-  .cart-empty {
-    padding: 44px 24px;
-    text-align: center;
-    border-radius: var(--cart-radius-lg);
-    border: 1px dashed var(--cart-border-strong);
-    background: rgba(255,255,255,0.78);
-  }
-
-  .cart-empty__title {
-    margin: 0 0 10px;
-    font-size: 1.4rem;
-    font-weight: 800;
-  }
-
-  .cart-empty__text {
-    margin: 0 0 24px;
-    color: var(--cart-muted);
-    line-height: 1.7;
-  }
-
-  .cart-empty__btn,
-  .cart-primary-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    min-height: 58px;
-    border: 0;
-    border-radius: 18px;
-    background: linear-gradient(135deg, var(--cart-green), var(--cart-green-dark));
-    color: #fff;
-    font-size: 1rem;
-    font-weight: 800;
-    padding: 14px 20px;
-    cursor: pointer;
-    box-shadow: 0 18px 35px rgba(15, 118, 110, 0.2);
-    transition: 0.22s ease;
-  }
-
-  .cart-empty__btn {
-    width: auto;
-    padding: 14px 24px;
-    text-decoration: none;
-  }
-
-  .cart-empty__btn:hover,
-  .cart-primary-btn:hover {
-    transform: translateY(-1px);
-  }
-
-  .cart-summary-card {
-    position: sticky;
-    top: 24px;
-    border-radius: var(--cart-radius-xl);
-    padding: 26px;
-  }
-
-  .cart-summary-list {
-    display: grid;
-    gap: 12px;
-    margin-top: 18px;
-  }
-
-  .cart-summary-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    font-size: 0.95rem;
-    color: var(--cart-text);
-  }
-
-  .cart-summary-row span:last-child {
-    text-align: right;
-    font-weight: 700;
-  }
-
-  .cart-totals {
-    margin-top: 22px;
-    padding-top: 20px;
-    border-top: 1px solid var(--cart-border);
-    display: grid;
-    gap: 14px;
-  }
-
-  .cart-total-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    color: var(--cart-text);
-    font-size: 0.98rem;
-  }
-
-  .cart-total-row strong {
-    font-weight: 800;
-  }
-
-  .cart-total-row--grand {
-    margin-top: 6px;
-    padding-top: 14px;
-    border-top: 1px dashed var(--cart-border-strong);
-    font-size: 1.05rem;
-  }
-
-  .cart-total-row--grand strong {
-    font-size: 1.7rem;
-    color: var(--cart-green-dark);
-    line-height: 1;
-  }
-
-  .cart-summary-note {
-    margin: 20px 0 18px;
-    padding: 14px 16px;
-    border-radius: 16px;
-    background: #f8fafc;
-    border: 1px solid var(--cart-border);
-    color: var(--cart-muted);
-    font-size: 0.92rem;
-    line-height: 1.7;
-  }
-
-  @media (max-width: 1100px) {
-    .cart-layout {
-      grid-template-columns: 1fr;
-    }
-
-    .cart-summary-card {
-      position: static;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .cart-page {
-      padding: 18px 0 56px;
-    }
-
-    .cart-shell {
-      width: min(100% - 20px, 1440px);
-    }
-
-    .cart-hero__inner,
-    .cart-panel,
-    .cart-summary-card {
-      padding: 20px;
-    }
-
-    .cart-hero__inner,
-    .cart-panel__header,
-    .cart-item__top {
-      flex-direction: column;
-    }
-
-    .cart-item__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .cart-title {
-      font-size: 2.2rem;
-    }
-
-    .cart-hero__stat {
-      width: 100%;
-      min-width: 0;
-    }
-  }
-  </STYle>
-  <SCRipt>
-      document.addEventListener("DOMContentLoaded", async () => {
-    await loadSharedPartials();
-    initCartPage();
-  });
-
-  async function loadSharedPartials() {
-    try {
-      const header = document.getElementById("header-placeholder");
-      if (header) {
-        const res = await fetch("./partials/header.html");
-        if (res.ok) header.innerHTML = await res.text();
-      }
-
-      const footer = document.getElementById("footer-placeholder");
-      if (footer) {
-        const res = await fetch("./partials/footer.html");
-        if (res.ok) footer.innerHTML = await res.text();
-      }
-    } catch (error) {
-      console.error("Kunde inte ladda header/footer:", error);
-    }
-  }
-
-  function initCartPage() {
-    const cartItemsEl = document.getElementById("cartItems");
-    const summaryAreaEl = document.getElementById("summaryArea");
-    const totalPriceEl = document.getElementById("totalPrice");
-    const summaryCountEl = document.getElementById("summaryCount");
-    const summaryRewardEl = document.getElementById("summaryReward");
-    const checkoutBtn = document.getElementById("checkoutBtn");
-    const clearCartBtn = document.getElementById("clearCartBtn");
-    const continueShoppingBtn = document.getElementById("continueShoppingBtn");
-
-    if (
-      !cartItemsEl ||
-      !summaryAreaEl ||
-      !totalPriceEl ||
-      !summaryCountEl ||
-      !summaryRewardEl ||
-      !checkoutBtn
-    ) {
-      return;
-    }
-
-    let cart = readCart();
-
-    renderAll();
-
-    if (clearCartBtn) {
-      clearCartBtn.addEventListener("click", () => {
-        cart = [];
-        saveCart(cart);
-        renderAll();
-      });
-    }
-
-    if (continueShoppingBtn) {
-      continueShoppingBtn.addEventListener("click", () => {
-        window.location.href = "abonnemang.html";
-      });
-    }
-
-    checkoutBtn.addEventListener("click", () => {
-      if (!cart.length) return;
-      window.location.href = "signera.html";
-    });
-
-    function renderAll() {
-      renderCartItems();
-      renderSummary();
-      updateCheckoutState();
-    }
-
-    function renderCartItems() {
-      if (!cart.length) {
-        cartItemsEl.innerHTML = `
-          <div class="cart-empty">
-            <h2 class="cart-empty__title">Din varukorg är tom</h2>
-            <p class="cart-empty__text">
-              Lägg till ett eller flera abonnemang från dina erbjudandesidor så visas de här.
-            </p>
-            <a href="abonnemang.html" class="cart-empty__btn">Se erbjudanden</a>
-          </div>
-        `;
-        return;
-      }
-
-      cartItemsEl.innerHTML = cart
-        .map((item, index) => {
-          const title = escapeHtml(item.title || item.name || "Mobilabonnemang");
-          const operator = escapeHtml(item.operator || item.company || "Okänd operatör");
-          const offerId = escapeHtml(item.offerId || "-");
-          const monthlyPrice = formatPrice(item.monthlyPrice || item.price || 0);
-          const rewardTotal = formatPrice(item.rewardTotal || 0);
-          const dataAmount = escapeHtml(item.dataLabel || item.data || item.surf || "Ej angivet");
-          const binding = escapeHtml(item.bindingLabel || item.binding || "Ej angivet");
-          const rewardRows = buildRewardRows(item.rewards);
-
-          return `
-            <article class="cart-item" data-index="${index}">
-              <div class="cart-item__top">
-                <div>
-                  <h3 class="cart-item__title">${title}</h3>
-                  <p class="cart-item__meta">
-                    ${operator}<br>
-                    ID: ${offerId}
-                  </p>
-                </div>
-
-                <button class="cart-remove-btn" data-remove-index="${index}" type="button">
-                  Ta bort
-                </button>
-              </div>
-
-              <div class="cart-item__grid">
-                <div class="cart-info-box">
-                  <p class="cart-info-box__label">Pris per månad</p>
-                  <p class="cart-info-box__value">${monthlyPrice}</p>
-                </div>
-
-                <div class="cart-info-box">
-                  <p class="cart-info-box__label">Surf</p>
-                  <p class="cart-info-box__value">${dataAmount}</p>
-                </div>
-
-                <div class="cart-info-box">
-                  <p class="cart-info-box__label">Bindningstid</p>
-                  <p class="cart-info-box__value">${binding}</p>
-                </div>
-
-                <div class="cart-info-box">
-                  <p class="cart-info-box__label">Belöningar</p>
-                  <div class="cart-reward-list">
-                    ${rewardRows}
-                  </div>
-                </div>
-
-                <div class="cart-info-box">
-                  <p class="cart-info-box__label">Totalt belöningsvärde</p>
-                  <p class="cart-info-box__value">${rewardTotal}</p>
-                </div>
-
-                <div class="cart-info-box">
-                  <p class="cart-info-box__label">Status</p>
-                  <p class="cart-info-box__value">Klar för signering</p>
-                </div>
-              </div>
-            </article>
-          `;
-        })
-        .join("");
-
-      cartItemsEl.querySelectorAll("[data-remove-index]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const index = Number(btn.dataset.removeIndex);
-          if (Number.isNaN(index)) return;
-
-          cart.splice(index, 1);
-          saveCart(cart);
-          renderAll();
-        });
-      });
-    }
-
-    function renderSummary() {
-      const totalMonthly = cart.reduce((sum, item) => {
-        return sum + normalizeNumber(item.monthlyPrice || item.price || 0);
-      }, 0);
-
-      const totalReward = cart.reduce((sum, item) => {
-        return sum + normalizeNumber(item.rewardTotal || 0);
-      }, 0);
-
-      summaryAreaEl.innerHTML = cart.length
-        ? cart
-            .map((item, index) => {
-              const title = escapeHtml(item.title || item.name || `Abonnemang ${index + 1}`);
-              const operator = escapeHtml(item.operator || item.company || "Okänd operatör");
-              const monthlyPrice = formatPrice(item.monthlyPrice || item.price || 0);
-
-              return `
-                <div class="cart-summary-row">
-                  <span>${title}<br><small style="color:#64748b">${operator}</small></span>
-                  <span>${monthlyPrice}</span>
-                </div>
-              `;
-            })
-            .join("")
-        : `
-          <div class="cart-summary-row">
-            <span>Inga abonnemang valda</span>
-            <span>0 kr</span>
-          </div>
-        `;
-
-      summaryCountEl.textContent = String(cart.length);
-      summaryRewardEl.textContent = formatPrice(totalReward);
-      totalPriceEl.textContent = formatPrice(totalMonthly);
-    }
-
-    function updateCheckoutState() {
-      const hasItems = cart.length > 0;
-      checkoutBtn.disabled = !hasItems;
-      checkoutBtn.style.opacity = hasItems ? "1" : "0.55";
-      checkoutBtn.style.cursor = hasItems ? "pointer" : "not-allowed";
-    }
-  }
-
-  /*
-    This is the data format this page can receive from other pages:
-
-    {
-      offerId: "tele2-25gb-001",
-      title: "Tele2 25 GB",
-      operator: "Tele2",
-      monthlyPrice: 349,
-      data: "25 GB",
-      dataLabel: "25 GB",
-      binding: "Utan bindningstid",
-      bindingLabel: "Utan bindningstid",
-      rewardTotal: 300,
-      rewards: {
-        "Amazon": 100,
-        "H&M": 200
-      }
-    }
-
-    Save one item or multiple items into localStorage key: dealettCart
-  */
-
-  function readCart() {
-    try {
-      const raw = localStorage.getItem("dealettCart");
-      const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }
-
-  function saveCart(cart) {
-    localStorage.setItem("dealettCart", JSON.stringify(cart));
-  }
-
-  function formatPrice(value) {
-    const number = normalizeNumber(value);
-    return `${number.toLocaleString("sv-SE")} kr`;
-  }
-
-  function normalizeNumber(value) {
-    const number = Number(value);
-    return Number.isFinite(number) ? number : 0;
-  }
-
-  function buildRewardRows(rewards) {
-    if (!rewards || typeof rewards !== "object") {
-      return `<div class="cart-reward-row"><span>Inga</span><span>0 kr</span></div>`;
-    }
-
-    const rows = Object.entries(rewards)
-      .filter(([, value]) => normalizeNumber(value) > 0)
-      .map(([company, value]) => {
-        return `
-          <div class="cart-reward-row">
-            <span>${escapeHtml(company)}</span>
-            <span>${formatPrice(value)}</span>
-          </div>
-        `;
-      });
-
-    return rows.length
-      ? rows.join("")
-      : `<div class="cart-reward-row"><span>Inga</span><span>0 kr</span></div>`;
-  }
-
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
-
-  /*
-    Optional helper for other pages:
-    You can call this from any page later.
-  */
-  window.addToDealettCart = function (item) {
-    const cart = readCart();
-    cart.push(item);
-    saveCart(cart);
-  };
-
-  window.replaceDealettCart = function (items) {
-    const safeItems = Array.isArray(items) ? items : [];
-    saveCart(safeItems);
-  };
-  </SCRipt>
-    <script>
-    function openCart() {
-    document.getElementById("cartDrawer").classList.remove("hidden");
-  }
-
-  function closeCart() {
-    document.getElementById("cartDrawer").classList.add("hidden");
-  }
-
-  document.getElementById("closeCart").onclick = closeCart;
-  document.getElementById("cartOverlay").onclick = closeCart;
-  </script>
-  </body>
-  </html>
+  <script type="module" src="./assets/varukorg.js"></script>
+</body>
+</html>

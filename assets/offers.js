@@ -56,12 +56,13 @@ let forcedStepGroup = null;
 let cursorGlowEl = null;
 let heroCountAnimated = false;
 let rewardCelebrationTimeout = null;
+const QUIZ_STEP_TOTAL = 3;
 
 const JOURNEY_GROUP_LABELS = {
   1: "Hushall och surf",
   2: "Operator och bindning",
   3: "Onskemal",
-  4: "Erbjudanden"
+  4: "Resultat"
 };
 
 const CARD_GROUPS = {
@@ -71,6 +72,27 @@ const CARD_GROUPS = {
   binding: 2,
   wishes: 3
 };
+
+const STAGE_DEFINITIONS = [
+  {
+    group: 1,
+    title: "Steg 1",
+    text: "Välj hushåll och surf i samma steg.",
+    cards: ["persons", "data"]
+  },
+  {
+    group: 2,
+    title: "Steg 2",
+    text: "Nuvarande operatör och bindningstid samlas här.",
+    cards: ["operators", "binding"]
+  },
+  {
+    group: 3,
+    title: "Steg 3",
+    text: "Önskemål är valfritt men kan styra rekommendationen.",
+    cards: ["wishes"]
+  }
+];
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -88,13 +110,23 @@ function getCardElement(cardName) {
   return document.querySelector(`.step-card[data-card="${cardName}"]`);
 }
 
+function getStageElement(group) {
+  return document.querySelector(`.step-stage[data-stage-group="${group}"]`);
+}
+
+function getStageCompletion(group) {
+  if (group === 1) return isCardComplete("persons") && isCardComplete("data");
+  if (group === 2) return isCardComplete("operators") && isCardComplete("binding");
+  if (group === 3) return Boolean((abonState.wishes || []).length) || isQuizComplete();
+  return false;
+}
+
 function getDerivedJourneyGroup() {
   const offersVisible = offersSection && !offersSection.classList.contains("is-hidden");
 
   if (!abonState.persons || !abonState.data) return 1;
   if (!hasAnsweredOperators(abonState) || !hasAnsweredBindings(abonState)) return 2;
   if (!offersVisible) return 3;
-  if (!abonState.wishes.length && !window.offerChosen) return 3;
   return 4;
 }
 
@@ -166,17 +198,20 @@ function ensureStepSummary(card) {
 
 function getJourneyProgressPercent() {
   const offersVisible = offersSection && !offersSection.classList.contains("is-hidden");
-  let progress = 0;
 
-  if (abonState.persons) progress += 12.5;
-  if (abonState.data) progress += 12.5;
-  if (hasAnsweredOperators(abonState)) progress += 12.5;
-  if (hasAnsweredBindings(abonState)) progress += 12.5;
-  if ((abonState.wishes || []).length) progress += 12.5;
-  if (offersVisible) progress += 25;
-  if (window.offerChosen) progress += 12.5;
+  if (offersVisible) {
+    return window.offerChosen ? 100 : 94;
+  }
 
-  return Math.max(8, Math.min(100, progress));
+  let progress = 8;
+
+  if (abonState.persons) progress = 24;
+  if (abonState.persons && abonState.data) progress = 42;
+  if (hasAnsweredOperators(abonState)) progress = 64;
+  if (hasAnsweredBindings(abonState)) progress = 82;
+  if ((abonState.wishes || []).length) progress = 90;
+
+  return progress;
 }
 
 function updateQuizProgressUI() {
@@ -186,7 +221,9 @@ function updateQuizProgressUI() {
   const currentLabel = JOURNEY_GROUP_LABELS[currentGroup] || JOURNEY_GROUP_LABELS[1];
 
   if (labelEl) {
-    labelEl.textContent = `Steg ${Math.min(currentGroup, 4)} av 4 · ${currentLabel}`;
+    labelEl.textContent = currentGroup > QUIZ_STEP_TOTAL
+      ? currentLabel
+      : `Steg ${Math.min(currentGroup, QUIZ_STEP_TOTAL)} av ${QUIZ_STEP_TOTAL} · ${currentLabel}`;
   }
 
   if (fillEl) {
@@ -237,21 +274,29 @@ function updateStepJourneyUI() {
   offersStrip?.classList.toggle("is-focus", currentGroup === 4);
 }
 
+function updateStageJourneyUI() {
+  const currentGroup = Math.min(getCurrentJourneyGroup(), QUIZ_STEP_TOTAL);
+
+  document.querySelectorAll(".step-stage").forEach(stage => {
+    const group = Number(stage.dataset.stageGroup || 1);
+    const active = group === currentGroup;
+    const complete = getStageCompletion(group);
+    const upcoming = group > currentGroup;
+
+    stage.classList.toggle("is-active", active);
+    stage.classList.toggle("is-complete", complete);
+    stage.classList.toggle("is-upcoming", upcoming);
+  });
+}
+
 function getNextFocusTarget() {
   if (!abonState.persons) return getCardElement("persons");
   if (!abonState.data) return getCardElement("data");
   if (!hasAnsweredOperators(abonState)) return getCardElement("operators");
   if (!hasAnsweredBindings(abonState)) return getCardElement("binding");
-  if (!(abonState.wishes || []).length && !window.offerChosen) return getCardElement("wishes");
   if (offersSection && !offersSection.classList.contains("is-hidden") && !window.offerChosen) return offersSection;
   if (!document.getElementById("rewardSection")?.classList.contains("is-hidden") && !window.beloningChosen) {
     return document.getElementById("rewardSection");
-  }
-  if (!document.getElementById("contactSection")?.classList.contains("is-hidden")) {
-    return document.getElementById("contactSection");
-  }
-  if (!document.getElementById("numberSection")?.classList.contains("is-hidden")) {
-    return document.getElementById("numberSection");
   }
   return null;
 }
@@ -424,6 +469,7 @@ function initOffersParallax() {
 function refreshPremiumUI() {
   bindStepCardInteractions();
   updateQuizProgressUI();
+  updateStageJourneyUI();
   updateStepJourneyUI();
   observeRevealElements();
   refreshTiltCards();
@@ -457,13 +503,12 @@ async function initPage() {
   initHeroSlider();
   initWishInput();
   initShowMorePersons();
+  bindResetQuizButton();
   await loadPlans();
   initQuiz();
   preselectFromUrl();
   showInitialOffersIfNeeded();
   updateAvailability();
-  bindContactStep();
-  bindNumberFlowBase();
   initPremiumExperience();
 }
 
@@ -520,9 +565,34 @@ function applyQuizLayout() {
     }
   }
 
-  [cards.persons, cards.data, cards.operators, cards.binding, cards.wishes]
-    .filter(Boolean)
-    .forEach(card => grid.appendChild(card));
+  grid.innerHTML = "";
+
+  STAGE_DEFINITIONS.forEach(stageDef => {
+    const stage = document.createElement("section");
+    stage.className = "step-stage reveal";
+    stage.dataset.stageGroup = String(stageDef.group);
+
+    const cardsMarkup = stageDef.cards
+      .map(cardName => cards[cardName])
+      .filter(Boolean);
+
+    stage.innerHTML = `
+      <div class="step-stage-shell">
+        <div class="step-stage-head">
+          <div>
+            <span class="step-stage-kicker">${stageDef.title}</span>
+            <h3 class="step-stage-title">${JOURNEY_GROUP_LABELS[stageDef.group]}</h3>
+          </div>
+          <p class="step-stage-text">${stageDef.text}</p>
+        </div>
+        <div class="step-stage-grid"></div>
+      </div>
+    `;
+
+    const stageGrid = stage.querySelector(".step-stage-grid");
+    cardsMarkup.forEach(card => stageGrid?.appendChild(card));
+    grid.appendChild(stage);
+  });
 }
 
 function hydrateElements() {
@@ -536,6 +606,60 @@ function resetTransientFlowStorage() {
   localStorage.removeItem("selectedOffer");
   localStorage.removeItem("collectedNumbers");
   localStorage.removeItem("startDateChoice");
+  localStorage.removeItem("contactEmail");
+  localStorage.removeItem("contactPhone");
+}
+
+function bindResetQuizButton() {
+  const button = document.getElementById("resetQuizBtn");
+  if (!button || button.dataset.bound === "true") return;
+
+  button.dataset.bound = "true";
+  button.addEventListener("click", resetQuizFlow);
+}
+
+function resetQuizFlow() {
+  localStorage.removeItem("dealettState");
+  resetTransientFlowStorage();
+
+  abonState.persons = null;
+  abonState.data = null;
+  abonState.operator = null;
+  abonState.binding = null;
+  abonState.bindingEndDate = null;
+  abonState.wishes = [];
+  abonState.operatorsByPerson = [];
+  abonState.bindingsByPerson = [];
+  abonState.bindingEndDatesByPerson = [];
+
+  window.offerChosen = false;
+  window.beloningChosen = false;
+  window.selectedOfferId = null;
+  forcedStepGroup = 1;
+
+  document.querySelectorAll(".quiz-option.selected, .quiz-option.active").forEach(button => {
+    button.classList.remove("selected", "active");
+  });
+
+  const showMoreButton = document.getElementById("showMorePersons");
+  const extraPersons = document.getElementById("personsExtra");
+  if (extraPersons) extraPersons.classList.add("is-hidden");
+  if (showMoreButton) showMoreButton.textContent = "Visa fler";
+
+  const wishInput = document.getElementById("operatorFreeInput");
+  const wishList = document.getElementById("operatorFreeList");
+  if (wishInput) wishInput.value = "";
+  if (wishList) wishList.innerHTML = "";
+
+  clearRewardAndNextSteps();
+  offersContainer?.replaceChildren();
+  offersSection?.classList.add("is-hidden");
+
+  renderOperators(1);
+  renderBindings(1);
+  updateAvailability();
+  refreshPremiumUI();
+  smoothScrollTo(document.getElementById("abonnemangQuizSection"));
 }
 
 function restoreSavedState() {
@@ -846,6 +970,7 @@ function initShowMorePersons() {
   btn.addEventListener("click", () => {
     extra.classList.toggle("is-hidden");
     btn.textContent = extra.classList.contains("is-hidden") ? "Visa fler" : "Visa färre";
+    refreshPremiumUI();
   });
 }
 
@@ -1988,10 +2113,12 @@ function openRewardSection(totalReward, offerId) {
     const distributedRewards = Object.fromEntries(
       Object.entries(selections).filter(([, value]) => value > 0)
     );
+
     const primaryReward = Object.entries(distributedRewards)
       .sort((left, right) => right[1] - left[1])[0];
 
     localStorage.setItem("rewardDistribution", JSON.stringify(distributedRewards));
+
     if (primaryReward) {
       localStorage.setItem("rewardChoice", JSON.stringify({
         company: primaryReward[0],
@@ -2023,9 +2150,8 @@ function openRewardSection(totalReward, offerId) {
     if (window.openCart) {
       window.openCart();
     }
-  
-    // continue flow
-    checkGoToNumberStep();
+
+    refreshPremiumUI();
   };
   rewardSection.classList.remove("is-hidden");
   refreshPremiumUI();
@@ -2038,280 +2164,16 @@ function remainingElState(value, remainingSumEl, remainingSumWrap) {
   remainingSumWrap.classList.add(value === 0 ? "is-good" : "is-negative");
 }
 
-function bindContactStep() {
-  const contactBtn = document.getElementById("contactContinueBtn");
-  if (!contactBtn) return;
-
-  contactBtn.addEventListener("click", () => {
-    const email = document.getElementById("contactEmail")?.value.trim() || "";
-    const phone = document.getElementById("contactPhone")?.value.trim() || "";
-
-    if (!email || !phone) {
-      alert("Fyll i både mejl och mobilnummer.");
-      return;
-    }
-
-    localStorage.setItem("contactEmail", email);
-    localStorage.setItem("contactPhone", phone);
-
-    document.getElementById("contactSection")?.classList.add("is-hidden");
-    startNumberFlow();
-  });
-}
-
-function checkGoToNumberStep() {
-  if (!window.offerChosen) return;
-  if (!window.beloningChosen) return;
-
-  const contactSection = document.getElementById("contactSection");
-  if (!contactSection) return;
-
-  contactSection.classList.remove("is-hidden");
-  refreshPremiumUI();
-  smoothScrollTo(contactSection);
-}
-
-function bindNumberFlowBase() {
-  const confirmBtn = document.getElementById("confirmNumbersBtn");
-  if (confirmBtn) confirmBtn.classList.add("is-hidden");
-}
-
-function isValidPhone(num) {
-  const normalized = num.replace(/\s+/g, "");
-  return /^07\d{8}$/.test(normalized) || /^\+467\d{8}$/.test(normalized);
-}
-
-function startNumberFlow() {
-  const numberSection = document.getElementById("numberSection");
-  const portSection = document.getElementById("portNumberSection");
-  const phoneInputsContainer = document.getElementById("phoneInputsContainer");
-  const confirmBtn = document.getElementById("confirmNumbersBtn");
-  const title = document.getElementById("numberFlowTitle");
-  const text = document.getElementById("numberFlowText");
-
-  if (!numberSection || !portSection || !phoneInputsContainer || !confirmBtn || !title || !text) return;
-
-  numberSection.classList.remove("is-hidden");
-  portSection.classList.remove("is-hidden");
-  confirmBtn.classList.remove("is-hidden");
-
-  const totalPeople = abonState.persons || 1;
-  let currentPerson = 1;
-  const collectedNumbers = {};
-
-  renderPersonStep();
-  refreshPremiumUI();
-  smoothScrollTo(numberSection);
-
-  function renderPersonStep() {
-    title.textContent = `Person ${currentPerson} av ${totalPeople}`;
-    text.textContent = "Välj om numret ska flyttas eller om ett nytt nummer ska skapas.";
-
-    phoneInputsContainer.innerHTML = `
-      <div class="number-choice-wrap">
-        <button type="button" class="number-choice-btn" data-choice="port">Flytta hit numret</button>
-        <button type="button" class="number-choice-btn" data-choice="new">Skaffa nytt nummer</button>
-      </div>
-      <div id="numberDynamicArea"></div>
-    `;
-
-    const dynamicArea = document.getElementById("numberDynamicArea");
-    let mode = null;
-
-    phoneInputsContainer.querySelectorAll("[data-choice]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        phoneInputsContainer.querySelectorAll("[data-choice]").forEach(x => x.classList.remove("active"));
-        btn.classList.add("active");
-        mode = btn.dataset.choice;
-
-        if (mode === "port") {
-          dynamicArea.innerHTML = `
-            <div class="form-field" style="margin-top:16px;">
-              <label for="portInput">Nummer för person ${currentPerson}</label>
-              <input type="tel" id="portInput" placeholder="07XXXXXXXX eller +467XXXXXXXX">
-            </div>
-          `;
-        } else {
-          dynamicArea.innerHTML = `
-            <div class="pro-card" style="margin-top:16px;padding:16px;">
-              Nytt nummer kommer att skapas för person ${currentPerson}.
-            </div>
-          `;
-        }
-      });
-    });
-
-    confirmBtn.textContent = currentPerson < totalPeople ? "Nästa person" : "Slutför";
-
-    confirmBtn.onclick = () => {
-      if (!mode) {
-        alert("Välj hur du vill göra med numret.");
-        return;
-      }
-
-      if (mode === "port") {
-        const input = document.getElementById("portInput");
-        const value = input?.value.trim() || "";
-
-        if (!isValidPhone(value)) {
-          alert("Ange ett giltigt svenskt nummer.");
-          return;
-        }
-
-        collectedNumbers[`person_${currentPerson}`] = {
-          type: "port",
-          number: value
-        };
-      } else {
-        collectedNumbers[`person_${currentPerson}`] = {
-          type: "new",
-          number: "nytt nummer"
-        };
-      }
-
-      if (currentPerson < totalPeople) {
-        currentPerson += 1;
-        renderPersonStep();
-      } else {
-        finishNumbers(collectedNumbers);
-      }
-    };
-  }
-}
-
-function finishNumbers(collectedNumbers) {
-  const phoneInputsContainer = document.getElementById("phoneInputsContainer");
-  const confirmBtn = document.getElementById("confirmNumbersBtn");
-  const title = document.getElementById("numberFlowTitle");
-  const text = document.getElementById("numberFlowText");
-
-  if (!phoneInputsContainer || !confirmBtn || !title || !text) return;
-
-  title.textContent = "Sammanfattning";
-  text.textContent = "Kontrollera uppgifterna innan du går vidare.";
-
-  const selectedOffer = JSON.parse(localStorage.getItem("selectedOffer") || "null");
-  const rewardChoice = JSON.parse(localStorage.getItem("rewardChoice") || "null");
-
-  const numbersHtml = Object.entries(collectedNumbers).map(([key, data]) => `
-    <div class="pro-card" style="padding:16px;">
-      <p><strong>${key.replace("person_", "Person ")}</strong></p>
-      <p>${data.type === "port" ? `Flyttar nummer: <strong>${data.number}</strong>` : "Får nytt nummer"}</p>
-    </div>
-  `).join("");
-
-  phoneInputsContainer.innerHTML = `
-    <div class="summary-grid" style="display:grid;gap:20px;">
-      <div class="pro-card" style="padding:20px;">
-        <h3 style="margin-bottom:16px;">Valt erbjudande</h3>
-        ${
-          selectedOffer
-            ? `
-              <div style="display:flex;align-items:center;gap:16px;">
-                <img src="${selectedOffer.logo}" alt="${selectedOffer.operator}" style="width:52px;height:52px;object-fit:contain;border-radius:10px;">
-                <div>
-                  <p><strong>${selectedOffer.title}</strong></p>
-                  <p>${selectedOffer.operator}</p>
-                  <p><strong>${selectedOffer.finalPrice} kr/mån</strong></p>
-                </div>
-              </div>
-            `
-            : `<p>Inget erbjudande valt.</p>`
-        }
-      </div>
-
-      <div class="pro-card" style="padding:20px;">
-        <h3 style="margin-bottom:16px;">Vald belöning</h3>
-        ${
-          rewardChoice
-            ? `
-              <div style="display:flex;align-items:center;gap:16px;">
-                <div style="width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#fff;">
-                  <img src="${getRewardLogo(rewardChoice.company)}" alt="${rewardChoice.company}" style="max-width:42px;max-height:42px;object-fit:contain;">
-                </div>
-                <div>
-                  <p><strong>${rewardChoice.company}</strong></p>
-                  <p>${rewardChoice.value} kr</p>
-                </div>
-              </div>
-            `
-            : `<p>Ingen belöning vald.</p>`
-        }
-      </div>
-
-      <div class="summary-grid-numbers" style="display:grid;gap:12px;">
-        ${numbersHtml}
-      </div>
-
-      <div class="pro-card" style="padding:20px;">
-        <h3 style="margin-bottom:16px;">Startdatum</h3>
-        <div style="display:grid;gap:12px;">
-          <button type="button" class="start-option" data-start="now">Starta nu</button>
-          <button type="button" class="start-option" data-start="binding">Starta när sista bindningstiden slutar</button>
-          <p id="startDateText" class="is-hidden">Startdatum: <strong id="startDateValue"></strong></p>
-        </div>
-      </div>
-    </div>
-  `;
-
-  confirmBtn.classList.remove("is-hidden");
-  confirmBtn.textContent = "Fortsätt till signering";
-
-  let startChoice = null;
-
-  document.querySelectorAll(".start-option").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".start-option").forEach(x => x.classList.remove("active"));
-      btn.classList.add("active");
-
-      startChoice = btn.dataset.start;
-      let actualStartDate = null;
-
-      if (startChoice === "now") {
-        actualStartDate = new Date().toISOString().split("T")[0];
-      }
-
-      if (startChoice === "binding") {
-        actualStartDate = getLatestBindingEndDate(abonState);
-      }
-
-      if (!actualStartDate) {
-        alert("Det finns inget bindningsdatum valt.");
-        return;
-      }
-
-      localStorage.setItem("startDateChoice", actualStartDate);
-      document.getElementById("startDateValue").textContent = actualStartDate;
-      document.getElementById("startDateText").classList.remove("is-hidden");
-    });
-  });
-
-  confirmBtn.onclick = () => {
-    if (!startChoice) {
-      alert("Välj när abonnemanget ska starta.");
-      return;
-    }
-
-    localStorage.setItem("collectedNumbers", JSON.stringify(collectedNumbers));
-    window.location.href = "signera.html";
-  };
-}
-
-function getRewardLogo(companyName) {
-  return REWARD_OPTIONS.find(item => item.name === companyName)?.logo || "";
-}
-
 function clearRewardAndNextSteps() {
   localStorage.removeItem("rewardChoice");
   localStorage.removeItem("rewardDistribution");
   localStorage.removeItem("selectedOffer");
   localStorage.removeItem("collectedNumbers");
   localStorage.removeItem("startDateChoice");
+  localStorage.removeItem("contactEmail");
+  localStorage.removeItem("contactPhone");
 
   const rewardSection = document.getElementById("rewardSection");
-  const contactSection = document.getElementById("contactSection");
-  const numberSection = document.getElementById("numberSection");
-  const portNumberSection = document.getElementById("portNumberSection");
   const rewardGrid = document.getElementById("rewardGrid");
   const continueBtn = document.getElementById("rewardContinueBtn");
   const totalRewardEl = document.getElementById("totalReward");
@@ -2319,9 +2181,6 @@ function clearRewardAndNextSteps() {
   const rewardProgressFill = document.getElementById("rewardProgressFill");
 
   rewardSection?.classList.add("is-hidden");
-  contactSection?.classList.add("is-hidden");
-  numberSection?.classList.add("is-hidden");
-  portNumberSection?.classList.add("is-hidden");
 
   if (rewardGrid) rewardGrid.innerHTML = "";
   if (continueBtn) continueBtn.disabled = true;
@@ -2331,9 +2190,7 @@ function clearRewardAndNextSteps() {
 }
 
 function hideNextSteps() {
-  document.getElementById("contactSection")?.classList.add("is-hidden");
-  document.getElementById("numberSection")?.classList.add("is-hidden");
-  document.getElementById("portNumberSection")?.classList.add("is-hidden");
+  // no-op: downstream checkout now happens on varukorg.html
 }
 
 function smoothScrollTo(element) {

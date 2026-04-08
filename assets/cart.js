@@ -106,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const drawer = document.getElementById("cartDrawer");
   const overlay = document.getElementById("cartOverlay");
   const closeBtn = document.getElementById("closeCart");
+  const goToCartPageBtn = document.getElementById("goToCartPageBtn");
 
   if (!drawer) return;
 
@@ -119,4 +120,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   overlay?.addEventListener("click", closeCart);
   closeBtn?.addEventListener("click", closeCart);
+
+  goToCartPageBtn?.addEventListener("click", () => {
+    const cart = getCart();
+    if (!cart.length) return;
+    window.location.href = "varukorg.html";
+  });
 });
