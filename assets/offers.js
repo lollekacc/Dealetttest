@@ -816,10 +816,159 @@ function calculateReward(price) {
   return 1000;
 }
 
+function calculateRenewalReward(price) {
+  return Math.round(calculateReward(price) / 2);
+}
+
+function getRewardPeopleCount(state = abonState) {
+  return Math.max(1, Number(state.persons) || 1);
+}
+
+function isExistingCustomerForPlan(currentOperator, planOperator) {
+  return Boolean(
+    currentOperator &&
+    currentOperator !== "Andra / Ingen" &&
+    currentOperator === planOperator
+  );
+}
+
+function getRewardMixCounts(plan, state = abonState) {
+  const persons = getRewardPeopleCount(state);
+  const operators = Array.isArray(state.operatorsByPerson) ? state.operatorsByPerson : [];
+
+  let newCount = 0;
+  let existingCount = 0;
+  let unknownCount = 0;
+
+  for (let i = 0; i < persons; i++) {
+    const currentOperator = operators[i];
+
+    if (!currentOperator) {
+      unknownCount += 1;
+      continue;
+    }
+
+    if (isExistingCustomerForPlan(currentOperator, plan.operator)) {
+      existingCount += 1;
+    } else {
+      newCount += 1;
+    }
+  }
+
+  newCount += unknownCount;
+
+  return {
+    persons,
+    newCount,
+    existingCount,
+    unknownCount
+  };
+}
+
+function getExistingCustomerShortLabel(state = abonState) {
+  return state.binding === "yes" ? "förl." : "bef.";
+}
+
+function getExistingCustomerSingleLabel(state = abonState) {
+  return state.binding === "yes" ? "Förlängning" : "Befintlig kund";
+}
+
+function formatRewardMixText(rewardMix, state = abonState) {
+  const { persons, newCount, existingCount } = rewardMix;
+  const existingShort = getExistingCustomerShortLabel(state);
+
+  if (persons === 1) {
+    return existingCount ? getExistingCustomerSingleLabel(state) : "Ny kund";
+  }
+
+  const parts = [];
+
+  if (newCount > 0) {
+    parts.push(`${newCount} ${newCount === 1 ? "ny" : "nya"}`);
+  }
+
+  if (existingCount > 0) {
+    parts.push(`${existingCount} ${existingShort}`);
+  }
+
+  return parts.join(" + ") || "Ny kund";
+}
+
+function buildRewardLineItems(plan, rewardMix) {
+  const { persons, newCount, existingCount } = rewardMix;
+  const lineItems = [];
+
+  if (persons <= 1) {
+    const isExisting = existingCount > 0;
+    lineItems.push({
+      type: isExisting ? "existing" : "new",
+      reward: isExisting
+        ? calculateRenewalReward(plan.finalPrice)
+        : calculateReward(plan.finalPrice)
+    });
+
+    return lineItems;
+  }
+
+  const addon = getFamilyAddonForOperator(plan.operator);
+  const addonPrice = addon?.addonPrice || plan.price;
+
+  if (newCount > 0) {
+    lineItems.push({
+      type: "new",
+      reward: calculateReward(plan.price)
+    });
+
+    for (let i = 0; i < newCount - 1; i++) {
+      lineItems.push({
+        type: "new",
+        reward: calculateReward(addonPrice)
+      });
+    }
+
+    for (let i = 0; i < existingCount; i++) {
+      lineItems.push({
+        type: "existing",
+        reward: calculateRenewalReward(addonPrice)
+      });
+    }
+
+    return lineItems;
+  }
+
+  lineItems.push({
+    type: "existing",
+    reward: calculateRenewalReward(plan.price)
+  });
+
+  for (let i = 1; i < persons; i++) {
+    lineItems.push({
+      type: "existing",
+      reward: calculateRenewalReward(addonPrice)
+    });
+  }
+
+  return lineItems;
+}
+
+function getOfferRewardDetails(plan, state = abonState) {
+  const rewardMix = getRewardMixCounts(plan, state);
+  const lineItems = buildRewardLineItems(plan, rewardMix);
+  const totalReward = lineItems.reduce((sum, item) => sum + item.reward, 0);
+
+  return {
+    ...rewardMix,
+    lineItems,
+    totalReward,
+    mixLabel: rewardMix.persons > 1 ? "Beräkning" : "Kundtyp",
+    mixText: formatRewardMixText(rewardMix, state),
+    totalLabel: "Presentkort totalt"
+  };
+}
+
 function buildOfferCard(plan, stateOverride = null) {
   const state = stateOverride || abonState;
-  const reward = calculateReward(plan.finalPrice);
-  const renewalReward = Math.round(reward / 2);
+  const rewardDetails = plan.rewardDetails || getOfferRewardDetails(plan, state);
   const isFamily = (state.persons || 1) > 1;
 
   const card = document.createElement("div");
@@ -830,23 +979,23 @@ function buildOfferCard(plan, stateOverride = null) {
       <button
         type="button"
         class="reward-pill reward-pill-blue gift-btn"
-        data-reward="${reward}"
+        data-reward="${rewardDetails.totalReward}"
         data-offer-id="${plan.id}"
-        data-type="new"
+        data-type="mix"
       >
-        <span class="reward-pill-label">Ny kund</span>
-        <span class="reward-pill-value">${reward} kr</span>
+        <span class="reward-pill-label">${rewardDetails.mixLabel}</span>
+        <span class="reward-pill-value">${rewardDetails.mixText}</span>
       </button>
 
       <button
         type="button"
         class="reward-pill reward-pill-green gift-btn"
-        data-reward="${renewalReward}"
+        data-reward="${rewardDetails.totalReward}"
         data-offer-id="${plan.id}"
-        data-type="renewal"
+        data-type="total"
       >
-        <span class="reward-pill-label">Förlängning</span>
-        <span class="reward-pill-value">${renewalReward} kr</span>
+        <span class="reward-pill-label">${rewardDetails.totalLabel}</span>
+        <span class="reward-pill-value">${rewardDetails.totalReward} kr</span>
       </button>
     </div>
 
@@ -924,17 +1073,21 @@ function renderOffers(offers) {
     return;
   }
 
-  offers.forEach(plan => {
+  offers.forEach(rawPlan => {
+    const plan = {
+      ...rawPlan,
+      rewardDetails: rawPlan.rewardDetails || getOfferRewardDetails(rawPlan)
+    };
     const card = buildOfferCard(plan);
 
     card.addEventListener("click", () => {
-      selectOfferCard(card, plan, calculateReward(plan.finalPrice));
+      selectOfferCard(card, plan);
     });
 
     card.querySelectorAll(".gift-btn").forEach(rewardBtn => {
       rewardBtn.addEventListener("click", e => {
         e.stopPropagation();
-        selectOfferCard(card, plan, Number(rewardBtn.dataset.reward));
+        selectOfferCard(card, plan);
       });
     });
 
@@ -944,7 +1097,9 @@ function renderOffers(offers) {
   offersSection?.classList.remove("is-hidden");
 }
 
-function selectOfferCard(card, plan, rewardValue) {
+function selectOfferCard(card, plan) {
+  const rewardDetails = plan.rewardDetails || getOfferRewardDetails(plan);
+
   document.querySelectorAll(".offer-choice").forEach(c => c.classList.remove("active"));
   card.classList.add("active");
 
@@ -959,14 +1114,16 @@ function selectOfferCard(card, plan, rewardValue) {
     logo: plan.logo,
     dataAmount: plan.dataAmount,
     finalPrice: plan.finalPrice,
-    pricePerPerson: plan.pricePerPerson
+    pricePerPerson: plan.pricePerPerson,
+    rewardTotal: rewardDetails.totalReward,
+    rewardMixLabel: rewardDetails.mixText
   }));
 
   localStorage.removeItem("rewardChoice");
   localStorage.removeItem("rewardDistribution");
 
   hideNextSteps();
-  openRewardSection(rewardValue, plan.id);
+  openRewardSection(rewardDetails.totalReward, plan.id);
 }
 
 function openRewardSection(totalReward, offerId) {
@@ -1051,7 +1208,8 @@ function openRewardSection(totalReward, offerId) {
       logo: selectedOffer.logo,
       price: selectedOffer.finalPrice,
       pricePerPerson: selectedOffer.pricePerPerson,
-      rewardTotal: totalReward,
+      rewardTotal: selectedOffer.rewardTotal || totalReward,
+      rewardMixLabel: selectedOffer.rewardMixLabel || "",
       rewards: selections
     };
   
