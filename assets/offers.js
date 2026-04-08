@@ -13,7 +13,9 @@ const abonState = window.abonState || {
   binding: null,
   bindingEndDate: null,
   wishes: [],
-  operatorsByPerson: []
+  operatorsByPerson: [],
+  bindingsByPerson: [],
+  bindingEndDatesByPerson: []
 };
 
 window.abonState = abonState;
@@ -53,6 +55,7 @@ document.addEventListener("DOMContentLoaded", initPage);
 
 async function initPage() {
   hydrateElements();
+  applyQuizLayout();
   resetTransientFlowStorage();
   restoreSavedState();
   await loadShell();
@@ -66,6 +69,64 @@ async function initPage() {
   updateAvailability();
   bindContactStep();
   bindNumberFlowBase();
+}
+
+function applyQuizLayout() {
+  const grid = document.querySelector(".quiz-steps-grid");
+  if (!grid) return;
+
+  const cards = {
+    persons: grid.querySelector('[data-card="persons"]'),
+    data: grid.querySelector('[data-card="data"]'),
+    operators: grid.querySelector('[data-card="operators"]'),
+    binding: grid.querySelector('[data-card="binding"]'),
+    wishes: grid.querySelector('[data-card="wishes"]')
+  };
+
+  [cards.operators, cards.binding, cards.wishes].forEach(card => {
+    card?.classList.add("step-card-wide");
+  });
+
+  if (cards.operators) {
+    const step = cards.operators.querySelector(".card-step");
+    if (step) step.textContent = "Steg 2";
+  }
+
+  if (cards.binding) {
+    const step = cards.binding.querySelector(".card-step");
+    if (step) step.textContent = "Steg 2";
+
+    const title = cards.binding.querySelector(".quiz-title");
+    if (title) title.textContent = "Har ni bindningstid idag?";
+
+    const subtitle = cards.binding.querySelector(".quiz-subtitle");
+    if (subtitle) {
+      subtitle.textContent = "Svar per person hjälper oss räkna rätt rekommendation och startdatum.";
+    }
+
+    cards.binding.querySelector(".inline-options.equal-buttons")?.remove();
+    cards.binding.querySelector("#bindingDateWrapper")?.remove();
+
+    if (!cards.binding.querySelector("#bindingWrapper")) {
+      cards.binding
+        .querySelector(".step-card-head")
+        ?.insertAdjacentHTML("afterend", '<div id="bindingWrapper" class="operator-wrapper binding-wrapper"></div>');
+    }
+  }
+
+  if (cards.wishes) {
+    const step = cards.wishes.querySelector(".card-step");
+    if (step) step.textContent = "Steg 3";
+
+    const subtitle = cards.wishes.querySelector(".quiz-subtitle");
+    if (subtitle) {
+      subtitle.textContent = "Valfritt, men om du fyller i detta styr det vilken rekommendation som lyfts fram.";
+    }
+  }
+
+  [cards.persons, cards.data, cards.operators, cards.binding, cards.wishes]
+    .filter(Boolean)
+    .forEach(card => grid.appendChild(card));
 }
 
 function hydrateElements() {
@@ -93,6 +154,27 @@ function restoreSavedState() {
   abonState.operatorsByPerson = Array.isArray(abonState.operatorsByPerson)
     ? abonState.operatorsByPerson
     : [];
+  abonState.bindingsByPerson = Array.isArray(abonState.bindingsByPerson)
+    ? abonState.bindingsByPerson
+    : [];
+  abonState.bindingEndDatesByPerson = Array.isArray(abonState.bindingEndDatesByPerson)
+    ? abonState.bindingEndDatesByPerson
+    : [];
+
+  if (!abonState.bindingsByPerson.length && abonState.binding !== null) {
+    const persons = Math.max(1, Number(abonState.persons) || 1);
+    abonState.bindingsByPerson = Array.from({ length: persons }, () => abonState.binding);
+  }
+
+  if (!abonState.bindingEndDatesByPerson.length && abonState.bindingEndDate) {
+    const persons = Math.max(1, Number(abonState.persons) || 1);
+    abonState.bindingEndDatesByPerson = Array.from(
+      { length: persons },
+      () => abonState.bindingEndDate
+    );
+  }
+
+  syncBindingSummary();
 }
 
 function persistState() {
@@ -102,11 +184,88 @@ function persistState() {
       wishes: Array.isArray(abonState.wishes) ? abonState.wishes : [],
       operatorsByPerson: Array.isArray(abonState.operatorsByPerson)
         ? abonState.operatorsByPerson
+        : [],
+      bindingsByPerson: Array.isArray(abonState.bindingsByPerson)
+        ? abonState.bindingsByPerson
+        : [],
+      bindingEndDatesByPerson: Array.isArray(abonState.bindingEndDatesByPerson)
+        ? abonState.bindingEndDatesByPerson
         : []
     }));
   } catch (err) {
     console.warn("Could not persist state:", err);
   }
+}
+
+function ensurePerPersonState(count) {
+  const safeCount = Math.max(1, Number(count) || 1);
+
+  if (!Array.isArray(abonState.operatorsByPerson)) abonState.operatorsByPerson = [];
+  if (!Array.isArray(abonState.bindingsByPerson)) abonState.bindingsByPerson = [];
+  if (!Array.isArray(abonState.bindingEndDatesByPerson)) abonState.bindingEndDatesByPerson = [];
+
+  while (abonState.operatorsByPerson.length < safeCount) {
+    abonState.operatorsByPerson.push(null);
+  }
+
+  while (abonState.bindingsByPerson.length < safeCount) {
+    abonState.bindingsByPerson.push(abonState.binding ?? null);
+  }
+
+  while (abonState.bindingEndDatesByPerson.length < safeCount) {
+    abonState.bindingEndDatesByPerson.push(abonState.bindingEndDate ?? null);
+  }
+
+  abonState.operatorsByPerson.length = safeCount;
+  abonState.bindingsByPerson.length = safeCount;
+  abonState.bindingEndDatesByPerson.length = safeCount;
+
+  syncBindingSummary();
+}
+
+function getLatestBindingEndDate(state = abonState) {
+  const dates = (state.bindingEndDatesByPerson || []).filter((date, index) => {
+    return state.bindingsByPerson?.[index] === "yes" && Boolean(date);
+  });
+
+  if (!dates.length) return null;
+  return [...dates].sort().at(-1) || null;
+}
+
+function syncBindingSummary(state = abonState) {
+  const bindings = (state.bindingsByPerson || []).filter(Boolean);
+
+  if (!bindings.length) {
+    state.binding = null;
+  } else if (bindings.every(value => value === "yes")) {
+    state.binding = "yes";
+  } else if (bindings.every(value => value === "no")) {
+    state.binding = "no";
+  } else {
+    state.binding = "mixed";
+  }
+
+  state.bindingEndDate = getLatestBindingEndDate(state);
+}
+
+function hasAnsweredOperators(state = abonState) {
+  const persons = Number(state.persons) || 0;
+  if (!persons) return false;
+
+  return Array.isArray(state.operatorsByPerson) &&
+    state.operatorsByPerson.length >= persons &&
+    state.operatorsByPerson.slice(0, persons).every(Boolean);
+}
+
+function hasAnsweredBindings(state = abonState) {
+  const persons = Number(state.persons) || 0;
+  if (!persons) return false;
+
+  return Array.isArray(state.bindingsByPerson) &&
+    state.bindingsByPerson.length >= persons &&
+    state.bindingsByPerson
+      .slice(0, persons)
+      .every(value => value === "yes" || value === "no");
 }
 
 async function loadShell() {
@@ -199,8 +358,8 @@ async function loadPlans() {
 function initQuiz() {
   bindPersons();
   bindData();
-  bindBinding();
   renderOperators(abonState.persons || 1);
+  renderBindings(abonState.persons || 1);
   restoreSelectionsUI();
 
   if (isQuizComplete()) {
@@ -213,7 +372,9 @@ function bindPersons() {
     btn.addEventListener("click", () => {
       abonState.persons = Number(btn.dataset.persons);
       setSelectedInScope(btn, "[data-persons]");
+      ensurePerPersonState(abonState.persons);
       renderOperators(abonState.persons);
+      renderBindings(abonState.persons);
 
       window.offerChosen = false;
       window.beloningChosen = false;
@@ -246,35 +407,7 @@ function bindData() {
 }
 
 function bindBinding() {
-  const bindingDateWrapper = document.getElementById("bindingDateWrapper");
-  const bindingInput = document.getElementById("bindingEndDate");
-
-  document.querySelectorAll("[data-binding]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      abonState.binding = btn.dataset.binding;
-      setSelectedInScope(btn, "[data-binding]");
-
-      if (abonState.binding === "yes") {
-        bindingDateWrapper?.classList.remove("is-hidden");
-      } else {
-        abonState.bindingEndDate = null;
-        if (bindingInput) bindingInput.value = "";
-        bindingDateWrapper?.classList.add("is-hidden");
-      }
-
-      window.offerChosen = false;
-      window.beloningChosen = false;
-      clearRewardAndNextSteps();
-
-      persistState();
-      updateOffers();
-    });
-  });
-
-  bindingInput?.addEventListener("change", () => {
-    abonState.bindingEndDate = bindingInput.value || null;
-    persistState();
-  });
+  renderBindings(abonState.persons || 1);
 }
 
 function initShowMorePersons() {
@@ -365,15 +498,7 @@ function renderOperators(count) {
   const wrapper = document.getElementById("operatorWrapper");
   if (!wrapper) return;
 
-  if (!Array.isArray(abonState.operatorsByPerson)) {
-    abonState.operatorsByPerson = [];
-  }
-
-  while (abonState.operatorsByPerson.length < count) {
-    abonState.operatorsByPerson.push(null);
-  }
-
-  abonState.operatorsByPerson.length = count;
+  ensurePerPersonState(count);
   wrapper.innerHTML = "";
 
   for (let i = 0; i < count; i++) {
@@ -422,6 +547,74 @@ function renderOperators(count) {
   }
 }
 
+function renderBindings(count) {
+  const wrapper = document.getElementById("bindingWrapper");
+  if (!wrapper) return;
+
+  ensurePerPersonState(count);
+  wrapper.innerHTML = "";
+
+  for (let i = 0; i < count; i++) {
+    const card = document.createElement("div");
+    card.className = "operator-person-card binding-person-card";
+
+    const selectedValue = abonState.bindingsByPerson[i];
+    const selectedDate = abonState.bindingEndDatesByPerson[i] || "";
+
+    card.innerHTML = `
+      <p class="operator-person-title">Har person ${i + 1} bindningstid idag?</p>
+
+      <div class="inline-options equal-buttons">
+        <button type="button" class="quiz-option abon-opt" data-binding="no">Nej</button>
+        <button type="button" class="quiz-option abon-opt" data-binding="yes">Ja</button>
+      </div>
+
+      <div class="binding-date ${selectedValue === "yes" ? "" : "is-hidden"}">
+        <label for="bindingEndDate_${i}">När slutar den?</label>
+        <input type="date" id="bindingEndDate_${i}" value="${selectedDate}">
+      </div>
+    `;
+
+    const dateWrapper = card.querySelector(".binding-date");
+    const dateInput = card.querySelector("input");
+
+    card.querySelectorAll("[data-binding]").forEach(btn => {
+      if (selectedValue === btn.dataset.binding) {
+        btn.classList.add("selected", "active");
+      }
+
+      btn.addEventListener("click", () => {
+        setSelectedInScope(btn, "[data-binding]");
+        abonState.bindingsByPerson[i] = btn.dataset.binding;
+
+        if (btn.dataset.binding === "yes") {
+          dateWrapper?.classList.remove("is-hidden");
+        } else {
+          abonState.bindingEndDatesByPerson[i] = null;
+          if (dateInput) dateInput.value = "";
+          dateWrapper?.classList.add("is-hidden");
+        }
+
+        syncBindingSummary();
+        window.offerChosen = false;
+        window.beloningChosen = false;
+        clearRewardAndNextSteps();
+
+        persistState();
+        updateOffers();
+      });
+    });
+
+    dateInput?.addEventListener("change", () => {
+      abonState.bindingEndDatesByPerson[i] = dateInput.value || null;
+      syncBindingSummary();
+      persistState();
+    });
+
+    wrapper.appendChild(card);
+  }
+}
+
 function buildOperatorButton(operator, logoPath) {
   return `
     <button type="button" class="quiz-option operator-btn" data-operator="${operator}">
@@ -447,18 +640,9 @@ function restoreSelectionsUI() {
     if (btn) setSelectedInScope(btn, "[data-data]");
   }
 
-  if (abonState.binding) {
-    const btn = document.querySelector(`[data-binding="${abonState.binding}"]`);
-    if (btn) {
-      setSelectedInScope(btn, "[data-binding]");
-      document.getElementById("bindingDateWrapper")?.classList.toggle("is-hidden", abonState.binding !== "yes");
-    }
-  }
-
-  if (abonState.bindingEndDate) {
-    const input = document.getElementById("bindingEndDate");
-    if (input) input.value = abonState.bindingEndDate;
-  }
+  ensurePerPersonState(abonState.persons || 1);
+  renderOperators(abonState.persons || 1);
+  renderBindings(abonState.persons || 1);
 }
 
 function preselectFromUrl() {
@@ -478,7 +662,9 @@ function preselectFromUrl() {
   abonState.operatorsByPerson[0] = urlOp;
   abonState.operator = urlOp;
 
+  ensurePerPersonState(abonState.persons || 1);
   renderOperators(abonState.persons || 1);
+  renderBindings(abonState.persons || 1);
   persistState();
 }
 
@@ -492,7 +678,10 @@ function setSelectedInScope(button, selector) {
 
 
 function isQuizComplete() {
-  return abonState.persons !== null && abonState.data !== null;
+  return abonState.persons !== null &&
+    abonState.data !== null &&
+    hasAnsweredOperators(abonState) &&
+    hasAnsweredBindings(abonState);
 }
 
 function normalizeSearchText(text = "") {
@@ -525,6 +714,43 @@ function getSelectedOperators(state = abonState) {
 
 function getOfferOperatorMatchCount(plan, state = abonState) {
   return getSelectedOperators(state).filter(operator => operator === plan.operator).length;
+}
+
+function getOfferRelationshipCounts(plan, state = abonState) {
+  const persons = Math.max(1, Number(state.persons) || 1);
+  const operators = Array.isArray(state.operatorsByPerson) ? state.operatorsByPerson : [];
+  const bindings = Array.isArray(state.bindingsByPerson) ? state.bindingsByPerson : [];
+
+  let matchedWithBinding = 0;
+  let matchedWithoutBinding = 0;
+  let switchReadyCount = 0;
+
+  for (let i = 0; i < persons; i++) {
+    const currentOperator = operators[i];
+    const binding = bindings[i];
+
+    if (!currentOperator) continue;
+
+    if (isExistingCustomerForPlan(currentOperator, plan.operator)) {
+      if (binding === "yes") {
+        matchedWithBinding += 1;
+      } else {
+        matchedWithoutBinding += 1;
+      }
+      continue;
+    }
+
+    if (binding === "no") {
+      switchReadyCount += 1;
+    }
+  }
+
+  return {
+    matchedWithBinding,
+    matchedWithoutBinding,
+    sameOperatorCount: matchedWithBinding + matchedWithoutBinding,
+    switchReadyCount
+  };
 }
 
 function getRankBonus(items, currentId, selector, descending = false, maxPoints = 4) {
@@ -571,11 +797,86 @@ function getWishOperatorBonus(plan, state = abonState) {
   return aliases.some(alias => wishText.includes(alias)) ? 4 : 0;
 }
 
+function getNetCostAfterReward(plan, state = abonState) {
+  const rewardDetails = plan.rewardDetails || getOfferRewardDetails(plan, state);
+  return plan.finalPrice - rewardDetails.totalReward;
+}
+
+function hasWishPreferences(state = abonState) {
+  return Array.isArray(state.wishes) && state.wishes.length > 0;
+}
+
+function getWishDrivenScore(plan, candidates, state = abonState) {
+  let score = 0;
+
+  const wantsCheap = stateHasWish(state, [
+    "billig",
+    "billigast",
+    "budget",
+    "lag kostnad",
+    "lagt pris",
+    "prisvard"
+  ]);
+  const wantsCoverage = stateHasWish(state, [
+    "tackning",
+    "coverage",
+    "signal"
+  ]);
+  const wantsLotsOfData = stateHasWish(state, [
+    "mycket surf",
+    "mycket data",
+    "obegransad",
+    "surfar mycket",
+    "streaming"
+  ]);
+  const wantsFamily = stateHasWish(state, [
+    "familj",
+    "familjeabonnemang",
+    "familje"
+  ]);
+
+  if (wantsCheap) {
+    score += getRankBonus(candidates, plan.id, item => getNetCostAfterReward(item, state), false, 14);
+  }
+
+  if (wantsCoverage) {
+    score += getRankBonus(
+      candidates,
+      plan.id,
+      item => COVERAGE_BONUS_BY_OPERATOR[item.operator] || 0,
+      true,
+      12
+    );
+  }
+
+  if (wantsLotsOfData) {
+    score += getRankBonus(
+      candidates,
+      plan.id,
+      item => Math.min(item.dataAmount || 0, 999),
+      true,
+      12
+    );
+  }
+
+  if (wantsFamily) {
+    if ((state.persons || 1) > 1) {
+      score += getRankBonus(candidates, plan.id, item => item.pricePerPerson, false, 12);
+      score += getRankBonus(candidates, plan.id, item => getNetCostAfterReward(item, state), false, 8);
+    } else {
+      score += getRankBonus(candidates, plan.id, item => item.finalPrice, false, 4);
+    }
+  }
+
+  score += getWishOperatorBonus(plan, state) * 6;
+
+  return Number(score.toFixed(3));
+}
+
 function scoreOffer(plan, candidates, state = abonState) {
   let score = 0;
   const persons = state.persons || 1;
-  const operatorMatches = getOfferOperatorMatchCount(plan, state);
-  const hasOperatorContext = getSelectedOperators(state).length > 0;
+  const relationshipCounts = getOfferRelationshipCounts(plan, state);
 
   const wantsCheap = stateHasWish(state, [
     "billig",
@@ -610,10 +911,13 @@ function scoreOffer(plan, candidates, state = abonState) {
     score += getRankBonus(candidates, plan.id, item => item.pricePerPerson, false, 3);
   }
 
-  if (operatorMatches > 0) {
-    score += operatorMatches * (state.binding === "yes" ? 3.5 : 2);
-  } else if (hasOperatorContext && state.binding === "no") {
-    score += 1.5;
+  score += relationshipCounts.matchedWithBinding * 3.5;
+  score += relationshipCounts.matchedWithoutBinding * 2;
+
+  if (!relationshipCounts.sameOperatorCount && relationshipCounts.switchReadyCount > 0) {
+    score += Math.min(2, relationshipCounts.switchReadyCount * 0.75);
+  } else if (relationshipCounts.switchReadyCount > 0) {
+    score += Math.min(1.5, relationshipCounts.switchReadyCount * 0.35);
   }
 
   if (wantsCheap) {
@@ -722,6 +1026,7 @@ function enrichOfferForState(plan, state = abonState) {
 }
 
 function buildAdaptiveOffers(state = abonState) {
+  const wishDriven = hasWishPreferences(state);
   const candidates = ALL_PLANS
     .filter(plan => !plan.isFamilyPlan)
     .filter(plan => matchesSelectedData(plan, state.data))
@@ -731,9 +1036,20 @@ function buildAdaptiveOffers(state = abonState) {
   const ranked = candidates
     .map(plan => ({
       ...plan,
-      matchScore: scoreOffer(plan, candidates, state)
+      rewardDetails: getOfferRewardDetails(plan, state),
+      matchScore: scoreOffer(plan, candidates, state),
+      wishScore: getWishDrivenScore(plan, candidates, state),
+      netCostAfterReward: getNetCostAfterReward(plan, state)
     }))
     .sort((left, right) => {
+      if (wishDriven && right.wishScore !== left.wishScore) {
+        return right.wishScore - left.wishScore;
+      }
+
+      if (wishDriven && left.netCostAfterReward !== right.netCostAfterReward) {
+        return left.netCostAfterReward - right.netCostAfterReward;
+      }
+
       if (right.matchScore !== left.matchScore) return right.matchScore - left.matchScore;
       if (left.finalPrice !== right.finalPrice) return left.finalPrice - right.finalPrice;
       if (right.dataAmount !== left.dataAmount) return right.dataAmount - left.dataAmount;
@@ -773,25 +1089,15 @@ function showInitialOffersIfNeeded() {
     return;
   }
 
-  if (!ALL_PLANS.length) return;
-
-  stopOffersScroll();
-
-  const offers = ALL_PLANS
-    .filter(p => !p.isFamilyPlan)
-    .map(p => ({
-      ...p,
-      finalPrice: p.price,
-      pricePerPerson: p.price
-    }))
-    .sort((a, b) => a.finalPrice - b.finalPrice)
-    .slice(0, 6);
-
-  renderOffers(offers);
+  offersContainer?.replaceChildren();
+  offersSection?.classList.add("is-hidden");
 }
 
 async function updateOffers() {
-  if (!isQuizComplete()) return;
+  if (!isQuizComplete()) {
+    offersSection?.classList.add("is-hidden");
+    return;
+  }
   await filterOffers();
   offersSection?.classList.remove("is-hidden");
 }
@@ -835,13 +1141,16 @@ function isExistingCustomerForPlan(currentOperator, planOperator) {
 function getRewardMixCounts(plan, state = abonState) {
   const persons = getRewardPeopleCount(state);
   const operators = Array.isArray(state.operatorsByPerson) ? state.operatorsByPerson : [];
+  const bindings = Array.isArray(state.bindingsByPerson) ? state.bindingsByPerson : [];
 
   let newCount = 0;
+  let renewalCount = 0;
   let existingCount = 0;
   let unknownCount = 0;
 
   for (let i = 0; i < persons; i++) {
     const currentOperator = operators[i];
+    const binding = bindings[i];
 
     if (!currentOperator) {
       unknownCount += 1;
@@ -849,7 +1158,11 @@ function getRewardMixCounts(plan, state = abonState) {
     }
 
     if (isExistingCustomerForPlan(currentOperator, plan.operator)) {
-      existingCount += 1;
+      if (binding === "yes") {
+        renewalCount += 1;
+      } else {
+        existingCount += 1;
+      }
     } else {
       newCount += 1;
     }
@@ -860,25 +1173,20 @@ function getRewardMixCounts(plan, state = abonState) {
   return {
     persons,
     newCount,
+    renewalCount,
     existingCount,
+    oldCount: renewalCount + existingCount,
     unknownCount
   };
 }
 
-function getExistingCustomerShortLabel(state = abonState) {
-  return state.binding === "yes" ? "förl." : "bef.";
-}
-
-function getExistingCustomerSingleLabel(state = abonState) {
-  return state.binding === "yes" ? "Förlängning" : "Befintlig kund";
-}
-
-function formatRewardMixText(rewardMix, state = abonState) {
-  const { persons, newCount, existingCount } = rewardMix;
-  const existingShort = getExistingCustomerShortLabel(state);
+function formatRewardMixText(rewardMix) {
+  const { persons, newCount, renewalCount, existingCount } = rewardMix;
 
   if (persons === 1) {
-    return existingCount ? getExistingCustomerSingleLabel(state) : "Ny kund";
+    if (renewalCount) return "Förlängning";
+    if (existingCount) return "Befintlig kund";
+    return "Ny kund";
   }
 
   const parts = [];
@@ -887,19 +1195,23 @@ function formatRewardMixText(rewardMix, state = abonState) {
     parts.push(`${newCount} ${newCount === 1 ? "ny" : "nya"}`);
   }
 
+  if (renewalCount > 0) {
+    parts.push(`${renewalCount} förl.`);
+  }
+
   if (existingCount > 0) {
-    parts.push(`${existingCount} ${existingShort}`);
+    parts.push(`${existingCount} bef.`);
   }
 
   return parts.join(" + ") || "Ny kund";
 }
 
 function buildRewardLineItems(plan, rewardMix) {
-  const { persons, newCount, existingCount } = rewardMix;
+  const { persons, newCount, oldCount } = rewardMix;
   const lineItems = [];
 
   if (persons <= 1) {
-    const isExisting = existingCount > 0;
+    const isExisting = oldCount > 0;
     lineItems.push({
       type: isExisting ? "existing" : "new",
       reward: isExisting
@@ -926,7 +1238,7 @@ function buildRewardLineItems(plan, rewardMix) {
       });
     }
 
-    for (let i = 0; i < existingCount; i++) {
+    for (let i = 0; i < oldCount; i++) {
       lineItems.push({
         type: "existing",
         reward: calculateRenewalReward(addonPrice)
@@ -961,7 +1273,7 @@ function getOfferRewardDetails(plan, state = abonState) {
     lineItems,
     totalReward,
     mixLabel: rewardMix.persons > 1 ? "Beräkning" : "Kundtyp",
-    mixText: formatRewardMixText(rewardMix, state),
+    mixText: formatRewardMixText(rewardMix),
     totalLabel: "Presentkort totalt"
   };
 }
@@ -1446,7 +1758,7 @@ function finishNumbers(collectedNumbers) {
         <h3 style="margin-bottom:16px;">Startdatum</h3>
         <div style="display:grid;gap:12px;">
           <button type="button" class="start-option" data-start="now">Starta nu</button>
-          <button type="button" class="start-option" data-start="binding">Starta när bindningstiden slutar</button>
+          <button type="button" class="start-option" data-start="binding">Starta när sista bindningstiden slutar</button>
           <p id="startDateText" class="is-hidden">Startdatum: <strong id="startDateValue"></strong></p>
         </div>
       </div>
@@ -1471,7 +1783,7 @@ function finishNumbers(collectedNumbers) {
       }
 
       if (startChoice === "binding") {
-        actualStartDate = abonState.bindingEndDate;
+        actualStartDate = getLatestBindingEndDate(abonState);
       }
 
       if (!actualStartDate) {
