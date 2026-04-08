@@ -16,6 +16,24 @@ const abonState = window.abonState || {
   operatorsByPerson: []
 };
 
+window.abonState = abonState;
+
+const COVERAGE_BONUS_BY_OPERATOR = {
+  Telia: 4,
+  Halebop: 3.75,
+  Telenor: 2.5,
+  Tele2: 2.25,
+  Tre: 1.75
+};
+
+const OPERATOR_WISH_ALIASES = {
+  Tele2: ["tele2"],
+  Telia: ["telia"],
+  Telenor: ["telenor"],
+  Tre: ["tre"],
+  Halebop: ["halebop"]
+};
+
 const REWARD_OPTIONS = [
   { name: "ICA Maxi", logo: "https://detailproduktion.se/wp-content/uploads/2014/04/ica-maxi-stormarknad-logo.png" },
   { name: "Amazon", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/2560px-Amazon_logo.svg.png" },
@@ -69,6 +87,25 @@ function restoreSavedState() {
     if (savedState) Object.assign(abonState, JSON.parse(savedState));
   } catch (err) {
     console.warn("Could not restore state:", err);
+  }
+
+  abonState.wishes = Array.isArray(abonState.wishes) ? abonState.wishes : [];
+  abonState.operatorsByPerson = Array.isArray(abonState.operatorsByPerson)
+    ? abonState.operatorsByPerson
+    : [];
+}
+
+function persistState() {
+  try {
+    localStorage.setItem("dealettState", JSON.stringify({
+      ...abonState,
+      wishes: Array.isArray(abonState.wishes) ? abonState.wishes : [],
+      operatorsByPerson: Array.isArray(abonState.operatorsByPerson)
+        ? abonState.operatorsByPerson
+        : []
+    }));
+  } catch (err) {
+    console.warn("Could not persist state:", err);
   }
 }
 
@@ -225,7 +262,12 @@ function bindBinding() {
         bindingDateWrapper?.classList.add("is-hidden");
       }
 
+      window.offerChosen = false;
+      window.beloningChosen = false;
+      clearRewardAndNextSteps();
+
       persistState();
+      updateOffers();
     });
   });
 
@@ -269,8 +311,14 @@ function initWishInput() {
       remove.innerHTML = '<i class="fa-solid fa-xmark"></i>';
       remove.addEventListener("click", () => {
         abonState.wishes = abonState.wishes.filter(x => x !== text);
+
+        window.offerChosen = false;
+        window.beloningChosen = false;
+        clearRewardAndNextSteps();
+
         persistState();
         renderWishList();
+        updateOffers();
       });
 
       item.append(label, remove);
@@ -283,8 +331,14 @@ function initWishInput() {
     if (!clean) return;
     if (abonState.wishes.some(x => x.toLowerCase() === clean.toLowerCase())) return;
     abonState.wishes.push(clean);
+
+    window.offerChosen = false;
+    window.beloningChosen = false;
+    clearRewardAndNextSteps();
+
     persistState();
     renderWishList();
+    updateOffers();
   }
 
   addBtn.addEventListener("click", () => {
@@ -441,14 +495,160 @@ function isQuizComplete() {
   return abonState.persons !== null && abonState.data !== null;
 }
 
+function normalizeSearchText(text = "") {
+  return String(text)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim();
+}
+
+function getStateWishText(state = abonState) {
+  return normalizeSearchText((state.wishes || []).join(" "));
+}
+
+function stateHasWish(state, keywords) {
+  const text = getStateWishText(state);
+  return keywords.some(keyword => text.includes(keyword));
+}
+
+function matchesSelectedData(plan, dataSelection) {
+  if (dataSelection === "low") return plan.dataAmount < 30;
+  if (dataSelection === "medium") return plan.dataAmount >= 20 && plan.dataAmount < 999;
+  if (dataSelection === "high") return plan.dataAmount >= 999;
+  return true;
+}
+
+function getSelectedOperators(state = abonState) {
+  return (state.operatorsByPerson || []).filter(operator => operator && operator !== "Andra / Ingen");
+}
+
+function getOfferOperatorMatchCount(plan, state = abonState) {
+  return getSelectedOperators(state).filter(operator => operator === plan.operator).length;
+}
+
+function getRankBonus(items, currentId, selector, descending = false, maxPoints = 4) {
+  const ranked = [...items].sort((left, right) => {
+    const leftValue = selector(left);
+    const rightValue = selector(right);
+
+    if (leftValue === rightValue) {
+      return left.operator.localeCompare(right.operator, "sv");
+    }
+
+    return descending ? rightValue - leftValue : leftValue - rightValue;
+  });
+
+  const index = ranked.findIndex(item => item.id === currentId);
+  if (index < 0) return 0;
+
+  return Math.max(0, maxPoints - index);
+}
+
+function getDataFitBonus(plan, state = abonState) {
+  if (state.data === "low") {
+    if (plan.dataAmount <= 10) return 4;
+    if (plan.dataAmount <= 15) return 3;
+    return 2;
+  }
+
+  if (state.data === "medium") {
+    if (plan.dataAmount >= 30 && plan.dataAmount <= 50) return 4;
+    if (plan.dataAmount >= 20 && plan.dataAmount <= 80) return 3;
+    return 1;
+  }
+
+  if (state.data === "high") {
+    return plan.dataAmount >= 999 ? 4 : 0;
+  }
+
+  return 0;
+}
+
+function getWishOperatorBonus(plan, state = abonState) {
+  const wishText = getStateWishText(state);
+  const aliases = OPERATOR_WISH_ALIASES[plan.operator] || [];
+  return aliases.some(alias => wishText.includes(alias)) ? 4 : 0;
+}
+
+function scoreOffer(plan, candidates, state = abonState) {
+  let score = 0;
+  const persons = state.persons || 1;
+  const operatorMatches = getOfferOperatorMatchCount(plan, state);
+  const hasOperatorContext = getSelectedOperators(state).length > 0;
+
+  const wantsCheap = stateHasWish(state, [
+    "billig",
+    "billigast",
+    "budget",
+    "lag kostnad",
+    "lagt pris",
+    "prisvard"
+  ]);
+  const wantsCoverage = stateHasWish(state, [
+    "tackning",
+    "coverage",
+    "signal"
+  ]);
+  const wantsLotsOfData = stateHasWish(state, [
+    "mycket surf",
+    "mycket data",
+    "obegransad",
+    "surfar mycket",
+    "streaming"
+  ]);
+  const wantsFamily = stateHasWish(state, [
+    "familj",
+    "familjeabonnemang",
+    "familje"
+  ]);
+
+  score += getDataFitBonus(plan, state);
+  score += getRankBonus(candidates, plan.id, item => item.finalPrice, false, 4);
+
+  if (persons > 1) {
+    score += getRankBonus(candidates, plan.id, item => item.pricePerPerson, false, 3);
+  }
+
+  if (operatorMatches > 0) {
+    score += operatorMatches * (state.binding === "yes" ? 3.5 : 2);
+  } else if (hasOperatorContext && state.binding === "no") {
+    score += 1.5;
+  }
+
+  if (wantsCheap) {
+    score += getRankBonus(candidates, plan.id, item => item.finalPrice, false, 5);
+  }
+
+  if (wantsCoverage) {
+    score += COVERAGE_BONUS_BY_OPERATOR[plan.operator] || 0;
+  }
+
+  if (wantsLotsOfData) {
+    score += getRankBonus(
+      candidates,
+      plan.id,
+      item => Math.min(item.dataAmount || 0, 999),
+      true,
+      4
+    );
+  }
+
+  if (wantsFamily && persons > 1) {
+    score += getRankBonus(candidates, plan.id, item => item.finalPrice, false, 4);
+  }
+
+  score += getWishOperatorBonus(plan, state);
+
+  return Number(score.toFixed(3));
+}
+
 function hasValidPlanForState(state) {
   return ALL_PLANS.some(p => {
     if (p.isFamilyPlan) return false;
 
     if (state.operator && p.operator !== state.operator) return false;
-    if (state.data === "low" && p.dataAmount >= 30) return false;
-    if (state.data === "medium" && (p.dataAmount < 20 || p.dataAmount >= 999)) return false;
-    if (state.data === "high" && p.dataAmount < 999) return false;
+    if (!matchesSelectedData(p, state.data)) return false;
 
     if ((state.persons || 1) > 1) {
       const addon = getFamilyAddonForOperator(p.operator);
@@ -502,6 +702,60 @@ function getFamilyAddonForOperator(operator) {
   );
 }
 
+function enrichOfferForState(plan, state = abonState) {
+  let totalPrice = plan.price;
+  let pricePerPerson = plan.price;
+
+  if ((state.persons || 1) > 1) {
+    const addon = getFamilyAddonForOperator(plan.operator);
+    if (!addon) return null;
+
+    totalPrice = plan.price + ((state.persons || 1) - 1) * addon.addonPrice;
+    pricePerPerson = Math.round(totalPrice / (state.persons || 1));
+  }
+
+  return {
+    ...plan,
+    finalPrice: totalPrice,
+    pricePerPerson
+  };
+}
+
+function buildAdaptiveOffers(state = abonState) {
+  const candidates = ALL_PLANS
+    .filter(plan => !plan.isFamilyPlan)
+    .filter(plan => matchesSelectedData(plan, state.data))
+    .map(plan => enrichOfferForState(plan, state))
+    .filter(Boolean);
+
+  const ranked = candidates
+    .map(plan => ({
+      ...plan,
+      matchScore: scoreOffer(plan, candidates, state)
+    }))
+    .sort((left, right) => {
+      if (right.matchScore !== left.matchScore) return right.matchScore - left.matchScore;
+      if (left.finalPrice !== right.finalPrice) return left.finalPrice - right.finalPrice;
+      if (right.dataAmount !== left.dataAmount) return right.dataAmount - left.dataAmount;
+      return left.operator.localeCompare(right.operator, "sv");
+    })
+    .slice(0, 3);
+
+  if (ranked.length >= 3) {
+    return [
+      { ...ranked[1], isRecommended: false, recommendationRank: 2 },
+      { ...ranked[0], isRecommended: true, recommendationRank: 1 },
+      { ...ranked[2], isRecommended: false, recommendationRank: 3 }
+    ];
+  }
+
+  return ranked.map((plan, index) => ({
+    ...plan,
+    isRecommended: index === 0,
+    recommendationRank: index + 1
+  }));
+}
+
 function stopOffersScroll() {
   const track = document.getElementById("offersTrack");
   const strip = document.querySelector(".offers-strip");
@@ -549,36 +803,7 @@ async function filterOffers() {
   const mainOperator = getMainChosenOperator();
   abonState.operator = mainOperator || null;
 
-  const offers = ALL_PLANS
-    .filter(p => !p.isFamilyPlan)
-    .filter(p => !abonState.operator || p.operator === abonState.operator)
-    .filter(p => {
-      if (abonState.data === "low") return p.dataAmount < 30;
-      if (abonState.data === "medium") return p.dataAmount >= 20 && p.dataAmount < 999;
-      if (abonState.data === "high") return p.dataAmount >= 999;
-      return true;
-    })
-    .map(p => {
-      let totalPrice = p.price;
-      let pricePerPerson = p.price;
-
-      if ((abonState.persons || 1) > 1) {
-        const addon = getFamilyAddonForOperator(p.operator);
-        if (!addon) return null;
-
-        totalPrice = p.price + ((abonState.persons || 1) - 1) * addon.addonPrice;
-        pricePerPerson = Math.round(totalPrice / (abonState.persons || 1));
-      }
-
-      return {
-        ...p,
-        finalPrice: totalPrice,
-        pricePerPerson
-      };
-    })
-    .filter(Boolean)
-    .sort((a, b) => a.finalPrice - b.finalPrice)
-    .slice(0, 6);
+  const offers = buildAdaptiveOffers(abonState);
 
   renderOffers(offers);
 }
@@ -634,6 +859,15 @@ function buildOfferCard(plan, stateOverride = null) {
       </div>
 
       <div class="offer-main">
+        ${
+          plan.isRecommended
+            ? `
+              <div style="display:flex;justify-content:center;margin-bottom:14px;">
+                <span class="offers-strip-badge">Rekommenderat</span>
+              </div>
+            `
+            : ""
+        }
         <h3 class="offer-title">${plan.title}</h3>
         <p class="offer-desc">${plan.text || "Mobilabonnemang med tydligt upplägg och konkurrenskraftigt pris."}</p>
       </div>
