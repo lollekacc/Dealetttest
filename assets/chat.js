@@ -42,6 +42,10 @@
     window.dispatchEvent(new Event("cartUpdated"));
   }
 
+  function prefersReducedMotion() {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
   function createChatUI() {
     if (document.querySelector('[data-chat-root]')) return;
 
@@ -466,6 +470,54 @@
   .chat-offer-link:disabled {
     cursor: default;
     opacity: 0.92;
+  }
+
+  .chat-cart-fly {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 10050;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    max-width: min(280px, calc(100vw - 32px));
+    padding: 12px 16px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #fff;
+    box-shadow:
+      0 18px 42px rgba(15, 23, 42, 0.28),
+      0 6px 18px rgba(15, 23, 42, 0.16);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .chat-cart-fly-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .chat-cart-target-pulse {
+    animation: chatCartTargetPulse 0.82s ease;
+  }
+
+  @keyframes chatCartTargetPulse {
+    0% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(15, 118, 110, 0.2);
+    }
+
+    40% {
+      transform: scale(1.07);
+      box-shadow: 0 0 0 14px rgba(15, 118, 110, 0);
+    }
+
+    100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(15, 118, 110, 0);
+    }
   }
 
   .chat-recommendations {
@@ -1441,27 +1493,137 @@
       );
     }
 
-    function openCartDestination() {
-      if (typeof window.openCart === "function") {
-        window.openCart();
-        return;
-      }
-
-      window.location.href = "./varukorg.html";
+    function getCartNavTarget() {
+      return document.querySelector(
+        '#mainHeader a[href="varukorg.html"], #mainHeader a[href="./varukorg.html"], .header-icon-link[href="varukorg.html"], .header-icon-link[href="./varukorg.html"]'
+      );
     }
 
-    function handleChatOfferChoice({ plan = null, payload = {}, broadband = false, trigger = null } = {}) {
-      const item = buildChatCartItem(plan, payload, broadband);
-      addItemToCart(item);
-      persistChatCartSelection(item);
+    function pulseCartTarget(target = getCartNavTarget()) {
+      if (!target) return;
+      target.classList.remove("chat-cart-target-pulse");
+      void target.offsetWidth;
+      target.classList.add("chat-cart-target-pulse");
+      window.setTimeout(() => {
+        target.classList.remove("chat-cart-target-pulse");
+      }, 900);
+    }
 
-      if (trigger) {
+    function getChatOfferHost(element) {
+      if (!element) return null;
+      return (
+        element.closest(".chat-recommendation-card, .chat-offer-card, .offer-choice") ||
+        element.closest(".chat-msg") ||
+        null
+      );
+    }
+
+    function markChatOfferAsAdded(host, trigger = null) {
+      host?.setAttribute("data-chat-cart-added", "true");
+      host?.querySelectorAll("button.chat-offer-link").forEach((button) => {
+        button.disabled = true;
+        button.classList.add("is-added");
+        button.textContent = "Tillagd i varukorgen";
+      });
+
+      if (trigger && trigger.matches("button.chat-offer-link")) {
         trigger.disabled = true;
         trigger.classList.add("is-added");
         trigger.textContent = "Tillagd i varukorgen";
       }
+    }
 
-      openCartDestination();
+    function animateItemToCart(sourceEl, item) {
+      const target = getCartNavTarget();
+
+      if (!sourceEl || !target) {
+        pulseCartTarget(target);
+        return Promise.resolve();
+      }
+
+      if (prefersReducedMotion()) {
+        pulseCartTarget(target);
+        return Promise.resolve();
+      }
+
+      const sourceCard =
+        sourceEl.closest(".chat-recommendation-card, .chat-offer-card, .offer-choice") || sourceEl;
+      const sourceRect = sourceCard.getBoundingClientRect();
+      const targetRect = target.getBoundingClientRect();
+
+      const ghost = document.createElement("div");
+      ghost.className = "chat-cart-fly";
+      ghost.setAttribute("aria-hidden", "true");
+      ghost.style.visibility = "hidden";
+
+      const icon = document.createElement("i");
+      icon.className = "fas fa-shopping-cart";
+
+      const label = document.createElement("span");
+      label.className = "chat-cart-fly-label";
+      label.textContent = item.title || item.operator || "Valt erbjudande";
+
+      ghost.append(icon, label);
+      document.body.appendChild(ghost);
+
+      const ghostRect = ghost.getBoundingClientRect();
+      const startLeft = sourceRect.left + (sourceRect.width - ghostRect.width) / 2;
+      const startTop = sourceRect.top + (sourceRect.height - ghostRect.height) / 2;
+      const endLeft = targetRect.left + (targetRect.width - ghostRect.width) / 2;
+      const endTop = targetRect.top + (targetRect.height - ghostRect.height) / 2;
+
+      ghost.style.visibility = "visible";
+      ghost.style.transform = `translate(${startLeft}px, ${startTop}px) scale(1)`;
+
+      const animation = ghost.animate(
+        [
+          {
+            transform: `translate(${startLeft}px, ${startTop}px) scale(1)`,
+            opacity: 1,
+            filter: "blur(0px)"
+          },
+          {
+            transform: `translate(${endLeft}px, ${endTop}px) scale(0.22)`,
+            opacity: 0.18,
+            filter: "blur(2px)"
+          }
+        ],
+        {
+          duration: 760,
+          easing: "cubic-bezier(.22,1,.36,1)",
+          fill: "forwards"
+        }
+      );
+
+      return animation.finished
+        .catch(() => {})
+        .then(() => {
+          ghost.remove();
+          pulseCartTarget(target);
+        });
+    }
+
+    function askForAnythingElse() {
+      addMessage(
+        "Perfekt, den ligger nu i varukorgen. Behöver du hjälp med något mer också?",
+        "ai"
+      );
+      syncSuggestions(readHistory());
+      input?.focus();
+    }
+
+    async function handleChatOfferChoice({ plan = null, payload = {}, broadband = false, trigger = null, sourceEl = null } = {}) {
+      const host = getChatOfferHost(sourceEl || trigger);
+      if (host?.dataset.chatCartAdded === "true") {
+        return;
+      }
+
+      const item = buildChatCartItem(plan, payload, broadband);
+      addItemToCart(item);
+      persistChatCartSelection(item);
+      markChatOfferAsAdded(host, trigger);
+      await animateItemToCart(sourceEl || trigger, item);
+      askForAnythingElse();
     }
 
     function createChatOfferButton({ plan = null, payload = {}, broadband = false } = {}) {
@@ -1493,7 +1655,10 @@
           return;
         }
 
-        handleChatOfferChoice(config);
+        handleChatOfferChoice({
+          ...config,
+          sourceEl: card
+        });
       });
     }
 
