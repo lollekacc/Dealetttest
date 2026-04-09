@@ -230,7 +230,9 @@ function renderCartSummary() {
               </div>
             </div>
           `
-          : `<p>Ingen belöning vald.</p>`
+          : rewardRows
+            ? `<p>Preliminärt presentkortsvärde sparat från ditt val.</p>`
+            : `<p>Ingen belöning vald.</p>`
       }
       ${rewardRows ? `<div style="display:grid;gap:8px;">${rewardRows}</div>` : ""}
     </div>

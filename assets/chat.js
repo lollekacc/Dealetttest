@@ -4,12 +4,43 @@
   const CHAT_HISTORY_KEY = "chat_history";
   const CHAT_OPEN_KEY = "chat_open";
   const CHAT_SESSION_KEY = "chat_sid";
+  const CHAT_CART_KEY = "dealettCart";
   const DEFAULT_GREETING = "Hej! Vad kan jag hj\u00e4lpa dig med?";
 
   const cachedCatalogs = {
     mobile: null,
     broadband: null
   };
+
+  const CHAT_OPERATOR_LOGOS = {
+    Tele2: "images/tele2.jpg",
+    Telia: "images/telia.png",
+    Telenor: "images/telenor.jpg",
+    Tre: "images/tre.jpg",
+    Halebop: "images/halebop.webp"
+  };
+
+  function readCartFallback() {
+    try {
+      const raw = localStorage.getItem(CHAT_CART_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function addItemToCart(item) {
+    if (window.cartAPI?.addToCart) {
+      window.cartAPI.addToCart(item);
+      return;
+    }
+
+    const cart = readCartFallback();
+    cart.push(item);
+    localStorage.setItem(CHAT_CART_KEY, JSON.stringify(cart));
+    window.dispatchEvent(new Event("cartUpdated"));
+  }
 
   function createChatUI() {
     if (document.querySelector('[data-chat-root]')) return;
@@ -411,16 +442,30 @@
     align-items: center;
     min-height: 44px;
     padding: 0 14px;
+    border: none;
     border-radius: 12px;
     background: #0f172a;
     color: #fff;
     font-size: 13px;
     font-weight: 600;
+    font-family: inherit;
     text-decoration: none;
+    cursor: pointer;
+    transition: background 0.18s ease, transform 0.18s ease;
   }
 
   .chat-offer-link:hover {
     background: #1e293b;
+    transform: translateY(-1px);
+  }
+
+  .chat-offer-link.is-added {
+    background: #0f766e;
+  }
+
+  .chat-offer-link:disabled {
+    cursor: default;
+    opacity: 0.92;
   }
 
   .chat-recommendations {
@@ -1252,17 +1297,204 @@
       );
     }
 
-    function buildOfferHref(plan, payload, broadband) {
+    function calculateChatMobileReward(price, rewardType = "new") {
+      const amount = Number(price);
+      if (!Number.isFinite(amount) || amount <= 0) {
+        return 0;
+      }
+
+      let reward = 0;
+
+      if (amount < 299) reward = 2000;
+      else if (amount < 399) reward = 3000;
+      else if (amount < 499) reward = 4000;
+      else if (amount < 699) reward = 5000;
+      else reward = 1000;
+
+      return rewardType === "renewal" ? Math.round(reward / 2) : reward;
+    }
+
+    function calculateChatBroadbandReward(price) {
+      const amount = Number(price);
+      if (!Number.isFinite(amount) || amount <= 0) {
+        return 0;
+      }
+
+      if (amount < 299) return 1000;
+      if (amount < 399) return 2000;
+      if (amount < 499) return 3000;
+      if (amount < 699) return 4000;
+      return 5000;
+    }
+
+    function getChatOfferLogo(plan, payload = {}) {
       const operator = plan?.operator || payload?.operator || "";
-      const planId = plan?.id || payload?.planId || "";
-      const page = broadband ? "bredband.html" : "abonnemang.html";
-      const params = new URLSearchParams();
+      return plan?.logo || payload?.logo || CHAT_OPERATOR_LOGOS[operator] || "";
+    }
 
-      if (operator) params.set("op", operator);
-      if (planId) params.set("plan", planId);
+    function getChatOfferMonthlyPrice(plan, payload = {}, broadband = false) {
+      const familyTotal = Number(payload?.totalPrice);
+      if (!broadband && Number(payload?.persons) > 1 && Number.isFinite(familyTotal) && familyTotal > 0) {
+        return familyTotal;
+      }
 
-      const query = params.toString();
-      return query ? `./${page}?${query}` : `./${page}`;
+      const payloadPrice = Number(payload?.price);
+      if (Number.isFinite(payloadPrice) && payloadPrice > 0) {
+        return payloadPrice;
+      }
+
+      const planPrice = Number(plan?.price);
+      return Number.isFinite(planPrice) && planPrice > 0 ? planPrice : 0;
+    }
+
+    function getChatOfferRewardTotal(plan, payload = {}, broadband = false) {
+      const explicitReward = Number(payload?.likelyReward ?? payload?.rewardTotal ?? payload?.reward);
+      if (Number.isFinite(explicitReward) && explicitReward > 0) {
+        return Math.round(explicitReward);
+      }
+
+      const monthlyPrice = getChatOfferMonthlyPrice(plan, payload, broadband);
+      if (!monthlyPrice) {
+        return 0;
+      }
+
+      return broadband
+        ? calculateChatBroadbandReward(monthlyPrice)
+        : calculateChatMobileReward(monthlyPrice, payload?.likelyRewardType);
+    }
+
+    function buildChatCartItem(plan, payload = {}, broadband = false) {
+      const operator = plan?.operator || payload?.operator || "Dealett";
+      const offerId =
+        plan?.id ||
+        payload?.planId ||
+        `${operator.toLowerCase().replace(/\s+/g, "-")}-${Date.now()}`;
+      const price = getChatOfferMonthlyPrice(plan, payload, broadband);
+      const rewardTotal = getChatOfferRewardTotal(plan, payload, broadband);
+      const featureLabel = formatPlanFeature(plan, payload, broadband);
+      const persons = Number(payload?.persons) || 1;
+      const bindingMonths = Number(plan?.bindingMonths ?? payload?.bindingMonths);
+      const bindingLabel = broadband
+        ? Number.isFinite(bindingMonths) && bindingMonths > 0
+          ? `${bindingMonths} mån bindningstid`
+          : "Ingen bindningstid"
+        : payload?.bindingLabel || payload?.binding || "Ej angivet";
+
+      return {
+        type: broadband ? "bredband" : "mobil",
+        offerId,
+        operator,
+        title:
+          plan?.title ||
+          payload?.title ||
+          (broadband ? payload?.speed || "Bredband" : payload?.data || "Mobilabonnemang"),
+        logo: getChatOfferLogo(plan, payload),
+        price,
+        monthlyPrice: price,
+        pricePerPerson:
+          persons > 1 && Number.isFinite(Number(payload?.pricePerLine))
+            ? Math.round(Number(payload.pricePerLine))
+            : null,
+        data: broadband ? null : payload?.data || plan?.data || featureLabel || null,
+        dataLabel: broadband ? null : featureLabel || payload?.data || plan?.data || null,
+        speed: broadband ? plan?.speed || payload?.speed || null : null,
+        speedMbps: broadband
+          ? Number(plan?.speedMbps ?? payload?.speedMbps) || null
+          : null,
+        binding: broadband
+          ? Number.isFinite(bindingMonths) && bindingMonths > 0
+            ? bindingMonths
+            : 0
+          : bindingLabel,
+        bindingLabel,
+        rewardTotal,
+        rewardMixLabel:
+          rewardTotal > 0
+            ? payload?.likelyRewardType === "renewal"
+              ? "Förlängning"
+              : "Preliminärt presentkort"
+            : "",
+        rewards: rewardTotal > 0 ? { Presentkort: rewardTotal } : {}
+      };
+    }
+
+    function persistChatCartSelection(item) {
+      localStorage.removeItem("rewardChoice");
+      localStorage.setItem("rewardDistribution", JSON.stringify(item.rewards || {}));
+      localStorage.removeItem("collectedNumbers");
+      localStorage.removeItem("startDateChoice");
+      localStorage.removeItem("contactEmail");
+      localStorage.removeItem("contactPhone");
+
+      localStorage.setItem(
+        "selectedOffer",
+        JSON.stringify({
+          id: item.offerId,
+          operator: item.operator,
+          title: item.title,
+          logo: item.logo,
+          finalPrice: item.price,
+          pricePerPerson: item.pricePerPerson,
+          rewardTotal: item.rewardTotal,
+          rewardMixLabel: item.rewardMixLabel || ""
+        })
+      );
+    }
+
+    function openCartDestination() {
+      if (typeof window.openCart === "function") {
+        window.openCart();
+        return;
+      }
+
+      window.location.href = "./varukorg.html";
+    }
+
+    function handleChatOfferChoice({ plan = null, payload = {}, broadband = false, trigger = null } = {}) {
+      const item = buildChatCartItem(plan, payload, broadband);
+      addItemToCart(item);
+      persistChatCartSelection(item);
+
+      if (trigger) {
+        trigger.disabled = true;
+        trigger.classList.add("is-added");
+        trigger.textContent = "Tillagd i varukorgen";
+      }
+
+      openCartDestination();
+    }
+
+    function createChatOfferButton({ plan = null, payload = {}, broadband = false } = {}) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "chat-offer-link";
+      button.textContent = "Lägg i varukorgen";
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        handleChatOfferChoice({
+          plan,
+          payload,
+          broadband,
+          trigger: button
+        });
+      });
+      return button;
+    }
+
+    function bindOfferCardDirectAdd(card, config = {}) {
+      if (!card || card.dataset.chatCartBound === "true") {
+        return;
+      }
+
+      card.dataset.chatCartBound = "true";
+      card.addEventListener("click", (event) => {
+        if (event.target.closest("a")) {
+          return;
+        }
+
+        handleChatOfferChoice(config);
+      });
     }
 
     function buildFallbackOfferCard(plan, payload = {}) {
@@ -1300,11 +1532,13 @@
         card.appendChild(meta);
       });
 
-      const link = document.createElement("a");
-      link.className = "chat-offer-link";
-      link.href = buildOfferHref(plan, payload, broadband);
-      link.textContent = "\u00d6ppna erbjudandet";
-      card.appendChild(link);
+      card.appendChild(
+        createChatOfferButton({
+          plan,
+          payload,
+          broadband
+        })
+      );
 
       return card;
     }
@@ -1440,18 +1674,23 @@
       const links = document.createElement("div");
       links.className = "chat-recommendation-links";
 
-      const link = document.createElement("a");
-      link.className = "chat-offer-link";
-      link.href = buildOfferHref(
-        {
-          id: offer.planId,
-          operator: offer.operator
-        },
-        offer,
-        broadband
+      links.appendChild(
+        createChatOfferButton({
+          plan: {
+            id: offer.planId,
+            operator: offer.operator,
+            logo: offer.logo,
+            title: offer.title,
+            price: offer.price,
+            data: offer.data,
+            dataAmount: offer.dataAmount,
+            speed: offer.speed,
+            speedMbps: offer.speedMbps
+          },
+          payload: offer,
+          broadband
+        })
       );
-      link.textContent = "Oppna erbjudandet";
-      links.appendChild(link);
 
       card.appendChild(links);
       return card;
@@ -1608,9 +1847,30 @@
         card = buildFallbackOfferCard(plan, payload);
       }
 
+      if (card.classList?.contains("offer-choice")) {
+        bindOfferCardDirectAdd(card, {
+          plan,
+          payload,
+          broadband
+        });
+      }
+
       const wrapper = document.createElement("div");
       wrapper.className = "chat-msg ai";
       wrapper.appendChild(card);
+
+      if (card.classList?.contains("offer-choice")) {
+        const actions = document.createElement("div");
+        actions.className = "chat-recommendation-links";
+        actions.appendChild(
+          createChatOfferButton({
+            plan,
+            payload,
+            broadband
+          })
+        );
+        wrapper.appendChild(actions);
+      }
 
       messages.appendChild(wrapper);
       messages.scrollTop = messages.scrollHeight;

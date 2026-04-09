@@ -9,7 +9,10 @@ async function loadSharedPartials() {
     const header = document.getElementById("header-placeholder");
     if (header) {
       const res = await fetch("./partials/header.html");
-      if (res.ok) header.innerHTML = await res.text();
+      if (res.ok) {
+        header.innerHTML = await res.text();
+        syncGlobalHeaderAppearance();
+      }
     }
 
     if (!document.querySelector('script[data-chat-script="true"]')) {
@@ -30,6 +33,18 @@ async function loadSharedPartials() {
   } catch (error) {
     console.error("Kunde inte ladda header/footer:", error);
   }
+}
+
+function syncGlobalHeaderAppearance() {
+  const header = document.getElementById("mainHeader");
+  if (!header) return;
+
+  const overlayMode = document.body?.dataset.headerMode === "overlay";
+  const isScrolled = window.scrollY > 24;
+
+  header.classList.toggle("header-overlay", overlayMode && !isScrolled);
+  header.classList.toggle("header-solid", !overlayMode || isScrolled);
+  header.classList.toggle("header-scrolled", isScrolled);
 }
 
 function initCartPage() {
@@ -347,29 +362,6 @@ initApp().catch((error) => {
   console.error("Main app init failed:", error);
 });
 
-    window.addEventListener("scroll", () => {
-      const header = document.getElementById("mainHeader");
-      if (!header) return;
-
-      const row = header.querySelector(".relative.w-full");
-
-      if (window.scrollY > 20) {
-        header.classList.remove("header-overlay");
-        header.classList.add("header-solid");
-        header.classList.add("shadow-md");
-
-        if (row) {
-          row.classList.remove("h-16");
-          row.classList.add("h-14");
-        }
-      } else {
-        header.classList.remove("header-solid");
-        header.classList.add("header-overlay");
-        header.classList.remove("shadow-md");
-
-        if (row) {
-          row.classList.remove("h-14");
-          row.classList.add("h-16");
-        }
-      }
-    });
+window.addEventListener("scroll", syncGlobalHeaderAppearance, { passive: true });
+window.addEventListener("resize", syncGlobalHeaderAppearance);
+document.addEventListener("DOMContentLoaded", syncGlobalHeaderAppearance);

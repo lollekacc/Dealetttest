@@ -3,7 +3,7 @@
 
 <header
   id="mainHeader"
-  class="fixed top-0 left-0 z-[1000] w-full transition-all duration-300 ease-out header-overlay"
+  class="fixed top-0 left-0 z-[1000] w-full transition-all duration-300 ease-out header-solid"
 >
   <div
     id="topRow"
@@ -271,11 +271,11 @@
   }
 
   /* ===== SHRINK ON SCROLL ===== */
-  #mainHeader.header-solid #topRow{
+  #mainHeader.header-scrolled #topRow{
     height:72px;
   }
 
-  #mainHeader.header-solid .header-logo{
+  #mainHeader.header-scrolled .header-logo{
     height:54px;
   }
 
@@ -321,17 +321,16 @@
 <script>
   (function () {
     const header = document.getElementById("mainHeader");
+    const body = document.body;
 
     function updateHeader() {
       if (!header) return;
+      const overlayMode = body?.dataset.headerMode === "overlay";
+      const isScrolled = window.scrollY > 24;
 
-      if (window.scrollY > 24) {
-        header.classList.remove("header-overlay");
-        header.classList.add("header-solid");
-      } else {
-        header.classList.remove("header-solid");
-        header.classList.add("header-overlay");
-      }
+      header.classList.toggle("header-overlay", overlayMode && !isScrolled);
+      header.classList.toggle("header-solid", !overlayMode || isScrolled);
+      header.classList.toggle("header-scrolled", isScrolled);
     }
 
     updateHeader();
