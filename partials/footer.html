@@ -1,222 +1,36 @@
-<!-- FOOTER -->
-<footer class="relative w-full mt-24 overflow-hidden text-neutral-200 bg-[#07090d]">
-  <!-- GLASS LAYERS -->
-  <div class="site-footer__bg" aria-hidden="true">
-    <div class="site-footer__gradient"></div>
-    <div class="site-footer__glow site-footer__glow--left"></div>
-    <div class="site-footer__glow site-footer__glow--right"></div>
-    <div class="site-footer__grid"></div>
-    <div class="site-footer__noise"></div>
-    <div class="site-footer__topline"></div>
-  </div>
+<footer class="site-footer">
+  <div class="site-footer__glow site-footer__glow--left" aria-hidden="true"></div>
+  <div class="site-footer__glow site-footer__glow--right" aria-hidden="true"></div>
+  <div class="site-footer__grid" aria-hidden="true"></div>
 
-  <!-- TOP SEPARATOR LIGHT -->
-  <div class="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+  <div class="site-footer__shell">
+    <div class="site-footer__brand">
+      <a href="index.html" class="site-footer__logo" aria-label="Dealett hem">
+        <img src="images/laga.png" alt="Dealett" />
+      </a>
+      <p class="site-footer__text">
+        Dealett gör det enklare att jämföra abonnemang och bredband med tydligare
+        beslutstöd, bättre överblick och en smidigare väg till rätt val.
+      </p>
+    </div>
 
-  <!-- CONTENT -->
-  <div class="relative z-10">
-    <div class="max-w-7xl mx-auto px-8 md:px-10 lg:px-12 py-12">
-      <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr_auto] items-center gap-10 lg:gap-12">
+    <nav class="site-footer__nav" aria-label="Sidfotsnavigering">
+      <a href="abonnemang.html">Abonnemang</a>
+      <a href="bredband.html">5G Bredband</a>
+      <a href="jamfor.html">Jämför täckning</a>
+      <a href="företag.html">Företag</a>
+      <a href="om-oss.html">Om oss</a>
+      <a href="kundservice.html">Kundservice</a>
+    </nav>
 
-        <!-- Logo -->
-        <a href="index.html" class="group justify-self-center lg:justify-self-start shrink-0">
-          <div class="rounded-[24px] border border-white/10 bg-white/[0.04] px-6 py-4 shadow-[0_16px_50px_rgba(0,0,0,0.42)] backdrop-blur-xl transition duration-300 group-hover:bg-white/[0.06] group-hover:border-white/20">
-            <img
-              src="./images/laga.png"
-              alt="Dealett"
-              class="h-14 md:h-16 w-auto opacity-95 transition duration-300 group-hover:opacity-100 group-hover:scale-[1.02]"
-            >
-          </div>
-        </a>
-
-        <!-- Navigation -->
-        <nav class="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[15px] md:text-[16px] font-semibold tracking-[0.01em]">
-          <a href="abonnemang.html" class="site-footer__link">Abonnemang</a>
-          <a href="bredband.html" class="site-footer__link">5G Bredband</a>
-          <a href="partner.html" class="site-footer__link">Partner</a>
-          <a href="belöning.html" class="site-footer__link">Belöning</a>
-          <a href="om-oss.html" class="site-footer__link">Om oss</a>
-          <a href="kundservice.html" class="site-footer__link">Kundservice</a>
-        </nav>
-
-        <!-- Social -->
-        <div class="flex items-center justify-center lg:justify-end gap-3 shrink-0">
-          <a href="#" class="site-footer__social" aria-label="Facebook">
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a href="#" class="site-footer__social" aria-label="Instagram">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="#" class="site-footer__social" aria-label="TikTok">
-            <i class="fab fa-tiktok"></i>
-          </a>
-          <a href="#" class="site-footer__social" aria-label="X">
-            <i class="fab fa-x-twitter"></i>
-          </a>
-        </div>
-      </div>
+    <div class="site-footer__cta">
+      <a href="kundservice.html" class="site-footer__button">Kontakta oss</a>
+      <a href="login.html" class="site-footer__button site-footer__button--ghost">Mitt konto</a>
     </div>
   </div>
 
-  <!-- COPYRIGHT -->
-  <div class="relative z-10 border-t border-white/10 bg-white/[0.02] py-5 text-center text-[12px] md:text-[13px] font-medium tracking-[0.14em] uppercase text-neutral-500">
-    © 2025 Dealett – Alla rättigheter reserverade
+  <div class="site-footer__meta">
+    <span>© 2026 Dealett</span>
+    <span>Alla rättigheter reserverade</span>
   </div>
-
-  <style>
-    footer{
-      font-family: "Inter", sans-serif;
-    }
-
-    .site-footer__bg{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      overflow:hidden;
-      z-index:0;
-    }
-
-    .site-footer__gradient{
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 15% 18%, rgba(34,197,94,0.16), transparent 34%),
-        radial-gradient(circle at 84% 12%, rgba(14,165,233,0.16), transparent 30%),
-        radial-gradient(circle at 50% 120%, rgba(255,255,255,0.06), transparent 42%),
-        linear-gradient(180deg, rgba(255,255,255,0.025) 0%, rgba(255,255,255,0) 35%),
-        linear-gradient(135deg, #0b0e13 0%, #090b10 45%, #05070b 100%);
-    }
-
-    .site-footer__glow{
-      position:absolute;
-      border-radius:999px;
-      filter:blur(100px);
-      opacity:1;
-    }
-
-    .site-footer__glow--left{
-      width:360px;
-      height:360px;
-      left:-90px;
-      top:-70px;
-      background:rgba(34,197,94,0.14);
-    }
-
-    .site-footer__glow--right{
-      width:320px;
-      height:320px;
-      right:-80px;
-      top:10px;
-      background:rgba(59,130,246,0.13);
-    }
-
-    .site-footer__grid{
-      position:absolute;
-      inset:0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size:48px 48px;
-      mask-image:linear-gradient(to bottom, rgba(255,255,255,0.22), transparent 78%);
-      -webkit-mask-image:linear-gradient(to bottom, rgba(255,255,255,0.22), transparent 78%);
-      opacity:.22;
-    }
-
-    .site-footer__noise{
-      position:absolute;
-      inset:0;
-      opacity:.06;
-      background-image:
-        radial-gradient(rgba(255,255,255,0.65) 0.6px, transparent 0.6px);
-      background-size:18px 18px;
-      mix-blend-mode:soft-light;
-    }
-
-    .site-footer__topline{
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:1px;
-      background:linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(255,255,255,0.08) 18%,
-        rgba(255,255,255,0.42) 50%,
-        rgba(255,255,255,0.08) 82%,
-        transparent 100%
-      );
-    }
-
-    .site-footer__link{
-      position:relative;
-      color:rgba(255,255,255,0.78);
-      text-decoration:none;
-      transition:color .25s ease, transform .25s ease;
-    }
-
-    .site-footer__link:hover{
-      color:#ffffff;
-      transform:translateY(-1px);
-    }
-
-    .site-footer__link::after{
-      content:"";
-      position:absolute;
-      left:0;
-      bottom:-6px;
-      width:100%;
-      height:2px;
-      border-radius:999px;
-      background:linear-gradient(90deg, rgba(34,197,94,0.9), rgba(59,130,246,0.9));
-      transform:scaleX(0);
-      transform-origin:center;
-      transition:transform .28s ease;
-      opacity:.95;
-    }
-
-    .site-footer__link:hover::after{
-      transform:scaleX(1);
-    }
-
-    .site-footer__social{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      width:48px;
-      height:48px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,0.10);
-      background:rgba(255,255,255,0.04);
-      color:rgba(255,255,255,0.70);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
-      box-shadow:0 10px 28px rgba(0,0,0,0.26);
-      transition:
-        transform .28s ease,
-        border-color .28s ease,
-        background .28s ease,
-        color .28s ease,
-        box-shadow .28s ease;
-    }
-
-    .site-footer__social:hover{
-      transform:translateY(-2px);
-      border-color:rgba(255,255,255,0.18);
-      background:rgba(255,255,255,0.08);
-      color:#ffffff;
-      box-shadow:0 14px 32px rgba(0,0,0,0.34);
-    }
-
-    @media (max-width: 768px){
-      .site-footer__link{
-        font-size:15px;
-      }
-
-      .site-footer__social{
-        width:46px;
-        height:46px;
-      }
-    }
-  </style>
 </footer>

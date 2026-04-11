@@ -19,17 +19,8 @@
 /* ===== Header placeholder ===== */
 
 #header-placeholder{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  z-index:1000;
-  min-height:0;
-  pointer-events:none;
-}
-
-#header-placeholder > *{
-  pointer-events:auto;
+  position:relative;
+  z-index:40;
 }
 
 #chat-panel {
@@ -584,6 +575,10 @@
   --brand: #0f766e;
   --brand-dark: #0b5c56;
   --brand-light: rgba(15,118,110,0.08);
+  --adeala-dark: #0f172a;
+  --adeala-blue: #0b57a4;
+  --adeala-green: #0f766e;
+  --adeala-beige: #f6efe4;
 
   --border: rgba(15,23,42,0.08);
   --border-strong: rgba(15,23,42,0.14);

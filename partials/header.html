@@ -1,339 +1,84 @@
-<!-- HEADER -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<header
-  id="mainHeader"
-  class="fixed top-0 left-0 z-[1000] w-full transition-all duration-300 ease-out header-solid"
->
-  <div
-    id="topRow"
-    class="relative mx-auto flex h-[84px] w-full max-w-[1440px] items-center justify-between px-5 transition-all duration-300 lg:px-8"
-  >
-    <!-- LEFT -->
-    <div class="hidden md:flex items-center gap-2">
-      <a
-        href="index.html"
-        class="header-mini-link group"
-      >
-        <span>Privat</span>
-      </a>
-
-      <a
-        href="företag.html"
-        class="header-mini-link group"
-      >
-        <span>Företag</span>
-      </a>
+<header id="mainHeader" class="site-header" data-overlay="false">
+  <div class="site-header__shell">
+    <div class="site-header__switches" aria-label="Sektion">
+      <a href="index.html" class="site-header__switch" data-route="index.html">Privat</a>
+      <a href="företag.html" class="site-header__switch" data-route="företag.html">Företag</a>
     </div>
 
-    <!-- CENTER -->
-<div class="absolute left-1/2 top-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 items-center">
-  
-  <a
-    href="index.html"
-    class="relative z-30 flex shrink-0 items-center justify-center rounded-2xl px-3 py-2"
-  >
-    <img
-      src="images/laga.png"
-      alt="Dealett"
-      class="header-logo block h-[62px] w-auto"
-    />
-  </a>
+    <a href="index.html" class="site-header__brand" aria-label="Dealett hem">
+      <img src="images/laga.png" alt="Dealett" class="site-header__logo" />
+    </a>
 
-  <nav
-    class="ml-10 hidden lg:flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-2 backdrop-blur-md"
-    style="font-family:'Inter',sans-serif;"
-  >
-    <a href="abonnemang.html" class="header-nav-link">Abonnemang</a>
-    <a href="bredband.html" class="header-nav-link">5G Bredband</a>
-    <a href="jamfor.html" class="header-nav-link">Jämför täckning</a>
-    <a href="om-oss.html" class="header-nav-link">Om oss</a>
-    <a href="kundservice.html" class="header-nav-link">Kundservice</a>
-  </nav>
+    <nav class="site-header__nav" aria-label="Huvudmeny">
+      <a href="abonnemang.html" class="site-header__link" data-route="abonnemang.html">Abonnemang</a>
+      <a href="bredband.html" class="site-header__link" data-route="bredband.html">5G Bredband</a>
+      <a href="jamfor.html" class="site-header__link" data-route="jamfor.html">Jämför täckning</a>
+      <a href="om-oss.html" class="site-header__link" data-route="om-oss.html">Om oss</a>
+      <a href="kundservice.html" class="site-header__link" data-route="kundservice.html">Kundservice</a>
+    </nav>
 
-</div>
-
-    <!-- RIGHT -->
-    <div class="flex items-center gap-2">
-      <a
-        href="varukorg.html"
-        class="header-icon-link group"
-      >
-        <i class="fas fa-shopping-cart text-[18px]"></i>
+    <div class="site-header__actions">
+      <a href="varukorg.html" class="site-header__action" aria-label="Varukorg" data-route="varukorg.html">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M3 4h2.2a1 1 0 0 1 .98.79L6.6 7h12.16a1 1 0 0 1 .97 1.24l-1.24 5A1 1 0 0 1 17.52 14H8.1a1 1 0 0 1-.98-.8L5.03 5H3z"></path>
+          <circle cx="9.5" cy="19" r="1.5"></circle>
+          <circle cx="16.5" cy="19" r="1.5"></circle>
+        </svg>
         <span>Varukorg</span>
       </a>
 
-      <a
-        href="login.html"
-        class="header-icon-link group"
-      >
-        <i class="fas fa-user text-[18px]"></i>
+      <a href="login.html" class="site-header__action" aria-label="Logga in" data-route="login.html">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.5 4.5 0 0 0 12 12z"></path>
+          <path d="M4 20a8 8 0 0 1 16 0"></path>
+        </svg>
         <span>Logga in</span>
       </a>
     </div>
+
+    <button
+      id="headerMenuToggle"
+      class="site-header__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="headerMobilePanel"
+      aria-label="Öppna meny"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <div id="headerMenuBackdrop" class="site-header__backdrop" hidden></div>
+
+  <div id="headerMobilePanel" class="site-header__mobile" hidden>
+    <div class="site-header__mobile-card">
+      <div class="site-header__mobile-top">
+        <span class="site-header__mobile-label">Navigering</span>
+        <button id="headerMenuClose" class="site-header__mobile-close" type="button" aria-label="Stäng meny">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <div class="site-header__mobile-switches">
+        <a href="index.html" class="site-header__mobile-switch" data-route="index.html">Privat</a>
+        <a href="företag.html" class="site-header__mobile-switch" data-route="företag.html">Företag</a>
+      </div>
+
+      <nav class="site-header__mobile-nav" aria-label="Mobilmeny">
+        <a href="abonnemang.html" class="site-header__mobile-link" data-route="abonnemang.html">Abonnemang</a>
+        <a href="bredband.html" class="site-header__mobile-link" data-route="bredband.html">5G Bredband</a>
+        <a href="jamfor.html" class="site-header__mobile-link" data-route="jamfor.html">Jämför täckning</a>
+        <a href="om-oss.html" class="site-header__mobile-link" data-route="om-oss.html">Om oss</a>
+        <a href="kundservice.html" class="site-header__mobile-link" data-route="kundservice.html">Kundservice</a>
+      </nav>
+
+      <div class="site-header__mobile-actions">
+        <a href="varukorg.html" class="site-header__mobile-button" data-route="varukorg.html">Varukorg</a>
+        <a href="login.html" class="site-header__mobile-button site-header__mobile-button--ghost" data-route="login.html">Mitt konto</a>
+      </div>
+    </div>
   </div>
 </header>
-
-<style>
-  
-  /* ===== HEADER BASE ===== */
-  #mainHeader{
-    font-family:'Inter',sans-serif;
-  }
-
-  #mainHeader.header-overlay{
-    background:transparent;
-    border-bottom:1px solid transparent;
-    backdrop-filter:none;
-    -webkit-backdrop-filter:none;
-    box-shadow:none;
-  }
-
-  #mainHeader.header-solid{
-    background:rgba(255,255,255,0.88);
-    border-bottom:1px solid rgba(15,23,42,0.08);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-    box-shadow:0 12px 36px rgba(15,23,42,0.08);
-  }
-
-  /* ===== SMALL LEFT LINKS ===== */
-  .header-mini-link{
-    position:relative;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    height:42px;
-    padding:0 14px;
-    border-radius:14px;
-    color:rgba(255,255,255,0.78);
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:.01em;
-    transition:all .18s ease;
-  }
-
-  .header-mini-link:hover{
-    background:rgba(255,255,255,0.10);
-    color:#fff;
-  }
-
-  .header-mini-link::after{
-    content:"";
-    position:absolute;
-    left:12px;
-    right:12px;
-    bottom:6px;
-    height:2px;
-    border-radius:999px;
-    background:#34d399;
-    transform:scaleX(0);
-    transform-origin:center;
-    transition:transform .18s ease;
-  }
-
-  .header-mini-link:hover::after{
-    transform:scaleX(1);
-  }
-
-  /* ===== CENTER NAV LINKS ===== */
-  .header-nav-link{
-    position:relative;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    height:48px;
-    padding:0 18px;
-    border-radius:16px;
-    color:rgba(255,255,255,0.82);
-    font-size:15px;
-    font-weight:700;
-    white-space:nowrap;
-    transition:all .18s ease;
-  }
-
-  .header-nav-link:hover{
-    color:#fff;
-    background:rgba(255,255,255,0.10);
-  }
-
-  .header-nav-link::after{
-    content:"";
-    position:absolute;
-    left:14px;
-    right:14px;
-    bottom:6px;
-    height:2px;
-    border-radius:999px;
-    background:#34d399;
-    transform:scaleX(0);
-    transform-origin:center;
-    transition:transform .18s ease;
-  }
-
-  .header-nav-link:hover::after{
-    transform:scaleX(1);
-  }
-
-  /* ===== RIGHT ICON LINKS ===== */
-  .header-icon-link{
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    min-width:74px;
-    height:58px;
-    padding:0 10px;
-    border-radius:18px;
-    color:rgba(255,255,255,0.82);
-    transition:all .18s ease;
-  }
-
-  .header-icon-link i{
-    transition:transform .18s ease;
-  }
-
-  .header-icon-link span{
-    margin-top:4px;
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:.01em;
-  }
-
-  .header-icon-link:hover{
-    background:rgba(255,255,255,0.10);
-    color:#fff;
-  }
-
-  .header-icon-link:hover i{
-    transform:translateY(-1px) scale(1.05);
-  }
-
-  .header-icon-link::after{
-    content:"";
-    position:absolute;
-    left:14px;
-    right:14px;
-    bottom:5px;
-    height:2px;
-    border-radius:999px;
-    background:#34d399;
-    transform:scaleX(0);
-    transform-origin:center;
-    transition:transform .18s ease;
-  }
-
-  .header-icon-link:hover::after{
-    transform:scaleX(1);
-  }
-
-  /* ===== SOLID HEADER COLORS ===== */
-  #mainHeader.header-solid .header-mini-link{
-    color:#475569;
-  }
-
-  #mainHeader.header-solid .header-mini-link:hover{
-    background:rgba(15,118,110,0.08);
-    color:#0f172a;
-  }
-
-  #mainHeader.header-solid .header-nav-link{
-    color:#475569;
-  }
-
-  #mainHeader.header-solid .header-nav-link:hover{
-    color:#0f172a;
-    background:rgba(15,118,110,0.08);
-  }
-
-  #mainHeader.header-solid nav{
-    background:rgba(15,23,42,0.03);
-    border-color:rgba(15,23,42,0.06);
-  }
-
-  #mainHeader.header-solid .header-icon-link{
-    color:#475569;
-  }
-
-  #mainHeader.header-solid .header-icon-link:hover{
-    background:rgba(15,118,110,0.08);
-    color:#0f172a;
-  }
-
-  #mainHeader.header-solid .header-logo{
-    filter:none;
-  }
-
-  /* ===== OVERLAY LOGO ===== */
-  #mainHeader.header-overlay .header-logo{
-    filter:brightness(0) invert(1);
-  }
-
-  /* ===== SHRINK ON SCROLL ===== */
-  #mainHeader.header-scrolled #topRow{
-    height:72px;
-  }
-
-  #mainHeader.header-scrolled .header-logo{
-    height:54px;
-  }
-
-  /* ===== MOBILE ===== */
-  @media (max-width: 1024px){
-    #topRow{
-      padding-left:14px;
-      padding-right:14px;
-    }
-
-    .header-icon-link{
-      min-width:64px;
-    }
-  }
-
-  @media (max-width: 768px){
-    #topRow{
-      height:72px !important;
-    }
-
-    .header-logo{
-      height:50px !important;
-    }
-
-    .header-icon-link{
-      min-width:56px;
-      height:52px;
-      padding:0 8px;
-    }
-
-    .header-icon-link span{
-      display:none;
-    }
-  }
-
-  @media (max-width: 640px){
-    .header-icon-link{
-      min-width:48px;
-    }
-  }
-</style>
-
-<script>
-  (function () {
-    const header = document.getElementById("mainHeader");
-    const body = document.body;
-
-    function updateHeader() {
-      if (!header) return;
-      const overlayMode = body?.dataset.headerMode === "overlay";
-      const isScrolled = window.scrollY > 24;
-
-      header.classList.toggle("header-overlay", overlayMode && !isScrolled);
-      header.classList.toggle("header-solid", !overlayMode || isScrolled);
-      header.classList.toggle("header-scrolled", isScrolled);
-    }
-
-    updateHeader();
-    window.addEventListener("scroll", updateHeader);
-  })();
-</script>

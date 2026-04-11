@@ -92,28 +92,6 @@ function smoothScrollTo(element) {
   });
 }
 
-async function loadShell() {
-  const headerPlaceholder = document.getElementById("header-placeholder");
-
-  try {
-    const headerRes = await fetch("./partials/header.html");
-    if (headerRes.ok && headerPlaceholder) {
-      headerPlaceholder.innerHTML = await headerRes.text();
-    }
-  } catch (err) {
-    console.warn("Header load failed:", err);
-  }
-
-  try {
-    const footerRes = await fetch("./partials/footer.html");
-    if (footerRes.ok) {
-      document.body.insertAdjacentHTML("beforeend", await footerRes.text());
-    }
-  } catch (err) {
-    console.warn("Footer load failed:", err);
-  }
-}
-
 function observeRevealElements() {
   if (!revealObserver) {
     document.querySelectorAll(".reveal").forEach(element => {
@@ -527,8 +505,7 @@ function restoreCheckoutProgress() {
 
 document.addEventListener("DOMContentLoaded", initPage);
 
-async function initPage() {
-  await loadShell();
+function initPage() {
   initRevealSystem();
   renderCartSummary();
   bindContactStep();

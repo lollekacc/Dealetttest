@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dealett – Signering</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="stylesheet" href="./assets/signera.css" />
+  <script src="./assets/layout.js" defer></script>
+</head>
+<body class="sign-page font-[Inter] text-slate-900 bg-slate-50">
+  <div id="header-placeholder"></div>
+
+  <main class="sign-main">
+    <section class="sign-hero">
+      <div class="sign-shell">
+        <div class="sign-hero__copy">
+          <span class="sign-kicker">Nästa steg</span>
+          <h1>Bekräfta din beställning med BankID</h1>
+          <p>
+            Här ser du en ren sammanfattning av ordern innan signering. När allt
+            ser rätt ut kan du slutföra beställningen direkt.
+          </p>
+
+          <div class="sign-hero__steps">
+            <span>1. Granska ordern</span>
+            <span>2. Bekräfta uppgifter</span>
+            <span>3. Signera klart</span>
+          </div>
+        </div>
+
+        <div class="sign-hero__panel">
+          <div class="sign-status" id="signStatusBadge">Klar för signering</div>
+          <strong id="signTotalPrice">0 kr/mån</strong>
+          <span id="signItemCount">0 valda abonnemang</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sign-section">
+      <div class="sign-shell sign-grid">
+        <article class="sign-card">
+          <div class="sign-card__head">
+            <div>
+              <span class="sign-label">Beställning</span>
+              <h2>Det här signerar du</h2>
+            </div>
+          </div>
+          <div id="signOrderSummary" class="sign-summary-list"></div>
+        </article>
+
+        <article class="sign-card">
+          <div class="sign-card__head">
+            <div>
+              <span class="sign-label">Kunduppgifter</span>
+              <h2>Kontakt och start</h2>
+            </div>
+          </div>
+          <div id="signCustomerSummary" class="sign-summary-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="sign-section sign-section--compact">
+      <div class="sign-shell">
+        <div class="sign-cta">
+          <div>
+            <span class="sign-label">Signering</span>
+            <h2>Redo att skicka beställningen?</h2>
+            <p>
+              När du bekräftar nedan markeras beställningen som slutförd och
+              varukorgen rensas för nästa besök.
+            </p>
+          </div>
+
+          <div class="sign-cta__actions">
+            <a href="varukorg.html" class="sign-button sign-button--ghost">Tillbaka till varukorgen</a>
+            <button id="confirmOrderBtn" class="sign-button" type="button">Signera med BankID</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    const CART_KEY = "dealettCart";
+
+    function readJson(key, fallback) {
+      try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function formatPrice(value) {
+      return `${Number(value || 0)} kr/mån`;
+    }
+
+    function renderSummary() {
+      const cart = readJson(CART_KEY, []);
+      const selectedOffer = readJson("selectedOffer", null);
+      const rewardChoice = readJson("rewardChoice", null);
+      const rewardDistribution = readJson("rewardDistribution", {});
+      const contactEmail = localStorage.getItem("contactEmail") || "Inte angivet";
+      const contactPhone = localStorage.getItem("contactPhone") || "Inte angivet";
+      const startDate = localStorage.getItem("startDateChoice") || "Så snart som möjligt";
+      const numbers = readJson("collectedNumbers", {});
+
+      const mergedItems = [...cart];
+      if (selectedOffer && !mergedItems.length) {
+        mergedItems.push({
+          title: selectedOffer.title || selectedOffer.name || "Valt abonnemang",
+          operator: selectedOffer.operator || "Dealett",
+          price: selectedOffer.finalPrice || selectedOffer.price || 0,
+          rewardTotal: rewardChoice?.value || 0
+        });
+      }
+
+      const orderSummary = document.getElementById("signOrderSummary");
+      const customerSummary = document.getElementById("signCustomerSummary");
+      const totalPrice = document.getElementById("signTotalPrice");
+      const itemCount = document.getElementById("signItemCount");
+
+      if (!mergedItems.length) {
+        orderSummary.innerHTML = `
+          <div class="sign-empty">
+            <p>Ingen order hittades ännu.</p>
+            <a href="abonnemang.html">Välj ett abonnemang först</a>
+          </div>
+        `;
+      } else {
+        orderSummary.innerHTML = mergedItems.map(item => `
+          <article class="sign-summary-item">
+            <div>
+              <strong>${item.title || "Abonnemang"}</strong>
+              <span>${item.operator || "Dealett"}</span>
+            </div>
+            <div class="sign-summary-item__meta">
+              <strong>${formatPrice(item.price)}</strong>
+              <span>${item.rewardTotal ? `Belöning ${item.rewardTotal} kr` : "Belöning väljs senare"}</span>
+            </div>
+          </article>
+        `).join("");
+      }
+
+      const rewardRows = Object.entries(rewardDistribution)
+        .map(([name, value]) => `<li>${name}: <strong>${Number(value || 0)} kr</strong></li>`)
+        .join("");
+
+      customerSummary.innerHTML = `
+        <article class="sign-summary-item">
+          <div>
+            <strong>E-post</strong>
+            <span>${contactEmail}</span>
+          </div>
+        </article>
+        <article class="sign-summary-item">
+          <div>
+            <strong>Mobilnummer</strong>
+            <span>${contactPhone}</span>
+          </div>
+        </article>
+        <article class="sign-summary-item">
+          <div>
+            <strong>Startdatum</strong>
+            <span>${startDate}</span>
+          </div>
+        </article>
+        <article class="sign-summary-item">
+          <div>
+            <strong>Nummeruppgifter</strong>
+            <span>${Object.keys(numbers || {}).length ? `${Object.keys(numbers).length} personer sparade` : "Inga nummerflyttar registrerade"}</span>
+          </div>
+        </article>
+        <article class="sign-summary-item">
+          <div>
+            <strong>Belöning</strong>
+            <span>${rewardChoice?.company ? `${rewardChoice.company} ${rewardChoice.value} kr` : rewardRows ? "Fördelad mellan flera presentkort" : "Ingen belöning vald"}</span>
+          </div>
+        </article>
+        ${rewardRows ? `<article class="sign-summary-item"><div><strong>Fördelning</strong><ul class="sign-reward-list">${rewardRows}</ul></div></article>` : ""}
+      `;
+
+      const total = mergedItems.reduce((sum, item) => sum + Number(item.price || 0), 0);
+      totalPrice.textContent = formatPrice(total);
+      itemCount.textContent = `${mergedItems.length} ${mergedItems.length === 1 ? "valt abonnemang" : "valda abonnemang"}`;
+    }
+
+    function finalizeOrder() {
+      const button = document.getElementById("confirmOrderBtn");
+      const badge = document.getElementById("signStatusBadge");
+
+      button.disabled = true;
+      button.textContent = "Signering klar";
+      badge.textContent = "Beställning bekräftad";
+      badge.classList.add("is-success");
+
+      [
+        "dealettCart",
+        "selectedOffer",
+        "rewardChoice",
+        "rewardDistribution",
+        "selectedBredband",
+        "selectedBredbandId",
+        "contactEmail",
+        "contactPhone",
+        "startDateChoice",
+        "collectedNumbers"
+      ].forEach(key => localStorage.removeItem(key));
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderSummary();
+      document.getElementById("confirmOrderBtn")?.addEventListener("click", finalizeOrder);
+    });
+  </script>
+</body>
+</html>

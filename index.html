@@ -23,9 +23,8 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script src="assets/indexbehovsanalys.js"></script>
-  <script src="assets/global.js"></script>
+  <script src="assets/layout.js" defer></script>
   <script src="assets/cart.js"></script>
-  <script src="./assets/chat.js"></script>
 
   <link rel="stylesheet" href="./assets/style.css" />
   
@@ -88,20 +87,6 @@
       text-decoration:none;
     }
 
-    #header-placeholder{
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      z-index:1000;
-      min-height:0;
-      pointer-events:none;
-    }
-
-    #header-placeholder > *{
-      pointer-events:auto;
-    }
-
     .page-shell{
       width:min(calc(100% - 40px), var(--max));
       margin:0 auto;
@@ -154,58 +139,6 @@
       color:var(--muted);
       font-size:1.02rem;
       line-height:1.8;
-    }
-
-    /* HEADER OVER HERO */
-    #mainHeader{
-      background:transparent;
-      border-bottom:1px solid transparent;
-      backdrop-filter:blur(0px);
-      -webkit-backdrop-filter:blur(0px);
-      transition:
-        background-color .28s ease,
-        backdrop-filter .28s ease,
-        border-color .28s ease,
-        box-shadow .28s ease;
-    }
-
-    #mainHeader.header-overlay{
-      background:transparent;
-      border-bottom-color:transparent;
-      box-shadow:none;
-    }
-
-    #mainHeader.header-solid{
-      background:rgba(255,255,255,0.94);
-      border-bottom:1px solid rgba(15,23,42,0.08);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
-      box-shadow:0 10px 30px rgba(15,23,42,0.06);
-    }
-
-    #mainHeader.header-overlay a,
-    #mainHeader.header-overlay span,
-    #mainHeader.header-overlay i{
-      color:#fff !important;
-    }
-
-    #mainHeader.header-overlay a:hover{
-      background:rgba(255,255,255,0.08) !important;
-      color:#fff !important;
-    }
-
-    #mainHeader.header-overlay img{
-      filter:brightness(0) invert(1);
-    }
-
-    #mainHeader.header-solid a,
-    #mainHeader.header-solid span,
-    #mainHeader.header-solid i{
-      color:#4b5563 !important;
-    }
-
-    #mainHeader.header-solid a:hover{
-      color:#000 !important;
     }
 
     /* HERO */
@@ -1463,7 +1396,7 @@
   </style>
 </head>
 
-<body class="home-page min-h-screen scroll-smooth" data-chat="index">
+<body class="home-page min-h-screen scroll-smooth" data-chat="index" data-header-mode="overlay">
   <div id="header-placeholder"></div>
 
   <main>
@@ -2195,41 +2128,6 @@
   <div id="footer-placeholder"></div>
 
   <script>
-    // Header overlay / solid state
-    window.addEventListener("scroll", () => {
-      const header = document.getElementById("mainHeader");
-      if (!header) return;
-
-      const row = header.querySelector(".relative.w-full");
-
-      if (window.scrollY > 20) {
-        header.classList.remove("header-overlay");
-        header.classList.add("header-solid");
-        header.classList.add("shadow-md");
-
-        if (row) {
-          row.classList.remove("h-16");
-          row.classList.add("h-14");
-        }
-      } else {
-        header.classList.remove("header-solid");
-        header.classList.add("header-overlay");
-        header.classList.remove("shadow-md");
-
-        if (row) {
-          row.classList.remove("h-14");
-          row.classList.add("h-16");
-        }
-      }
-    });
-
-    window.addEventListener("load", () => {
-      const header = document.getElementById("mainHeader");
-      if (header) {
-        header.classList.add("header-overlay");
-      }
-    });
-
     // MAP
     const DEFAULT_VIEW = {
       center: [62.0, 15.0],

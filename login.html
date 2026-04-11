@@ -16,6 +16,7 @@
           crossorigin="anonymous" />
 
     <link rel="stylesheet" href="./assets/style.css">
+    <script src="./assets/layout.js" defer></script>
 
   </head>
 
@@ -76,46 +77,25 @@
       </div>
     </section>
 
-    <!-- Load shared footer + chat -->
+    <div id="footer-placeholder"></div>
     <script>
-      document.addEventListener("DOMContentLoaded", async () => {
-        const headerRes = await fetch("partials/header.html");
-        if (headerRes.ok) {
-          document.getElementById("header-placeholder").innerHTML =
-            await headerRes.text();
-        }
+      document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+          e.preventDefault();
 
-        const footerRes = await fetch("partials/footer.html");
-        if (footerRes.ok) {
-          document.body.insertAdjacentHTML("beforeend", await footerRes.text());
-        }
+          const email = document.getElementById("loginEmail").value;
+          const password = document.getElementById("loginPassword").value;
 
-        const script = document.createElement("script");
-        script.src = "assets/chat.js";
-        script.defer = true;
-        document.body.appendChild(script);
+          if (email && password) {
+            localStorage.setItem("dealett_user", JSON.stringify({
+              name: email.split("@")[0],
+              email: email
+            }));
+
+            window.location.href = "account.html";
+          }
+        });
       });
     </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-  document.getElementById("loginForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const email = document.getElementById("loginEmail").value;
-    const password = document.getElementById("loginPassword").value;
-
-    if (email && password) {
-      localStorage.setItem("dealett_user", JSON.stringify({
-        name: email.split("@")[0],
-        email: email
-      }));
-
-      window.location.href = "account.html";
-    }
-  });
-
-});
-</script>
   </body>
   </html>

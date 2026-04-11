@@ -1,0 +1,314 @@
+.sign-page {
+  background:
+    radial-gradient(circle at top left, rgba(15, 118, 110, 0.08), transparent 24%),
+    radial-gradient(circle at 86% 12%, rgba(11, 87, 164, 0.08), transparent 22%),
+    linear-gradient(180deg, #f8fbff 0%, #f2f6fb 100%);
+}
+
+.sign-main {
+  overflow: clip;
+}
+
+.sign-shell {
+  width: min(calc(100% - 40px), 1240px);
+  margin: 0 auto;
+}
+
+.sign-hero {
+  padding: 56px 0 34px;
+}
+
+.sign-hero .sign-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) 320px;
+  gap: 28px;
+  align-items: end;
+}
+
+.sign-kicker,
+.sign-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(15, 118, 110, 0.08);
+  color: #0b5c56;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sign-hero h1,
+.sign-cta h2,
+.sign-card h2 {
+  color: #0f172a;
+  letter-spacing: -0.04em;
+}
+
+.sign-hero h1 {
+  margin: 20px 0 14px;
+  font-size: clamp(2.5rem, 6vw, 4.7rem);
+  line-height: 0.96;
+  font-weight: 900;
+}
+
+.sign-hero p {
+  max-width: 62ch;
+  color: #516071;
+  font-size: 1.04rem;
+  line-height: 1.85;
+}
+
+.sign-hero__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.sign-hero__steps span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.05);
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.sign-hero__panel,
+.sign-card,
+.sign-cta {
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.sign-hero__panel {
+  display: grid;
+  gap: 12px;
+  padding: 26px;
+}
+
+.sign-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  width: fit-content;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.1);
+  color: #0b57a4;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.sign-status.is-success {
+  background: rgba(16, 185, 129, 0.12);
+  color: #0f766e;
+}
+
+.sign-hero__panel strong {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.04em;
+}
+
+.sign-hero__panel span {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.sign-section {
+  padding: 28px 0;
+}
+
+.sign-section--compact {
+  padding-bottom: 0;
+}
+
+.sign-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.sign-card {
+  padding: 28px;
+}
+
+.sign-card__head {
+  margin-bottom: 22px;
+}
+
+.sign-card h2,
+.sign-cta h2 {
+  margin: 16px 0 0;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  line-height: 1.05;
+  font-weight: 850;
+}
+
+.sign-summary-list {
+  display: grid;
+  gap: 14px;
+}
+
+.sign-summary-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 22px;
+  background: linear-gradient(180deg, #ffffff, #f9fbfc);
+}
+
+.sign-summary-item strong,
+.sign-summary-item span {
+  display: block;
+}
+
+.sign-summary-item strong {
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.sign-summary-item span {
+  margin-top: 6px;
+  color: #64748b;
+  line-height: 1.7;
+}
+
+.sign-summary-item__meta {
+  text-align: right;
+}
+
+.sign-reward-list {
+  margin-top: 10px;
+  padding-left: 18px;
+  color: #516071;
+}
+
+.sign-empty {
+  padding: 28px;
+  border-radius: 24px;
+  background: #ffffff;
+  text-align: center;
+}
+
+.sign-empty a {
+  color: #0f766e;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.sign-cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 26px;
+  align-items: center;
+  padding: 30px;
+}
+
+.sign-cta p {
+  margin-top: 14px;
+  max-width: 62ch;
+  color: #516071;
+  line-height: 1.85;
+}
+
+.sign-cta__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.sign-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 190px;
+  min-height: 54px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #0b57a4, #0f766e);
+  color: #ffffff;
+  font-family: "Inter", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 18px 36px rgba(11, 87, 164, 0.22);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+}
+
+.sign-button:hover {
+  transform: translateY(-1px);
+}
+
+.sign-button:disabled {
+  cursor: default;
+  opacity: 0.75;
+  transform: none;
+}
+
+.sign-button--ghost {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+  color: #0f172a;
+  box-shadow: none;
+}
+
+@media (max-width: 980px) {
+  .sign-hero .sign-shell,
+  .sign-grid,
+  .sign-cta {
+    grid-template-columns: 1fr;
+  }
+
+  .sign-cta__actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 720px) {
+  .sign-shell {
+    width: calc(100% - 28px);
+  }
+
+  .sign-hero {
+    padding-top: 32px;
+  }
+
+  .sign-card,
+  .sign-hero__panel,
+  .sign-cta {
+    padding: 22px 18px;
+    border-radius: 24px;
+  }
+
+  .sign-summary-item {
+    flex-direction: column;
+  }
+
+  .sign-summary-item__meta {
+    text-align: left;
+  }
+
+  .sign-button {
+    width: 100%;
+  }
+}

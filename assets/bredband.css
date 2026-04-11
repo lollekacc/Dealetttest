@@ -851,11 +851,3 @@ outline:none;
 border-color:#0C4A3C;
 
 }
-body{
-  padding-top:80px;
-}
-@media (min-width: 768px) {
-  #mainHeader nav {
-    display: flex !important;
-  }
-}

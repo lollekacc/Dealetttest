@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dealett – Bredband</title>
   <script src="assets/cart.js"></script>
-  <script src="./assets/chat.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./assets/bredband.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="./assets/layout.js" defer></script>
 </head>
 
-<body class="min-h-screen font-[Inter] bg-[#f6f8fb] text-slate-900">
+<body class="min-h-screen font-[Inter] bg-[#f6f8fb] text-slate-900" data-header-mode="overlay">
   <div id="header-placeholder"></div>
 
   <!-- HERO -->
@@ -398,17 +398,7 @@ document.getElementById("filtersBar").classList.remove("hidden");
       document.body.classList.remove("overflow-hidden");
     }
 
-    async function loadPartials() {
-      document.getElementById("header-placeholder").innerHTML =
-        await fetch("partials/header.html").then(r => r.text());
-
-      document.getElementById("footer-placeholder").innerHTML =
-        await fetch("partials/footer.html").then(r => r.text());
-    }
-
     document.addEventListener("DOMContentLoaded", async () => {
-      await loadPartials();
-
       fetch("./data/5Gbredband.json")
         .then(res => {
           if (!res.ok) throw new Error("HTTP " + res.status);
@@ -439,10 +429,12 @@ document.getElementById("filtersBar").classList.remove("hidden");
         const giftBtn = e.target.closest(".gift-btn");
         if (giftBtn) {
           e.stopPropagation();
+          const rewardValue = Number(giftBtn.dataset.reward);
           localStorage.setItem("rewardChoice", JSON.stringify({
-            reward: Number(giftBtn.dataset.reward)
+            reward: rewardValue
           }));
-          window.location.href = "pchoice.html";
+          els.searchMsg.textContent = `Presentkort på ${rewardValue} kr sparat. Välj nu bredband och fortsätt till varukorgen.`;
+          els.searchMsg.className = "bb-search-msg success";
           return;
         }
 
@@ -744,19 +736,22 @@ document.getElementById("filtersBar").classList.remove("hidden");
     }
   });
 
-  document.getElementById("zoomInBtn")?.onclick = () => map.zoomIn();
-  document.getElementById("zoomOutBtn")?.onclick = () => map.zoomOut();
+  const zoomInBtn = document.getElementById("zoomInBtn");
+  const zoomOutBtn = document.getElementById("zoomOutBtn");
+  const resetViewBtn = document.getElementById("resetViewBtn");
+  const clearLayerBtn = document.getElementById("clearLayerBtn");
 
-  document.getElementById("resetViewBtn")?.onclick = () => {
+  zoomInBtn?.addEventListener("click", () => map.zoomIn());
+  zoomOutBtn?.addEventListener("click", () => map.zoomOut());
+  resetViewBtn?.addEventListener("click", () => {
     map.setView([62.0, 15.0], 5);
-  };
-
-  document.getElementById("clearLayerBtn")?.onclick = () => {
+  });
+  clearLayerBtn?.addEventListener("click", () => {
     if (searchMarker) {
       map.removeLayer(searchMarker);
       searchMarker = null;
     }
-  };
+  });
 
   setTimeout(() => map.invalidateSize(), 200);
 });
