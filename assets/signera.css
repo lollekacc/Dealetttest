@@ -15,7 +15,7 @@
 }
 
 .sign-hero {
-  padding: 56px 0 34px;
+  padding: calc(var(--site-header-height, 86px) + 32px) 0 34px;
 }
 
 .sign-hero .sign-shell {

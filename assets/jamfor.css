@@ -27,7 +27,7 @@ body.jamfor-page {
 .coverage-hero {
   position: relative;
   overflow: hidden;
-  padding: 54px 0 36px;
+  padding: calc(var(--site-header-height, 86px) + 32px) 0 36px;
   background:
     linear-gradient(135deg, #0b1220 0%, #0f172a 50%, #0d1b2a 100%);
   color: #fff;

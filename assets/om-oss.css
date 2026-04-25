@@ -28,7 +28,7 @@
 }
 
 .about-main{
-  padding-top: 10px;
+  padding-top: 0;
   overflow: clip;
 }
 
@@ -65,7 +65,7 @@
 
 /* HERO */
 .about-hero{
-  padding: 44px 0 96px;
+  padding: 130px 0 96px;
 }
 
 .about-hero::before{
@@ -462,7 +462,7 @@
   border-radius: 36px;
   background:
     radial-gradient(circle at 20% 20%, rgba(255,255,255,0.10), transparent 24%),
-    linear-gradient(135deg, #0c4a3c 0%, #0f766e 58%, #15803d 100%);
+    linear-gradient(135deg, #0b5c56 0%, #0f766e 58%, #0d9488 100%);
   box-shadow: var(--about-shadow-lg);
   text-align: center;
   color: #ffffff;

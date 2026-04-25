@@ -412,6 +412,35 @@ body[data-header-mode="overlay"] .site-header.is-solid {
   box-shadow: var(--site-header-shadow);
 }
 
+/* Pages with a light background: keep overlay positioning but force solid appearance */
+body[data-header-mode="overlay"][data-header-solid="true"] .site-header {
+  background: var(--site-header-surface-strong);
+  border-bottom-color: var(--site-header-line);
+  box-shadow: var(--site-header-shadow);
+}
+
+body[data-header-mode="overlay"][data-header-solid="true"] .site-header .site-header__nav {
+  border-color: rgba(15, 23, 42, 0.06);
+  background: rgba(15, 23, 42, 0.03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+body[data-header-mode="overlay"][data-header-solid="true"] .site-header .site-header__switch,
+body[data-header-mode="overlay"][data-header-solid="true"] .site-header .site-header__link,
+body[data-header-mode="overlay"][data-header-solid="true"] .site-header .site-header__action {
+  color: var(--site-header-muted);
+}
+
+body[data-header-mode="overlay"][data-header-solid="true"] .site-header .site-header__toggle {
+  border-color: rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--site-header-text);
+}
+
+body[data-header-mode="overlay"][data-header-solid="true"] .site-header .site-header__logo {
+  filter: none;
+}
+
 .site-header.is-solid {
   border-bottom-color: var(--site-header-line);
   background: var(--site-header-surface-strong);

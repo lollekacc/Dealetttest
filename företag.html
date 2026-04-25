@@ -12,6 +12,118 @@
   <link rel="stylesheet" href="./assets/style.css">
   <link rel="stylesheet" href="./assets/index.css">
   <script src="./assets/layout.js" defer></script>
+
+  <style>
+    /* Plan cards */
+    .plan-card {
+      display: flex;
+      flex-direction: column;
+      padding: 28px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(15,23,42,0.08);
+      box-shadow: 0 12px 32px rgba(15,23,42,0.06);
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .plan-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 22px 50px rgba(15,23,42,0.10);
+    }
+    .plan-card--featured {
+      background: rgba(255,255,255,0.96);
+      border: 2px solid rgba(15,118,110,0.28);
+      box-shadow: 0 18px 48px rgba(15,118,110,0.12);
+    }
+    .plan-card--featured:hover {
+      box-shadow: 0 28px 60px rgba(15,118,110,0.18);
+    }
+    .plan-badge {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 16px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #0b5c56, #0f766e);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+      box-shadow: 0 8px 18px rgba(15,118,110,0.28);
+    }
+    .plan-card h4 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 16px;
+      letter-spacing: -0.02em;
+    }
+    .plan-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .plan-card ul li {
+      font-size: 0.88rem;
+      color: #475569;
+      padding-left: 20px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .plan-card ul li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #0f766e;
+      opacity: 0.7;
+    }
+    .plan-price-old {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      text-decoration: line-through;
+      margin: 0;
+    }
+    .plan-price {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #0f766e;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin: 4px 0 2px;
+    }
+    .plan-price-note {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin: 0 0 16px;
+    }
+    /* Operator section */
+    .operator-section {
+      padding: 32px;
+      border-radius: 32px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(15,23,42,0.07);
+      box-shadow: 0 10px 30px rgba(15,23,42,0.05);
+    }
+    .operator-logo-col img {
+      max-height: 52px;
+      width: auto;
+      object-fit: contain;
+    }
+    .operator-logo-col p {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.65;
+    }
+  </style>
 </head>
 
 <body class="home-page min-h-screen font-[Inter] text-gray-900" data-header-mode="overlay">
@@ -62,366 +174,269 @@
 </section>
 
   <!-- PLANS -->
-  <section class="py-20">
-    <div class="max-w-7xl mx-auto px-6 space-y-20">
+  <section class="py-16" style="padding-bottom:80px;">
+    <div class="max-w-7xl mx-auto px-6">
 
-      <!-- ================= TELIA ================= -->
-      <div class="grid md:grid-cols-4 gap-8 items-start">
-        <div>
-          <img src="images/telia.png" alt="Telia Företag" class="h-50 mb-3 object-contain" />
-          <p class="text-gray-600 text-sm">
-            Företagsabonnemang med marknadsledande täckning och stabil prestanda.
-          </p>
-        </div>
-<!-- Telia Obegränsad Plus -->
-<div class="border-2 border-[#0f766e] rounded-xl p-6 shadow-md flex flex-col">
-  <h4 class="text-lg font-bold mb-2">Obegränsad Plus</h4>
-
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• Obegränsad surf</li>
-    <li>• 5G upp till 1500 Mbit/s</li>
-    <li>• 50 GB surf i EU/EES</li>
-    <li>• Fria samtal, sms och mms</li>
-    <li>• Smart Säkerhet ingår</li>
-    <li>• Extra datasim (värde 249 kr/mån)</li>
-    <li>• 50% på Microsoft 365 Standard</li>
-  </ul>
-
-  <div class="mt-auto">
-    <p class="text-xl font-extrabold text-[#0f766e]">
-      579 kr/mån
-    </p>
-
-    <a href="signera.html" class="adeala-btn w-full text-center mt-4">
-      Välj och anpassa
-    </a>
-  </div>
-</div>
-
-<!-- Telia Obegränsad -->
-<div class="border rounded-xl p-6 shadow-sm flex flex-col">
-  <h4 class="text-lg font-bold mb-2">Obegränsad</h4>
-
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• Obegränsad surf</li>
-    <li>• 5G upp till 300 Mbit/s</li>
-    <li>• 50 GB surf i EU/EES</li>
-    <li>• Fria samtal, sms och mms</li>
-    <li>• Smart Säkerhet ingår</li>
-  </ul>
-
-  <div class="mt-auto">
-    <p class="text-xl font-extrabold text-[#0f766e]">
-      479 kr/mån
-    </p>
-
-    <a href="signera.html" class="adeala-btn w-full text-center mt-4">
-      Välj och anpassa
-    </a>
-  </div>
-</div>
-
-<!-- Telia 50 GB -->
-<div class="border rounded-xl p-6 shadow-sm flex flex-col">
-  <h4 class="text-lg font-bold mb-2">50 GB</h4>
-
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• 50 GB surf</li>
-    <li>• 5G upp till 100 Mbit/s</li>
-    <li>• 50 GB surf i EU/EES</li>
-    <li>• Fria samtal, sms och mms</li>
-    <li>• Smart Säkerhet ingår</li>
-  </ul>
-
-  <div class="mt-auto">
-    <p class="text-xl font-extrabold text-[#0f766e]">
-      379 kr/mån
-    </p>
-
-    <a href="signera.html" class="adeala-btn w-full text-center mt-4">
-      Välj och anpassa
-    </a>
-  </div>
-</div>
-
+      <div class="text-center mb-14">
+        <span class="section-kicker">Jämför planer</span>
+        <h2 class="mt-5 text-3xl md:text-4xl font-black" style="color:#0f172a;letter-spacing:-0.04em;">Välj operatör och plan</h2>
+        <p class="mt-3 text-base max-w-xl mx-auto" style="color:#64748b;line-height:1.8;">Alla planer inkluderar 5G-uppkoppling och stöd för företag i alla storlekar.</p>
       </div>
 
-      <!-- ================= TELE2 ================= -->
-      <div class="grid md:grid-cols-4 gap-8 items-start">
-        <div>
-          <img src="images/tele2.jpg" alt="Tele2 Företag" class="h-50 mb-3 object-contain" />
-          <p class="text-gray-600 text-sm">
-            Flexibla företagsabonnemang med stark 5G-närvaro.
-          </p>
-        </div>
-<!-- Tele2 Obegränsad Max -->
-<div class="border rounded-xl p-6 shadow-sm flex flex-col">
-  <h4 class="text-lg font-bold mb-2">Obegränsad Max</h4>
+      <div class="space-y-10">
 
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• 5G upp till 1500 Mbit/s</li>
-    <li>• Ring fritt till kollegor utomlands</li>
-    <li>• 100 GB surf i EU/EES & utvalda länder</li>
-    <li>• Fria samtal, sms och mms i EU/EES</li>
-    <li>• 1 000 fria samtal/sms/mms till Norden</li>
-  </ul>
+        <!-- TELIA -->
+        <div class="operator-section">
+          <div class="grid md:grid-cols-4 gap-6 items-start">
+            <div class="operator-logo-col pt-2">
+              <img src="images/telia.png" alt="Telia Företag" />
+              <p>Marknadsledande täckning och stabil prestanda för företag.</p>
+            </div>
 
-  <div class="mt-auto">
-    <p class="text-sm text-gray-500 line-through">
-      Ordinarie pris: 599 kr/mån
-    </p>
-    <p class="text-xl font-extrabold text-[#0f766e]">
-      329 kr/mån
-    </p>
-    <p class="text-sm text-gray-600 mb-4">
-      24 mån bindningstid
-    </p>
+            <!-- Telia Obegränsad Plus (featured) -->
+            <div class="plan-card plan-card--featured relative">
+              <span class="plan-badge">Mest komplett</span>
+              <h4>Obegränsad Plus</h4>
+              <ul>
+                <li>Obegränsad surf</li>
+                <li>5G upp till 1500 Mbit/s</li>
+                <li>50 GB surf i EU/EES</li>
+                <li>Fria samtal, sms och mms</li>
+                <li>Smart Säkerhet ingår</li>
+                <li>Extra datasim (värde 249 kr/mån)</li>
+                <li>50% på Microsoft 365 Standard</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price">579 kr/mån</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;margin-top:14px;">Välj och anpassa</a>
+              </div>
+            </div>
 
-    <a href="signera.html" class="adeala-btn w-full text-center">
-      Beställ
-    </a>
-  </div>
-</div>
+            <!-- Telia Obegränsad -->
+            <div class="plan-card">
+              <h4>Obegränsad</h4>
+              <ul>
+                <li>Obegränsad surf</li>
+                <li>5G upp till 300 Mbit/s</li>
+                <li>50 GB surf i EU/EES</li>
+                <li>Fria samtal, sms och mms</li>
+                <li>Smart Säkerhet ingår</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price">479 kr/mån</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;margin-top:14px;">Välj och anpassa</a>
+              </div>
+            </div>
 
-<!-- Tele2 Obegränsad (Populärt val) -->
-<div class="border-2 border-[#0C4A3C] rounded-xl p-6 shadow-md flex flex-col relative">
-  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0f766e] text-white text-xs px-4 py-1 rounded-full">
-    Populärt val
-  </span>
-
-  <h4 class="text-lg font-bold mb-2">Obegränsad</h4>
-
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• 5G upp till 300 Mbit/s</li>
-    <li>• Ring fritt till kollegor utomlands</li>
-    <li>• 100 GB surf i EU/EES & utvalda länder</li>
-    <li>• Fria samtal, sms och mms i EU/EES</li>
-  </ul>
-
-  <div class="mt-auto">
-    <p class="text-sm text-gray-500 line-through">
-      Ordinarie pris: 499 kr/mån
-    </p>
-    <p class="text-xl font-extrabold text-[#0f766e]">
-      279 kr/mån
-    </p>
-    <p class="text-sm text-gray-600 mb-4">
-      24 mån bindningstid
-    </p>
-
-    <a href="signera.html" class="adeala-btn w-full text-center">
-      Beställ
-    </a>
-  </div>
-</div>
-
-<!-- Tele2 60 GB -->
-<div class="border rounded-xl p-6 shadow-sm flex flex-col">
-  <h4 class="text-lg font-bold mb-2">60 GB</h4>
-
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• 5G upp till 100 Mbit/s</li>
-    <li>• 60 GB surf i EU/EES</li>
-    <li>• Fria samtal, sms och mms i Sverige & EU/EES</li>
-  </ul>
-
-  <div class="mt-auto">
-    <p class="text-sm text-gray-500 line-through">
-      Ordinarie pris: 399 kr/mån
-    </p>
-    <p class="text-xl font-extrabold text-[#0f766e]">
-      269 kr/mån
-    </p>
-    <p class="text-sm text-gray-600 mb-4">
-      24 mån bindningstid
-    </p>
-
-    <a href="signera.html" class="adeala-btn w-full text-center">
-      Beställ
-    </a>
-  </div>
-</div>
-
-      </div>
-
-      <!-- ================= TELENOR ================= -->
-      <div class="grid md:grid-cols-4 gap-8 items-start">
-        <div>
-          <img src="images/telenor.jpg" alt="Telenor Företag" class="h-50 mb-3 object-contain" />
-          <p class="text-gray-600 text-sm">
-            Stabil uppkoppling och pålitliga företagslösningar i hela Sverige.
-          </p>
+            <!-- Telia 50 GB -->
+            <div class="plan-card">
+              <h4>50 GB</h4>
+              <ul>
+                <li>50 GB surf</li>
+                <li>5G upp till 100 Mbit/s</li>
+                <li>50 GB surf i EU/EES</li>
+                <li>Fria samtal, sms och mms</li>
+                <li>Smart Säkerhet ingår</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price">379 kr/mån</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;margin-top:14px;">Välj och anpassa</a>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Telenor Obegränsat Premium -->
-<div class="border-2 border-[#0f766e] rounded-xl p-6 shadow-md flex flex-col relative">
-  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0f766e] text-white text-xs px-4 py-1 rounded-full">
-    Kampanj
-  </span>
+        <!-- TELE2 -->
+        <div class="operator-section">
+          <div class="grid md:grid-cols-4 gap-6 items-start">
+            <div class="operator-logo-col pt-2">
+              <img src="images/tele2.jpg" alt="Tele2 Företag" />
+              <p>Flexibla företagsabonnemang med stark 5G-närvaro.</p>
+            </div>
 
-  <h4 class="text-lg font-bold mb-2">Obegränsat Premium</h4>
+            <!-- Tele2 Obegränsad Max -->
+            <div class="plan-card">
+              <h4>Obegränsad Max</h4>
+              <ul>
+                <li>5G upp till 1500 Mbit/s</li>
+                <li>Ring fritt till kollegor utomlands</li>
+                <li>100 GB surf i EU/EES & utvalda länder</li>
+                <li>Fria samtal, sms och mms i EU/EES</li>
+                <li>1 000 fria samtal/sms/mms till Norden</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price-old">Ordinarie: 599 kr/mån</p>
+                <p class="plan-price">329 kr/mån</p>
+                <p class="plan-price-note">24 mån bindningstid</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;">Beställ</a>
+              </div>
+            </div>
 
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• Obegränsad surf i Sverige</li>
-    <li>• 150 GB i EU/EES + 10 länder</li>
-    <li>• 5G upp till 1500 Mbit/s</li>
-    <li>• Fria samtal, sms och mms i EU/EES</li>
-    <li>• Extra data-sim & SafeZone</li>
-    <li>• Internationella samtal till Norden</li>
-    <li>• One X växel – Bas</li>
-  </ul>
+            <!-- Tele2 Obegränsad (featured) -->
+            <div class="plan-card plan-card--featured relative">
+              <span class="plan-badge">Populärt val</span>
+              <h4>Obegränsad</h4>
+              <ul>
+                <li>5G upp till 300 Mbit/s</li>
+                <li>Ring fritt till kollegor utomlands</li>
+                <li>100 GB surf i EU/EES & utvalda länder</li>
+                <li>Fria samtal, sms och mms i EU/EES</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price-old">Ordinarie: 499 kr/mån</p>
+                <p class="plan-price">279 kr/mån</p>
+                <p class="plan-price-note">24 mån bindningstid</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;">Beställ</a>
+              </div>
+            </div>
 
-  <div class="mt-auto">
-    <p class="text-sm text-gray-500 line-through">Ordinarie pris: 599 kr/mån</p>
-    <p class="text-xl font-extrabold text-[#0f766e]">449 kr/mån</p>
-    <p class="text-sm text-gray-600 mb-4">24 mån bindningstid</p>
-
-    <a href="signera.html" class="adeala-btn w-full text-center">
-      Beställ
-    </a>
-  </div>
-</div>
-
-<!-- Telenor Obegränsat Plus -->
-<div class="border rounded-xl p-6 shadow-sm flex flex-col">
-  <h4 class="text-lg font-bold mb-2">Obegränsat Plus</h4>
-
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• Obegränsad surf i Sverige</li>
-    <li>• 100 GB i EU/EES + 10 länder</li>
-    <li>• 5G upp till 600 Mbit/s</li>
-    <li>• Fria samtal, sms och mms i EU/EES</li>
-    <li>• Extra data-sim</li>
-    <li>• Internationella samtal till Norden</li>
-  </ul>
-
-  <div class="mt-auto">
-    <p class="text-sm text-gray-500 line-through">Ordinarie pris: 499 kr/mån</p>
-    <p class="text-xl font-extrabold text-[#0f766e]">449 kr/mån</p>
-    <p class="text-sm text-gray-600 mb-4">24 mån bindningstid</p>
-
-    <a href="signera.html" class="adeala-btn w-full text-center">
-      Beställ
-    </a>
-  </div>
-</div>
-
-<!-- Telenor Obegränsat -->
-<div class="border rounded-xl p-6 shadow-sm flex flex-col">
-  <h4 class="text-lg font-bold mb-2">Obegränsat</h4>
-
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• Obegränsad surf i Sverige</li>
-    <li>• 75 GB i EU/EES</li>
-    <li>• 5G upp till 300 Mbit/s</li>
-    <li>• Fria samtal, sms och mms i EU/EES</li>
-  </ul>
-
-  <div class="mt-auto">
-    <p class="text-sm text-gray-500 line-through">Ordinarie pris: 449 kr/mån</p>
-    <p class="text-xl font-extrabold text-[#0f766e]">399 kr/mån</p>
-    <p class="text-sm text-gray-600 mb-4">24 mån bindningstid</p>
-
-    <a href="signera.html" class="adeala-btn w-full text-center">
-      Beställ
-    </a>
-  </div>
-</div>
-
-      </div>
-
-      <!-- ================= TRE ================= -->
-      <div class="grid md:grid-cols-4 gap-8 items-start">
-        <div>
-          <img src="images/tre.jpg" alt="Tre Företag" class="h-50 mb-3 object-contain" />
-          <p class="text-gray-600 text-sm">
-            Snabba och moderna företagsabonnemang med hög flexibilitet.
-          </p>
+            <!-- Tele2 60 GB -->
+            <div class="plan-card">
+              <h4>60 GB</h4>
+              <ul>
+                <li>5G upp till 100 Mbit/s</li>
+                <li>60 GB surf i EU/EES</li>
+                <li>Fria samtal, sms och mms i Sverige & EU/EES</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price-old">Ordinarie: 399 kr/mån</p>
+                <p class="plan-price">269 kr/mån</p>
+                <p class="plan-price-note">24 mån bindningstid</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;">Beställ</a>
+              </div>
+            </div>
+          </div>
         </div>
-<!-- Tre Företag Obegränsad -->
-<div class="border rounded-xl p-6 shadow-sm flex flex-col">
-  <h4 class="text-lg font-bold mb-2">3Företag Obegränsad</h4>
 
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• Obegränsad surf i Sverige</li>
-    <li>• Upp till 300 Mbit/s (5G)</li>
-    <li>• 100 GB/mån i EU/EES & Storbritannien</li>
-    <li>• Surfa och ring i över 80 länder</li>
-    <li>• Samtal & sms ingår</li>
-  </ul>
+        <!-- TELENOR -->
+        <div class="operator-section">
+          <div class="grid md:grid-cols-4 gap-6 items-start">
+            <div class="operator-logo-col pt-2">
+              <img src="images/telenor.jpg" alt="Telenor Företag" />
+              <p>Stabil uppkoppling och pålitliga företagslösningar i hela Sverige.</p>
+            </div>
 
-  <div class="mt-auto">
-    <p class="text-xl font-extrabold text-[#0f766e]">
-      299 kr/mån
-    </p>
-    <p class="text-sm text-gray-600 mb-4">
-      24 mån bindningstid
-    </p>
+            <!-- Telenor Obegränsat Premium (featured) -->
+            <div class="plan-card plan-card--featured relative">
+              <span class="plan-badge">Kampanj</span>
+              <h4>Obegränsat Premium</h4>
+              <ul>
+                <li>Obegränsad surf i Sverige</li>
+                <li>150 GB i EU/EES + 10 länder</li>
+                <li>5G upp till 1500 Mbit/s</li>
+                <li>Fria samtal, sms och mms i EU/EES</li>
+                <li>Extra data-sim & SafeZone</li>
+                <li>Internationella samtal till Norden</li>
+                <li>One X växel – Bas</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price-old">Ordinarie: 599 kr/mån</p>
+                <p class="plan-price">449 kr/mån</p>
+                <p class="plan-price-note">24 mån bindningstid</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;">Beställ</a>
+              </div>
+            </div>
 
-    <a href="signera.html" class="adeala-btn w-full text-center">
-      Beställ
-    </a>
-  </div>
-</div>
+            <!-- Telenor Obegränsat Plus -->
+            <div class="plan-card">
+              <h4>Obegränsat Plus</h4>
+              <ul>
+                <li>Obegränsad surf i Sverige</li>
+                <li>100 GB i EU/EES + 10 länder</li>
+                <li>5G upp till 600 Mbit/s</li>
+                <li>Fria samtal, sms och mms i EU/EES</li>
+                <li>Extra data-sim</li>
+                <li>Internationella samtal till Norden</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price-old">Ordinarie: 499 kr/mån</p>
+                <p class="plan-price">449 kr/mån</p>
+                <p class="plan-price-note">24 mån bindningstid</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;">Beställ</a>
+              </div>
+            </div>
 
-<!-- Tre Företag Obegränsad Max -->
-<div class="border-2 border-[#0f766e] rounded-xl p-6 shadow-md flex flex-col relative">
-  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0f766e] text-white text-xs px-4 py-1 rounded-full">
-    Populär
-  </span>
+            <!-- Telenor Obegränsat -->
+            <div class="plan-card">
+              <h4>Obegränsat</h4>
+              <ul>
+                <li>Obegränsad surf i Sverige</li>
+                <li>75 GB i EU/EES</li>
+                <li>5G upp till 300 Mbit/s</li>
+                <li>Fria samtal, sms och mms i EU/EES</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price-old">Ordinarie: 449 kr/mån</p>
+                <p class="plan-price">399 kr/mån</p>
+                <p class="plan-price-note">24 mån bindningstid</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;">Beställ</a>
+              </div>
+            </div>
+          </div>
+        </div>
 
-  <h4 class="text-lg font-bold mb-2">3Företag Obegränsad Max</h4>
+        <!-- TRE -->
+        <div class="operator-section">
+          <div class="grid md:grid-cols-4 gap-6 items-start">
+            <div class="operator-logo-col pt-2">
+              <img src="images/tre.jpg" alt="Tre Företag" />
+              <p>Snabba och moderna företagsabonnemang med hög flexibilitet.</p>
+            </div>
 
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• Obegränsad surf i Sverige</li>
-    <li>• Obegränsad hastighet (5G)</li>
-    <li>• 100 GB/mån utomlands med 3Världen</li>
-    <li>• 10 tim samtal till utlandet</li>
-    <li>• Extra datakort ingår</li>
-  </ul>
+            <!-- Tre Obegränsad -->
+            <div class="plan-card">
+              <h4>3Företag Obegränsad</h4>
+              <ul>
+                <li>Obegränsad surf i Sverige</li>
+                <li>Upp till 300 Mbit/s (5G)</li>
+                <li>100 GB/mån i EU/EES & Storbritannien</li>
+                <li>Surfa och ring i över 80 länder</li>
+                <li>Samtal & sms ingår</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price">299 kr/mån</p>
+                <p class="plan-price-note">24 mån bindningstid</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;">Beställ</a>
+              </div>
+            </div>
 
-  <div class="mt-auto">
-    <p class="text-xl font-extrabold text-[#0f766e]">
-      399 kr/mån
-    </p>
-    <p class="text-sm text-gray-600 mb-4">
-      24 mån bindningstid
-    </p>
+            <!-- Tre Obegränsad Max (featured) -->
+            <div class="plan-card plan-card--featured relative">
+              <span class="plan-badge">Populär</span>
+              <h4>3Företag Obegränsad Max</h4>
+              <ul>
+                <li>Obegränsad surf i Sverige</li>
+                <li>Obegränsad hastighet (5G)</li>
+                <li>100 GB/mån utomlands med 3Världen</li>
+                <li>10 tim samtal till utlandet</li>
+                <li>Extra datakort ingår</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price">399 kr/mån</p>
+                <p class="plan-price-note">24 mån bindningstid</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;">Beställ</a>
+              </div>
+            </div>
 
-    <a href="signera.html" class="adeala-btn w-full text-center">
-      Beställ
-    </a>
-  </div>
-</div>
-
-<!-- Tre Företag – 3Koppla -->
-<div class="border rounded-xl p-6 shadow-sm flex flex-col" style="background:rgba(15,118,110,0.04);">
-  <span class="text-xs uppercase font-semibold text-[#0f766e] mb-2">
-    Nyhet
-  </span>
-
-  <h4 class="text-lg font-bold mb-2">3Koppla</h4>
-
-  <ul class="text-sm text-gray-700 space-y-1 mb-4">
-    <li>• Mobil växel & kontaktcenter</li>
-    <li>• Smarta företagsfunktioner</li>
-    <li>• Integration med företagsappar</li>
-    <li>• Enkel self service</li>
-  </ul>
-
-  <div class="mt-auto">
-    <p class="text-sm text-gray-600 mb-4">
-      Tilläggstjänst för företag
-    </p>
-
-    <a href="signera.html" class="adeala-btn w-full text-center">
-      Läs mer
-    </a>
-  </div>
-</div>
+            <!-- 3Koppla -->
+            <div class="plan-card" style="background:rgba(15,118,110,0.04);">
+              <span style="font-size:11px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:#0f766e;display:block;margin-bottom:10px;">Nyhet</span>
+              <h4>3Koppla</h4>
+              <ul>
+                <li>Mobil växel & kontaktcenter</li>
+                <li>Smarta företagsfunktioner</li>
+                <li>Integration med företagsappar</li>
+                <li>Enkel self service</li>
+              </ul>
+              <div style="margin-top:auto;">
+                <p class="plan-price-note" style="margin-bottom:14px;">Tilläggstjänst för företag</p>
+                <a href="signera.html" class="adeala-btn" style="display:block;text-align:center;">Läs mer</a>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </div>
-
     </div>
   </section>
 

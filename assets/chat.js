@@ -24,9 +24,12 @@
     "B",
     "BLOCKQUOTE",
     "BR",
+    "BUTTON",
     "CODE",
+    "DIV",
     "EM",
     "I",
+    "IMG",
     "LI",
     "OL",
     "P",
@@ -36,10 +39,8 @@
     "UL"
   ]);
   const DROP_RICH_TEXT_TAGS = new Set([
-    "BUTTON",
     "FORM",
     "IFRAME",
-    "IMG",
     "INPUT",
     "OBJECT",
     "SCRIPT",
@@ -865,6 +866,26 @@
     }
   }
 
+  function sanitizeRichTextSrc(value) {
+    const trimmed = String(value || "").trim();
+    if (!trimmed) return null;
+
+    try {
+      const url = new URL(trimmed, window.location.origin);
+      return ["http:", "https:"].includes(url.protocol) ? url.href : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function sanitizeClassName(value) {
+    return String(value || "")
+      .split(/\s+/)
+      .map((token) => token.trim())
+      .filter((token) => /^[a-zA-Z0-9_-]+$/.test(token))
+      .join(" ");
+  }
+
   function sanitizeRichTextTree(root) {
     Array.from(root.childNodes).forEach(node => {
       if (node.nodeType === Node.COMMENT_NODE) {
@@ -911,13 +932,58 @@
           return;
         }
 
+        if (name === "class") {
+          const safeClassName = sanitizeClassName(attribute.value);
+          if (safeClassName) {
+            node.setAttribute("class", safeClassName);
+          } else {
+            node.removeAttribute(attribute.name);
+          }
+          return;
+        }
+
+        if (tagName === "BUTTON" && name === "type") {
+          node.setAttribute("type", "button");
+          return;
+        }
+
+        if (tagName === "BUTTON" && name === "data-chat-answer") {
+          node.setAttribute("data-chat-answer", String(attribute.value || "").trim());
+          return;
+        }
+
+        if (tagName === "IMG" && name === "src") {
+          const safeSrc = sanitizeRichTextSrc(attribute.value);
+          if (safeSrc) {
+            node.setAttribute("src", safeSrc);
+          } else {
+            node.remove();
+          }
+          return;
+        }
+
+        if (tagName === "IMG" && ["alt", "loading", "decoding"].includes(name)) {
+          node.setAttribute(name, String(attribute.value || "").trim());
+          return;
+        }
+
         node.removeAttribute(attribute.name);
       });
 
       if (tagName === "A") {
         if (node.hasAttribute("href")) {
-          node.setAttribute("target", "_blank");
-          node.setAttribute("rel", "noopener noreferrer");
+          try {
+            const hrefUrl = new URL(node.getAttribute("href"), window.location.origin);
+            if (hrefUrl.origin === window.location.origin) {
+              node.removeAttribute("target");
+              node.removeAttribute("rel");
+            } else {
+              node.setAttribute("target", "_blank");
+              node.setAttribute("rel", "noopener noreferrer");
+            }
+          } catch {
+            node.removeAttribute("href");
+          }
         } else {
           node.removeAttribute("target");
           node.removeAttribute("rel");
