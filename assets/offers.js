@@ -2107,7 +2107,12 @@ function openRewardSection(totalReward, offerId) {
   updateUI();
 
   continueBtn.onclick = () => { 
-    const selectedOffer = JSON.parse(localStorage.getItem("selectedOffer") || "null");
+    let selectedOffer = null;
+    try {
+      selectedOffer = JSON.parse(localStorage.getItem("selectedOffer") || "null");
+    } catch (error) {
+      console.warn("Could not read selectedOffer from storage:", error);
+    }
     if (!selectedOffer) return;
 
     const distributedRewards = Object.fromEntries(

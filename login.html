@@ -16,61 +16,66 @@
           crossorigin="anonymous" />
 
     <link rel="stylesheet" href="./assets/style.css">
+    <link rel="stylesheet" href="./assets/index.css">
     <script src="./assets/layout.js" defer></script>
 
   </head>
 
-  <body class="min-h-screen font-[Inter] bg-white text-gray-900">
+  <body class="home-page min-h-screen font-[Inter] text-gray-900" data-header-mode="overlay">
 
     <!-- Header -->
     <div id="header-placeholder"></div>
 
     <!-- LOGIN SECTION -->
-    <section class="min-h-[80vh] flex items-center justify-center px-6">
-      <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 relative overflow-hidden">
+    <section class="min-h-[80vh] flex items-center justify-center px-6 py-20">
+      <div class="w-full max-w-md relative overflow-hidden" style="background:rgba(255,255,255,0.88);border:1px solid rgba(255,255,255,0.85);border-radius:32px;padding:2.5rem;backdrop-filter:blur(20px);box-shadow:0 30px 80px rgba(15,23,42,0.12);">
 
-        <!-- Optional watermark SVG background -->
-        <div class="absolute inset-0 opacity-10 pointer-events-none"
-            style="background: url('images/logo-watermark.svg') center / contain no-repeat;">
+        <div class="mb-6 text-center">
+          <span class="section-kicker">Välkommen tillbaka</span>
         </div>
 
-        <h1 class="text-3xl font-extrabold text-center mb-6 relative z-10">
+        <h1 style="margin:16px 0 24px;font-size:2.2rem;font-weight:900;letter-spacing:-0.04em;color:#0f172a;text-align:center;line-height:1.05;">
           Logga in
         </h1>
 
         <form id="loginForm" class="space-y-5 relative z-10">
           <div>
-            <label class="block text-sm font-medium mb-1">E-post</label>
+            <label class="block text-sm font-semibold mb-2" style="color:#0f172a;">E-post</label>
             <input
               id="loginEmail"
               type="email"
               required
-              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              style="width:100%;padding:14px 18px;border-radius:16px;border:1px solid rgba(15,23,42,0.12);background:#fff;font-family:inherit;font-size:1rem;color:#0f172a;outline:none;transition:border-color .2s,box-shadow .2s;"
               placeholder="namn@email.se"
+              onfocus="this.style.borderColor='rgba(15,118,110,0.45)';this.style.boxShadow='0 0 0 4px rgba(15,118,110,0.10)'"
+              onblur="this.style.borderColor='rgba(15,23,42,0.12)';this.style.boxShadow='none'"
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium mb-1">Lösenord</label>
+            <label class="block text-sm font-semibold mb-2" style="color:#0f172a;">Lösenord</label>
             <input
-            id="loginPassword"
+              id="loginPassword"
               type="password"
               required
-              class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              style="width:100%;padding:14px 18px;border-radius:16px;border:1px solid rgba(15,23,42,0.12);background:#fff;font-family:inherit;font-size:1rem;color:#0f172a;outline:none;transition:border-color .2s,box-shadow .2s;"
               placeholder="••••••••"
+              onfocus="this.style.borderColor='rgba(15,118,110,0.45)';this.style.boxShadow='0 0 0 4px rgba(15,118,110,0.10)'"
+              onblur="this.style.borderColor='rgba(15,23,42,0.12)';this.style.boxShadow='none'"
             />
           </div>
 
           <button
             type="submit"
-            class="w-full adeala-btn py-3 rounded-xl text-lg font-semibold">
+            class="btn-primary"
+            style="width:100%;border:none;cursor:pointer;font-family:inherit;">
             Logga in
           </button>
         </form>
 
-        <div class="mt-6 text-center text-sm text-gray-600 relative z-10">
+        <div class="mt-6 text-center text-sm relative z-10" style="color:#64748b;">
           Har du inget konto?
-          <a href="#" class="text-blue-600 font-semibold hover:underline">
+          <a href="#" style="color:#0f766e;font-weight:700;text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
             Registrera dig
           </a>
         </div>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="sv">
-    
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,206 +8,147 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            inter: ["Inter", "sans-serif"]
-          },
-          colors: {
-            dealett: {
-              bg: "#06070b",
-              bgSoft: "#0b0f16",
-              panel: "rgba(14,19,28,0.78)",
-              panelSoft: "rgba(255,255,255,0.04)",
-              line: "rgba(255,255,255,0.08)",
-              lineStrong: "rgba(255,255,255,0.14)",
-              text: "#f5f7fb",
-              muted: "#9aa4b2",
-              gold: "#d4af37",
-              goldSoft: "rgba(212,175,55,0.14)",
-              green: "#10b981",
-              red: "#ef4444"
-            }
-          },
-          boxShadow: {
-            glass: "0 20px 60px rgba(0,0,0,0.32)",
-            soft: "0 10px 30px rgba(0,0,0,0.18)",
-            gold: "0 0 0 1px rgba(212,175,55,0.16), 0 20px 60px rgba(0,0,0,0.32)"
-          }
-        }
-      }
-    };
-  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="stylesheet" href="./assets/index.css" />
+  <script src="./assets/layout.js" defer></script>
 
   <style>
-    :root {
-      --bg-1: #06070b;
-      --bg-2: #0b0f16;
-      --text: #f5f7fb;
-      --muted: #9aa4b2;
-      --gold: #d4af37;
-    }
+    html { scroll-behavior: smooth; }
 
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      font-family: "Inter", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(212,175,55,0.12), transparent 26%),
-        radial-gradient(circle at 85% 10%, rgba(255,255,255,0.06), transparent 20%),
-        linear-gradient(180deg, #06070b 0%, #0a0e15 45%, #070a10 100%);
-      min-height: 100vh;
-    }
-
-    .glass {
-      background: rgba(14, 19, 28, 0.78);
+    .acct-glass {
+      background: rgba(255,255,255,0.88);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.85);
+      box-shadow: 0 20px 60px rgba(15,23,42,0.08);
     }
 
-    .card-hover {
-      transition: transform .28s ease, border-color .28s ease, background-color .28s ease, box-shadow .28s ease;
+    .acct-card {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(15,23,42,0.08);
+      box-shadow: 0 12px 28px rgba(15,23,42,0.05);
+      transition: transform .28s ease, box-shadow .28s ease;
     }
 
-    .card-hover:hover {
-      transform: translateY(-4px);
-      border-color: rgba(212,175,55,0.2);
+    .acct-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 50px rgba(15,23,42,0.09);
     }
 
-    .gold-outline {
-      box-shadow:
-        0 0 0 1px rgba(212,175,55,0.15),
-        0 20px 60px rgba(0,0,0,0.34);
+    .acct-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: rgba(15,118,110,0.10);
+      color: #0b5c56;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
-    .text-balance {
-      text-wrap: balance;
+    .acct-btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #0b5c56, #0f766e);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(15,118,110,0.22);
+      transition: transform .2s ease, box-shadow .2s ease;
+      border: none;
+      cursor: pointer;
     }
 
-    .hidden {
-      display: none !important;
+    .acct-btn-primary:hover { transform: translateY(-2px); }
+
+    .acct-btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: transparent;
+      color: #0f172a;
+      font-weight: 700;
+      border: 1px solid rgba(15,23,42,0.14);
+      transition: background .2s ease;
+      cursor: pointer;
     }
 
-    .page-grid {
-      background-image:
-        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
-      background-size: 72px 72px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent 90%);
-      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent 90%);
+    .acct-btn-ghost:hover { background: rgba(15,23,42,0.05); }
+
+    .acct-stat-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #64748b;
     }
+
+    .acct-divider {
+      height: 1px;
+      background: rgba(15,23,42,0.07);
+    }
+
+    .hidden { display: none !important; }
   </style>
 </head>
 
-<body class="font-inter text-dealett-text">
-  <!-- Background -->
-  <div class="fixed inset-0 pointer-events-none overflow-hidden">
-    <div class="absolute inset-0 page-grid opacity-[0.28]"></div>
-    <div class="absolute top-[-120px] left-[-60px] w-[420px] h-[420px] rounded-full bg-dealett-goldSoft blur-3xl opacity-70"></div>
-    <div class="absolute top-[120px] right-[-120px] w-[360px] h-[360px] rounded-full bg-white/5 blur-3xl opacity-80"></div>
-    <div class="absolute bottom-[-120px] left-[20%] w-[340px] h-[340px] rounded-full bg-dealett-goldSoft blur-3xl opacity-40"></div>
-  </div>
+<body class="home-page font-[Inter] text-gray-900" data-header-mode="overlay">
 
-  <!-- New Header -->
-  <header class="sticky top-0 z-50 px-4 pt-4 md:px-6">
-    <div class="max-w-7xl mx-auto">
-      <div class="glass gold-outline rounded-[24px] border border-dealett-line">
-        <div class="flex items-center justify-between px-4 py-3 md:px-6 md:py-4">
-          <a href="index.html" class="flex items-center gap-3 group">
-            <div class="h-11 w-11 rounded-2xl bg-dealett-gold text-black flex items-center justify-center text-lg font-black shadow-soft">
-              D
-            </div>
-            <div class="min-w-0">
-              <div class="text-[11px] uppercase tracking-[0.32em] text-dealett-gold font-semibold">
-                Dealett
-              </div>
-              <div class="text-sm md:text-base font-semibold text-white group-hover:text-dealett-gold transition-colors">
-                Mitt konto
-              </div>
-            </div>
-          </a>
+  <div id="header-placeholder"></div>
 
-          <div class="flex items-center gap-2 md:gap-3">
-            <a
-              href="abonnemang.html"
-              class="hidden sm:inline-flex items-center justify-center rounded-full border border-dealett-lineStrong bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-white/[0.08]"
-            >
-              Erbjudanden
-            </a>
+  <main class="relative z-10 pt-8">
 
-            <a
-              href="account.html"
-              class="inline-flex items-center justify-center rounded-full bg-dealett-gold px-4 py-2.5 text-sm font-semibold text-black transition hover:scale-[1.02]"
-            >
-              Profil
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main class="relative z-10">
-    <!-- Hero -->
-    <section class="pt-8 pb-6 md:pt-10 md:pb-8">
+    <!-- Hero / Welcome -->
+    <section class="pb-6">
       <div class="max-w-7xl mx-auto px-4 md:px-6">
-        <div class="glass gold-outline rounded-[32px] border border-dealett-line overflow-hidden">
-          <div class="relative px-6 py-7 md:px-10 md:py-10 lg:px-12 lg:py-12">
-            <div class="absolute -top-10 right-[-30px] w-52 h-52 rounded-full bg-dealett-goldSoft blur-3xl opacity-70"></div>
-            <div class="absolute bottom-[-40px] left-[-10px] w-40 h-40 rounded-full bg-white/5 blur-3xl"></div>
+        <div class="acct-glass rounded-[32px] overflow-hidden">
+          <div class="relative px-6 py-8 md:px-10 md:py-10 lg:px-12 lg:py-12">
+            <!-- Decorative glows -->
+            <div class="absolute -top-16 right-[-20px] w-56 h-56 rounded-full pointer-events-none" style="background:rgba(15,118,110,0.08);filter:blur(48px);"></div>
+            <div class="absolute bottom-[-30px] left-[-10px] w-44 h-44 rounded-full pointer-events-none" style="background:rgba(59,130,246,0.06);filter:blur(40px);"></div>
 
             <div class="relative grid gap-8 lg:grid-cols-[minmax(0,1.5fr)_340px] lg:items-end">
               <div>
-                <p class="text-[11px] md:text-xs uppercase tracking-[0.3em] text-dealett-gold font-semibold">
-                  Premium dashboard
-                </p>
+                <span class="acct-pill">Premium dashboard</span>
 
-                <h1 class="mt-4 text-4xl md:text-6xl font-black tracking-[-0.05em] leading-[0.95] text-balance">
-                  Välkommen tillbaka,
-                  <span id="userName" class="text-dealett-gold">Kund</span>
+                <h1 class="mt-5 text-4xl md:text-5xl font-black tracking-tight leading-none" style="letter-spacing:-0.05em;color:#0f172a;">
+                  Välkommen tillbaka,<br>
+                  <span id="userName" style="color:#0f766e;">Kund</span>
                 </h1>
 
-                <p class="mt-5 max-w-2xl text-sm md:text-lg text-dealett-muted leading-relaxed">
+                <p class="mt-5 max-w-2xl text-base md:text-lg leading-relaxed" style="color:#64748b;">
                   Din samlade översikt för abonnemang, belöningar och kontostatus — renare, snabbare och tydligare.
                 </p>
 
                 <div class="mt-7 flex flex-wrap gap-3">
-                  <a
-                    href="abonnemang.html"
-                    class="inline-flex items-center justify-center rounded-full bg-dealett-gold px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
-                  >
+                  <a href="abonnemang.html" class="acct-btn-primary px-6 py-3 text-sm">
                     Utforska abonnemang
                   </a>
-
-                  <button
-                    id="logoutBtn"
-                    class="inline-flex items-center justify-center rounded-full border border-dealett-lineStrong bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
-                  >
+                  <button id="logoutBtn" class="acct-btn-ghost px-6 py-3 text-sm">
                     Logga ut
                   </button>
                 </div>
               </div>
 
               <div class="grid grid-cols-2 gap-3">
-                <div class="rounded-[24px] border border-white/10 bg-white/[0.04] p-4 md:p-5">
-                  <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Status</p>
-                  <strong class="mt-2 block text-xl md:text-2xl font-bold text-dealett-green">Aktivt</strong>
+                <div class="rounded-[24px] p-4 md:p-5" style="background:rgba(15,118,110,0.06);border:1px solid rgba(15,118,110,0.12);">
+                  <p class="acct-stat-label">Status</p>
+                  <strong class="mt-2 block text-xl md:text-2xl font-bold" style="color:#16a34a;">Aktivt</strong>
                 </div>
 
-                <div class="rounded-[24px] border border-white/10 bg-white/[0.04] p-4 md:p-5">
-                  <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Konto</p>
-                  <strong class="mt-2 block text-xl md:text-2xl font-bold text-dealett-gold">Premium</strong>
+                <div class="rounded-[24px] p-4 md:p-5" style="background:rgba(15,118,110,0.06);border:1px solid rgba(15,118,110,0.12);">
+                  <p class="acct-stat-label">Konto</p>
+                  <strong class="mt-2 block text-xl md:text-2xl font-bold" style="color:#0f766e;">Premium</strong>
                 </div>
 
-                <div class="rounded-[24px] border border-white/10 bg-white/[0.04] p-4 md:p-5 col-span-2">
-                  <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Senast uppdaterad</p>
-                  <strong id="lastUpdated" class="mt-2 block text-lg font-semibold text-white">—</strong>
+                <div class="rounded-[24px] p-4 md:p-5 col-span-2" style="background:rgba(15,23,42,0.03);border:1px solid rgba(15,23,42,0.08);">
+                  <p class="acct-stat-label">Senast uppdaterad</p>
+                  <strong id="lastUpdated" class="mt-2 block text-lg font-semibold" style="color:#0f172a;">—</strong>
                 </div>
               </div>
             </div>
@@ -216,124 +157,114 @@
       </div>
     </section>
 
-    <!-- Top stats -->
+    <!-- Top stats row -->
     <section class="pb-6">
       <div class="max-w-7xl mx-auto px-4 md:px-6">
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          <div class="glass card-hover rounded-[24px] border border-dealett-line px-5 py-5 shadow-glass">
-            <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Abonnemang</p>
-            <strong id="activePlan" class="mt-3 block text-2xl font-bold tracking-[-0.03em] text-white">Inget</strong>
-            <span class="mt-2 block text-sm text-dealett-muted">Aktiv plan</span>
+          <div class="acct-card rounded-[24px] px-5 py-5">
+            <p class="acct-stat-label">Abonnemang</p>
+            <strong id="activePlan" class="mt-3 block text-2xl font-bold tracking-tight" style="color:#0f172a;">Inget</strong>
+            <span class="mt-2 block text-sm" style="color:#64748b;">Aktiv plan</span>
           </div>
 
-          <div class="glass card-hover rounded-[24px] border border-dealett-line px-5 py-5 shadow-glass">
-            <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Pris</p>
-            <strong id="monthlyCost" class="mt-3 block text-2xl font-bold tracking-[-0.03em] text-white">0 kr</strong>
-            <span class="mt-2 block text-sm text-dealett-muted">Per månad</span>
+          <div class="acct-card rounded-[24px] px-5 py-5">
+            <p class="acct-stat-label">Pris</p>
+            <strong id="monthlyCost" class="mt-3 block text-2xl font-bold tracking-tight" style="color:#0f172a;">0 kr</strong>
+            <span class="mt-2 block text-sm" style="color:#64748b;">Per månad</span>
           </div>
 
-          <div class="glass card-hover rounded-[24px] border border-dealett-line px-5 py-5 shadow-glass">
-            <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Belöning</p>
-            <strong id="rewardStatus" class="mt-3 block text-2xl font-bold tracking-[-0.03em] text-white">Ingen</strong>
-            <span class="mt-2 block text-sm text-dealett-muted">Aktuell förmån</span>
+          <div class="acct-card rounded-[24px] px-5 py-5">
+            <p class="acct-stat-label">Belöning</p>
+            <strong id="rewardStatus" class="mt-3 block text-2xl font-bold tracking-tight" style="color:#0f172a;">Ingen</strong>
+            <span class="mt-2 block text-sm" style="color:#64748b;">Aktuell förmån</span>
           </div>
 
-          <div class="glass card-hover rounded-[24px] border border-dealett-line px-5 py-5 shadow-glass">
-            <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Användare</p>
-            <strong id="userInitials" class="mt-3 block text-2xl font-bold tracking-[-0.03em] text-dealett-gold">DK</strong>
-            <span class="mt-2 block text-sm text-dealett-muted">Kontoprofil</span>
+          <div class="acct-card rounded-[24px] px-5 py-5">
+            <p class="acct-stat-label">Användare</p>
+            <strong id="userInitials" class="mt-3 block text-2xl font-bold tracking-tight" style="color:#0f766e;">DK</strong>
+            <span class="mt-2 block text-sm" style="color:#64748b;">Kontoprofil</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Content -->
+    <!-- Main content -->
     <section class="pb-16 md:pb-20">
       <div class="max-w-7xl mx-auto px-4 md:px-6">
         <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1.7fr)_360px] gap-5">
-          <!-- Left -->
+
+          <!-- Left column -->
           <div class="space-y-5">
+
             <!-- Subscription card -->
-            <div class="glass card-hover rounded-[30px] border border-dealett-line p-6 md:p-8 shadow-glass">
+            <div class="acct-card rounded-[30px] p-6 md:p-8">
               <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
                 <div>
-                  <p class="text-[11px] uppercase tracking-[0.22em] text-dealett-gold font-semibold">Mitt abonnemang</p>
-                  <h2 class="mt-2 text-2xl md:text-3xl font-bold tracking-[-0.03em] text-white">
+                  <p class="acct-pill" style="display:inline-flex;">Mitt abonnemang</p>
+                  <h2 class="mt-3 text-2xl md:text-3xl font-bold tracking-tight" style="color:#0f172a;">
                     Din aktiva plan
                   </h2>
-                  <p class="mt-2 text-sm text-dealett-muted">
+                  <p class="mt-2 text-sm" style="color:#64748b;">
                     Operatör, surf, startdatum och månadskostnad samlat på ett ställe.
                   </p>
                 </div>
               </div>
 
               <!-- Empty state -->
-              <div id="emptyPlanState" class="mt-8 rounded-[26px] border border-dashed border-white/10 bg-white/[0.025] p-8 md:p-10 text-center">
-                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-dealett-lineStrong bg-dealett-goldSoft text-2xl text-dealett-gold">
+              <div id="emptyPlanState" class="mt-8 rounded-[26px] p-8 md:p-10 text-center" style="border:2px dashed rgba(15,118,110,0.20);background:rgba(15,118,110,0.03);">
+                <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full text-2xl font-bold" style="background:rgba(15,118,110,0.10);color:#0f766e;border:1px solid rgba(15,118,110,0.20);">
                   +
                 </div>
-                <p class="mt-5 text-2xl font-semibold text-white">Inget abonnemang kopplat</p>
-                <p class="mt-3 max-w-md mx-auto text-sm text-dealett-muted leading-relaxed">
+                <p class="mt-5 text-2xl font-semibold" style="color:#0f172a;">Inget abonnemang kopplat</p>
+                <p class="mt-3 max-w-md mx-auto text-sm leading-relaxed" style="color:#64748b;">
                   Du har ännu inte lagt till någon plan. Utforska de bästa alternativen och koppla ett abonnemang till ditt konto.
                 </p>
-                <a
-                  href="abonnemang.html"
-                  class="mt-6 inline-flex items-center justify-center rounded-full bg-dealett-gold px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
-                >
+                <a href="abonnemang.html" class="acct-btn-primary mt-6 px-6 py-3 text-sm">
                   Hitta abonnemang
                 </a>
               </div>
 
               <!-- Active plan -->
               <div id="planContent" class="hidden mt-8">
-                <div class="rounded-[28px] border border-white/10 bg-white/[0.03] p-6 md:p-7">
+                <div class="rounded-[28px] p-6 md:p-7" style="background:rgba(15,118,110,0.04);border:1px solid rgba(15,118,110,0.12);">
                   <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
                     <div class="min-w-0">
-                      <div class="inline-flex items-center rounded-full border border-dealett-lineStrong bg-dealett-goldSoft px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-dealett-gold">
-                        Aktiv plan
-                      </div>
+                      <span class="acct-pill">Aktiv plan</span>
 
-                      <h3 id="planNameHeading" class="mt-4 text-3xl md:text-4xl font-black tracking-[-0.04em] text-white break-words">
+                      <h3 id="planNameHeading" class="mt-4 text-3xl md:text-4xl font-black break-words" style="letter-spacing:-0.04em;color:#0f172a;">
                         —
                       </h3>
 
-                      <p id="planOperatorLine" class="mt-2 text-base md:text-lg text-dealett-muted">
+                      <p id="planOperatorLine" class="mt-2 text-base md:text-lg" style="color:#64748b;">
                         —
                       </p>
 
                       <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div class="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-4">
-                          <p class="text-[11px] uppercase tracking-[0.18em] text-dealett-muted">Surf</p>
-                          <strong id="planData" class="mt-2 block text-lg font-semibold text-dealett-gold">—</strong>
+                        <div class="rounded-2xl px-4 py-4" style="background:#fff;border:1px solid rgba(15,23,42,0.08);">
+                          <p class="acct-stat-label">Surf</p>
+                          <strong id="planData" class="mt-2 block text-lg font-semibold" style="color:#0f766e;">—</strong>
                         </div>
 
-                        <div class="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-4">
-                          <p class="text-[11px] uppercase tracking-[0.18em] text-dealett-muted">Startdatum</p>
-                          <strong id="planStartDate" class="mt-2 block text-lg font-semibold text-dealett-gold">—</strong>
+                        <div class="rounded-2xl px-4 py-4" style="background:#fff;border:1px solid rgba(15,23,42,0.08);">
+                          <p class="acct-stat-label">Startdatum</p>
+                          <strong id="planStartDate" class="mt-2 block text-lg font-semibold" style="color:#0f766e;">—</strong>
                         </div>
                       </div>
                     </div>
 
-                    <div class="shrink-0 rounded-[24px] border border-dealett-lineStrong bg-black/20 px-6 py-5 min-w-[230px]">
-                      <p class="text-[11px] uppercase tracking-[0.2em] text-dealett-muted">Månadskostnad</p>
-                      <strong id="planPriceBig" class="mt-3 block text-4xl font-black tracking-[-0.05em] text-white">
+                    <div class="shrink-0 rounded-[24px] px-6 py-5 min-w-[230px]" style="background:#fff;border:1px solid rgba(15,23,42,0.10);">
+                      <p class="acct-stat-label">Månadskostnad</p>
+                      <strong id="planPriceBig" class="mt-3 block text-4xl font-black" style="letter-spacing:-0.05em;color:#0f172a;">
                         0 kr
                       </strong>
                     </div>
                   </div>
 
                   <div class="mt-7 flex flex-wrap gap-3">
-                    <a
-                      href="abonnemang.html"
-                      class="inline-flex items-center justify-center rounded-full bg-dealett-gold px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02]"
-                    >
+                    <a href="abonnemang.html" class="acct-btn-primary px-6 py-3 text-sm">
                       Byt abonnemang
                     </a>
-
-                    <button
-                      id="cancelPlan"
-                      class="inline-flex items-center justify-center rounded-full border border-red-500/30 bg-red-500/10 px-6 py-3 text-sm font-semibold text-red-300 transition hover:bg-red-500/15"
-                    >
+                    <button id="cancelPlan" class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition" style="border:1px solid rgba(239,68,68,0.30);background:rgba(239,68,68,0.07);color:#dc2626;cursor:pointer;">
                       Avsluta abonnemang
                     </button>
                   </div>
@@ -342,111 +273,116 @@
             </div>
 
             <!-- Reward card -->
-            <div class="glass card-hover rounded-[30px] border border-dealett-line p-6 md:p-8 shadow-glass">
+            <div class="acct-card rounded-[30px] p-6 md:p-8">
               <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <p class="text-[11px] uppercase tracking-[0.22em] text-dealett-gold font-semibold">Belöning</p>
-                  <h2 class="mt-3 text-2xl md:text-3xl font-bold tracking-[-0.03em] text-white">
+                  <p class="acct-pill" style="display:inline-flex;">Belöning</p>
+                  <h2 class="mt-3 text-2xl md:text-3xl font-bold tracking-tight" style="color:#0f172a;">
                     Din valda förmån
                   </h2>
-                  <p class="mt-2 text-sm text-dealett-muted">
+                  <p class="mt-2 text-sm" style="color:#64748b;">
                     Din bonus eller kampanj kopplad till kontot.
                   </p>
                 </div>
 
-                <div class="inline-flex items-center rounded-full border border-dealett-lineStrong bg-dealett-goldSoft px-4 py-2 text-sm font-semibold text-dealett-gold">
-                  Aktiv förmån
-                </div>
+                <span class="acct-pill">Aktiv förmån</span>
               </div>
 
-              <div class="mt-8 rounded-[26px] border border-white/10 bg-white/[0.03] p-6 md:p-7">
-                <p id="rewardNameLarge" class="text-2xl md:text-3xl font-bold tracking-[-0.03em] text-white">
+              <div class="mt-8 rounded-[26px] p-6 md:p-7" style="background:rgba(15,118,110,0.04);border:1px solid rgba(15,118,110,0.12);">
+                <p id="rewardNameLarge" class="text-2xl md:text-3xl font-bold tracking-tight" style="color:#0f172a;">
                   Ingen vald
                 </p>
-                <p id="rewardDescription" class="mt-3 max-w-3xl text-sm md:text-base text-dealett-muted leading-relaxed">
+                <p id="rewardDescription" class="mt-3 max-w-3xl text-sm md:text-base leading-relaxed" style="color:#64748b;">
                   Ingen belöning är kopplad till ditt konto ännu.
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- Right -->
+          <!-- Right column / sidebar -->
           <aside class="space-y-5">
-            <div class="glass card-hover rounded-[30px] border border-dealett-line p-6 shadow-glass">
-              <p class="text-[11px] uppercase tracking-[0.22em] text-dealett-gold font-semibold">Snabbval</p>
-              <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-white">Genvägar</h2>
-              <p class="mt-2 text-sm text-dealett-muted">
+
+            <!-- Quick links -->
+            <div class="acct-card rounded-[30px] p-6">
+              <p class="acct-pill" style="display:inline-flex;">Snabbval</p>
+              <h2 class="mt-3 text-2xl font-bold tracking-tight" style="color:#0f172a;">Genvägar</h2>
+              <p class="mt-2 text-sm" style="color:#64748b;">
                 Direkt åtkomst till viktiga delar av kontot.
               </p>
 
               <div class="mt-6 space-y-3">
-                <a href="kundservice.html" class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-white transition hover:bg-white/[0.06]">
+                <a href="kundservice.html" class="flex items-center justify-between rounded-2xl px-4 py-4 transition" style="border:1px solid rgba(15,23,42,0.08);background:rgba(15,118,110,0.03);color:#0f172a;" onmouseover="this.style.background='rgba(15,118,110,0.07)'" onmouseout="this.style.background='rgba(15,118,110,0.03)'">
                   <span class="font-medium">Support</span>
-                  <span class="text-dealett-muted">→</span>
+                  <span style="color:#64748b;">→</span>
                 </a>
 
-                <a href="account.html" class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-white transition hover:bg-white/[0.06]">
+                <a href="account.html" class="flex items-center justify-between rounded-2xl px-4 py-4 transition" style="border:1px solid rgba(15,23,42,0.08);background:rgba(15,118,110,0.03);color:#0f172a;" onmouseover="this.style.background='rgba(15,118,110,0.07)'" onmouseout="this.style.background='rgba(15,118,110,0.03)'">
                   <span class="font-medium">Profil</span>
-                  <span class="text-dealett-muted">→</span>
+                  <span style="color:#64748b;">→</span>
                 </a>
 
-                <a href="abonnemang.html" class="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-white transition hover:bg-white/[0.06]">
+                <a href="abonnemang.html" class="flex items-center justify-between rounded-2xl px-4 py-4 transition" style="border:1px solid rgba(15,23,42,0.08);background:rgba(15,118,110,0.03);color:#0f172a;" onmouseover="this.style.background='rgba(15,118,110,0.07)'" onmouseout="this.style.background='rgba(15,118,110,0.03)'">
                   <span class="font-medium">Erbjudanden</span>
-                  <span class="text-dealett-muted">→</span>
+                  <span style="color:#64748b;">→</span>
                 </a>
               </div>
             </div>
 
-            <div class="glass card-hover rounded-[30px] border border-dealett-line p-6 shadow-glass">
-              <p class="text-[11px] uppercase tracking-[0.22em] text-dealett-gold font-semibold">Kontostatus</p>
-              <h2 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-white">Översikt</h2>
+            <!-- Account status -->
+            <div class="acct-card rounded-[30px] p-6">
+              <p class="acct-pill" style="display:inline-flex;">Kontostatus</p>
+              <h2 class="mt-3 text-2xl font-bold tracking-tight" style="color:#0f172a;">Översikt</h2>
 
               <div class="mt-6 space-y-4">
                 <div class="flex items-start justify-between gap-4">
-                  <span class="text-sm text-dealett-muted">Inloggad som</span>
-                  <span id="sidebarUserName" class="text-sm font-semibold text-white text-right">Kund</span>
+                  <span class="text-sm" style="color:#64748b;">Inloggad som</span>
+                  <span id="sidebarUserName" class="text-sm font-semibold text-right" style="color:#0f172a;">Kund</span>
                 </div>
 
-                <div class="h-px bg-white/8"></div>
+                <div class="acct-divider"></div>
 
                 <div class="flex items-start justify-between gap-4">
-                  <span class="text-sm text-dealett-muted">Aktivt abonnemang</span>
-                  <span id="sidebarPlanName" class="text-sm font-semibold text-white text-right">Inget</span>
+                  <span class="text-sm" style="color:#64748b;">Aktivt abonnemang</span>
+                  <span id="sidebarPlanName" class="text-sm font-semibold text-right" style="color:#0f172a;">Inget</span>
                 </div>
 
-                <div class="h-px bg-white/8"></div>
+                <div class="acct-divider"></div>
 
                 <div class="flex items-start justify-between gap-4">
-                  <span class="text-sm text-dealett-muted">Belöning</span>
-                  <span id="sidebarRewardName" class="text-sm font-semibold text-white text-right">Ingen</span>
+                  <span class="text-sm" style="color:#64748b;">Belöning</span>
+                  <span id="sidebarRewardName" class="text-sm font-semibold text-right" style="color:#0f172a;">Ingen</span>
                 </div>
 
-                <div class="h-px bg-white/8"></div>
+                <div class="acct-divider"></div>
 
                 <div class="flex items-start justify-between gap-4">
-                  <span class="text-sm text-dealett-muted">Status</span>
-                  <span class="text-sm font-semibold text-dealett-green text-right">Aktivt</span>
+                  <span class="text-sm" style="color:#64748b;">Status</span>
+                  <span class="text-sm font-semibold text-right" style="color:#16a34a;">Aktivt</span>
                 </div>
               </div>
             </div>
 
-            <div class="glass card-hover rounded-[30px] border border-dealett-line p-6 shadow-glass">
-              <p class="text-[11px] uppercase tracking-[0.22em] text-dealett-gold font-semibold">Profil</p>
-              <div class="mt-4 flex items-center gap-4">
-                <div id="avatarCircle" class="h-14 w-14 rounded-2xl bg-dealett-gold text-black flex items-center justify-center text-lg font-black">
+            <!-- Profile card -->
+            <div class="acct-card rounded-[30px] p-6">
+              <p class="acct-pill" style="display:inline-flex;">Profil</p>
+              <div class="mt-5 flex items-center gap-4">
+                <div id="avatarCircle" class="h-14 w-14 rounded-2xl flex items-center justify-center text-lg font-black text-white" style="background:linear-gradient(135deg,#0b5c56,#0f766e);">
                   DK
                 </div>
                 <div class="min-w-0">
-                  <p id="profileNameCard" class="text-lg font-semibold text-white truncate">Kund</p>
-                  <p class="text-sm text-dealett-muted">Dealett medlem</p>
+                  <p id="profileNameCard" class="text-lg font-semibold truncate" style="color:#0f172a;">Kund</p>
+                  <p class="text-sm" style="color:#64748b;">Dealett medlem</p>
                 </div>
               </div>
             </div>
+
           </aside>
         </div>
       </div>
     </section>
   </main>
+
+  <div id="footer-placeholder"></div>
 
   <script>
     document.addEventListener("DOMContentLoaded", init);
@@ -534,7 +470,6 @@
         cancelBtn.addEventListener("click", () => {
           const confirmed = confirm("Vill du avsluta ditt abonnemang?");
           if (!confirmed) return;
-
           localStorage.removeItem("dealett_plan");
           location.reload();
         });

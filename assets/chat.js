@@ -19,6 +19,34 @@
     Tre: "images/tre.jpg",
     Halebop: "images/halebop.webp"
   };
+  const SAFE_RICH_TEXT_TAGS = new Set([
+    "A",
+    "B",
+    "BLOCKQUOTE",
+    "BR",
+    "CODE",
+    "EM",
+    "I",
+    "LI",
+    "OL",
+    "P",
+    "PRE",
+    "SPAN",
+    "STRONG",
+    "UL"
+  ]);
+  const DROP_RICH_TEXT_TAGS = new Set([
+    "BUTTON",
+    "FORM",
+    "IFRAME",
+    "IMG",
+    "INPUT",
+    "OBJECT",
+    "SCRIPT",
+    "STYLE",
+    "SVG",
+    "TEXTAREA"
+  ]);
 
   function readCartFallback() {
     try {
@@ -820,6 +848,91 @@
     }
 
     return /<\/?[a-z][\s\S]*>/i.test(reply) ? "html" : "text";
+  }
+
+  function sanitizeRichTextHref(value) {
+    const trimmed = String(value || "").trim();
+    if (!trimmed) return null;
+    if (trimmed.startsWith("#")) return trimmed;
+
+    try {
+      const url = new URL(trimmed, window.location.origin);
+      return ["http:", "https:", "mailto:", "tel:"].includes(url.protocol)
+        ? url.href
+        : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function sanitizeRichTextTree(root) {
+    Array.from(root.childNodes).forEach(node => {
+      if (node.nodeType === Node.COMMENT_NODE) {
+        node.remove();
+        return;
+      }
+
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        return;
+      }
+
+      const tagName = node.tagName.toUpperCase();
+
+      if (DROP_RICH_TEXT_TAGS.has(tagName)) {
+        node.remove();
+        return;
+      }
+
+      if (!SAFE_RICH_TEXT_TAGS.has(tagName)) {
+        const fragment = document.createDocumentFragment();
+        while (node.firstChild) {
+          fragment.appendChild(node.firstChild);
+        }
+        sanitizeRichTextTree(fragment);
+        node.replaceWith(fragment);
+        return;
+      }
+
+      Array.from(node.attributes).forEach(attribute => {
+        const name = attribute.name.toLowerCase();
+
+        if (name.startsWith("on")) {
+          node.removeAttribute(attribute.name);
+          return;
+        }
+
+        if (tagName === "A" && name === "href") {
+          const safeHref = sanitizeRichTextHref(attribute.value);
+          if (safeHref) {
+            node.setAttribute("href", safeHref);
+          } else {
+            node.removeAttribute(attribute.name);
+          }
+          return;
+        }
+
+        node.removeAttribute(attribute.name);
+      });
+
+      if (tagName === "A") {
+        if (node.hasAttribute("href")) {
+          node.setAttribute("target", "_blank");
+          node.setAttribute("rel", "noopener noreferrer");
+        } else {
+          node.removeAttribute("target");
+          node.removeAttribute("rel");
+        }
+      }
+
+      sanitizeRichTextTree(node);
+    });
+  }
+
+  function sanitizeRichText(html) {
+    const template = document.createElement("template");
+    template.innerHTML = String(html ?? "");
+    sanitizeRichTextTree(template.content);
+    return template.innerHTML;
   }
 
   function normalizeHistoryMessage(entry) {
@@ -2073,7 +2186,7 @@ if (host.endsWith("github.io")) {
 
       if (type === "ai" && options.format === "html") {
         div.classList.add("rich-text");
-        div.innerHTML = text;
+        div.innerHTML = sanitizeRichText(text);
       } else {
         div.classList.add("plain-text");
         div.textContent = text;

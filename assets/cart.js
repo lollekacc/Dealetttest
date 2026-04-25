@@ -1,11 +1,25 @@
 const CART_KEY = "dealettCart";
 
 function getCart() {
-  return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+  try {
+    const parsed = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 }
 
 function saveCart(cart) {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 function addToCart(item) {
@@ -49,31 +63,38 @@ function renderCart() {
   let total = 0;
 
   cart.forEach((item, index) => {
-    total += item.price || 0;
+    total += Number(item?.price) || 0;
+    const rewards = item && typeof item.rewards === "object" && item.rewards !== null
+      ? item.rewards
+      : {};
+    const safeLogo = escapeHtml(item?.logo || "");
+    const safeTitle = escapeHtml(item?.title || "Abonnemang");
+    const safeOperator = escapeHtml(item?.operator || "Dealett");
+    const safePrice = Number(item?.price) || 0;
 
-    const rewardsHTML = Object.entries(item.rewards || {})
+    const rewardsHTML = Object.entries(rewards)
       .filter(([_, v]) => v > 0)
-      .map(([k, v]) => `<div class="text-xs text-gray-500">${k}: ${v} kr</div>`)
+      .map(([k, v]) => `<div class="text-xs text-gray-500">${escapeHtml(k)}: ${Number(v) || 0} kr</div>`)
       .join("");
 
     const el = document.createElement("div");
     el.className = "border rounded-xl p-4 flex gap-3";
 
     el.innerHTML = `
-      <img src="${item.logo}" class="w-12 h-12 object-contain rounded-md border">
+      <img src="${safeLogo}" alt="${safeOperator}" class="w-12 h-12 object-contain rounded-md border">
 
       <div class="flex-1">
         <div class="flex justify-between items-start">
           <div>
-            <p class="font-semibold">${item.title}</p>
-            <p class="text-sm text-gray-500">${item.operator}</p>
+            <p class="font-semibold">${safeTitle}</p>
+            <p class="text-sm text-gray-500">${safeOperator}</p>
           </div>
 
           <button data-index="${index}" class="removeItem text-red-500 text-sm">Ta bort</button>
         </div>
 
         <div class="mt-2 text-sm">
-          <strong>${item.price} kr/mån</strong>
+          <strong>${safePrice} kr/mån</strong>
         </div>
 
         <div class="mt-2">
@@ -87,9 +108,7 @@ function renderCart() {
 
   totalEl.textContent = total + " kr";
 
-  summary.innerHTML = `
-    <div>Antal abonnemang: ${cart.length}</div>
-  `;
+  summary.textContent = `Antal abonnemang: ${cart.length}`;
 
   // remove handlers
   document.querySelectorAll(".removeItem").forEach(btn => {

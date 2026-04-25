@@ -10,43 +10,48 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/style.css">
+  <link rel="stylesheet" href="./assets/index.css">
   <script src="./assets/layout.js" defer></script>
 </head>
 
-<body class="min-h-screen font-[Inter] bg-white text-gray-900" data-header-mode="overlay">
+<body class="home-page min-h-screen font-[Inter] text-gray-900" data-header-mode="overlay">
 
   <div id="header-placeholder"></div>
 
   <!-- HERO -->
-  <section class="bg-gradient-to-b from-[#004C9E] to-[#0C4A3C] py-20 text-white text-center">
-    <h1 class="text-4xl md:text-5xl font-extrabold">
-      Mobilabonnemang för företag
-    </h1>
-    <p class="mt-4 max-w-2xl mx-auto text-white/90 text-lg">
-      Smarta mobilabonnemang anpassade för företag i alla storlekar – med trygg 5G-uppkoppling och förutsägbara kostnader.
-    </p>
+  <section class="py-28 text-white text-center relative overflow-hidden" style="background:linear-gradient(135deg,#08111f 0%,#0f172a 58%,#10283b 100%);">
+    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(circle at 20% 20%,rgba(16,185,129,0.18),transparent 28%),radial-gradient(circle at 80% 20%,rgba(59,130,246,0.18),transparent 30%);"></div>
+    <div class="relative z-10 px-6">
+      <span class="section-kicker" style="background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.90);">Företagslösningar</span>
+      <h1 class="mt-5 text-4xl md:text-5xl font-black tracking-tight" style="letter-spacing:-0.04em;">
+        Mobilabonnemang för företag
+      </h1>
+      <p class="mt-4 max-w-2xl mx-auto text-white/80 text-lg" style="line-height:1.85;">
+        Smarta mobilabonnemang anpassade för företag i alla storlekar – med trygg 5G-uppkoppling och förutsägbara kostnader.
+      </p>
+    </div>
   </section>
 <!-- BUSINESS SIZE QUESTION -->
-<section class="py-12 bg-gray-50">
+<section class="py-12">
   <div class="max-w-4xl mx-auto px-6 text-center">
 
-    <h2 class="text-2xl md:text-3xl font-bold text-[#0C4A3C] mb-6">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6" style="color:#0f172a;">
       Hur stort är företaget?
     </h2>
 
     <div class="grid md:grid-cols-3 gap-6">
 
-      <button class="business-size border-2 border-[#0C4A3C] rounded-xl p-6 hover:bg-[#0C4A3C] hover:text-white transition"
+      <button class="business-size border-2 border-[#0f766e] rounded-xl p-6 font-semibold hover:bg-[#0f766e] hover:text-white transition"
               data-size="small">
         1–10 personer
       </button>
 
-      <button class="business-size border-2 border-[#0C4A3C] rounded-xl p-6 hover:bg-[#0C4A3C] hover:text-white transition"
+      <button class="business-size border-2 border-[#0f766e] rounded-xl p-6 font-semibold hover:bg-[#0f766e] hover:text-white transition"
               data-size="medium">
         10–100 personer
       </button>
 
-      <button class="business-size border-2 border-[#0C4A3C] rounded-xl p-6 hover:bg-[#0C4A3C] hover:text-white transition"
+      <button class="business-size border-2 border-[#0f766e] rounded-xl p-6 font-semibold hover:bg-[#0f766e] hover:text-white transition"
               data-size="large">
         100+ personer
       </button>
@@ -69,7 +74,7 @@
           </p>
         </div>
 <!-- Telia Obegränsad Plus -->
-<div class="border-2 border-[#004C9E] rounded-xl p-6 shadow-md flex flex-col">
+<div class="border-2 border-[#0f766e] rounded-xl p-6 shadow-md flex flex-col">
   <h4 class="text-lg font-bold mb-2">Obegränsad Plus</h4>
 
   <ul class="text-sm text-gray-700 space-y-1 mb-4">
@@ -83,7 +88,7 @@
   </ul>
 
   <div class="mt-auto">
-    <p class="text-xl font-extrabold text-[#0C4A3C]">
+    <p class="text-xl font-extrabold text-[#0f766e]">
       579 kr/mån
     </p>
 
@@ -106,7 +111,7 @@
   </ul>
 
   <div class="mt-auto">
-    <p class="text-xl font-extrabold text-[#0C4A3C]">
+    <p class="text-xl font-extrabold text-[#0f766e]">
       479 kr/mån
     </p>
 
@@ -129,7 +134,7 @@
   </ul>
 
   <div class="mt-auto">
-    <p class="text-xl font-extrabold text-[#0C4A3C]">
+    <p class="text-xl font-extrabold text-[#0f766e]">
       379 kr/mån
     </p>
 
@@ -165,7 +170,7 @@
     <p class="text-sm text-gray-500 line-through">
       Ordinarie pris: 599 kr/mån
     </p>
-    <p class="text-xl font-extrabold text-[#0C4A3C]">
+    <p class="text-xl font-extrabold text-[#0f766e]">
       329 kr/mån
     </p>
     <p class="text-sm text-gray-600 mb-4">
@@ -180,7 +185,7 @@
 
 <!-- Tele2 Obegränsad (Populärt val) -->
 <div class="border-2 border-[#0C4A3C] rounded-xl p-6 shadow-md flex flex-col relative">
-  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0C4A3C] text-white text-xs px-4 py-1 rounded-full">
+  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0f766e] text-white text-xs px-4 py-1 rounded-full">
     Populärt val
   </span>
 
@@ -197,7 +202,7 @@
     <p class="text-sm text-gray-500 line-through">
       Ordinarie pris: 499 kr/mån
     </p>
-    <p class="text-xl font-extrabold text-[#0C4A3C]">
+    <p class="text-xl font-extrabold text-[#0f766e]">
       279 kr/mån
     </p>
     <p class="text-sm text-gray-600 mb-4">
@@ -224,7 +229,7 @@
     <p class="text-sm text-gray-500 line-through">
       Ordinarie pris: 399 kr/mån
     </p>
-    <p class="text-xl font-extrabold text-[#0C4A3C]">
+    <p class="text-xl font-extrabold text-[#0f766e]">
       269 kr/mån
     </p>
     <p class="text-sm text-gray-600 mb-4">
@@ -249,8 +254,8 @@
         </div>
 
         <!-- Telenor Obegränsat Premium -->
-<div class="border-2 border-[#004C9E] rounded-xl p-6 shadow-md flex flex-col relative">
-  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#004C9E] text-white text-xs px-4 py-1 rounded-full">
+<div class="border-2 border-[#0f766e] rounded-xl p-6 shadow-md flex flex-col relative">
+  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0f766e] text-white text-xs px-4 py-1 rounded-full">
     Kampanj
   </span>
 
@@ -268,7 +273,7 @@
 
   <div class="mt-auto">
     <p class="text-sm text-gray-500 line-through">Ordinarie pris: 599 kr/mån</p>
-    <p class="text-xl font-extrabold text-[#0C4A3C]">449 kr/mån</p>
+    <p class="text-xl font-extrabold text-[#0f766e]">449 kr/mån</p>
     <p class="text-sm text-gray-600 mb-4">24 mån bindningstid</p>
 
     <a href="signera.html" class="adeala-btn w-full text-center">
@@ -292,7 +297,7 @@
 
   <div class="mt-auto">
     <p class="text-sm text-gray-500 line-through">Ordinarie pris: 499 kr/mån</p>
-    <p class="text-xl font-extrabold text-[#0C4A3C]">449 kr/mån</p>
+    <p class="text-xl font-extrabold text-[#0f766e]">449 kr/mån</p>
     <p class="text-sm text-gray-600 mb-4">24 mån bindningstid</p>
 
     <a href="signera.html" class="adeala-btn w-full text-center">
@@ -314,7 +319,7 @@
 
   <div class="mt-auto">
     <p class="text-sm text-gray-500 line-through">Ordinarie pris: 449 kr/mån</p>
-    <p class="text-xl font-extrabold text-[#0C4A3C]">399 kr/mån</p>
+    <p class="text-xl font-extrabold text-[#0f766e]">399 kr/mån</p>
     <p class="text-sm text-gray-600 mb-4">24 mån bindningstid</p>
 
     <a href="signera.html" class="adeala-btn w-full text-center">
@@ -346,7 +351,7 @@
   </ul>
 
   <div class="mt-auto">
-    <p class="text-xl font-extrabold text-[#0C4A3C]">
+    <p class="text-xl font-extrabold text-[#0f766e]">
       299 kr/mån
     </p>
     <p class="text-sm text-gray-600 mb-4">
@@ -360,8 +365,8 @@
 </div>
 
 <!-- Tre Företag Obegränsad Max -->
-<div class="border-2 border-[#004C9E] rounded-xl p-6 shadow-md flex flex-col relative">
-  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#004C9E] text-white text-xs px-4 py-1 rounded-full">
+<div class="border-2 border-[#0f766e] rounded-xl p-6 shadow-md flex flex-col relative">
+  <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0f766e] text-white text-xs px-4 py-1 rounded-full">
     Populär
   </span>
 
@@ -376,7 +381,7 @@
   </ul>
 
   <div class="mt-auto">
-    <p class="text-xl font-extrabold text-[#0C4A3C]">
+    <p class="text-xl font-extrabold text-[#0f766e]">
       399 kr/mån
     </p>
     <p class="text-sm text-gray-600 mb-4">
@@ -390,8 +395,8 @@
 </div>
 
 <!-- Tre Företag – 3Koppla -->
-<div class="border rounded-xl p-6 shadow-sm flex flex-col bg-gray-50">
-  <span class="text-xs uppercase font-semibold text-[#004C9E] mb-2">
+<div class="border rounded-xl p-6 shadow-sm flex flex-col" style="background:rgba(15,118,110,0.04);">
+  <span class="text-xs uppercase font-semibold text-[#0f766e] mb-2">
     Nyhet
   </span>
 

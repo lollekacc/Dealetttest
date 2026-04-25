@@ -1,19 +1,17 @@
 :root{
-  --bg: #f5f7ff;
-  --bg-soft: #eef2ff;
+  --bg: #f4f7fb;
+  --bg-soft: #f8fbfd;
   --surface: rgba(255,255,255,0.82);
   --surface-strong: rgba(255,255,255,0.94);
-  --text: #1f2340;
-  --muted: #616783;
-  --line: rgba(31,35,64,0.10);
-  --brand: #5b5bd6;
-  --brand-dark: #3939b8;
-  --accent: #f97316;
-  --accent-soft: rgba(249,115,22,0.12);
-  --brand-soft: rgba(91,91,214,0.12);
-  --shadow-sm: 0 12px 28px rgba(40,44,90,0.06);
-  --shadow-md: 0 20px 50px rgba(40,44,90,0.10);
-  --shadow-lg: 0 30px 90px rgba(40,44,90,0.14);
+  --text: #0f172a;
+  --muted: #64748b;
+  --line: rgba(15,23,42,0.08);
+  --brand: #0f766e;
+  --brand-dark: #0b5c56;
+  --brand-soft: rgba(15,118,110,0.10);
+  --shadow-sm: 0 12px 28px rgba(15,23,42,0.05);
+  --shadow-md: 0 20px 50px rgba(15,23,42,0.08);
+  --shadow-lg: 0 30px 90px rgba(15,23,42,0.12);
   --radius-sm: 18px;
   --radius-md: 28px;
   --radius-lg: 36px;
@@ -34,9 +32,9 @@ html{
 body{
   margin: 0;
   background:
-    radial-gradient(circle at top left, rgba(91,91,214,0.10), transparent 25%),
-    radial-gradient(circle at top right, rgba(249,115,22,0.10), transparent 22%),
-    linear-gradient(180deg, #f8f9ff 0%, #f2f5ff 40%, #f7f8fc 100%);
+    radial-gradient(circle at top left, rgba(16,185,129,0.06), transparent 30%),
+    radial-gradient(circle at top right, rgba(59,130,246,0.06), transparent 26%),
+    linear-gradient(180deg, #f8fbff 0%, #f2f6fa 100%);
   color: var(--text);
 }
 
@@ -60,12 +58,19 @@ body{
   min-height: 34px;
   padding: 0 14px;
   border-radius: 999px;
-  background: var(--brand-soft);
-  color: var(--brand-dark);
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.90);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.support-section .support-eyebrow{
+  background: var(--brand-soft);
+  border: none;
+  color: var(--brand-dark);
 }
 
 .support-eyebrow-dark{
@@ -74,8 +79,21 @@ body{
 }
 
 .support-hero{
-  padding: 56px 0 88px;
+  padding: 138px 0 88px;
   position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #08111f 0%, #0f172a 58%, #10283b 100%);
+  color: #fff;
+}
+
+.support-hero::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(16,185,129,0.18), transparent 28%),
+    radial-gradient(circle at 82% 16%, rgba(59,130,246,0.18), transparent 30%);
+  pointer-events: none;
 }
 
 .support-hero-wrap{
@@ -91,16 +109,17 @@ body{
   line-height: 0.95;
   letter-spacing: -0.06em;
   font-weight: 900;
+  color: #fff;
 }
 
 .support-hero-copy h1 span{
   display: block;
-  color: var(--brand);
+  color: #a7f3d0;
 }
 
 .support-hero-copy p{
   max-width: 62ch;
-  color: var(--muted);
+  color: rgba(255,255,255,0.74);
   font-size: 1.08rem;
   line-height: 1.85;
 }
@@ -119,38 +138,38 @@ body{
   min-height: 50px;
   padding: 0 18px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.78);
-  border: 1px solid rgba(31,35,64,0.06);
-  box-shadow: var(--shadow-sm);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(12px);
   font-weight: 600;
-  color: var(--text);
+  color: #fff;
 }
 
 .support-hero-tags i{
-  color: var(--accent);
+  color: var(--brand);
 }
 
 .support-hero-panel{
   padding: 24px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.92));
-  border: 1px solid rgba(255,255,255,0.75);
-  box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .support-panel-card{
   padding: 26px;
   border-radius: 24px;
-  background: linear-gradient(180deg, #ffffff, #f9faff);
-  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
 .support-panel-label{
   display: block;
   margin-bottom: 10px;
-  color: var(--muted);
+  color: rgba(255,255,255,0.62);
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -163,11 +182,12 @@ body{
   font-size: 2rem;
   line-height: 1.05;
   letter-spacing: -0.04em;
+  color: #fff;
 }
 
 .support-panel-card p{
   margin: 0;
-  color: var(--muted);
+  color: rgba(255,255,255,0.72);
   line-height: 1.8;
 }
 
@@ -181,20 +201,21 @@ body{
 .support-panel-mini div{
   padding: 18px;
   border-radius: 20px;
-  background: rgba(255,255,255,0.82);
-  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.10);
 }
 
 .support-panel-mini span{
   display: block;
   margin-bottom: 6px;
-  color: var(--muted);
+  color: rgba(255,255,255,0.60);
   font-size: 0.82rem;
 }
 
 .support-panel-mini strong{
   display: block;
   line-height: 1.45;
+  color: #fff;
 }
 
 .support-head{
@@ -262,8 +283,8 @@ body{
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--brand-soft);
+  color: var(--brand);
 }
 
 .support-faq-left span{
@@ -395,8 +416,8 @@ body{
 .support-field input:focus,
 .support-field select:focus,
 .support-field textarea:focus{
-  border-color: rgba(91,91,214,0.45);
-  box-shadow: 0 0 0 4px rgba(91,91,214,0.10);
+  border-color: rgba(15,118,110,0.45);
+  box-shadow: 0 0 0 4px rgba(15,118,110,0.10);
 }
 
 .support-btn{
@@ -417,9 +438,9 @@ body{
     color var(--transition),
     border-color var(--transition),
     box-shadow var(--transition);
-  background: linear-gradient(135deg, var(--brand), var(--accent));
+  background: linear-gradient(135deg, var(--brand-dark), var(--brand));
   color: #fff;
-  box-shadow: 0 16px 34px rgba(91,91,214,0.18);
+  box-shadow: 0 16px 34px rgba(15,118,110,0.22);
 }
 
 .support-btn:hover{
@@ -434,8 +455,8 @@ body{
   padding: 58px 38px;
   border-radius: 38px;
   background:
-    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 24%),
-    linear-gradient(135deg, #242a63 0%, #5b5bd6 55%, #f97316 100%);
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.10), transparent 24%),
+    linear-gradient(135deg, #0b5c56 0%, #0f766e 58%, #15803d 100%);
   color: #fff;
   text-align: center;
   box-shadow: var(--shadow-lg);
