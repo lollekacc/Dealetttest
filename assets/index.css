@@ -512,64 +512,47 @@ a{
 .steps-grid{
   display:grid;
   grid-template-columns:repeat(3, minmax(0,1fr));
-  gap:22px;
+  gap:0;
+  max-width:960px;
+  margin:0 auto;
 }
 
 .step-card-v2{
-  position:relative;
-  padding:32px 30px;
-  border-radius:30px;
-  background:transparent;
-  border:none;
-  box-shadow:none;
-  overflow:hidden;
+  padding:40px 48px;
+  text-align:center;
+  border-right:1px solid var(--line);
 }
 
-.step-card-v2::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at top right, rgba(15,118,110,0.05), transparent 30%),
-    linear-gradient(135deg, rgba(255,255,255,0.4), transparent 42%);
-  pointer-events:none;
+.step-card-v2:last-child{
+  border-right:none;
 }
 
 .step-number{
-  position:relative;
-  z-index:1;
-  width:56px;
-  height:56px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:18px;
-  background:var(--brand-soft);
-  color:var(--brand-dark);
-  font-size:1rem;
+  display:inline-block;
+  font-size:3rem;
   font-weight:900;
-  letter-spacing:.02em;
-  margin-bottom:22px;
+  line-height:1;
+  letter-spacing:-.06em;
+  color:var(--brand);
+  opacity:.18;
+  margin-bottom:20px;
 }
 
 .step-card-v2 h3{
-  position:relative;
-  z-index:1;
-  margin:0 0 10px;
+  margin:0 0 12px;
   color:var(--text);
-  font-size:1.35rem;
-  line-height:1.15;
+  font-size:1.2rem;
+  line-height:1.2;
   letter-spacing:-.03em;
   font-weight:800;
 }
 
 .step-card-v2 p{
-  position:relative;
-  z-index:1;
-  margin:0;
+  margin:0 auto;
+  max-width:26ch;
   color:var(--muted);
   line-height:1.75;
-  font-size:.98rem;
+  font-size:.95rem;
 }
 
 /* QUIZ SHELL */
@@ -763,23 +746,26 @@ a{
 /* PROMOS */
 .promo-grid{
   display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:26px;
+  grid-template-columns:1fr;
+  gap:80px;
 }
 
 .promo-card{
   position:relative;
   display:grid;
-  grid-template-columns:1.1fr .9fr;
+  grid-template-columns:1fr 1fr;
   align-items:center;
-  gap:24px;
-  min-height:390px;
-  padding:34px;
-  border-radius:34px;
+  gap:72px;
+  padding:0;
+  border-radius:0;
   background:transparent;
   border:none;
   box-shadow:none;
-  overflow:hidden;
+  overflow:visible;
+}
+
+.promo-card:nth-child(2) .promo-image-wrap{
+  order:-1;
 }
 
 .promo-card::before{
@@ -849,21 +835,31 @@ a{
 
 .promo-ribbon{
   position:absolute;
-  top:18px;
-  right:-44px;
-  min-width:220px;
-  height:34px;
-  display:flex;
+  top:16px;
+  left:16px;
+  display:inline-flex;
   align-items:center;
-  justify-content:center;
-  transform:rotate(35deg);
-  background:linear-gradient(135deg, #15803d 0%, #22c55e 55%, #86efac 100%);
+  gap:7px;
+  padding:7px 14px 7px 10px;
+  border-radius:999px;
+  background:linear-gradient(135deg, #166534 0%, #16a34a 100%);
   color:#fff;
-  font-size:14px;
+  font-size:11.5px;
   font-weight:800;
-  letter-spacing:.01em;
-  box-shadow:0 12px 28px rgba(21,128,61,0.18);
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  box-shadow:0 4px 18px rgba(22,101,52,0.38);
   z-index:2;
+}
+
+.promo-ribbon::before{
+  content:"";
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  background:#86efac;
+  flex-shrink:0;
+  box-shadow:0 0 0 3px rgba(134,239,172,0.28);
 }
 
 /* COVERAGE */
@@ -1213,12 +1209,13 @@ a{
     min-height:460px;
   }
 
-  .promo-grid{
-    grid-template-columns:1fr;
-  }
-
   .promo-card{
     grid-template-columns:1fr;
+    gap:40px;
+  }
+
+  .promo-card:nth-child(2) .promo-image-wrap{
+    order:0;
   }
 
   .partner-bar-logos{
@@ -1228,10 +1225,24 @@ a{
 
 @media (max-width: 980px){
   .hero-stats,
-  .steps-grid,
   .coverage-summary,
   .coverage-grid{
     grid-template-columns:1fr;
+  }
+
+  .steps-grid{
+    grid-template-columns:1fr;
+    max-width:480px;
+  }
+
+  .step-card-v2{
+    border-right:none;
+    border-bottom:1px solid var(--line);
+    padding:32px 24px;
+  }
+
+  .step-card-v2:last-child{
+    border-bottom:none;
   }
 
   .coverage-topbar{
@@ -1347,9 +1358,8 @@ a{
     grid-template-columns:1fr;
   }
 
-  .step-card-v2,
-  .promo-card{
-    padding:22px;
+  .step-card-v2{
+    padding:24px 16px;
   }
 
   .coverage-map{

@@ -131,9 +131,12 @@ function initSharedHeader() {
     if (window.innerWidth > 1180) {
       closeMenu();
     }
+
+    syncHeaderState();
   });
 
   window.addEventListener("scroll", syncHeaderState, { passive: true });
+  window.addEventListener("load", syncHeaderState, { once: true });
   syncHeaderState();
   markActiveHeaderLinks();
   header.dataset.ready = "true";
@@ -146,11 +149,15 @@ function syncHeaderState() {
   }
 
   const overlayMode = document.body.dataset.headerMode === "overlay";
+  const forceSolid = document.body.dataset.headerSolid === "true";
   const isScrolled = window.scrollY > 24;
+  const overlayTheme = resolveHeaderTheme();
+  const isSolid = forceSolid || !overlayMode || hasHeaderPassedOverlayTarget(header);
 
-  header.classList.toggle("is-solid", !overlayMode || isScrolled);
+  header.dataset.theme = overlayTheme;
+  header.classList.toggle("is-solid", isSolid);
   header.classList.toggle("is-scrolled", isScrolled);
-  header.dataset.overlay = overlayMode && !isScrolled ? "true" : "false";
+  header.dataset.overlay = overlayMode && !isSolid ? "true" : "false";
 }
 
 function markActiveHeaderLinks() {
@@ -161,4 +168,39 @@ function markActiveHeaderLinks() {
     const route = (link.getAttribute("data-route") || "").toLowerCase();
     link.classList.toggle("is-current", route === currentPath);
   });
+}
+
+function resolveHeaderTheme() {
+  const theme = (document.body.dataset.headerTheme || "").toLowerCase();
+  if (theme === "light" || theme === "dark") {
+    return theme;
+  }
+
+  return document.body.dataset.headerSolid === "true" ? "dark" : "light";
+}
+
+function hasHeaderPassedOverlayTarget(header) {
+  const target = getHeaderOverlayTarget();
+  if (!target) {
+    return window.scrollY > Math.max(24, header.offsetHeight);
+  }
+
+  const rect = target.getBoundingClientRect();
+  return rect.bottom <= header.offsetHeight + 12;
+}
+
+function getHeaderOverlayTarget() {
+  const selector = document.body.dataset.headerAnchor;
+  if (selector) {
+    try {
+      const target = document.querySelector(selector);
+      if (target) {
+        return target;
+      }
+    } catch (error) {
+      console.warn("Ogiltig selector i data-header-anchor:", error);
+    }
+  }
+
+  return document.querySelector("[data-header-anchor-target]");
 }
