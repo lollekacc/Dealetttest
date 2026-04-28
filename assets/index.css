@@ -519,11 +519,9 @@ a{
   position:relative;
   padding:32px 30px;
   border-radius:30px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.86));
-  border:1px solid rgba(255,255,255,0.8);
-  box-shadow:
-    0 18px 50px rgba(15,23,42,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.85);
+  background:transparent;
+  border:none;
+  box-shadow:none;
   overflow:hidden;
 }
 
@@ -778,11 +776,9 @@ a{
   min-height:390px;
   padding:34px;
   border-radius:34px;
-  background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.86));
-  border:1px solid rgba(255,255,255,0.8);
-  box-shadow:
-    0 18px 50px rgba(15,23,42,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.85);
+  background:transparent;
+  border:none;
+  box-shadow:none;
   overflow:hidden;
 }
 
