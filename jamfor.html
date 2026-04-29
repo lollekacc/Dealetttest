@@ -185,8 +185,10 @@
                         <div class="map-ui">
                       
                           <div class="map-search">
-                            <input id="mapSearchInput" type="text" placeholder="S&ouml;k adress">
-                            <button id="mapSearchBtn">🔍</button>
+                            <button id="mapSearchBtn" class="map-search__icon" type="button" aria-label="Sök">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            </button>
+                            <input id="mapSearchInput" type="text" placeholder="S&ouml;k adress eller plats" />
                           </div>
                       
                           <div class="map-zoom">
@@ -625,60 +627,17 @@ document.getElementById("fullscreenMapBtn")?.addEventListener("click", () => {
   </script>
   <style>
     .map-ui {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  right: 16px;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
-  z-index: 1000;
-}
-
-/* SEARCH */
-.map-search {
-  display: flex;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  pointer-events: all;
-}
-
-.map-search input {
-  border: none;
-  outline: none;
-  padding: 10px 14px;
-  width: 220px;
-  font-size: 14px;
-}
-
-.map-search button {
-  background: #0f766e;
-  color: white;
-  border: none;
-  padding: 0 14px;
-  cursor: pointer;
-}
-
-/* ZOOM */
-.map-zoom {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  pointer-events: all;
-}
-
-.map-zoom button {
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: white;
-  font-size: 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      pointer-events: none;
+      z-index: 1000;
+      gap: 14px;
+    }
   </style>
 </body>
 </html>
