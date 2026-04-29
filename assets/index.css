@@ -1357,8 +1357,9 @@ a{
 }
 
 .operator-card[data-operator="tele2"] img,
-.operator-card[data-operator="telenor"] img{
-  padding:6px 10px;
+.operator-card[data-operator="telenor"] img,
+.operator-card[data-operator="halebop"] img{
+  padding:0px 2px;
 }
 
 .operator-card:hover{
