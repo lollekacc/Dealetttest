@@ -69,6 +69,14 @@ a{
   padding:92px 0;
 }
 
+.section-promo-ai{
+  background:#e8f1ff;
+}
+
+.section-promo-bonus{
+  background:#e6f3f8;
+}
+
 .section-head{
   margin-bottom:42px;
 }
@@ -527,6 +535,7 @@ a{
 /* UNIFIED ANALYS SECTION */
 .section-analys{
   padding:92px 0;
+  background:#f0f4ff;
 }
 
 /* When quiz questions are active, collapse intro layout */
@@ -1096,7 +1105,7 @@ a{
   overflow:visible;
 }
 
-.promo-card:nth-child(2) .promo-image-wrap{
+.promo-card--reversed .promo-image-wrap{
   order:-1;
 }
 
@@ -1105,7 +1114,6 @@ a{
   position:absolute;
   inset:0;
   background:
-    linear-gradient(135deg, rgba(255,255,255,0.55), transparent 45%),
     radial-gradient(circle at 80% 20%, rgba(15,118,110,0.06), transparent 18%);
   pointer-events:none;
 }
@@ -1208,9 +1216,9 @@ a{
 .coverage-main{
   position:relative;
   z-index:2;
-  padding:0;
+  padding:92px 0;
   margin:0;
-  background:none;
+  background:#e5f4ef;
 }
 
 .coverage-shell{
@@ -1568,7 +1576,7 @@ a{
     gap:40px;
   }
 
-  .promo-card:nth-child(2) .promo-image-wrap{
+  .promo-card--reversed .promo-image-wrap{
     order:0;
   }
 
