@@ -279,6 +279,22 @@ a{
   justify-content:center;
 }
 
+.hero-photo-frame{
+  position:relative;
+  z-index:1;
+  width:min(100%, 560px);
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:var(--shadow-lg);
+}
+
+.hero-photo{
+  width:100%;
+  height:auto;
+  display:block;
+  object-fit:cover;
+}
+
 .hero-glow{
   position:absolute;
   inset:auto;
