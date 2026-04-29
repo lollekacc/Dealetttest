@@ -86,16 +86,6 @@
         <div class="coverage-topbar">
           <div>
             <p class="coverage-topbar__eyebrow">T&auml;ckningskarta</p>
-            <h2>Bygg en enkel t&auml;ckningsvy</h2>
-          </div>
-
-          <div class="coverage-topbar__right">
-            <button id="resetViewBtn" class="coverage-btn coverage-btn--soft" type="button">
-              &Aring;terst&auml;ll vy
-            </button>
-            <button id="clearLayerBtn" class="coverage-btn coverage-btn--soft" type="button">
-              Rensa lager
-            </button>
           </div>
         </div>
 
@@ -177,39 +167,12 @@
               </div>
             </section>
 
-            <section class="coverage-card coverage-card--sidebar">
-              <div class="coverage-card__head">
-                <div>
-                  <p class="coverage-section-label">Tj&auml;nst</p>
-                  <h3>Vad du anv&auml;nder n&auml;tet till</h3>
-                </div>
+            <div class="sidebar-info-note">
+              <div class="sidebar-info-note__icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
               </div>
-
-              <div class="coverage-filter-grid" data-filter-group="service">
-                <button class="coverage-filter is-active" type="button">Samtal</button>
-                <button class="coverage-filter is-active" type="button">Data</button>
-                <button class="coverage-filter" type="button">SMS</button>
-                <button class="coverage-filter" type="button">Bredband</button>
-                <button class="coverage-filter" type="button">Fast tr&aring;dl&ouml;st</button>
-              </div>
-            </section>
-
-            <section class="coverage-card coverage-card--sidebar">
-              <div class="coverage-card__head">
-                <div>
-                  <p class="coverage-section-label">Plats</p>
-                  <h3>Var du beh&ouml;ver t&auml;ckning</h3>
-                </div>
-              </div>
-
-              <div class="coverage-filter-grid" data-filter-group="context">
-                <button class="coverage-filter is-active" type="button">Utomhus</button>
-                <button class="coverage-filter" type="button">Inomhus</button>
-                <button class="coverage-filter" type="button">I bil</button>
-                <button class="coverage-filter" type="button">Landsbygd</button>
-                <button class="coverage-filter" type="button">Stad</button>
-              </div>
-            </section>
+              <p>Täckningsinformationen är en uppskattning och inte ett löfte. <a href="#" class="sidebar-info-link">Läs mer &rarr;</a></p>
+            </div>
 
           </aside>
 
@@ -235,93 +198,58 @@
                       
                         <!-- MAP -->
                         <div id="map" class="coverage-map"></div>
-                      
+
+                        <!-- LEGEND: floating overlay bottom-left inside map -->
+                        <div class="map-legend-overlay">
+                          <div class="coverage-legend__item">
+                            <span class="legend-swatch legend-swatch--none"></span>
+                            <span>Ingen t&auml;ckning</span>
+                          </div>
+                          <div class="coverage-legend__item">
+                            <span class="legend-swatch legend-swatch--limited"></span>
+                            <span>Begr&auml;nsad</span>
+                          </div>
+                          <div class="coverage-legend__item">
+                            <span class="legend-swatch legend-swatch--basic"></span>
+                            <span>Grundl&auml;ggande</span>
+                          </div>
+                          <div class="coverage-legend__item">
+                            <span class="legend-swatch legend-swatch--good"></span>
+                            <span>Bra</span>
+                          </div>
+                          <div class="coverage-legend__item">
+                            <span class="legend-swatch legend-swatch--excellent"></span>
+                            <span>Utm&auml;rkt t&auml;ckning</span>
+                          </div>
+                        </div>
+
+                        <!-- BOTTOM BAR: half-transparent, inside map -->
+                        <div class="map-bottom-bar" aria-label="Kartkontroller">
+                          <button id="currentLocationBtn" class="map-bottom-pill" type="button">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Nuvarande plats
+                          </button>
+                          <button id="manualPinBtn" class="map-bottom-pill" type="button">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-8-5.33-8-12a8 8 0 0 1 16 0c0 6.67-8 12-8 12z"/><line x1="12" y1="2" x2="12" y2="5"/></svg>
+                            Placera n&aring;l
+                          </button>
+                          <button id="layerToggleBtn" class="map-bottom-pill" type="button">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                            Lager
+                          </button>
+                          <button id="fullscreenMapBtn" class="map-bottom-pill" type="button">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                            Helsk&auml;rm
+                          </button>
+                          <div class="map-zoom-group">
+                            <button id="zoomOutBtn2" class="map-zoom-btn" type="button" aria-label="Zooma ut">−</button>
+                            <span class="map-zoom-label">Zoomniv&aring;: <strong id="visibleZoomLabel">5</strong></span>
+                            <button id="zoomInBtn2" class="map-zoom-btn" type="button" aria-label="Zooma in">+</button>
+                          </div>
+                        </div>
+
                       </div>
 
-            <div class="map-control-strip" aria-label="Map interaction elements">
-              <button id="currentLocationBtn" class="map-control-pill" type="button">Nuvarande plats</button>
-              <button id="manualPinBtn" class="map-control-pill" type="button">Placera n&aring;l</button>
-              <button id="layerToggleBtn" class="map-control-pill" type="button">Visa/d&ouml;lj lager</button>
-              <button id="fullscreenMapBtn" class="map-control-pill" type="button">Helsk&auml;rm</button>
-              <span class="map-control-pill map-control-pill--status">Zoomniv&aring; <strong id="visibleZoomLabel">5</strong></span>
-            </div>
-
-            <div class="coverage-legend">
-              <div class="coverage-legend__item">
-                <span class="legend-swatch legend-swatch--none"></span>
-                <span>Ingen t&auml;ckning</span>
-              </div>
-              <div class="coverage-legend__item">
-                <span class="legend-swatch legend-swatch--limited"></span>
-                <span>Begr&auml;nsad</span>
-              </div>
-              <div class="coverage-legend__item">
-                <span class="legend-swatch legend-swatch--basic"></span>
-                <span>Grundl&auml;ggande</span>
-              </div>
-              <div class="coverage-legend__item">
-                <span class="legend-swatch legend-swatch--good"></span>
-                <span>Bra</span>
-              </div>
-              <div class="coverage-legend__item">
-                <span class="legend-swatch legend-swatch--excellent"></span>
-                <span>Utm&auml;rkt t&auml;ckning</span>
-              </div>
-            </div>
-
-            <div class="coverage-metrics" aria-label="T&auml;ckningsm&auml;tningar">
-              <article>
-                <span>Hastighet</span>
-                <strong>Vanlig / max</strong>
-              </article>
-              <article>
-                <span>F&ouml;rdr&ouml;jning</span>
-                <strong>Uppskattning</strong>
-              </article>
-              <article>
-                <span>Kapacitet</span>
-                <strong>Belastning i n&auml;tet</strong>
-              </article>
-              <article>
-                <span>Tr&auml;ngsel</span>
-                <strong>Hur upptaget n&auml;tet &auml;r</strong>
-              </article>
-            </div>
-          </section>
-        </div>
-
-      </section>
-
-      <section class="coverage-info">
-        <article class="coverage-info-card">
-          <span>T&auml;ckningsinformation</span>
-          <h2>T&auml;ckning &auml;r en uppskattning</h2>
-          <p>Faktisk upplevelse kan variera. Signal p&aring;verkas av omgivningen, och inomhust&auml;ckning kan inte garanteras.</p>
-        </article>
-
-        <article class="coverage-info-card">
-          <span>Vad p&aring;verkar t&auml;ckning</span>
-          <h2>Sm&aring; saker kan spela roll</h2>
-          <p>Avst&aring;nd till mast, terr&auml;ng, byggnader, mobilens egenskaper och belastning i n&auml;tet kan p&aring;verka resultatet.</p>
-        </article>
-
-        <article class="coverage-info-card">
-          <span>Teknikf&ouml;rklaring</span>
-          <h2>2G, 3G, 4G and 5G</h2>
-          <p>Nyare n&auml;t &auml;r ofta snabbare, men mobilen kan falla tillbaka till &auml;ldre n&auml;t n&auml;r det beh&ouml;vs.</p>
-        </article>
-
-        <article class="coverage-info-card">
-          <span>N&auml;tf&ouml;r&auml;ndringar</span>
-          <h2>N&auml;ten utvecklas hela tiden</h2>
-          <p>3G fasas ut p&aring; m&aring;nga platser, 2G finns kvar f&ouml;r &auml;ldre st&ouml;d och 5G forts&auml;tter att byggas ut.</p>
-        </article>
-
-        <article class="coverage-info-card coverage-info-card--wide">
-          <span>Avancerade etiketter</span>
-          <h2>Extra information, enkelt f&ouml;rklarat</h2>
-          <p>VoLTE, VoWiFi, frist&aring;ende 5G, streaming, gaming, videosamtal, stabilitet, risk f&ouml;r avbrott och uppskattad f&ouml;rdr&ouml;jning kan visas n&auml;r data finns.</p>
-        </article>
       </section>
     </div>
   </main>
@@ -561,12 +489,11 @@ map.on("drag", () => {
       clearActiveOverlay();
     });
 
-    document.getElementById("zoomInBtn").addEventListener("click", () => {
-      map.zoomIn();
+    ["zoomInBtn","zoomInBtn2"].forEach(id => {
+      document.getElementById(id)?.addEventListener("click", () => map.zoomIn());
     });
-
-    document.getElementById("zoomOutBtn").addEventListener("click", () => {
-      map.zoomOut();
+    ["zoomOutBtn","zoomOutBtn2"].forEach(id => {
+      document.getElementById(id)?.addEventListener("click", () => map.zoomOut());
     });
 
     map.on("zoomend", () => {
