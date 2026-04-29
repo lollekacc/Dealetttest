@@ -667,7 +667,7 @@ body.jamfor-page {
 /* LEGEND: dark floating overlay inside the map */
 .map-legend-overlay {
   position: absolute;
-  bottom: 72px;
+  bottom: 86px;
   left: 16px;
   z-index: 500;
   display: flex;
@@ -690,17 +690,19 @@ body.jamfor-page {
 /* BOTTOM BAR: half-transparent bar at bottom of map */
 .map-bottom-bar {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
   z-index: 500;
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 16px;
-  background: rgba(10, 14, 25, 0.70);
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(10, 14, 25, 0.52);
   backdrop-filter: blur(16px);
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .map-bottom-pill {
