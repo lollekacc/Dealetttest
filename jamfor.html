@@ -40,36 +40,35 @@
 
     <div class="content-wrapper coverage-hero__inner">
       <div class="coverage-hero__copy">
-        <span class="coverage-badge">Täckning & nät</span>
-        <h1>Jämför mobilnät på kartan</h1>
+        <span class="coverage-badge">T&auml;ckningsfilter</span>
+        <h1>V&auml;lj n&auml;t, tj&auml;nst och plats</h1>
         <p>
-          Växla mellan operatörer, zooma in på ditt område och få en snabb
-          överblick över vilket nät som passar bäst för dig.
+          B&ouml;rja med operat&ouml;ren och v&auml;lj sedan vilken t&auml;ckning du vill f&ouml;rst&aring;. Kartan visar en uppskattning, inte ett l&ouml;fte.
         </p>
 
         <div class="coverage-hero__actions">
-          <a href="#coverageApp" class="coverage-btn coverage-btn--primary">Öppna kartan</a>
-          <a href="abonnemang.html" class="coverage-btn coverage-btn--ghost">Jämför abonnemang</a>
+          <a href="#coverageApp" class="coverage-btn coverage-btn--primary">&Ouml;ppna kartan</a>
+          <a href="abonnemang.html" class="coverage-btn coverage-btn--ghost">J&auml;mf&ouml;r abonnemang</a>
         </div>
       </div>
 
       <div class="coverage-hero__panel">
         <div class="hero-panel-card">
           <div class="hero-panel-card__top">
-            <span class="hero-panel-card__label">Aktiv vy</span>
+            <span class="hero-panel-card__label">Aktuellt val</span>
             <span id="heroActiveOperator" class="hero-panel-card__pill">Ingen vald</span>
           </div>
 
           <div class="hero-panel-card__body">
             <p>
-              Klicka på en operatör för att ladda dess täckningslager direkt på kartan.
+              V&auml;lj ett n&auml;t f&ouml;rst. Anv&auml;nd sedan filter f&ouml;r tj&auml;nst, plats och kvalitet.
             </p>
 
             <div class="hero-panel-card__chips">
-              <span>3G</span>
-              <span>4G</span>
-              <span>5G</span>
-              <span>Datatäckning</span>
+              <span>N&auml;t</span>
+              <span>Tj&auml;nst</span>
+              <span>Plats</span>
+              <span>Kvalitet</span>
             </div>
           </div>
         </div>
@@ -85,16 +84,16 @@
         <!-- TOPBAR -->
         <div class="coverage-topbar">
           <div>
-            <p class="coverage-topbar__eyebrow">Täckningskarta</p>
-            <h2>Välj operatör och utforska kartan</h2>
+            <p class="coverage-topbar__eyebrow">T&auml;ckningskarta</p>
+            <h2>Bygg en enkel t&auml;ckningsvy</h2>
           </div>
 
           <div class="coverage-topbar__right">
             <button id="resetViewBtn" class="coverage-btn coverage-btn--soft" type="button">
-              Återställ vy
+              &Aring;terst&auml;ll vy
             </button>
             <button id="clearLayerBtn" class="coverage-btn coverage-btn--soft" type="button">
-              Ta bort lager
+              Rensa lager
             </button>
           </div>
         </div>
@@ -106,8 +105,8 @@
             <section class="coverage-card coverage-card--sidebar">
               <div class="coverage-card__head">
                 <div>
-                  <p class="coverage-section-label">Operatörer</p>
-                  <h3>Välj nät</h3>
+                  <p class="coverage-section-label">Operat&ouml;rer</p>
+                  <h3>V&auml;lj operat&ouml;r</h3>
                 </div>
               </div>
 
@@ -162,17 +161,53 @@
             <section class="coverage-card coverage-card--sidebar">
               <div class="coverage-card__head">
                 <div>
-                  <p class="coverage-section-label">Tips</p>
-                  <h3>Så använder du kartan</h3>
+                  <p class="coverage-section-label">Filter</p>
+                  <h3>N&auml;t</h3>
                 </div>
               </div>
 
-              <ul class="coverage-tips">
-                <li>Välj en operatör i listan.</li>
-                <li>Zooma in till stad eller område.</li>
-                <li>Dra kartan för att jämföra olika platser.</li>
-                <li>Rensa lagret för att börja om.</li>
-              </ul>
+              <div class="coverage-filter-grid" data-filter-group="network">
+                <button class="coverage-filter is-active" type="button">2G</button>
+                <button class="coverage-filter" type="button">3G</button>
+                <button class="coverage-filter is-active" type="button">4G</button>
+                <button class="coverage-filter" type="button">4G+</button>
+                <button class="coverage-filter is-active" type="button">5G</button>
+                <button class="coverage-filter" type="button">5G+</button>
+              </div>
+            </section>
+
+            <section class="coverage-card coverage-card--sidebar">
+              <div class="coverage-card__head">
+                <div>
+                  <p class="coverage-section-label">Tj&auml;nst</p>
+                  <h3>Vad du anv&auml;nder n&auml;tet till</h3>
+                </div>
+              </div>
+
+              <div class="coverage-filter-grid" data-filter-group="service">
+                <button class="coverage-filter is-active" type="button">Samtal</button>
+                <button class="coverage-filter is-active" type="button">Data</button>
+                <button class="coverage-filter" type="button">SMS</button>
+                <button class="coverage-filter" type="button">Bredband</button>
+                <button class="coverage-filter" type="button">Fast tr&aring;dl&ouml;st</button>
+              </div>
+            </section>
+
+            <section class="coverage-card coverage-card--sidebar">
+              <div class="coverage-card__head">
+                <div>
+                  <p class="coverage-section-label">Plats</p>
+                  <h3>Var du beh&ouml;ver t&auml;ckning</h3>
+                </div>
+              </div>
+
+              <div class="coverage-filter-grid" data-filter-group="context">
+                <button class="coverage-filter is-active" type="button">Utomhus</button>
+                <button class="coverage-filter" type="button">Inomhus</button>
+                <button class="coverage-filter" type="button">I bil</button>
+                <button class="coverage-filter" type="button">Landsbygd</button>
+                <button class="coverage-filter" type="button">Stad</button>
+              </div>
             </section>
 
           </aside>
@@ -186,7 +221,7 @@
                         <div class="map-ui">
                       
                           <div class="map-search">
-                            <input id="mapSearchInput" type="text" placeholder="Sök adress eller stad...">
+                            <input id="mapSearchInput" type="text" placeholder="S&ouml;k adress">
                             <button id="mapSearchBtn">🔍</button>
                           </div>
                       
@@ -202,23 +237,90 @@
                       
                       </div>
 
+            <div class="map-control-strip" aria-label="Map interaction elements">
+              <button id="currentLocationBtn" class="map-control-pill" type="button">Nuvarande plats</button>
+              <button id="manualPinBtn" class="map-control-pill" type="button">Placera n&aring;l</button>
+              <button id="layerToggleBtn" class="map-control-pill" type="button">Visa/d&ouml;lj lager</button>
+              <button id="fullscreenMapBtn" class="map-control-pill" type="button">Helsk&auml;rm</button>
+              <span class="map-control-pill map-control-pill--status">Zoomniv&aring; <strong id="visibleZoomLabel">5</strong></span>
+            </div>
+
             <div class="coverage-legend">
               <div class="coverage-legend__item">
-                <span class="legend-swatch legend-swatch--base"></span>
-                <span>Bakgrundskarta</span>
+                <span class="legend-swatch legend-swatch--none"></span>
+                <span>Ingen t&auml;ckning</span>
               </div>
               <div class="coverage-legend__item">
-                <span class="legend-swatch legend-swatch--overlay"></span>
-                <span>Aktivt täckningslager</span>
+                <span class="legend-swatch legend-swatch--limited"></span>
+                <span>Begr&auml;nsad</span>
               </div>
               <div class="coverage-legend__item">
-                <span class="legend-swatch legend-swatch--focus"></span>
-                <span>Vald operatör</span>
+                <span class="legend-swatch legend-swatch--basic"></span>
+                <span>Grundl&auml;ggande</span>
               </div>
+              <div class="coverage-legend__item">
+                <span class="legend-swatch legend-swatch--good"></span>
+                <span>Bra</span>
+              </div>
+              <div class="coverage-legend__item">
+                <span class="legend-swatch legend-swatch--excellent"></span>
+                <span>Utm&auml;rkt t&auml;ckning</span>
+              </div>
+            </div>
+
+            <div class="coverage-metrics" aria-label="T&auml;ckningsm&auml;tningar">
+              <article>
+                <span>Hastighet</span>
+                <strong>Vanlig / max</strong>
+              </article>
+              <article>
+                <span>F&ouml;rdr&ouml;jning</span>
+                <strong>Uppskattning</strong>
+              </article>
+              <article>
+                <span>Kapacitet</span>
+                <strong>Belastning i n&auml;tet</strong>
+              </article>
+              <article>
+                <span>Tr&auml;ngsel</span>
+                <strong>Hur upptaget n&auml;tet &auml;r</strong>
+              </article>
             </div>
           </section>
         </div>
 
+      </section>
+
+      <section class="coverage-info">
+        <article class="coverage-info-card">
+          <span>T&auml;ckningsinformation</span>
+          <h2>T&auml;ckning &auml;r en uppskattning</h2>
+          <p>Faktisk upplevelse kan variera. Signal p&aring;verkas av omgivningen, och inomhust&auml;ckning kan inte garanteras.</p>
+        </article>
+
+        <article class="coverage-info-card">
+          <span>Vad p&aring;verkar t&auml;ckning</span>
+          <h2>Sm&aring; saker kan spela roll</h2>
+          <p>Avst&aring;nd till mast, terr&auml;ng, byggnader, mobilens egenskaper och belastning i n&auml;tet kan p&aring;verka resultatet.</p>
+        </article>
+
+        <article class="coverage-info-card">
+          <span>Teknikf&ouml;rklaring</span>
+          <h2>2G, 3G, 4G and 5G</h2>
+          <p>Nyare n&auml;t &auml;r ofta snabbare, men mobilen kan falla tillbaka till &auml;ldre n&auml;t n&auml;r det beh&ouml;vs.</p>
+        </article>
+
+        <article class="coverage-info-card">
+          <span>N&auml;tf&ouml;r&auml;ndringar</span>
+          <h2>N&auml;ten utvecklas hela tiden</h2>
+          <p>3G fasas ut p&aring; m&aring;nga platser, 2G finns kvar f&ouml;r &auml;ldre st&ouml;d och 5G forts&auml;tter att byggas ut.</p>
+        </article>
+
+        <article class="coverage-info-card coverage-info-card--wide">
+          <span>Avancerade etiketter</span>
+          <h2>Extra information, enkelt f&ouml;rklarat</h2>
+          <p>VoLTE, VoWiFi, frist&aring;ende 5G, streaming, gaming, videosamtal, stabilitet, risk f&ouml;r avbrott och uppskattad f&ouml;rdr&ouml;jning kan visas n&auml;r data finns.</p>
+        </article>
       </section>
     </div>
   </main>
@@ -227,6 +329,8 @@
   <div id="footer-placeholder"></div>
 
   <script>
+    applyPlainLanguageCopy();
+
     const DEFAULT_VIEW = {
       center: [62.0, 15.0],
       zoom: 5
@@ -245,6 +349,71 @@ const map = L.map("map", {
 map.on("drag", () => {
   map.panInsideBounds(SWEDEN_BOUNDS, { animate: false });
 });
+
+    function applyPlainLanguageCopy() {
+      const setText = (selector, text) => {
+        const el = document.querySelector(selector);
+        if (el) {
+          el.textContent = text;
+        }
+      };
+
+      setText(".coverage-badge", "T\u00e4ckningsfilter");
+      setText(".coverage-hero__copy h1", "V\u00e4lj n\u00e4t, tj\u00e4nst och plats");
+      setText(
+        ".coverage-hero__copy p",
+        "B\u00f6rja med operat\u00f6ren och v\u00e4lj sedan vilken t\u00e4ckning du vill f\u00f6rst\u00e5. Kartan visar en uppskattning, inte ett l\u00f6fte."
+      );
+
+      const heroActions = document.querySelectorAll(".coverage-hero__actions a");
+      if (heroActions[0]) heroActions[0].textContent = "\u00d6ppna kartan";
+      if (heroActions[1]) heroActions[1].textContent = "J\u00e4mf\u00f6r abonnemang";
+
+      setText(".hero-panel-card__label", "Aktuellt val");
+      setText(
+        ".hero-panel-card__body p",
+        "V\u00e4lj ett n\u00e4t f\u00f6rst. Anv\u00e4nd sedan filter f\u00f6r tj\u00e4nst, plats och kvalitet."
+      );
+
+      const chips = document.querySelector(".hero-panel-card__chips");
+      if (chips) {
+        chips.innerHTML = "<span>N\u00e4t</span><span>Tj\u00e4nst</span><span>Plats</span><span>Kvalitet</span>";
+      }
+
+      setText(".coverage-topbar__eyebrow", "T\u00e4ckningskarta");
+      setText(".coverage-topbar h2", "Bygg en enkel t\u00e4ckningsvy");
+      setText("#resetViewBtn", "\u00c5terst\u00e4ll vy");
+      setText("#clearLayerBtn", "Rensa lager");
+
+      const cardLabels = document.querySelectorAll(".coverage-card--sidebar .coverage-section-label");
+      if (cardLabels[0]) cardLabels[0].textContent = "Operat\u00f6rer";
+
+      const cardTitles = document.querySelectorAll(".coverage-card--sidebar h3");
+      if (cardTitles[0]) cardTitles[0].textContent = "V\u00e4lj operat\u00f6r";
+
+      const searchInput = document.getElementById("mapSearchInput");
+      if (searchInput) {
+        searchInput.placeholder = "S\u00f6k adress";
+      }
+
+      const legendLabels = document.querySelectorAll(".coverage-legend__item span:last-child");
+      if (legendLabels[0]) legendLabels[0].textContent = "Ingen t\u00e4ckning";
+      if (legendLabels[1]) legendLabels[1].textContent = "Begr\u00e4nsad";
+      if (legendLabels[2]) legendLabels[2].textContent = "Grundl\u00e4ggande";
+      if (legendLabels[3]) legendLabels[3].textContent = "Bra";
+      if (legendLabels[4]) legendLabels[4].textContent = "Utm\u00e4rkt t\u00e4ckning";
+
+      ["activeOperatorLabel", "mapToolbarLabel", "zoomLabel", "coordsLabel"].forEach(id => {
+        if (document.getElementById(id)) {
+          return;
+        }
+
+        const ghost = document.createElement("span");
+        ghost.id = id;
+        ghost.hidden = true;
+        document.body.appendChild(ghost);
+      });
+    }
 
     let activeOverlay = null;
     let activeOperatorKey = null;
@@ -401,6 +570,7 @@ map.on("drag", () => {
 
     map.on("zoomend", () => {
       zoomLabel.textContent = map.getZoom();
+      updateVisibleZoom();
     });
 
     map.on("moveend", () => {
@@ -417,6 +587,7 @@ map.on("drag", () => {
     setTimeout(() => {
       map.invalidateSize();
       zoomLabel.textContent = map.getZoom();
+      updateVisibleZoom();
       const center = map.getCenter();
       coordsLabel.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
     }, 250);
@@ -458,6 +629,69 @@ searchBtn.addEventListener("click", () => {
 searchInput.addEventListener("keydown", e => {
   if (e.key === "Enter") {
     searchAddress(searchInput.value.trim());
+  }
+});
+
+function updateVisibleZoom() {
+  const visibleZoomLabel = document.getElementById("visibleZoomLabel");
+  if (visibleZoomLabel) {
+    visibleZoomLabel.textContent = map.getZoom();
+  }
+}
+
+document.querySelectorAll(".coverage-filter").forEach(button => {
+  button.addEventListener("click", () => {
+    button.classList.toggle("is-active");
+  });
+});
+
+document.getElementById("currentLocationBtn")?.addEventListener("click", () => {
+  if (!navigator.geolocation) return;
+
+  navigator.geolocation.getCurrentPosition(position => {
+    const { latitude, longitude } = position.coords;
+    map.setView([latitude, longitude], 14, { animate: true });
+
+    if (searchMarker) map.removeLayer(searchMarker);
+    searchMarker = L.marker([latitude, longitude]).addTo(map);
+  });
+});
+
+let manualPinMode = false;
+document.getElementById("manualPinBtn")?.addEventListener("click", event => {
+  manualPinMode = !manualPinMode;
+  event.currentTarget.classList.toggle("is-active", manualPinMode);
+});
+
+map.on("click", event => {
+  if (!manualPinMode) return;
+
+  if (searchMarker) map.removeLayer(searchMarker);
+  searchMarker = L.marker(event.latlng).addTo(map);
+  manualPinMode = false;
+  document.getElementById("manualPinBtn")?.classList.remove("is-active");
+});
+
+document.getElementById("layerToggleBtn")?.addEventListener("click", event => {
+  if (!activeOverlay) return;
+
+  if (map.hasLayer(activeOverlay)) {
+    map.removeLayer(activeOverlay);
+    event.currentTarget.classList.add("is-muted");
+  } else {
+    activeOverlay.addTo(map);
+    event.currentTarget.classList.remove("is-muted");
+  }
+});
+
+document.getElementById("fullscreenMapBtn")?.addEventListener("click", () => {
+  const mapCard = document.querySelector(".coverage-map-card");
+  if (!mapCard) return;
+
+  if (document.fullscreenElement) {
+    document.exitFullscreen?.();
+  } else {
+    mapCard.requestFullscreen?.();
   }
 });
   </script>

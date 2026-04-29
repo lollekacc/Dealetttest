@@ -70,6 +70,8 @@ body.jamfor-page {
 .coverage-hero__inner {
   position: relative;
   z-index: 2;
+  width: min(calc(100% - 48px), 1360px);
+  margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(320px, 420px);
   gap: 32px;
@@ -464,6 +466,40 @@ body.jamfor-page {
   font-size: 0.93rem;
 }
 
+.coverage-filter-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.coverage-filter {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--coverage-text);
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.coverage-filter:hover {
+  transform: translateY(-1px);
+  border-color: rgba(15, 118, 110, 0.28);
+}
+
+.coverage-filter.is-active {
+  border-color: var(--coverage-accent);
+  background: var(--coverage-accent);
+  color: #fff;
+}
+
 /* MAP */
 .coverage-map-area {
   display: flex;
@@ -591,6 +627,131 @@ body.jamfor-page {
   background: var(--coverage-accent);
 }
 
+.legend-swatch--none {
+  background: #cbd5e1;
+}
+
+.legend-swatch--limited {
+  background: #f59e0b;
+}
+
+.legend-swatch--basic {
+  background: #60a5fa;
+}
+
+.legend-swatch--good {
+  background: #10b981;
+}
+
+.legend-swatch--excellent {
+  background: #047857;
+}
+
+.map-control-strip,
+.coverage-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.map-control-strip {
+  align-items: center;
+}
+
+.map-control-pill {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--coverage-text);
+  font-size: 0.84rem;
+  font-weight: 800;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+  cursor: pointer;
+}
+
+.map-control-pill--status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: default;
+}
+
+.map-control-pill.is-active {
+  border-color: var(--coverage-accent);
+  background: var(--coverage-accent);
+  color: #fff;
+}
+
+.map-control-pill.is-muted {
+  opacity: 0.62;
+}
+
+.coverage-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.coverage-metrics article {
+  padding: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--coverage-shadow);
+}
+
+.coverage-metrics span,
+.coverage-info-card span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--coverage-accent);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.coverage-metrics strong {
+  display: block;
+  color: var(--coverage-text);
+  font-size: 1rem;
+}
+
+.coverage-info {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.coverage-info-card {
+  padding: 22px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--coverage-shadow);
+}
+
+.coverage-info-card h2 {
+  margin: 0 0 10px;
+  color: var(--coverage-text);
+  font-size: 1.12rem;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.coverage-info-card p {
+  margin: 0;
+  color: var(--coverage-muted);
+  font-size: 0.93rem;
+  line-height: 1.65;
+}
+
+.coverage-info-card--wide {
+  grid-column: span 2;
+}
+
 /* LEAFLET */
 .leaflet-container {
   font-family: "Inter", sans-serif;
@@ -628,11 +789,19 @@ body.jamfor-page {
   .coverage-map-area {
     order: 1;
   }
+
+  .coverage-info {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .coverage-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 900px) {
   .coverage-hero {
-    padding: 36px 0 28px;
+    padding: calc(var(--site-header-height, 86px) + 24px) 0 28px;
   }
 
   .coverage-shell {
@@ -659,6 +828,10 @@ body.jamfor-page {
 
   .coverage-map {
     height: 560px;
+  }
+
+  .coverage-metrics {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -691,6 +864,19 @@ body.jamfor-page {
 
   .coverage-legend {
     gap: 12px;
+  }
+
+  .coverage-info {
+    grid-template-columns: 1fr;
+  }
+
+  .coverage-info-card--wide {
+    grid-column: auto;
+  }
+
+  .map-control-pill {
+    width: 100%;
+    justify-content: center;
   }
 }
 .map-search{
