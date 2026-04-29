@@ -24,22 +24,39 @@ body.jamfor-page {
 }
 
 /* HERO */
+@keyframes jamforHeroZoom {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1); }
+}
+
 .coverage-hero {
   position: relative;
   overflow: hidden;
   padding: calc(var(--site-header-height, 86px) + 32px) 0 36px;
-  background:
-    linear-gradient(135deg, #0b1220 0%, #0f172a 50%, #0d1b2a 100%);
+  background: #030810;
   color: #fff;
+}
+
+.coverage-hero__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform-origin: center center;
+  animation: jamforHeroZoom 14s ease forwards;
+  will-change: transform;
 }
 
 .coverage-hero__bg {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0)),
-    radial-gradient(circle at 20% 20%, rgba(16,185,129,0.16), transparent 25%),
-    radial-gradient(circle at 85% 15%, rgba(59,130,246,0.18), transparent 24%);
+    linear-gradient(104deg, rgba(3,9,19,0.88) 0%, rgba(3,9,19,0.72) 36%, rgba(3,9,19,0.30) 66%, rgba(3,9,19,0.40) 100%),
+    radial-gradient(circle at 20% 20%, rgba(16,185,129,0.14), transparent 32%),
+    radial-gradient(circle at 85% 15%, rgba(59,130,246,0.14), transparent 28%),
+    linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.44) 100%);
   pointer-events: none;
 }
 
