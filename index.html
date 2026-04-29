@@ -158,97 +158,68 @@
       </div>
     </div>
 
-    <!-- HOW IT WORKS -->
-    <section class="section-space">
+    <!-- HOW IT WORKS + QUIZ (unified) -->
+    <section id="analys" class="section-analys">
       <div class="page-shell">
-        <div class="section-head center">
-          <span class="section-kicker">Så fungerar det</span>
-          <h2>Tre enkla steg till rätt abonnemang</h2>
-          <p>
-            Ett tydligt flöde från behovsanalys till färdig beställning. Designat för att kännas enkelt,
-            modernt och tryggt från start till avslut.
-          </p>
-        </div>
 
-        <div class="steps-grid">
-          <article class="step-card-v2">
-            <div class="step-number">Steg 1</div>
-            <h3>Besvara några frågor</h3>
-            <p>Vi analyserar hushållets behov, nuvarande operatör, surfnivå och prisbild.</p>
-          </article>
-
-          <article class="step-card-v2">
-            <div class="step-number">Steg 2</div>
-            <h3>Jämför alternativen</h3>
-            <p>Se abonnemang, familjeupplägg och bonus i ett mer professionellt och överskådligt flöde.</p>
-          </article>
-
-          <article class="step-card-v2">
-            <div class="step-number">Steg 3</div>
-            <h3>Beställ direkt</h3>
-            <p>Välj abonnemang som passar bäst och gå vidare utan att behöva byta mobil eller nummer.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- QUIZ -->
-    <section id="analys" class="quiz-section px-4 pb-16 sm:px-6 lg:px-8 lg:pb-24">
-      <div class="mx-auto max-w-7xl">
-        <div class="quiz-shell rounded-[2rem] border border-white/70 bg-white/85 shadow-soft backdrop-blur-xl">
-          <div class="border-b border-slate-100 px-6 py-5 sm:px-8">
-            <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p class="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-700">
-                  Behovsanalys
-                </p>
-                <h2 class="mt-1 text-2xl font-bold text-slate-950 sm:text-3xl">
-                  Hitta rätt abonnemang på ett mer professionellt sätt
-                </h2>
-              </div>
-
-              <div class="flex flex-wrap gap-2 text-sm font-medium text-slate-600">
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Mobil</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Pris</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Surf</span>
-                <span class="rounded-full bg-slate-100 px-3 py-1.5">Bindningstid</span>
-              </div>
-            </div>
-          </div>
-
-          <div id="quiz-slot" class="px-6 py-8 sm:px-8 sm:py-10 transition-all duration-300 overflow-hidden">
+        <!-- Quiz -->
+        <div class="quiz-shell">
+          <div id="quiz-slot" class="transition-all duration-300 overflow-hidden">
             <div id="quiz-intro" class="transition-opacity duration-300">
-              <div class="mx-auto max-w-3xl text-center">
-                <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
-                  <i class="fa-solid fa-sparkles"></i>
-                  Analysera ditt behov
+              <div class="quiz-intro-grid">
+
+                <!-- Left: heading + vertical steps -->
+                <div class="quiz-intro-left">
+                  <span class="section-kicker">Behovsanalys</span>
+                  <h2 class="quiz-intro-headline">Hitta rätt abonnemang på ett mer professionellt sätt</h2>
+                  <p class="quiz-intro-desc">Besvara tre snabba frågor — vi analyserar ditt hushålls behov och visar de bästa alternativen.</p>
+                  <ol class="quiz-vsteps">
+                    <li>
+                      <span class="quiz-vstep-num">1</span>
+                      <div>
+                        <strong>Besvara några frågor</strong>
+                        <p>Vi analyserar hushållets behov, operatör, surfnivå och prisbild.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="quiz-vstep-num">2</span>
+                      <div>
+                        <strong>Jämför alternativen</strong>
+                        <p>Se abonnemang, familjeupplägg och bonus i ett överskådligt flöde.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <span class="quiz-vstep-num">3</span>
+                      <div>
+                        <strong>Beställ direkt</strong>
+                        <p>Välj abonnemang och gå vidare — ingen ny mobil eller nummer krävs.</p>
+                      </div>
+                    </li>
+                  </ol>
                 </div>
 
-                <h3 class="mt-5 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
-                  Se om du kan sänka kostnaden eller få mer för pengarna
-                </h3>
-
-                <div class="mt-8">
+                <!-- Right: CTA -->
+                <div class="quiz-intro-right">
+                  <div class="quiz-intro-badge">
+                    <i class="fa-solid fa-sparkles"></i>
+                    Analysera ditt behov
+                  </div>
+                  <h3 class="quiz-intro-cta-title">Se om du kan sänka kostnaden eller få mer för pengarna</h3>
                   <button
                     id="quiz-start"
-                    class="adeala-btn inline-flex items-center justify-center rounded-2xl px-8 py-4 text-base font-bold shadow-lg transition hover:-translate-y-0.5"
+                    class="adeala-btn quiz-intro-cta-btn"
                     type="button"
                   >
-                    <span class="mr-2">👉</span> Se min analys
+                    <span>👉</span> Se min analys
                   </button>
+                  <p class="quiz-intro-meta">Tar under 2 minuter &nbsp;·&nbsp; Helt kostnadsfritt</p>
+                  <div class="quiz-intro-checks">
+                    <span><i class="fa-solid fa-check"></i> Transparens</span>
+                    <span><i class="fa-solid fa-check"></i> Kontroll</span>
+                    <span><i class="fa-solid fa-check"></i> Säkerhet</span>
+                  </div>
                 </div>
 
-                <div class="mt-10 grid gap-3 sm:grid-cols-3">
-                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
-                    ✔️ Transparens
-                  </div>
-                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
-                    ✔️ Kontroll
-                  </div>
-                  <div class="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-700">
-                    ✔️ Säkerhet
-                  </div>
-                </div>
               </div>
             </div>
 
