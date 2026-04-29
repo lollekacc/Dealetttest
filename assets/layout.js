@@ -3,6 +3,8 @@ const DEALett_SHARED_STYLES = [
   "assets/footer.css"
 ];
 
+window.DEALETT_SHARED_LAYOUT_ACTIVE = true;
+
 document.addEventListener("DOMContentLoaded", () => {
   void initSharedLayout().catch(error => {
     console.error("Kunde inte starta delad layout:", error);
@@ -15,8 +17,18 @@ async function initSharedLayout() {
     loadPartialInto("#header-placeholder", "partials/header.html"),
     loadPartialInto("#footer-placeholder", "partials/footer.html")
   ]);
+  dedupeSharedFooters();
   initSharedHeader();
   ensureChatScript();
+}
+
+function dedupeSharedFooters() {
+  const footers = Array.from(document.querySelectorAll("footer.site-footer"));
+  if (footers.length <= 1) {
+    return;
+  }
+
+  footers.slice(1).forEach(footer => footer.remove());
 }
 
 async function loadPartialInto(selector, url) {

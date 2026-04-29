@@ -789,6 +789,14 @@ function hasAnsweredBindings(state = abonState) {
 }
 
 async function loadShell() {
+  const hasSharedLayoutScript = Boolean(
+    document.querySelector('script[src$="assets/layout.js"], script[src$="./assets/layout.js"]')
+  );
+
+  if (window.DEALETT_SHARED_LAYOUT_ACTIVE || hasSharedLayoutScript) {
+    return;
+  }
+
   const headerPlaceholder = document.getElementById("header-placeholder");
 
   try {
@@ -801,9 +809,13 @@ async function loadShell() {
   }
 
   try {
-    const footerRes = await fetch("./partials/footer.html");
-    if (footerRes.ok) {
-      document.body.insertAdjacentHTML("beforeend", await footerRes.text());
+    const footerPlaceholder = document.getElementById("footer-placeholder");
+    if (footerPlaceholder && footerPlaceholder.dataset.sharedLoaded !== "true") {
+      const footerRes = await fetch("./partials/footer.html");
+      if (footerRes.ok) {
+        footerPlaceholder.innerHTML = await footerRes.text();
+        footerPlaceholder.dataset.sharedLoaded = "true";
+      }
     }
   } catch (err) {
     console.warn("Footer load failed:", err);
