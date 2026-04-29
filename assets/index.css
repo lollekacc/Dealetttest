@@ -73,7 +73,7 @@ a{
 
 .section-promo-ai{
   position:relative;
-  background: #e7f0fa;
+  background: #fafcff;
 }
 
 .section-promo-ai::before{
@@ -84,7 +84,7 @@ a{
   width:560px;
   height:560px;
   border-radius:999px;
-  background:radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 65%);
+  background:radial-gradient(circle, rgba(236, 237, 238, 0.18) 0%, transparent 65%);
   pointer-events:none;
   z-index:0;
 }
@@ -102,7 +102,7 @@ a{
   width:520px;
   height:520px;
   border-radius:999px;
-  background:radial-gradient(circle, rgba(16,185,129,0.18) 0%, transparent 65%);
+  background:radial-gradient(circle, rgba(244, 245, 244, 0.18) 0%, transparent 65%);
   pointer-events:none;
   z-index:0;
 }
@@ -580,7 +580,7 @@ a{
   width:600px;
   height:600px;
   border-radius:999px;
-  background:radial-gradient(circle, rgba(139,92,246,0.16) 0%, transparent 65%);
+  background:radial-gradient(circle, rgba(238, 237, 240, 0.16) 0%, transparent 65%);
   pointer-events:none;
   z-index:0;
 }
@@ -593,7 +593,7 @@ a{
   width:440px;
   height:440px;
   border-radius:999px;
-  background:radial-gradient(circle, rgba(99,102,241,0.13) 0%, transparent 65%);
+  background:radial-gradient(circle, rgba(221, 221, 224, 0.13) 0%, transparent 65%);
   pointer-events:none;
   z-index:0;
 }
@@ -1287,9 +1287,9 @@ a{
 .coverage-main{
   position:relative;
   z-index:2;
-  padding:76px 0;
+  padding:76px 0 172px;
   margin:0;
-  background: #dbe9f6;
+  background: #fafcff;
 }
 
 .coverage-main::before{
