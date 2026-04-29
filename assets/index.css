@@ -1198,12 +1198,11 @@ a{
 }
 
 .coverage-shell{
-  padding:28px;
-  border-radius:34px;
-  background:rgba(255,255,255,0.70);
-  border:1px solid rgba(255,255,255,0.85);
-  backdrop-filter:blur(20px);
-  box-shadow:var(--shadow-lg);
+  padding:0;
+  background:transparent;
+  border:none;
+  backdrop-filter:none;
+  box-shadow:none;
 }
 
 .coverage-topbar{
@@ -1241,23 +1240,22 @@ a{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:48px;
-  padding:0 18px;
-  border-radius:16px;
-  border:1px solid var(--line);
-  background:#fff;
-  color:var(--text);
-  font-size:.95rem;
-  font-weight:800;
+  min-height:42px;
+  padding:0 16px;
+  border-radius:10px;
+  border:none;
+  background:transparent;
+  color:var(--muted-2);
+  font-size:.9rem;
+  font-weight:700;
   cursor:pointer;
-  transition:.2s ease;
-  box-shadow:0 10px 24px rgba(15,23,42,0.05);
+  transition:.15s ease;
+  text-decoration:underline;
+  text-underline-offset:3px;
 }
 
 .coverage-btn:hover{
-  transform:translateY(-1px);
-  border-color:rgba(15,118,110,0.22);
-  box-shadow:0 16px 28px rgba(15,23,42,0.08);
+  color:var(--brand-dark);
 }
 
 .coverage-summary{
@@ -1268,11 +1266,10 @@ a{
 }
 
 .coverage-summary-item{
-  padding:18px 20px;
-  border-radius:22px;
-  background:rgba(255,255,255,0.84);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow-sm);
+  padding:14px 0;
+  border-top:1px solid var(--line);
+  background:transparent;
+  box-shadow:none;
 }
 
 .coverage-summary-item span{
@@ -1298,11 +1295,10 @@ a{
 }
 
 .coverage-sidebar{
-  padding:20px;
-  border-radius:28px;
-  background:rgba(255,255,255,0.88);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow-sm);
+  padding:0;
+  background:transparent;
+  border:none;
+  box-shadow:none;
 }
 
 .coverage-card__head{
@@ -1334,38 +1330,47 @@ a{
 .operator-card{
   width:100%;
   display:grid;
-  grid-template-columns:64px minmax(0,1fr);
+  grid-template-columns:52px minmax(0,1fr);
   align-items:center;
-  gap:14px;
-  padding:14px;
-  border-radius:20px;
-  border:1px solid var(--line);
-  background:linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  transition:.2s ease;
+  gap:12px;
+  padding:10px 0;
+  border-top:1px solid var(--line);
+  border-radius:0;
+  border-left:none;
+  border-right:none;
+  border-bottom:none;
+  background:transparent;
+  transition:.15s ease;
   cursor:pointer;
-  box-shadow:0 8px 20px rgba(15,23,42,0.04);
+  box-shadow:none;
 }
 
-.operator-card:hover{
-  transform:translateY(-2px);
-  border-color:rgba(15,118,110,0.22);
-  box-shadow:0 16px 28px rgba(15,23,42,0.08);
+.operator-card:last-child{
+  border-bottom:1px solid var(--line);
+}
+
+.operator-card:hover .operator-card__text strong{
+  color:var(--brand-dark);
 }
 
 .operator-card.is-active{
-  background:linear-gradient(135deg, rgba(15,118,110,0.10), rgba(255,255,255,1));
-  border-color:rgba(15,118,110,0.20);
-  box-shadow:0 18px 30px rgba(15,118,110,0.10);
+  background:transparent;
+  border-color:var(--line);
+  box-shadow:none;
+}
+
+.operator-card.is-active .operator-card__text strong{
+  color:var(--brand);
 }
 
 .operator-card__logo{
   display:flex;
   align-items:center;
   justify-content:center;
-  height:58px;
-  border-radius:18px;
-  background:#fff;
-  border:1px solid rgba(15,23,42,0.06);
+  height:44px;
+  border-radius:12px;
+  background:rgba(15,23,42,0.04);
+  border:none;
   overflow:hidden;
 }
 
@@ -1393,10 +1398,10 @@ a{
 .coverage-map-card{
   position:relative;
   overflow:hidden;
-  border-radius:30px;
-  background:#fff;
-  border:1px solid var(--line);
-  box-shadow:var(--shadow-md);
+  border-radius:20px;
+  background:transparent;
+  border:none;
+  box-shadow:none;
 }
 
 .map-ui{
@@ -1480,11 +1485,11 @@ a{
   flex-wrap:wrap;
   gap:16px;
   margin-top:14px;
-  padding:14px 16px;
-  border-radius:18px;
-  background:rgba(255,255,255,0.84);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow-sm);
+  padding:12px 0;
+  border-top:1px solid var(--line);
+  background:transparent;
+  border-radius:0;
+  box-shadow:none;
 }
 
 .coverage-legend__item{
@@ -1646,8 +1651,7 @@ a{
 
 
   .coverage-shell{
-    padding:18px;
-    border-radius:24px;
+    padding:0;
   }
 
   .coverage-map{

@@ -612,29 +612,6 @@
               <h2>Utforska operatörernas täckning</h2>
             </div>
 
-            <div class="coverage-topbar__right">
-              <button id="resetViewBtn" class="coverage-btn" type="button">
-                Återställ vy
-              </button>
-              <button id="clearLayerBtn" class="coverage-btn" type="button">
-                Ta bort lager
-              </button>
-            </div>
-          </div>
-
-          <div class="coverage-summary">
-            <div class="coverage-summary-item">
-              <span>Vald operatör</span>
-              <strong id="activeOperatorSummary">Ingen vald</strong>
-            </div>
-            <div class="coverage-summary-item">
-              <span>Zoomnivå</span>
-              <strong id="zoomSummary">5</strong>
-            </div>
-            <div class="coverage-summary-item">
-              <span>Kartcentrum</span>
-              <strong id="coordsSummary">62.0000, 15.0000</strong>
-            </div>
           </div>
 
           <div class="coverage-grid">
@@ -705,20 +682,6 @@
                 <div id="map" class="coverage-map"></div>
               </div>
 
-              <div class="coverage-legend">
-                <div class="coverage-legend__item">
-                  <span class="legend-swatch legend-swatch--base"></span>
-                  <span>Bakgrundskarta</span>
-                </div>
-                <div class="coverage-legend__item">
-                  <span class="legend-swatch legend-swatch--overlay"></span>
-                  <span>Aktivt täckningslager</span>
-                </div>
-                <div class="coverage-legend__item">
-                  <span class="legend-swatch legend-swatch--focus"></span>
-                  <span>Vald operatör</span>
-                </div>
-              </div>
             </section>
           </div>
         </section>
@@ -817,17 +780,11 @@
     }).addTo(map);
 
     const operatorButtons = document.querySelectorAll(".operator-card");
-    const activeOperatorSummary = document.getElementById("activeOperatorSummary");
-    const zoomSummary = document.getElementById("zoomSummary");
-    const coordsSummary = document.getElementById("coordsSummary");
 
     function setActiveOperatorUI(key) {
       operatorButtons.forEach(btn => {
         btn.classList.toggle("is-active", btn.dataset.operator === key);
       });
-
-      const label = key ? operatorMeta[key].label : "Ingen vald";
-      activeOperatorSummary.textContent = label;
 
       if (key) {
         document.documentElement.style.setProperty("--coverage-accent", operatorMeta[key].theme);
@@ -871,14 +828,6 @@
       });
     });
 
-    document.getElementById("resetViewBtn").addEventListener("click", () => {
-      map.setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom, { animate: true });
-    });
-
-    document.getElementById("clearLayerBtn").addEventListener("click", () => {
-      clearActiveOverlay();
-    });
-
     document.getElementById("zoomInBtn").addEventListener("click", () => {
       map.zoomIn();
     });
@@ -887,20 +836,8 @@
       map.zoomOut();
     });
 
-    map.on("zoomend", () => {
-      zoomSummary.textContent = map.getZoom();
-    });
-
-    map.on("moveend", () => {
-      const center = map.getCenter();
-      coordsSummary.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
-    });
-
     setTimeout(() => {
       map.invalidateSize();
-      zoomSummary.textContent = map.getZoom();
-      const center = map.getCenter();
-      coordsSummary.textContent = `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
     }, 250);
 
     window.addEventListener("resize", () => {
