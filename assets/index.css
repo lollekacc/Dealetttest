@@ -1356,6 +1356,11 @@ a{
   transition:.18s ease;
 }
 
+.operator-card[data-operator="tele2"] img,
+.operator-card[data-operator="telenor"] img{
+  padding:6px 10px;
+}
+
 .operator-card:hover{
   border-color:rgba(15,118,110,0.40);
   transform:translateY(-2px);
