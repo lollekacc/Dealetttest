@@ -192,6 +192,7 @@ function createIndexQuiz() {
   function startQuiz() {
     dom.intro?.classList.add("hidden");
     dom.wrapper?.classList.remove("hidden");
+    document.getElementById("analys")?.classList.add("quiz-running");
 
     requestAnimationFrame(() => {
       dom.wrapper?.classList.remove("opacity-0");
@@ -202,6 +203,7 @@ function createIndexQuiz() {
   function showIntro() {
     dom.wrapper?.classList.add("hidden", "opacity-0");
     dom.intro?.classList.remove("hidden");
+    document.getElementById("analys")?.classList.remove("quiz-running");
     updateStepState(0);
     syncProgress();
   }
@@ -222,29 +224,15 @@ function createIndexQuiz() {
   function updateStepState(activeIndex) {
     steps.forEach((step, index) => {
       step.classList.remove("active-step", "stacked-card", "upcoming-card", "hidden-step");
-
-      let topOffset = 0;
-      let zIndex = 120 - index;
+      step.setAttribute("aria-hidden", index === activeIndex ? "false" : "true");
 
       if (index < activeIndex) {
-        const depth = activeIndex - index;
-        topOffset = depth * 18;
-        zIndex = 180 - depth;
         step.classList.add("stacked-card");
       } else if (index === activeIndex) {
         step.classList.add("active-step");
-        zIndex = 220;
       } else {
-        const depth = index - activeIndex;
-        topOffset = depth * 22;
-        zIndex = 120 - depth;
         step.classList.add("upcoming-card");
       }
-
-      step.style.setProperty("--card-top", `${topOffset}px`);
-      step.style.setProperty("--stack-offset", `${-topOffset}px`);
-      step.style.zIndex = String(zIndex);
-      step.setAttribute("aria-hidden", index === activeIndex ? "false" : "true");
     });
   }
 
@@ -268,21 +256,8 @@ function createIndexQuiz() {
   }
 
   function syncStackHeight() {
-    const activeStep = steps[state.currentStep];
-    if (!activeStep || !dom.stack) return;
-
-    requestAnimationFrame(() => {
-      const activeCard = activeStep.querySelector(".quiz-card");
-      const activeHeight = activeCard ? activeCard.offsetHeight : activeStep.offsetHeight;
-      const previewDepth = Math.max(0, steps.length - state.currentStep - 1) * 20;
-      const targetHeight = Math.max(560, activeHeight + previewDepth + 24);
-
-      dom.stack.style.minHeight = `${targetHeight}px`;
-
-      if (dom.slot) {
-        dom.slot.style.minHeight = `${Math.max(560, targetHeight + 32)}px`;
-      }
-    });
+    if (dom.stack) dom.stack.style.minHeight = "";
+    if (dom.slot)  dom.slot.style.minHeight  = "";
   }
 
   async function renderRecommendations() {
@@ -293,9 +268,9 @@ function createIndexQuiz() {
 
     if (!recommendedPlans.length) {
       dom.offersContainer.innerHTML = [
-        '<article class="rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-sm">',
-        '<h4 class="text-xl font-bold text-slate-950">Inga träffar just nu</h4>',
-        '<p class="mt-3 text-sm leading-6 text-slate-600">Testa att gå tillbaka och justera prisnivå eller surfbehov så visar vi fler relevanta alternativ.</p>',
+        '<article class="offer-card offer-card--empty">',
+        '<h4 class="offer-card__title">Inga träffar just nu</h4>',
+        '<p class="offer-card__empty-text">Testa att gå tillbaka och justera prisnivå eller surfbehov så visar vi fler relevanta alternativ.</p>',
         "</article>"
       ].join("");
       syncStackHeight();
@@ -402,7 +377,7 @@ function createIndexQuiz() {
 
   function buildRecommendationCard(plan, index) {
     const article = document.createElement("article");
-    article.className = "rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg";
+    article.className = index === 0 ? "offer-card offer-card--top" : "offer-card";
 
     const topLabel = index === 0 ? "Bäst match" : `Alternativ ${index + 1}`;
     const currentOperator = state.operators.includes(plan.operator) ? "Nuvarande operatör" : "Nytt alternativ";
@@ -411,26 +386,26 @@ function createIndexQuiz() {
       : `${plan.finalPrice} kr/mån`;
 
     article.innerHTML = [
-      '<div class="flex items-start justify-between gap-4">',
+      '<div class="offer-card__head">',
       '  <div>',
-      `    <p class="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">${topLabel}</p>`,
-      `    <p class="mt-3 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">${currentOperator}</p>`,
-      `    <h4 class="mt-2 text-2xl font-bold text-slate-950">${plan.operator}</h4>`,
-      `    <p class="mt-1 text-base font-semibold text-slate-700">${plan.title}</p>`,
+      `    <span class="offer-card__label">${topLabel}</span>`,
+      `    <p class="offer-card__operator-type">${currentOperator}</p>`,
+      `    <h4 class="offer-card__name">${plan.operator}</h4>`,
+      `    <p class="offer-card__plan-title">${plan.title}</p>`,
       "  </div>",
-      `  <img src="${plan.logo}" alt="${plan.operator}" class="h-12 w-auto rounded-xl object-contain" />`,
+      `  <img src="${plan.logo}" alt="${plan.operator}" class="offer-card__logo" />`,
       "</div>",
-      `  <p class="mt-5 text-sm leading-6 text-slate-600">${plan.text || "Mobilabonnemang med tydlig prisbild och relevant surfmängd."}</p>`,
-      '  <div class="mt-6 grid gap-3 sm:grid-cols-2">',
-      '    <div class="rounded-2xl bg-slate-50 px-4 py-3">',
-      '      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Surf</p>',
-      `      <p class="mt-2 text-lg font-bold text-slate-950">${plan.dataAmount >= 999 ? "Obegränsad" : `${plan.dataAmount} GB`}</p>`,
-      "    </div>",
-      '    <div class="rounded-2xl bg-slate-50 px-4 py-3">',
-      '      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Pris</p>',
-      `      <p class="mt-2 text-lg font-bold text-slate-950">${priceText}</p>`,
-      "    </div>",
-      "  </div>"
+      `<p class="offer-card__desc">${plan.text || "Mobilabonnemang med tydlig prisbild och relevant surfmängd."}</p>`,
+      '<div class="offer-card__stats">',
+      '  <div class="offer-card__stat">',
+      '    <p class="offer-card__stat-label">Surf</p>',
+      `    <p class="offer-card__stat-value">${plan.dataAmount >= 999 ? "Obegränsad" : `${plan.dataAmount} GB`}</p>`,
+      "  </div>",
+      '  <div class="offer-card__stat">',
+      '    <p class="offer-card__stat-label">Pris</p>',
+      `    <p class="offer-card__stat-value">${priceText}</p>`,
+      "  </div>",
+      "</div>"
     ].join("");
 
     return article;
