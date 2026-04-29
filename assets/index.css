@@ -73,7 +73,7 @@ a{
 
 .section-promo-ai{
   position:relative;
-  background:linear-gradient(135deg, #eff6ff 0%, #dbeafe 55%, #bfdbfe 100%);
+  background: #e7f0fa;
 }
 
 .section-promo-ai::before{
@@ -91,7 +91,7 @@ a{
 
 .section-promo-bonus{
   position:relative;
-  background:linear-gradient(135deg, #f0fdf4 0%, #d1fae5 55%, #a7f3d0 100%);
+  background: #ffffff;
 }
 
 .section-promo-bonus::before{
@@ -567,7 +567,7 @@ a{
 .section-analys{
   position:relative;
   padding:76px 0;
-  background:linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #e0e7ff 100%);
+  background: #ffffff;
 }
 
 .section-analys::before{
@@ -1287,7 +1287,7 @@ a{
   z-index:2;
   padding:76px 0;
   margin:0;
-  background:linear-gradient(135deg, #ecfdf5 0%, #d1fae5 45%, #ccfbf1 100%);
+  background: #dbe9f6;
 }
 
 .coverage-main::before{
