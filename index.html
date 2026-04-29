@@ -605,86 +605,58 @@
           </p>
         </div>
 
-        <section class="coverage-shell">
-          <div class="coverage-topbar">
-            <div>
-              <p class="coverage-topbar__eyebrow">Interaktiv karta</p>
-              <h2>Utforska operatörernas täckning</h2>
+        <!-- Operator selector -->
+        <div class="coverage-ops">
+          <button class="operator-card" data-operator="telia" type="button">
+            <div class="operator-card__logo">
+              <img src="images/telia.png" alt="Telia">
             </div>
+            <div class="operator-card__text"><strong>Telia</strong></div>
+          </button>
 
+          <button class="operator-card" data-operator="tele2" type="button">
+            <div class="operator-card__logo">
+              <img src="images/tele2.jpg" alt="Tele2">
+            </div>
+            <div class="operator-card__text"><strong>Tele2</strong></div>
+          </button>
+
+          <button class="operator-card" data-operator="telenor" type="button">
+            <div class="operator-card__logo">
+              <img src="images/telenor.jpg" alt="Telenor">
+            </div>
+            <div class="operator-card__text"><strong>Telenor</strong></div>
+          </button>
+
+          <button class="operator-card" data-operator="tre" type="button">
+            <div class="operator-card__logo">
+              <img src="images/tre.jpg" alt="Tre">
+            </div>
+            <div class="operator-card__text"><strong>Tre</strong></div>
+          </button>
+
+          <button class="operator-card" data-operator="halebop" type="button">
+            <div class="operator-card__logo">
+              <img src="images/halebop.webp" alt="Halebop">
+            </div>
+            <div class="operator-card__text"><strong>Halebop</strong></div>
+          </button>
+        </div>
+
+        <!-- Full-width map -->
+        <div class="coverage-map-card">
+          <div class="map-ui">
+            <div class="map-search">
+              <input id="mapSearchInput" type="text" placeholder="Sök adress eller stad..." />
+              <button id="mapSearchBtn" type="button">🔍</button>
+            </div>
+            <div class="map-zoom">
+              <button id="zoomInBtn" type="button">+</button>
+              <button id="zoomOutBtn" type="button">−</button>
+            </div>
           </div>
-
-          <div class="coverage-grid">
-            <!-- SIDEBAR -->
-            <aside class="coverage-sidebar">
-              <section class="coverage-card coverage-card--sidebar">
-                <div class="coverage-card__head">
-                  <div>
-                    <p class="coverage-section-label">Operatörer</p>
-                    <h3>Välj nät</h3>
-                  </div>
-                </div>
-
-                <div class="operator-list">
-                  <button class="operator-card" data-operator="telia" type="button">
-                    <div class="operator-card__logo">
-                      <img src="images/telia.png" alt="Telia">
-                    </div>
-                    <div class="operator-card__text"><strong>Telia</strong></div>
-                  </button>
-
-                  <button class="operator-card" data-operator="tele2" type="button">
-                    <div class="operator-card__logo">
-                      <img src="images/tele2.jpg" alt="Tele2">
-                    </div>
-                    <div class="operator-card__text"><strong>Tele2</strong></div>
-                  </button>
-
-                  <button class="operator-card" data-operator="telenor" type="button">
-                    <div class="operator-card__logo">
-                      <img src="images/telenor.jpg" alt="Telenor">
-                    </div>
-                    <div class="operator-card__text"><strong>Telenor</strong></div>
-                  </button>
-
-                  <button class="operator-card" data-operator="tre" type="button">
-                    <div class="operator-card__logo">
-                      <img src="images/tre.jpg" alt="Tre">
-                    </div>
-                    <div class="operator-card__text"><strong>Tre</strong></div>
-                  </button>
-
-                  <button class="operator-card" data-operator="halebop" type="button">
-                    <div class="operator-card__logo">
-                      <img src="images/halebop.webp" alt="Halebop">
-                    </div>
-                    <div class="operator-card__text"><strong>Halebop</strong></div>
-                  </button>
-                </div>
-              </section>
-            </aside>
-
-            <!-- MAP AREA -->
-            <section class="coverage-map-area">
-              <div class="coverage-map-card">
-                <div class="map-ui">
-                  <div class="map-search">
-                    <input id="mapSearchInput" type="text" placeholder="Sök adress eller stad..." />
-                    <button id="mapSearchBtn" type="button">🔍</button>
-                  </div>
-
-                  <div class="map-zoom">
-                    <button id="zoomInBtn" type="button">+</button>
-                    <button id="zoomOutBtn" type="button">−</button>
-                  </div>
-                </div>
-
-                <div id="map" class="coverage-map"></div>
-              </div>
-
-            </section>
-          </div>
-        </section>
+          <div id="map" class="coverage-map"></div>
+        </div>
       </div>
     </section>
   </main>
