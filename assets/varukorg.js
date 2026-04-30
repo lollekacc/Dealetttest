@@ -29,6 +29,12 @@ function getCart() {
   return readJson(CART_KEY, []);
 }
 
+function saveCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  window.dispatchEvent(new Event("cartUpdated"));
+  window.DEALETT_updateCartCount?.();
+}
+
 function getSavedState() {
   return readJson("dealettState", {});
 }
@@ -154,16 +160,52 @@ function getEffectiveSelectedOffer() {
     : null;
 }
 
+function getCartItemsForSummary() {
+  const cart = getCart();
+  if (cart.length) return cart;
+
+  const selectedOffer = getSelectedOffer();
+  if (!selectedOffer) return [];
+
+  const rewardDistribution = getRewardDistribution();
+
+  return [{
+    cartItemId: "selected-offer-fallback",
+    offerId: selectedOffer.id,
+    operator: selectedOffer.operator,
+    title: selectedOffer.title,
+    logo: selectedOffer.logo,
+    dataAmount: selectedOffer.dataAmount,
+    price: selectedOffer.finalPrice ?? selectedOffer.price,
+    pricePerPerson: selectedOffer.pricePerPerson,
+    rewardTotal: selectedOffer.rewardTotal,
+    rewardMixLabel: selectedOffer.rewardMixLabel,
+    rewards: rewardDistribution
+  }];
+}
+
+function renderRewardRows(rewards = {}) {
+  const rows = Object.entries(rewards)
+    .filter(([, value]) => Number(value) > 0)
+    .map(([name, value]) => `
+      <span class="cart-reward-pill">
+        ${escapeHtml(name)}
+        <strong>${Number(value) || 0} kr</strong>
+      </span>
+    `)
+    .join("");
+
+  return rows || '<span class="cart-muted">Ingen presentkortsfördelning vald.</span>';
+}
+
 function renderCartSummary() {
   const container = document.getElementById("cartSummaryContainer");
   if (!container) return;
 
   const cart = getCart();
-  const selectedOffer = getEffectiveSelectedOffer();
-  const rewardChoice = getRewardChoice();
-  const rewardDistribution = getRewardDistribution();
+  const cartItems = getCartItemsForSummary();
 
-  if (!cart.length && !selectedOffer) {
+  if (!cartItems.length) {
     container.innerHTML = `
       <div class="pro-card" style="padding:20px;">
         <p>Varukorgen är tom.</p>
@@ -173,70 +215,68 @@ function renderCartSummary() {
     return;
   }
 
-  const offerPrice = selectedOffer?.finalPrice ?? selectedOffer?.price ?? 0;
-  const offerBlock = selectedOffer ? `
-    <div class="pro-card reveal" style="padding:20px;">
-      <h3 style="margin-bottom:16px;">Valt abonnemang</h3>
-      <div style="display:flex;align-items:center;gap:16px;">
-        <img src="${escapeHtml(selectedOffer.logo || "")}" alt="${escapeHtml(selectedOffer.operator || "")}" style="width:52px;height:52px;object-fit:contain;border-radius:10px;">
+  const totalMonthly = cartItems.reduce((sum, item) => sum + (Number(item.price) || 0), 0);
+  const totalReward = cartItems.reduce((sum, item) => sum + (Number(item.rewardTotal) || 0), 0);
+  const canRemoveItems = cart.length > 0;
+
+  container.innerHTML = `
+    <div class="summary-grid cart-summary-grid">
+      <div class="pro-card reveal cart-overview-card">
         <div>
-          <p><strong>${escapeHtml(selectedOffer.title || "Mobilabonnemang")}</strong></p>
-          <p>${escapeHtml(selectedOffer.operator || "")}</p>
-          <p><strong>${offerPrice} kr/mån</strong></p>
+          <span class="cart-overview-label">Antal abonnemang</span>
+          <strong>${cartItems.length}</strong>
+        </div>
+        <div>
+          <span class="cart-overview-label">Månadskostnad</span>
+          <strong>${totalMonthly} kr/mån</strong>
+        </div>
+        <div>
+          <span class="cart-overview-label">Presentkort totalt</span>
+          <strong>${totalReward} kr</strong>
         </div>
       </div>
-    </div>
-  ` : "";
 
-  const rewardRows = Object.entries(rewardDistribution)
-    .map(([name, value]) => `<div>${escapeHtml(name)}: <strong>${Number(value) || 0} kr</strong></div>`)
-    .join("");
-
-  const rewardBlock = `
-    <div class="pro-card reveal" style="padding:20px;">
-      <h3 style="margin-bottom:16px;">Valt presentkort</h3>
-      ${
-        rewardChoice
-          ? `
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
-              <div style="width:52px;height:52px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#fff;">
-                <img src="${escapeHtml(getRewardLogo(rewardChoice.company))}" alt="${escapeHtml(rewardChoice.company)}" style="max-width:42px;max-height:42px;object-fit:contain;">
-              </div>
+      <div class="cart-items-list">
+        ${cartItems.map((item, index) => `
+          <article class="pro-card reveal cart-summary-item">
+            <div class="cart-summary-item__main">
+              <img src="${escapeHtml(item.logo || "")}" alt="${escapeHtml(item.operator || "")}" class="cart-summary-item__logo">
               <div>
-                <p><strong>${escapeHtml(rewardChoice.company)}</strong></p>
-                <p>${Number(rewardChoice.value) || 0} kr</p>
+                <span class="cart-summary-item__eyebrow">Abonnemang ${index + 1}</span>
+                <h3>${escapeHtml(item.title || "Mobilabonnemang")}</h3>
+                <p>${escapeHtml(item.operator || "Dealett")}${item.dataAmount ? ` · ${escapeHtml(item.dataAmount)}` : ""}</p>
               </div>
             </div>
-          `
-          : rewardRows
-            ? `<p>Preliminärt presentkortsvärde sparat från ditt val.</p>`
-            : `<p>Ingen belöning vald.</p>`
-      }
-      ${rewardRows ? `<div style="display:grid;gap:8px;">${rewardRows}</div>` : ""}
-    </div>
-  `;
 
-  const cartBlock = cart.length ? `
-    <div class="pro-card reveal" style="padding:20px;">
-      <h3 style="margin-bottom:16px;">Varukorg</h3>
-      <div style="display:grid;gap:10px;">
-        ${cart.map((item, index) => `
-          <div style="display:flex;justify-content:space-between;gap:16px;">
-            <span>${escapeHtml(item.title || `Abonnemang ${index + 1}`)}</span>
-            <strong>${Number(item.price) || 0} kr/mån</strong>
-          </div>
+            <div class="cart-summary-item__price">
+              <strong>${Number(item.price) || 0} kr/mån</strong>
+              ${item.pricePerPerson ? `<span>${Number(item.pricePerPerson) || 0} kr/person</span>` : ""}
+            </div>
+
+            <div class="cart-summary-item__rewards">
+              <span>Presentkort</span>
+              <div>${renderRewardRows(item.rewards || {})}</div>
+            </div>
+
+            ${canRemoveItems ? `
+              <button type="button" class="cart-remove-line" data-remove-cart-index="${index}">
+                Ta bort
+              </button>
+            ` : ""}
+          </article>
         `).join("")}
       </div>
     </div>
-  ` : "";
-
-  container.innerHTML = `
-    <div class="summary-grid" style="display:grid;gap:20px;">
-      ${offerBlock}
-      ${rewardBlock}
-      ${cartBlock}
-    </div>
   `;
+
+  container.querySelectorAll("[data-remove-cart-index]").forEach(button => {
+    button.addEventListener("click", () => {
+      const nextCart = getCart();
+      nextCart.splice(Number(button.dataset.removeCartIndex), 1);
+      saveCart(nextCart);
+      renderCartSummary();
+    });
+  });
 
   observeRevealElements();
 }

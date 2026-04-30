@@ -3,6 +3,8 @@ const DEALett_SHARED_STYLES = [
   "assets/footer.css"
 ];
 
+const DEALETT_CART_KEY = "dealettCart";
+
 window.DEALETT_SHARED_LAYOUT_ACTIVE = true;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -19,6 +21,7 @@ async function initSharedLayout() {
   ]);
   dedupeSharedFooters();
   initSharedHeader();
+  initSharedCartCount();
   ensureChatScript();
 }
 
@@ -152,6 +155,42 @@ function initSharedHeader() {
   syncHeaderState();
   markActiveHeaderLinks();
   header.dataset.ready = "true";
+}
+
+function getSharedCartCount() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(DEALETT_CART_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.length : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function syncSharedCartCount() {
+  const count = getSharedCartCount();
+
+  document.querySelectorAll("[data-cart-count]").forEach(element => {
+    element.textContent = String(count);
+    element.hidden = count <= 0;
+    element.setAttribute("aria-label", `${count} varor i varukorgen`);
+  });
+}
+
+function initSharedCartCount() {
+  syncSharedCartCount();
+  window.DEALETT_updateCartCount = syncSharedCartCount;
+
+  if (window.DEALETT_CART_COUNT_BOUND === true) {
+    return;
+  }
+
+  window.DEALETT_CART_COUNT_BOUND = true;
+  window.addEventListener("cartUpdated", syncSharedCartCount);
+  window.addEventListener("storage", event => {
+    if (event.key === DEALETT_CART_KEY) {
+      syncSharedCartCount();
+    }
+  });
 }
 
 function syncHeaderState() {

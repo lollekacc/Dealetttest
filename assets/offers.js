@@ -914,19 +914,6 @@ function initHeroSlider() {
     });
   });
 
-  if (!prefersReducedMotion() && hasFinePointer() && heroWrap && heroContent) {
-    heroWrap.addEventListener("mousemove", event => {
-      const rect = heroWrap.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width - 0.5;
-      const y = (event.clientY - rect.top) / rect.height - 0.5;
-      heroContent.style.transform = `translate3d(${x * 12}px, ${y * 10}px, 0)`;
-    });
-
-    heroWrap.addEventListener("mouseleave", () => {
-      heroContent.style.transform = "";
-    });
-  }
-
   updateDots();
   goToSlide(currentSlide);
   restartTimer();
@@ -2164,10 +2151,12 @@ function openRewardSection(totalReward, offerId) {
     }
   
     const cartItem = {
+      cartItemId: `${selectedOffer.id}-${Date.now()}-${Math.random().toString(36).slice(2)}`,
       offerId: selectedOffer.id,
       operator: selectedOffer.operator,
       title: selectedOffer.title,
       logo: selectedOffer.logo,
+      dataAmount: selectedOffer.dataAmount,
       price: selectedOffer.finalPrice,
       pricePerPerson: selectedOffer.pricePerPerson,
       rewardTotal: selectedOffer.rewardTotal || totalReward,

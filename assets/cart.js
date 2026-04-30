@@ -13,6 +13,11 @@ function saveCart(cart) {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
 
+function notifyCartUpdated() {
+  window.dispatchEvent(new Event("cartUpdated"));
+  window.DEALETT_updateCartCount?.();
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -24,10 +29,13 @@ function escapeHtml(value) {
 
 function addToCart(item) {
   const cart = getCart();
-  cart.push(item);
+  cart.push({
+    ...item,
+    cartItemId: item?.cartItemId || `${Date.now()}-${Math.random().toString(36).slice(2)}`
+  });
   saveCart(cart);
 
-  window.dispatchEvent(new Event("cartUpdated"));
+  notifyCartUpdated();
 }
 
 function removeFromCart(index) {
@@ -35,12 +43,12 @@ function removeFromCart(index) {
   cart.splice(index, 1);
   saveCart(cart);
 
-  window.dispatchEvent(new Event("cartUpdated"));
+  notifyCartUpdated();
 }
 
 function clearCart() {
   localStorage.removeItem(CART_KEY);
-  window.dispatchEvent(new Event("cartUpdated"));
+  notifyCartUpdated();
 }
 
 // expose globally
