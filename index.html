@@ -30,6 +30,7 @@
   
 
   <link rel="stylesheet" href="./assets/index.css" />
+  <link rel="stylesheet" href="./assets/jamfor.css" />
 </head>
 
 <body class="home-page min-h-screen scroll-smooth" data-chat="index" data-header-mode="overlay" data-header-theme="light">
@@ -590,47 +591,116 @@
         <div class="section-head center">
           <span class="section-kicker">Täckningskarta</span>
           <h2>Välj operatör och utforska kartan</h2>
-          <p>
-            Se täckning, jämför nät och sök direkt på adress eller stad för att få en tydligare bild av läget där du bor.
-          </p>
+          <p>Se täckning, jämför nät och sök direkt på adress eller stad för att få en tydligare bild av läget där du bor.</p>
         </div>
 
-        <!-- Operator selector -->
-        <div class="coverage-ops">
-          <button class="operator-card" data-operator="telia" type="button">
-            <img src="images/telia.png" alt="Telia">
-          </button>
+        <div class="coverage-shell">
+          <div class="coverage-grid">
 
-          <button class="operator-card" data-operator="tele2" type="button">
-            <img src="images/tele2.jpg" alt="Tele2">
-          </button>
+            <!-- SIDEBAR -->
+            <aside class="coverage-sidebar">
 
-          <button class="operator-card" data-operator="telenor" type="button">
-            <img src="images/telenor.jpg" alt="Telenor">
-          </button>
+              <section class="coverage-card coverage-card--sidebar">
+                <div class="coverage-card__head">
+                  <div>
+                    <p class="coverage-section-label">Operatörer</p>
+                    <h3>Välj operatör</h3>
+                  </div>
+                </div>
+                <div class="operator-list">
+                  <button class="operator-card" data-operator="telia" type="button">
+                    <div class="operator-card__logo"><img src="images/telia.png" alt="Telia"></div>
+                  </button>
+                  <button class="operator-card" data-operator="tele2" type="button">
+                    <div class="operator-card__logo"><img src="images/tele2.jpg" alt="Tele2"></div>
+                  </button>
+                  <button class="operator-card" data-operator="telenor" type="button">
+                    <div class="operator-card__logo"><img src="images/telenor.jpg" alt="Telenor"></div>
+                  </button>
+                  <button class="operator-card" data-operator="tre" type="button">
+                    <div class="operator-card__logo"><img src="images/tre.jpg" alt="Tre"></div>
+                  </button>
+                  <button class="operator-card" data-operator="halebop" type="button">
+                    <div class="operator-card__logo"><img src="images/halebop.webp" alt="Halebop"></div>
+                  </button>
+                </div>
+              </section>
 
-          <button class="operator-card" data-operator="tre" type="button">
-            <img src="images/tre.jpg" alt="Tre">
-          </button>
+              <section class="coverage-card coverage-card--sidebar">
+                <div class="coverage-card__head">
+                  <div>
+                    <p class="coverage-section-label">Filter</p>
+                    <h3>Nät</h3>
+                  </div>
+                </div>
+                <div class="coverage-filter-grid">
+                  <button class="coverage-filter is-active" type="button">2G</button>
+                  <button class="coverage-filter" type="button">3G</button>
+                  <button class="coverage-filter is-active" type="button">4G</button>
+                  <button class="coverage-filter" type="button">4G+</button>
+                  <button class="coverage-filter is-active" type="button">5G</button>
+                  <button class="coverage-filter" type="button">5G+</button>
+                </div>
+              </section>
 
-          <button class="operator-card" data-operator="halebop" type="button">
-            <img src="images/halebop.webp" alt="Halebop">
-          </button>
-        </div>
+              <div class="sidebar-info-note">
+                <div class="sidebar-info-note__icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </div>
+                <p>Täckningsinformationen är en uppskattning och inte ett löfte. <a href="jamfor.html" class="sidebar-info-link">Läs mer &rarr;</a></p>
+              </div>
 
-        <!-- Full-width map -->
-        <div class="coverage-map-card">
-          <div class="map-ui">
-            <div class="map-search">
-              <input id="mapSearchInput" type="text" placeholder="Sök adress eller stad..." />
-              <button id="mapSearchBtn" type="button">🔍</button>
-            </div>
-            <div class="map-zoom">
-              <button id="zoomInBtn" type="button">+</button>
-              <button id="zoomOutBtn" type="button">−</button>
-            </div>
+            </aside>
+
+            <!-- MAP AREA -->
+            <section class="coverage-map-area">
+              <div class="coverage-map-card">
+
+                <div class="map-ui">
+                  <div class="map-search">
+                    <button id="mapSearchBtn" class="map-search__icon" type="button" aria-label="Sök">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    </button>
+                    <input id="mapSearchInput" type="text" placeholder="Sök adress eller plats" />
+                  </div>
+                  <div class="map-zoom">
+                    <button id="zoomInBtn" type="button">+</button>
+                    <button id="zoomOutBtn" type="button">−</button>
+                  </div>
+                </div>
+
+                <div id="map" class="coverage-map"></div>
+
+                <!-- Legend overlay -->
+                <div class="map-legend-overlay">
+                  <div class="coverage-legend__item"><span class="legend-swatch legend-swatch--none"></span><span>Ingen täckning</span></div>
+                  <div class="coverage-legend__item"><span class="legend-swatch legend-swatch--limited"></span><span>Begränsad</span></div>
+                  <div class="coverage-legend__item"><span class="legend-swatch legend-swatch--basic"></span><span>Grundläggande</span></div>
+                  <div class="coverage-legend__item"><span class="legend-swatch legend-swatch--good"></span><span>Bra</span></div>
+                  <div class="coverage-legend__item"><span class="legend-swatch legend-swatch--excellent"></span><span>Utmärkt täckning</span></div>
+                </div>
+
+                <!-- Bottom bar -->
+                <div class="map-bottom-bar">
+                  <button id="currentLocationBtn" class="map-bottom-pill" type="button">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Nuvarande plats
+                  </button>
+                  <button id="fullscreenMapBtn" class="map-bottom-pill" type="button">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                    Helskärm
+                  </button>
+                  <div class="map-zoom-group">
+                    <button id="zoomOutBtn2" class="map-zoom-btn" type="button" aria-label="Zooma ut">−</button>
+                    <span class="map-zoom-label">Zoomnivå: <strong id="visibleZoomLabel">5</strong></span>
+                    <button id="zoomInBtn2" class="map-zoom-btn" type="button" aria-label="Zooma in">+</button>
+                  </div>
+                </div>
+
+              </div>
+            </section>
+
           </div>
-          <div id="map" class="coverage-map"></div>
         </div>
       </div>
     </section>
@@ -775,12 +845,32 @@
       });
     });
 
-    document.getElementById("zoomInBtn").addEventListener("click", () => {
-      map.zoomIn();
+    ["zoomInBtn","zoomInBtn2"].forEach(id => {
+      document.getElementById(id)?.addEventListener("click", () => map.zoomIn());
+    });
+    ["zoomOutBtn","zoomOutBtn2"].forEach(id => {
+      document.getElementById(id)?.addEventListener("click", () => map.zoomOut());
     });
 
-    document.getElementById("zoomOutBtn").addEventListener("click", () => {
-      map.zoomOut();
+    const zoomLabel = document.getElementById("visibleZoomLabel");
+    map.on("zoomend", () => {
+      if (zoomLabel) zoomLabel.textContent = map.getZoom();
+    });
+
+    document.getElementById("currentLocationBtn")?.addEventListener("click", () => {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition(pos => {
+        map.setView([pos.coords.latitude, pos.coords.longitude], 12, { animate: true });
+      });
+    });
+
+    document.getElementById("fullscreenMapBtn")?.addEventListener("click", () => {
+      const el = document.getElementById("coverageApp");
+      if (!document.fullscreenElement) {
+        el?.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
     });
 
     setTimeout(() => {

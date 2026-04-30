@@ -828,7 +828,9 @@
       persons: null,
       data: null,
       speed: null,
-      bredbandtype: null
+      bredbandtype: null,
+      mode: null,
+      step: null
     };
   }
 
@@ -1255,6 +1257,347 @@ if (host.endsWith("github.io")) {
       suggestions.style.display = hasMeaningfulHistory(history) ? "none" : "";
     }
 
+    function normalizeChatText(value = "") {
+      return String(value)
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+    }
+
+    function renderAnswerQuestion(question, options) {
+      const buttons = options
+        .map(option => {
+          const label = escapeHtml(option.label);
+          const answer = escapeHtml(option.answer || option.label);
+          return `<button type="button" class="chat-answer-btn" data-chat-answer="${answer}">${label}</button>`;
+        })
+        .join("");
+
+      addMessage(
+        `<div class="chat-answer-options"><p>${escapeHtml(question)}</p>${buttons}</div>`,
+        "ai",
+        { format: "html" }
+      );
+    }
+
+    function isMobileIntent(text) {
+      const normalized = normalizeChatText(text);
+      return (
+        normalized.includes("mobilabonnemang") ||
+        normalized.includes("mobil abonnemang") ||
+        normalized.includes("abonnemang passar") ||
+        normalized.includes("abonnemang for mig")
+      ) && !normalized.includes("bredband");
+    }
+
+    function isBroadbandIntent(text) {
+      const normalized = normalizeChatText(text);
+      return normalized.includes("bredband") || normalized.includes("5g hemma") || normalized.includes("wifi hemma");
+    }
+
+    function parsePersons(text) {
+      const normalized = normalizeChatText(text);
+      const digit = normalized.match(/\b([1-9]|10)\b/);
+      if (digit) return Math.min(10, Math.max(1, Number(digit[1])));
+      if (normalized.includes("en person") || normalized === "en") return 1;
+      if (normalized.includes("tva")) return 2;
+      if (normalized.includes("tre")) return 3;
+      if (normalized.includes("fyra")) return 4;
+      if (normalized.includes("fem")) return 5;
+      return null;
+    }
+
+    function parseDataNeed(text) {
+      const normalized = normalizeChatText(text);
+      if (normalized.includes("obegrans") || normalized.includes("mycket") || normalized.includes("stream") || normalized.includes("jobbar")) {
+        return "high";
+      }
+      if (normalized.includes("lagom") || normalized.includes("30") || normalized.includes("40") || normalized.includes("50")) {
+        return "medium";
+      }
+      if (normalized.includes("lite") || normalized.includes("10") || normalized.includes("billig")) {
+        return "low";
+      }
+      return null;
+    }
+
+    function parseSpeedNeed(text) {
+      const normalized = normalizeChatText(text);
+      if (normalized.includes("mycket") || normalized.includes("snabbast") || normalized.includes("gaming") || normalized.includes("1000")) {
+        return "high";
+      }
+      if (normalized.includes("snabb") || normalized.includes("stream") || normalized.includes("600")) {
+        return "medium";
+      }
+      if (normalized.includes("lagom") || normalized.includes("billig") || normalized.includes("150")) {
+        return "low";
+      }
+      return null;
+    }
+
+    function parseBroadbandType(text) {
+      const normalized = normalizeChatText(text);
+      if (normalized.includes("tv")) return "tv";
+      if (normalized.includes("internet")) return "internet";
+      if (normalized.includes("osaker") || normalized.includes("vet inte")) return "any";
+      return null;
+    }
+
+    function startMobileGuide() {
+      state.quiz = createEmptyQuizState();
+      state.quiz.mode = "mobile";
+      state.quiz.step = "persons";
+
+      renderAnswerQuestion("Hur många personer gäller abonnemanget för?", [
+        { label: "1 person" },
+        { label: "2 personer" },
+        { label: "3 personer" },
+        { label: "4 personer" },
+        { label: "5+ personer", answer: "5 personer" }
+      ]);
+    }
+
+    function askMobileDataNeed() {
+      state.quiz.mode = "mobile";
+      state.quiz.step = "data";
+
+      renderAnswerQuestion("Hur mycket surf behöver ni ungefär?", [
+        { label: "Lite surf", answer: "Lite surf" },
+        { label: "Lagom surf", answer: "Lagom surf" },
+        { label: "Mycket / obegränsat", answer: "Mycket surf" }
+      ]);
+    }
+
+    function startBroadbandGuide() {
+      state.quiz = createEmptyQuizState();
+      state.quiz.mode = "broadband";
+      state.quiz.step = "speed";
+
+      renderAnswerQuestion("Vilken hastighet känns närmast ert behov?", [
+        { label: "Lagom hastighet", answer: "Lagom hastighet" },
+        { label: "Snabb hastighet", answer: "Snabb hastighet" },
+        { label: "Mycket snabb / gaming", answer: "Mycket snabb hastighet" }
+      ]);
+    }
+
+    function askBroadbandType() {
+      state.quiz.mode = "broadband";
+      state.quiz.step = "type";
+
+      renderAnswerQuestion("Vad ska bredbandet främst användas till?", [
+        { label: "Bara internet", answer: "Bara internet" },
+        { label: "Internet + TV", answer: "Internet och TV" },
+        { label: "Osäker", answer: "Osäker" }
+      ]);
+    }
+
+    function getFamilyAddon(operator) {
+      return (state.catalogs.mobile || []).find(plan =>
+        plan.operator === operator && plan.familyPriceType === "addon"
+      );
+    }
+
+    function buildMobileGuidePayload() {
+      const persons = Number(state.quiz.persons) || 1;
+      const tier = state.quiz.data || "medium";
+
+      const offers = (state.catalogs.mobile || [])
+        .filter(plan => plan.category === "mobil" && !plan.isFamilyPlan && plan.tier === tier)
+        .map(plan => {
+          const addon = getFamilyAddon(plan.operator);
+          const totalPrice = persons > 1 && addon
+            ? Number(plan.price) + (persons - 1) * Number(addon.addonPrice || addon.price || 0)
+            : Number(plan.price) || 0;
+          const pricePerLine = Math.round(totalPrice / persons);
+
+          return {
+            planId: plan.id,
+            category: "mobil",
+            operator: plan.operator,
+            logo: plan.logo,
+            title: plan.title,
+            data: plan.data,
+            dataAmount: plan.data,
+            price: totalPrice,
+            totalPrice,
+            persons,
+            pricePerLine,
+            familyAddonPrice: addon?.addonPrice || null,
+            description: plan.text || "",
+            likelyReward: calculateChatMobileReward(totalPrice, "new"),
+            likelyRewardType: "new"
+          };
+        })
+        .sort((left, right) => (left.totalPrice || 0) - (right.totalPrice || 0))
+        .slice(0, 3)
+        .map((offer, index) => ({
+          ...offer,
+          label: index === 0 ? "Rekommenderas" : "Alternativ"
+        }));
+
+      return {
+        intro: "Här är några abonnemang som matchar dina svar.",
+        offers
+      };
+    }
+
+    function buildBroadbandGuidePayload() {
+      const speed = state.quiz.speed || "medium";
+      const type = state.quiz.bredbandtype || "any";
+      const minSpeed = speed === "high" ? 600 : speed === "medium" ? 300 : 0;
+
+      const offers = (state.catalogs.broadband || [])
+        .filter(plan => {
+          const speedMbps = Number(plan.speedMbps) || 0;
+          if (speedMbps < minSpeed) return false;
+          if (type === "tv") return plan.tv || /tv/i.test(plan.title || "");
+          if (type === "internet") return !/tv/i.test(plan.title || "");
+          return true;
+        })
+        .sort((left, right) => (Number(left.price) || 0) - (Number(right.price) || 0))
+        .slice(0, 3)
+        .map((plan, index) => ({
+          planId: plan.id,
+          category: "bredband",
+          operator: plan.operator,
+          logo: plan.logo || CHAT_OPERATOR_LOGOS[plan.operator] || "",
+          title: plan.title,
+          speed: plan.speed,
+          speedMbps: plan.speedMbps,
+          price: plan.price,
+          bindingMonths: plan.bindingMonths,
+          description: plan.text || plan.features?.[0] || "",
+          likelyReward: calculateChatBroadbandReward(plan.price),
+          label: index === 0 ? "Rekommenderas" : "Alternativ"
+        }));
+
+      return {
+        intro: "Här är några 5G-bredband som matchar dina svar.",
+        offers
+      };
+    }
+
+    function lastAiMessageText() {
+      const history = readHistory();
+      const lastAi = [...history].reverse().find(entry => entry?.type === "ai" && typeof entry.text === "string");
+      return normalizeChatText(lastAi?.text || "");
+    }
+
+    async function finishMobileGuide() {
+      const payload = buildMobileGuidePayload();
+      state.quiz = createEmptyQuizState();
+
+      if (payload.offers.length) {
+        await renderRecommendations(payload);
+        return;
+      }
+
+      addMessage("Jag hittade inga abonnemang som matchade svaren just nu.", "ai");
+    }
+
+    async function finishBroadbandGuide() {
+      const payload = buildBroadbandGuidePayload();
+      state.quiz = createEmptyQuizState();
+
+      if (payload.offers.length) {
+        await renderRecommendations(payload);
+        return;
+      }
+
+      addMessage("Jag hittade inget 5G-bredband som matchade svaren just nu.", "ai");
+    }
+
+    async function handleGuidedMessage(text) {
+      const normalized = normalizeChatText(text);
+      const activeMode = state.quiz.mode;
+
+      if (!activeMode && isMobileIntent(normalized)) {
+        startMobileGuide();
+        return true;
+      }
+
+      if (!activeMode && isBroadbandIntent(normalized)) {
+        startBroadbandGuide();
+        return true;
+      }
+
+      if (!activeMode) {
+        const previous = lastAiMessageText();
+        if (parsePersons(normalized) && previous.includes("person") && previous.includes("abonnemang")) {
+          state.quiz = createEmptyQuizState();
+          state.quiz.mode = "mobile";
+          state.quiz.persons = String(parsePersons(normalized));
+          askMobileDataNeed();
+          return true;
+        }
+
+        if (parseDataNeed(normalized) && previous.includes("surf")) {
+          state.quiz.mode = "mobile";
+          state.quiz.persons = state.quiz.persons || "1";
+          state.quiz.data = parseDataNeed(normalized);
+          await finishMobileGuide();
+          return true;
+        }
+
+        return false;
+      }
+
+      if (activeMode === "mobile") {
+        if (state.quiz.step === "persons") {
+          const persons = parsePersons(normalized);
+          if (!persons) {
+            renderAnswerQuestion("Välj antal personer först, så fortsätter vi lugnt.", [
+              { label: "1 person" },
+              { label: "2 personer" },
+              { label: "3 personer" },
+              { label: "4 personer" },
+              { label: "5+ personer", answer: "5 personer" }
+            ]);
+            return true;
+          }
+
+          state.quiz.persons = String(persons);
+          askMobileDataNeed();
+          return true;
+        }
+
+        if (state.quiz.step === "data") {
+          const dataNeed = parseDataNeed(normalized);
+          if (!dataNeed) {
+            askMobileDataNeed();
+            return true;
+          }
+
+          state.quiz.data = dataNeed;
+          await finishMobileGuide();
+          return true;
+        }
+      }
+
+      if (activeMode === "broadband") {
+        if (state.quiz.step === "speed") {
+          const speedNeed = parseSpeedNeed(normalized);
+          if (!speedNeed) {
+            askBroadbandType();
+            return true;
+          }
+
+          state.quiz.speed = speedNeed;
+          askBroadbandType();
+          return true;
+        }
+
+        if (state.quiz.step === "type") {
+          state.quiz.bredbandtype = parseBroadbandType(normalized) || "any";
+          await finishBroadbandGuide();
+          return true;
+        }
+      }
+
+      return false;
+    }
+
     function bindUI() {
       toggle?.addEventListener("click", openOrTogglePanel);
       close?.addEventListener("click", closePanel);
@@ -1304,6 +1647,10 @@ if (host.endsWith("github.io")) {
         addMessage(text, "user");
         input.value = "";
         syncSuggestions(readHistory());
+
+        if (await handleGuidedMessage(text)) {
+          return;
+        }
 
         const data = await sendMessage(text);
         await handleResponse(data);
