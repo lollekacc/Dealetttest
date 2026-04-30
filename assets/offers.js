@@ -485,6 +485,26 @@ function syncPremiumExperience(sourceCardName = null, { scroll = true } = {}) {
   });
 }
 
+function shouldAutoScrollAfterAnswer(sourceCardName) {
+  const group = getCardGroup(sourceCardName);
+
+  if (group === 1) {
+    return isCardComplete("persons") && isCardComplete("data");
+  }
+
+  if (group === 2) {
+    return isCardComplete("operators") && isCardComplete("binding");
+  }
+
+  return true;
+}
+
+function syncPremiumExperienceAfterAnswer(sourceCardName) {
+  syncPremiumExperience(sourceCardName, {
+    scroll: shouldAutoScrollAfterAnswer(sourceCardName)
+  });
+}
+
 function initPremiumExperience() {
   initRevealSystem();
   initCursorGlow();
@@ -946,7 +966,7 @@ function bindPersons() {
 
       persistState();
       updateAvailability();
-      updateOffers().finally(() => syncPremiumExperience("persons"));
+      updateOffers().finally(() => syncPremiumExperienceAfterAnswer("persons"));
     });
   });
 }
@@ -965,7 +985,7 @@ function bindData() {
 
       persistState();
       updateAvailability();
-      updateOffers().finally(() => syncPremiumExperience("data"));
+      updateOffers().finally(() => syncPremiumExperienceAfterAnswer("data"));
     });
   });
 }
@@ -1104,7 +1124,7 @@ function renderOperators(count) {
 
         persistState();
         updateAvailability();
-        updateOffers().finally(() => syncPremiumExperience("operators"));
+        updateOffers().finally(() => syncPremiumExperienceAfterAnswer("operators"));
       });
     });
 
@@ -1166,7 +1186,7 @@ function renderBindings(count) {
         clearRewardAndNextSteps();
 
         persistState();
-        updateOffers().finally(() => syncPremiumExperience("binding"));
+        updateOffers().finally(() => syncPremiumExperienceAfterAnswer("binding"));
       });
     });
 
