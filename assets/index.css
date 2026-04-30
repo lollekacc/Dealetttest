@@ -160,8 +160,9 @@ a{
   position:relative;
   z-index:1;
   overflow:hidden;
-  min-height:800px;
-  padding:128px 0 100px;
+  min-height:0;
+  max-height:calc(100vh - 80px);
+  padding:110px 0 48px;
   background:
     radial-gradient(circle at 5% 36%, rgba(16,185,129,0.24), transparent 23%),
     radial-gradient(circle at 74% 48%, rgba(14,165,233,0.12), transparent 26%),
