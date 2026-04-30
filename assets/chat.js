@@ -424,6 +424,22 @@
     transform: translateY(-1px);
   }
 
+  .chat-msg.ai .chat-answer-btn:disabled,
+  .chat-msg.ai .chat-answer-btn.is-used {
+    cursor: default;
+    opacity: 0.58;
+    background: #eef2f7;
+    color: #64748b;
+    transform: none;
+  }
+
+  .chat-msg.ai .chat-answer-btn.is-selected {
+    border-color: rgba(37, 99, 235, 0.38);
+    background: rgba(37, 99, 235, 0.08);
+    color: #1d4ed8;
+    opacity: 1;
+  }
+
   .chat-msg.ai .chat-answer-options {
     display: grid;
     gap: 8px;
@@ -1207,7 +1223,8 @@ if (host.endsWith("github.io")) {
 
     const state = {
       catalogs,
-      quiz: createEmptyQuizState()
+      quiz: createEmptyQuizState(),
+      lastRecommendations: null
     };
 
     ensureSession();
@@ -1266,6 +1283,8 @@ if (host.endsWith("github.io")) {
     }
 
     function renderAnswerQuestion(question, options) {
+      deactivateAnswerGroups();
+
       const buttons = options
         .map(option => {
           const label = escapeHtml(option.label);
@@ -1279,6 +1298,76 @@ if (host.endsWith("github.io")) {
         "ai",
         { format: "html" }
       );
+    }
+
+    function deactivateAnswerGroups(options = {}) {
+      const except = options.except || null;
+      messages?.querySelectorAll(".chat-answer-options").forEach((group) => {
+        if (group === except) return;
+        group.dataset.answered = "true";
+        group.querySelectorAll(".chat-answer-btn").forEach((item) => {
+          item.disabled = true;
+          item.classList.add("is-used");
+        });
+      });
+    }
+
+    function syncRestoredAnswerGroups(history = []) {
+      const groups = [...(messages?.querySelectorAll(".chat-answer-options") || [])];
+      if (!groups.length) return;
+
+      const lastEntry = [...history].reverse().find(Boolean);
+      const lastIsOpenQuestion =
+        lastEntry?.kind === "message" &&
+        lastEntry?.type === "ai" &&
+        lastEntry?.format === "html" &&
+        String(lastEntry.text || "").includes("chat-answer-options");
+
+      deactivateAnswerGroups({
+        except: lastIsOpenQuestion ? groups[groups.length - 1] : null
+      });
+    }
+
+    function lockAnswerGroup(button) {
+      const group = button?.closest(".chat-answer-options");
+      if (!group || group.dataset.answered === "true") {
+        return false;
+      }
+
+      group.dataset.answered = "true";
+      group.querySelectorAll(".chat-answer-btn").forEach((item) => {
+        item.disabled = true;
+        item.classList.add("is-used");
+      });
+
+      button.classList.add("is-selected");
+      return true;
+    }
+
+    function isPositiveSatisfaction(text) {
+      const normalized = normalizeChatText(text)
+        .replace(/[.!?,]+/g, "")
+        .replace(/\s+/g, " ");
+
+      return (
+        /^(ja|japp|yes|ok|okej)( tack)?$/.test(normalized) ||
+        normalized === "tack" ||
+        /\btack\b/.test(normalized) ||
+        normalized.includes("det kanns bra") ||
+        normalized.includes("det kandes bra") ||
+        normalized.includes("det var bra") ||
+        normalized.includes("tack det var bra")
+      );
+    }
+
+    function isCartRequest(text) {
+      const normalized = normalizeChatText(text);
+      return normalized.includes("visa varukorgen") || normalized === "varukorg";
+    }
+
+    function isCoverageMapRequest(text) {
+      const normalized = normalizeChatText(text);
+      return normalized.includes("oppna tackningskartan") || normalized.includes("tackningskarta");
     }
 
     function isMobileIntent(text) {
@@ -1402,8 +1491,8 @@ if (host.endsWith("github.io")) {
       const persons = Number(state.quiz.persons) || 1;
       const tier = state.quiz.data || "medium";
 
-      const offers = (state.catalogs.mobile || [])
-        .filter(plan => plan.category === "mobil" && !plan.isFamilyPlan && plan.tier === tier)
+      const allOffers = (state.catalogs.mobile || [])
+        .filter(plan => plan.category === "mobil" && !plan.isFamilyPlan)
         .map(plan => {
           const addon = getFamilyAddon(plan.operator);
           const totalPrice = persons > 1 && addon
@@ -1418,7 +1507,8 @@ if (host.endsWith("github.io")) {
             logo: plan.logo,
             title: plan.title,
             data: plan.data,
-            dataAmount: plan.data,
+            dataAmount: Number(plan.dataAmount) || 0,
+            tier: plan.tier,
             price: totalPrice,
             totalPrice,
             persons,
@@ -1428,7 +1518,10 @@ if (host.endsWith("github.io")) {
             likelyReward: calculateChatMobileReward(totalPrice, "new"),
             likelyRewardType: "new"
           };
-        })
+        });
+
+      const offers = allOffers
+        .filter(offer => offer.tier === tier)
         .sort((left, right) => (left.totalPrice || 0) - (right.totalPrice || 0))
         .slice(0, 3)
         .map((offer, index) => ({
@@ -1438,7 +1531,10 @@ if (host.endsWith("github.io")) {
 
       return {
         intro: "Här är några abonnemang som matchar dina svar.",
-        offers
+        offers,
+        adjustmentPool: allOffers,
+        recommendationType: "mobile",
+        persons
       };
     }
 
@@ -1447,34 +1543,40 @@ if (host.endsWith("github.io")) {
       const type = state.quiz.bredbandtype || "any";
       const minSpeed = speed === "high" ? 600 : speed === "medium" ? 300 : 0;
 
-      const offers = (state.catalogs.broadband || [])
+      const allOffers = (state.catalogs.broadband || [])
         .filter(plan => {
-          const speedMbps = Number(plan.speedMbps) || 0;
-          if (speedMbps < minSpeed) return false;
           if (type === "tv") return plan.tv || /tv/i.test(plan.title || "");
           if (type === "internet") return !/tv/i.test(plan.title || "");
           return true;
         })
-        .sort((left, right) => (Number(left.price) || 0) - (Number(right.price) || 0))
-        .slice(0, 3)
-        .map((plan, index) => ({
+        .map((plan) => ({
           planId: plan.id,
           category: "bredband",
           operator: plan.operator,
           logo: plan.logo || CHAT_OPERATOR_LOGOS[plan.operator] || "",
           title: plan.title,
           speed: plan.speed,
-          speedMbps: plan.speedMbps,
-          price: plan.price,
+          speedMbps: Number(plan.speedMbps) || 0,
+          price: Number(plan.price) || 0,
           bindingMonths: plan.bindingMonths,
           description: plan.text || plan.features?.[0] || "",
-          likelyReward: calculateChatBroadbandReward(plan.price),
+          likelyReward: calculateChatBroadbandReward(plan.price)
+        }));
+
+      const offers = allOffers
+        .filter(offer => (Number(offer.speedMbps) || 0) >= minSpeed)
+        .sort((left, right) => (Number(left.price) || 0) - (Number(right.price) || 0))
+        .slice(0, 3)
+        .map((offer, index) => ({
+          ...offer,
           label: index === 0 ? "Rekommenderas" : "Alternativ"
         }));
 
       return {
         intro: "Här är några 5G-bredband som matchar dina svar.",
-        offers
+        offers,
+        adjustmentPool: allOffers,
+        recommendationType: "broadband"
       };
     }
 
@@ -1508,9 +1610,288 @@ if (host.endsWith("github.io")) {
       addMessage("Jag hittade inget 5G-bredband som matchade svaren just nu.", "ai");
     }
 
+    async function handleRecommendationAdjustment(kind) {
+      const rememberedPayload = state.lastRecommendations;
+      const catalogPayload = buildCatalogRecommendationPayload(kind);
+      const payload = rememberedPayload || catalogPayload;
+      const sourceOffers = Array.isArray(payload?.adjustmentPool) && payload.adjustmentPool.length
+        ? payload.adjustmentPool
+        : Array.isArray(catalogPayload?.adjustmentPool) && catalogPayload.adjustmentPool.length
+          ? catalogPayload.adjustmentPool
+          : payload?.offers;
+
+      if (!payload || !Array.isArray(sourceOffers) || !sourceOffers.length) {
+        addMessage(
+          "Jag saknar tillr\u00e4ckligt med uppgifter f\u00f6r att visa bra erbjudanden direkt. Skriv om det g\u00e4ller mobilabonnemang eller 5G-bredband, s\u00e5 tar jag fram alternativ.",
+          "ai"
+        );
+        return;
+      }
+
+      const offers = [...sourceOffers];
+      let intro = "Jag justerar alternativen efter det du vill prioritera.";
+      const isBroadband = offers.some((offer) => offer.category === "bredband" || offer.speed || offer.speedMbps);
+
+      if (kind === "cheap") {
+        offers.sort((left, right) => {
+          const leftPrice = Number(left.totalPrice ?? left.price) || 0;
+          const rightPrice = Number(right.totalPrice ?? right.price) || 0;
+          return leftPrice - rightPrice;
+        });
+        intro = "H\u00e4r \u00e4r alternativen med l\u00e4gst pris f\u00f6rst.";
+      }
+
+      if (kind === "more") {
+        offers.sort((left, right) => {
+          const leftValue = isBroadband ? Number(left.speedMbps) || 0 : Number(left.dataAmount) || 0;
+          const rightValue = isBroadband ? Number(right.speedMbps) || 0 : Number(right.dataAmount) || 0;
+          return rightValue - leftValue;
+        });
+        intro = isBroadband
+          ? "H\u00e4r \u00e4r alternativen med h\u00f6gre hastighet f\u00f6rst."
+          : "H\u00e4r \u00e4r alternativen med mer surf f\u00f6rst.";
+      }
+
+      if (kind === "coverage") {
+        const priority = ["Telia", "Telenor", "Tre", "Tele2", "Halebop"];
+        offers.sort((left, right) => {
+          const leftIndex = priority.indexOf(left.operator);
+          const rightIndex = priority.indexOf(right.operator);
+          return (leftIndex === -1 ? 99 : leftIndex) - (rightIndex === -1 ? 99 : rightIndex);
+        });
+        intro = "H\u00e4r \u00e4r n\u00e5gra alternativ att b\u00f6rja med n\u00e4r t\u00e4ckning \u00e4r viktig. Kontrollera alltid adressen i t\u00e4ckningskartan innan du best\u00e4ller.";
+      }
+
+      const displayOffers = kind === "coverage" ? getDistinctOperatorOffers(offers) : offers;
+      const adjustedOffers = displayOffers.slice(0, 3).map((offer, index) => ({
+        ...offer,
+        label: index === 0 ? "Rekommenderat" : "Alternativ"
+      }));
+
+      await renderRecommendations({
+        ...payload,
+        intro,
+        offers: adjustedOffers,
+        adjustmentPool: sourceOffers
+      }, { askFollowup: false });
+
+      askAfterAdjustment();
+    }
+
+    function getDistinctOperatorOffers(offers = []) {
+      const seen = new Set();
+      return offers.filter((offer) => {
+        const key = offer.operator || offer.planId || offer.title;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+
+    function askAfterAdjustment() {
+      renderAnswerQuestion("Vill du justera mer eller k\u00e4nns n\u00e5got av alternativen bra?", [
+        { label: "Ja, tack", answer: "Ja, tack" },
+        { label: "Billigare", answer: "Visa billigare alternativ" },
+        { label: "Mer surf / hastighet", answer: "Visa mer surf eller h\u00f6gre hastighet" },
+        { label: "T\u00e4ckning", answer: "Visa alternativ med b\u00e4ttre t\u00e4ckning" }
+      ]);
+    }
+
+    function buildCatalogRecommendationPayload(kind = "cheap") {
+      const type = inferRecommendationType(kind);
+      return type === "broadband"
+        ? buildBroadbandCatalogPayload(kind)
+        : buildMobileCatalogPayload(kind);
+    }
+
+    function inferRecommendationType(kind = "") {
+      const currentType = getPayloadType(state.lastRecommendations);
+      if (currentType) return currentType;
+
+      if (kind === "more") {
+        const recent = getRecentConversationText();
+        if (recent.includes("bredband") || recent.includes("hastighet") || recent.includes("wifi") || recent.includes("5g hemma")) {
+          return "broadband";
+        }
+      }
+
+      const recent = getRecentConversationText();
+      if (recent.includes("bredband") || recent.includes("router") || recent.includes("internet hemma")) {
+        return "broadband";
+      }
+
+      return "mobile";
+    }
+
+    function getPayloadType(payload) {
+      if (!payload || !Array.isArray(payload.offers) || !payload.offers.length) {
+        return null;
+      }
+
+      return payload.offers.some((offer) => offer.category === "bredband" || offer.speed || offer.speedMbps)
+        ? "broadband"
+        : "mobile";
+    }
+
+    function getRecentConversationText() {
+      return normalizeChatText(readHistory()
+        .slice(-10)
+        .map((entry) => entry?.text || entry?.payload?.intro || "")
+        .join(" "));
+    }
+
+    function inferPersonsFromHistory() {
+      const history = readHistory();
+      for (let index = history.length - 1; index >= 0; index -= 1) {
+        if (history[index]?.type !== "user") continue;
+        const persons = parsePersons(history[index].text || "");
+        if (persons) return persons;
+      }
+      return 1;
+    }
+
+    function buildMobileCatalogPayload(kind = "cheap") {
+      const persons = inferPersonsFromHistory();
+      const offers = (state.catalogs.mobile || [])
+        .filter((plan) => plan.category === "mobil" && !plan.isFamilyPlan)
+        .map((plan) => {
+          const addon = getFamilyAddon(plan.operator);
+          const totalPrice = persons > 1 && addon
+            ? Number(plan.price) + (persons - 1) * Number(addon.addonPrice || addon.price || 0)
+            : Number(plan.price) || 0;
+          const pricePerLine = Math.round(totalPrice / persons);
+
+          return {
+            planId: plan.id,
+            category: "mobil",
+            operator: plan.operator,
+            logo: plan.logo || CHAT_OPERATOR_LOGOS[plan.operator] || "",
+            title: plan.title,
+            data: plan.data,
+            dataAmount: Number(plan.dataAmount) || 0,
+            price: totalPrice,
+            totalPrice,
+            persons,
+            pricePerLine,
+            familyAddonPrice: addon?.addonPrice || null,
+            description: plan.text || "",
+            likelyReward: calculateChatMobileReward(totalPrice, "new"),
+            likelyRewardType: "new"
+          };
+        });
+
+      if (kind === "more") {
+        offers.sort((left, right) => (Number(right.dataAmount) || 0) - (Number(left.dataAmount) || 0) || (left.totalPrice || 0) - (right.totalPrice || 0));
+      } else if (kind === "coverage") {
+        const priority = ["Telia", "Telenor", "Tre", "Tele2", "Halebop"];
+        offers.sort((left, right) => {
+          const leftIndex = priority.indexOf(left.operator);
+          const rightIndex = priority.indexOf(right.operator);
+          return (leftIndex === -1 ? 99 : leftIndex) - (rightIndex === -1 ? 99 : rightIndex) || (left.totalPrice || 0) - (right.totalPrice || 0);
+        });
+      } else {
+        offers.sort((left, right) => (left.totalPrice || 0) - (right.totalPrice || 0));
+      }
+
+      const intro = kind === "more"
+        ? "H\u00e4r \u00e4r mobilabonnemang med mer surf f\u00f6rst."
+        : kind === "coverage"
+          ? "H\u00e4r \u00e4r mobilabonnemang att b\u00f6rja med n\u00e4r t\u00e4ckning \u00e4r viktig. Kontrollera adressen i t\u00e4ckningskartan innan du best\u00e4ller."
+          : "H\u00e4r \u00e4r billiga mobilabonnemang fr\u00e5n katalogen.";
+
+      return {
+        intro,
+        offers: offers.slice(0, 3).map((offer, index) => ({
+          ...offer,
+          label: index === 0 ? "Rekommenderat" : "Alternativ"
+        })),
+        adjustmentPool: offers,
+        recommendationType: "mobile",
+        persons
+      };
+    }
+
+    function buildBroadbandCatalogPayload(kind = "cheap") {
+      const offers = (state.catalogs.broadband || [])
+        .map((plan) => ({
+          planId: plan.id,
+          category: "bredband",
+          operator: plan.operator,
+          logo: plan.logo || CHAT_OPERATOR_LOGOS[plan.operator] || "",
+          title: plan.title,
+          speed: plan.speed,
+          speedMbps: Number(plan.speedMbps) || 0,
+          price: Number(plan.price) || 0,
+          bindingMonths: plan.bindingMonths,
+          description: plan.text || plan.features?.[0] || "",
+          likelyReward: calculateChatBroadbandReward(plan.price)
+        }));
+
+      if (kind === "more") {
+        offers.sort((left, right) => (right.speedMbps || 0) - (left.speedMbps || 0) || (left.price || 0) - (right.price || 0));
+      } else {
+        offers.sort((left, right) => (left.price || 0) - (right.price || 0));
+      }
+
+      const intro = kind === "more"
+        ? "H\u00e4r \u00e4r 5G-bredband med h\u00f6gre hastighet f\u00f6rst."
+        : "H\u00e4r \u00e4r prisv\u00e4rda 5G-bredband fr\u00e5n katalogen.";
+
+      return {
+        intro,
+        offers: offers.slice(0, 3).map((offer, index) => ({
+          ...offer,
+          label: index === 0 ? "Rekommenderat" : "Alternativ"
+        })),
+        adjustmentPool: offers,
+        recommendationType: "broadband"
+      };
+    }
+
     async function handleGuidedMessage(text) {
       const normalized = normalizeChatText(text);
       const activeMode = state.quiz.mode;
+
+      if (isPositiveSatisfaction(normalized)) {
+        state.quiz = createEmptyQuizState();
+        addMessage(
+          "Toppen. D\u00e5 l\u00e5ter jag alternativen ligga kvar h\u00e4r.",
+          "ai"
+        );
+        return true;
+      }
+
+      if (isCartRequest(normalized)) {
+        addMessage("Absolut. Jag \u00f6ppnar varukorgen \u00e5t dig.", "ai");
+        window.location.href = "varukorg.html";
+        return true;
+      }
+
+      if (isCoverageMapRequest(normalized)) {
+        addMessage("Absolut. Jag \u00f6ppnar t\u00e4ckningskartan \u00e5t dig.", "ai");
+        window.location.href = "jamfor.html";
+        return true;
+      }
+
+      if (!activeMode && normalized.includes("billigare")) {
+        await handleRecommendationAdjustment("cheap");
+        return true;
+      }
+
+      if (!activeMode && (normalized.includes("mer surf") || normalized.includes("hogre hastighet") || normalized.includes("hastighet"))) {
+        await handleRecommendationAdjustment("more");
+        return true;
+      }
+
+      if (!activeMode && normalized.includes("battre tackning")) {
+        await handleRecommendationAdjustment("coverage");
+        return true;
+      }
+
+      if (!activeMode && normalized.includes("jamfor fler alternativ")) {
+        await handleRecommendationAdjustment("more");
+        return true;
+      }
 
       if (!activeMode && isMobileIntent(normalized)) {
         startMobileGuide();
@@ -1610,6 +1991,10 @@ if (host.endsWith("github.io")) {
       document.addEventListener("click", (event) => {
         const answerButton = event.target.closest(".chat-answer-btn");
         if (answerButton && root.contains(answerButton)) {
+          if (answerButton.disabled || !lockAnswerGroup(answerButton)) {
+            return;
+          }
+
           const text = answerButton.dataset.chatAnswer;
           if (text && form && input) {
             input.value = text;
@@ -1715,6 +2100,7 @@ if (host.endsWith("github.io")) {
         }
 
         if (message.kind === "recommendations") {
+          state.lastRecommendations = message.payload;
           await renderRecommendations(message.payload, { persist: false });
           continue;
         }
@@ -1729,6 +2115,7 @@ if (host.endsWith("github.io")) {
         });
       }
 
+      syncRestoredAnswerGroups(history);
       return history;
     }
 
@@ -2141,6 +2528,28 @@ if (host.endsWith("github.io")) {
       input?.focus();
     }
 
+    function askIfHelped(context = "recommendations") {
+      const question = context === "cart"
+        ? "Kändes det rätt att lägga den i varukorgen, eller vill du att jag jämför fler alternativ?"
+        : "Hjälpte det här dig, eller vill du att jag justerar för pris, surf, täckning eller något annat?";
+
+      const options = context === "cart"
+        ? [
+            { label: "Ja, det känns bra", answer: "Ja, det känns bra" },
+            { label: "Jämför fler alternativ", answer: "Jämför fler alternativ" },
+            { label: "Visa varukorgen", answer: "Visa varukorgen" }
+          ]
+        : [
+            { label: "Ja, tack", answer: "Ja, tack" },
+            { label: "Billigare alternativ", answer: "Visa billigare alternativ" },
+            { label: "Mer surf / hastighet", answer: "Visa mer surf eller högre hastighet" },
+            { label: "Bättre täckning", answer: "Visa alternativ med bättre täckning" }
+          ];
+
+      renderAnswerQuestion(question, options);
+      input?.focus();
+    }
+
     async function handleChatOfferChoice({ plan = null, payload = {}, broadband = false, trigger = null, sourceEl = null } = {}) {
       const host = getChatOfferHost(sourceEl || trigger);
       if (host?.dataset.chatCartAdded === "true") {
@@ -2153,6 +2562,7 @@ if (host.endsWith("github.io")) {
       markChatOfferAsAdded(host, trigger);
       await animateItemToCart(sourceEl || trigger, item);
       askForAnythingElse();
+      askIfHelped("cart");
     }
 
     function createChatOfferButton({ plan = null, payload = {}, broadband = false } = {}) {
@@ -2480,7 +2890,7 @@ if (host.endsWith("github.io")) {
     }
 
     async function renderRecommendations(payload, options = {}) {
-      const { persist = true } = options;
+      const { persist = true, askFollowup = true } = options;
 
       if (!payload || !messages || !Array.isArray(payload.offers) || !payload.offers.length) {
         addMessage("Kunde inte visa rekommendationerna.", "ai");
@@ -2509,11 +2919,16 @@ if (host.endsWith("github.io")) {
       syncSuggestions(readHistory());
 
       if (persist) {
+        state.lastRecommendations = payload;
         saveHistory({
           kind: "recommendations",
           type: "ai",
           payload
         });
+
+        if (askFollowup) {
+          askIfHelped("recommendations");
+        }
       }
     }
 
@@ -2576,6 +2991,8 @@ if (host.endsWith("github.io")) {
           type: "ai",
           payload
         });
+
+        askIfHelped("offer");
       }
     }
 

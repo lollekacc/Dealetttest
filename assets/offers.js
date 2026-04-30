@@ -1864,24 +1864,13 @@ function buildOfferCard(plan, stateOverride = null) {
 
   card.innerHTML = `
     <div class="offer-card-top">
-      <button
-        type="button"
-        class="reward-pill reward-pill-blue gift-btn"
-        data-reward="${rewardDetails.totalReward}"
-        data-offer-id="${plan.id}"
-        data-type="mix"
-      >
+      <button type="button" class="reward-pill reward-pill-blue gift-btn"
+        data-reward="${rewardDetails.totalReward}" data-offer-id="${plan.id}" data-type="mix">
         <span class="reward-pill-label">${rewardDetails.mixLabel}</span>
         <span class="reward-pill-value">${rewardDetails.mixText}</span>
       </button>
-
-      <button
-        type="button"
-        class="reward-pill reward-pill-green gift-btn"
-        data-reward="${rewardDetails.totalReward}"
-        data-offer-id="${plan.id}"
-        data-type="total"
-      >
+      <button type="button" class="reward-pill reward-pill-green gift-btn"
+        data-reward="${rewardDetails.totalReward}" data-offer-id="${plan.id}" data-type="total">
         <span class="reward-pill-label">${rewardDetails.totalLabel}</span>
         <span class="reward-pill-value">${rewardDetails.totalReward} kr</span>
       </button>
@@ -1889,22 +1878,16 @@ function buildOfferCard(plan, stateOverride = null) {
 
     <div class="offer-card-body">
       <div class="offer-brand-wrap">
+        <p class="offer-operator-label">Operatör</p>
         <div class="offer-logo-wrap">
           <img src="${plan.logo}" alt="${plan.operator}" class="offer-logo-img" loading="lazy" decoding="async">
         </div>
         <p class="offer-operator">${plan.operator}</p>
       </div>
 
+      <div class="offer-divider"></div>
+
       <div class="offer-main">
-        ${
-          plan.isRecommended
-            ? `
-              <div style="display:flex;justify-content:center;margin-bottom:14px;">
-                <span class="offers-strip-badge">Rekommenderat</span>
-              </div>
-            `
-            : ""
-        }
         <h3 class="offer-title">${plan.title}</h3>
         <p class="offer-desc">${plan.text || "Mobilabonnemang med tydligt upplägg och konkurrenskraftigt pris."}</p>
       </div>
@@ -1914,28 +1897,22 @@ function buildOfferCard(plan, stateOverride = null) {
           <i class="fa-solid fa-wifi"></i>
           <span>${plan.dataAmount >= 999 ? "Obegränsad surf" : `${plan.dataAmount} GB surf`}</span>
         </div>
-
-        ${
-          isFamily
-            ? `
-              <div class="offer-price-wrap">
-                <p class="offer-price-main">${plan.pricePerPerson} kr <span>/ person</span></p>
-                <p class="offer-price-sub">${plan.finalPrice} kr/mån totalt · ${state.persons} personer</p>
-              </div>
-            `
-            : `
-              <div class="offer-price-wrap">
-                <p class="offer-price-main">${plan.finalPrice} kr <span>/ mån</span></p>
-                <p class="offer-price-sub">Tydlig månadskostnad och enkel överblick</p>
-              </div>
-            `
+        ${isFamily
+          ? `<div class="offer-price-wrap">
+               <p class="offer-price-main">${plan.pricePerPerson} kr <span>/ person</span></p>
+               <p class="offer-price-sub">${plan.finalPrice} kr/mån totalt · ${state.persons} personer</p>
+             </div>`
+          : `<div class="offer-price-wrap">
+               <p class="offer-price-main">${plan.finalPrice} kr <span>/ mån</span></p>
+               <p class="offer-price-sub">Tydlig månadskostnad och enkel överblick</p>
+             </div>`
         }
       </div>
 
       <div class="offer-card-bottom">
-        <div class="offer-select-text">
+        <div class="offer-select-text${plan.isRecommended ? ' offer-select-text--primary' : ''}">
           <i class="fa-solid fa-circle-check"></i>
-          <span>Välj detta erbjudande</span>
+          <span>${plan.isRecommended ? 'Välj rekommenderat erbjudande' : 'Välj detta erbjudande'}</span>
         </div>
       </div>
     </div>
@@ -1995,7 +1972,21 @@ function renderOffers(offers) {
       });
     });
 
-    offersContainer.appendChild(card);
+    if (plan.isRecommended) {
+      const wrapper = document.createElement("div");
+      wrapper.className = "offer-card-wrapper offer-card-wrapper--rec";
+      const badge = document.createElement("div");
+      badge.className = "offer-rec-badge-float";
+      badge.innerHTML = '<i class="fa-solid fa-star"></i> Rekommenderat';
+      wrapper.appendChild(badge);
+      wrapper.appendChild(card);
+      offersContainer.appendChild(wrapper);
+    } else {
+      const wrapper = document.createElement("div");
+      wrapper.className = "offer-card-wrapper";
+      wrapper.appendChild(card);
+      offersContainer.appendChild(wrapper);
+    }
   });
 
   offersSection?.classList.remove("is-hidden");
