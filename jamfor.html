@@ -452,13 +452,17 @@ map.on("drag", () => {
       });
     });
 
-    document.getElementById("resetViewBtn").addEventListener("click", () => {
+    function bindClick(id, handler) {
+      document.getElementById(id)?.addEventListener("click", handler);
+    }
+
+    bindClick("resetViewBtn", () => {
       map.setView(DEFAULT_VIEW.center, DEFAULT_VIEW.zoom, {
         animate: true
       });
     });
 
-    document.getElementById("clearLayerBtn").addEventListener("click", () => {
+    bindClick("clearLayerBtn", () => {
       clearActiveOverlay();
     });
 
@@ -589,11 +593,28 @@ document.getElementById("fullscreenMapBtn")?.addEventListener("click", () => {
   const mapCard = document.querySelector(".coverage-map-card");
   if (!mapCard) return;
 
-  if (document.fullscreenElement) {
-    document.exitFullscreen?.();
+  if (document.fullscreenElement || document.webkitFullscreenElement) {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else {
+      document.webkitExitFullscreen?.();
+    }
   } else {
-    mapCard.requestFullscreen?.();
+    if (mapCard.requestFullscreen) {
+      mapCard.requestFullscreen();
+    } else {
+      mapCard.webkitRequestFullscreen?.();
+    }
   }
+});
+
+["fullscreenchange", "webkitfullscreenchange"].forEach(eventName => {
+  document.addEventListener(eventName, () => {
+    setTimeout(() => {
+      map.invalidateSize();
+      updateVisibleZoom();
+    }, 150);
+  });
 });
   </script>
   <style>
@@ -608,6 +629,10 @@ document.getElementById("fullscreenMapBtn")?.addEventListener("click", () => {
       pointer-events: none;
       z-index: 1000;
       gap: 14px;
+    }
+
+    .map-zoom {
+      pointer-events: auto;
     }
   </style>
 </body>
