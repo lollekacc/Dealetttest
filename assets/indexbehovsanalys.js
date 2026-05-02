@@ -19,6 +19,10 @@ function createIndexQuiz() {
     slot: document.getElementById("quiz-slot"),
     stack: document.getElementById("quiz-card-stack"),
     startButton: document.getElementById("quiz-start"),
+    heroStartButton: document.getElementById("hero-start-analysis"),
+    hero: document.querySelector(".home-hero"),
+    heroVisual: document.querySelector(".hero-visual"),
+    heroMount: document.getElementById("hero-quiz-mount"),
     operatorContainer: document.getElementById("operator-per-person"),
     operatorTemplate: document.getElementById("operator-picker-template"),
     offersContainer: document.getElementById("offers-container")
@@ -27,6 +31,7 @@ function createIndexQuiz() {
   const steps = Array.from(document.querySelectorAll("#quiz-card-stack .quiz-step-card"));
   const questionStepCount = Math.max(steps.length - 1, 0);
   const resultStepIndex = Math.max(steps.length - 1, 0);
+  const sectionWrapperAnchor = document.createComment("quiz section mount");
   let plans = null;
 
   function init() {
@@ -42,6 +47,10 @@ function createIndexQuiz() {
 
   function bindEvents() {
     dom.startButton.addEventListener("click", startQuiz);
+    dom.heroStartButton?.addEventListener("click", event => {
+      event.preventDefault();
+      startQuiz({ inHero: true });
+    });
     dom.wrapper.addEventListener("click", handleWrapperClick);
     window.addEventListener("resize", syncStackHeight);
 
@@ -189,7 +198,33 @@ function createIndexQuiz() {
     syncStackHeight();
   }
 
-  function startQuiz() {
+  function mountQuizInHero() {
+    if (!dom.heroMount || !dom.wrapper) return;
+
+    if (!sectionWrapperAnchor.parentNode) {
+      dom.wrapper.parentNode?.insertBefore(sectionWrapperAnchor, dom.wrapper);
+    }
+
+    dom.heroMount.appendChild(dom.wrapper);
+    dom.hero?.classList.add("quiz-in-hero");
+    dom.heroVisual?.classList.add("is-quiz-active");
+  }
+
+  function mountQuizInSection() {
+    if (!dom.wrapper) return;
+
+    sectionWrapperAnchor.parentNode?.insertBefore(dom.wrapper, sectionWrapperAnchor);
+    dom.hero?.classList.remove("quiz-in-hero");
+    dom.heroVisual?.classList.remove("is-quiz-active");
+  }
+
+  function startQuiz(options = {}) {
+    if (options.inHero) {
+      mountQuizInHero();
+    } else {
+      mountQuizInSection();
+    }
+
     dom.intro?.classList.add("hidden");
     dom.wrapper?.classList.remove("hidden");
     document.getElementById("analys")?.classList.add("quiz-running");
@@ -201,6 +236,7 @@ function createIndexQuiz() {
   }
 
   function showIntro() {
+    mountQuizInSection();
     dom.wrapper?.classList.add("hidden", "opacity-0");
     dom.intro?.classList.remove("hidden");
     document.getElementById("analys")?.classList.remove("quiz-running");
