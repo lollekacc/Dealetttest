@@ -1975,12 +1975,12 @@ a{
   padding:0;
   height:64px;
   border-radius:16px;
-  border:2px solid rgba(255,255,255,0.85);
+  border:1.5px solid var(--line);
   background:#fff;
   cursor:pointer;
   transition:.18s ease;
   overflow:hidden;
-  box-shadow:0 4px 18px rgba(15,23,42,0.08);
+  box-shadow:0 2px 8px rgba(15,23,42,0.05);
 }
 
 .operator-card img{
@@ -2003,7 +2003,8 @@ a{
 }
 
 .operator-card:hover{
-  border-color:rgba(15,118,110,0.40);
+  border-color:rgba(15,118,110,0.32);
+  box-shadow:0 6px 18px rgba(15,23,42,0.09);
   transform:translateY(-2px);
 }
 
@@ -2013,6 +2014,7 @@ a{
 
 .operator-card.is-active{
   border-color:var(--brand);
+  border-width:2px;
   box-shadow:0 0 0 3px var(--brand-soft);
 }
 
@@ -2171,6 +2173,108 @@ a{
 .legend-swatch--focus{ background:var(--brand); }
 
 .leaflet-control-zoom{ display:none; }
+
+/* COVERAGE MAP — index page overrides (beats jamfor.css via higher specificity) */
+
+.coverage-main .coverage-filter{
+  min-height:34px;
+  padding:0 14px;
+  border:1.5px solid var(--line);
+  border-radius:999px;
+  background:#fff;
+  color:var(--muted-2);
+  font-size:.82rem;
+  font-weight:700;
+  cursor:pointer;
+  text-decoration:none;
+  transition:.18s ease;
+}
+
+.coverage-main .coverage-filter:hover{
+  border-color:rgba(15,118,110,0.28);
+  color:var(--brand-dark);
+  transform:translateY(-1px);
+}
+
+.coverage-main .coverage-filter.is-active{
+  background:var(--brand);
+  border-color:var(--brand);
+  color:#fff;
+  box-shadow:0 4px 12px rgba(15,118,110,0.22);
+}
+
+.coverage-main .map-legend-overlay{
+  background:rgba(255,255,255,0.94);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--line);
+  box-shadow:0 8px 28px rgba(15,23,42,0.10);
+}
+
+.coverage-main .map-legend-overlay .coverage-legend__item{
+  color:var(--muted-2);
+  font-size:.82rem;
+  font-weight:600;
+}
+
+.coverage-main .map-bottom-bar{
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow:0 6px 20px rgba(15,23,42,0.09);
+}
+
+.coverage-main .map-bottom-pill{
+  color:var(--muted-2);
+  background:transparent;
+  border-color:transparent;
+}
+
+.coverage-main .map-bottom-pill:hover{
+  background:rgba(15,23,42,0.04);
+  border-color:var(--line);
+  color:var(--text);
+}
+
+.coverage-main .map-bottom-pill svg{
+  opacity:.55;
+}
+
+.coverage-main .map-zoom-group{
+  background:transparent;
+  border:1px solid var(--line);
+}
+
+.coverage-main .map-zoom-btn{
+  color:var(--muted-2);
+  background:transparent;
+}
+
+.coverage-main .map-zoom-btn:hover{
+  background:rgba(15,23,42,0.04);
+  color:var(--text);
+}
+
+.coverage-main .map-zoom-label{
+  color:var(--muted);
+  border-left-color:var(--line);
+  border-right-color:var(--line);
+  line-height:34px;
+}
+
+.coverage-main .map-zoom-label strong{
+  color:var(--text);
+}
+
+.coverage-main .map-zoom button{
+  border:1.5px solid var(--line);
+  box-shadow:0 4px 12px rgba(15,23,42,0.07);
+  color:var(--text);
+}
+
+.coverage-main .map-zoom button:hover{
+  border-color:rgba(15,118,110,0.28);
+}
 
 /* CHAT MODAL */
 #chat-modal{
