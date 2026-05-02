@@ -23,6 +23,7 @@ function createIndexQuiz() {
     hero: document.querySelector(".home-hero"),
     heroVisual: document.querySelector(".hero-visual"),
     heroMount: document.getElementById("hero-quiz-mount"),
+    familyOfferGrid: document.querySelector(".family-offer-grid"),
     operatorContainer: document.getElementById("operator-per-person"),
     operatorTemplate: document.getElementById("operator-picker-template"),
     offersContainer: document.getElementById("offers-container")
@@ -35,7 +36,7 @@ function createIndexQuiz() {
   let plans = null;
 
   function init() {
-    if (!dom.startButton || !dom.wrapper || !dom.stack || !steps.length) return;
+    if (!dom.wrapper || !dom.stack || !steps.length) return;
 
     window.abonState = state;
 
@@ -46,11 +47,12 @@ function createIndexQuiz() {
   }
 
   function bindEvents() {
-    dom.startButton.addEventListener("click", startQuiz);
+    dom.startButton?.addEventListener("click", startQuiz);
     dom.heroStartButton?.addEventListener("click", event => {
       event.preventDefault();
       startQuiz({ inHero: true });
     });
+    dom.familyOfferGrid?.addEventListener("click", handleFamilyOfferClick);
     dom.wrapper.addEventListener("click", handleWrapperClick);
     window.addEventListener("resize", syncStackHeight);
 
@@ -83,6 +85,79 @@ function createIndexQuiz() {
     if (stackedIndex >= 0) {
       showStep(stackedIndex);
     }
+  }
+
+  function handleFamilyOfferClick(event) {
+    const card = event.target.closest("[data-family-offer]");
+    if (!card) return;
+
+    event.preventDefault();
+
+    const item = buildFamilyCartItem(card);
+    const cart = readCart();
+    cart.push(item);
+
+    localStorage.setItem("dealettCart", JSON.stringify(cart));
+    localStorage.setItem("selectedOffer", JSON.stringify({
+      id: item.offerId,
+      operator: item.operator,
+      title: item.title,
+      logo: item.logo,
+      dataAmount: item.dataAmount,
+      finalPrice: item.price,
+      pricePerPerson: item.pricePerPerson,
+      rewardTotal: item.rewardTotal,
+      rewardMixLabel: item.rewardMixLabel
+    }));
+    localStorage.setItem("dealettState", JSON.stringify({
+      persons: 4,
+      data: getDataTier(item.dataAmount),
+      operator: item.operator,
+      binding: null,
+      bindingEndDate: null,
+      wishes: ["Familjeabonnemang"],
+      operatorsByPerson: Array.from({ length: 4 }, () => "Andra / Ingen"),
+      bindingsByPerson: Array.from({ length: 4 }, () => null),
+      bindingEndDatesByPerson: Array.from({ length: 4 }, () => null)
+    }));
+    localStorage.removeItem("rewardChoice");
+    localStorage.setItem("rewardDistribution", JSON.stringify(item.rewards));
+
+    window.DEALETT_updateCartCount?.();
+    window.location.href = "varukorg.html";
+  }
+
+  function readCart() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem("dealettCart") || "[]");
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function buildFamilyCartItem(card) {
+    const rewardTotal = Number(card.dataset.rewardTotal) || 0;
+
+    return {
+      cartItemId: `${card.dataset.offerId}-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      offerId: card.dataset.offerId,
+      operator: card.dataset.operator,
+      title: card.dataset.title,
+      logo: card.dataset.logo,
+      dataAmount: Number(card.dataset.dataAmount) || 0,
+      price: Number(card.dataset.price) || 0,
+      pricePerPerson: Number(card.dataset.pricePerPerson) || 0,
+      rewardTotal,
+      rewardMixLabel: card.dataset.rewardMixLabel || "",
+      rewards: rewardTotal > 0 ? { Presentkort: rewardTotal } : {}
+    };
+  }
+
+  function getDataTier(dataAmount) {
+    if (dataAmount >= 999) return "high";
+    if (dataAmount >= 20) return "medium";
+    return "low";
   }
 
   function handleOptionClick(option) {

@@ -123,60 +123,92 @@
         <div class="quiz-shell">
           <div id="quiz-slot" class="transition-all duration-300 overflow-hidden">
             <div id="quiz-intro" class="transition-opacity duration-300">
-              <div class="quiz-intro-grid">
-
-                <!-- Left: heading + vertical steps -->
-                <div class="quiz-intro-left">
-                  <span class="section-kicker">Behovsanalys</span>
-                  <h2 class="quiz-intro-headline">Hitta rätt abonnemang på ett mer professionellt sätt</h2>
-                  <p class="quiz-intro-desc">Besvara tre snabba frågor — vi analyserar ditt hushålls behov och visar de bästa alternativen.</p>
-                  <ol class="quiz-vsteps">
-                    <li>
-                      <span class="quiz-vstep-num">1</span>
-                      <div>
-                        <strong>Besvara några frågor</strong>
-                        <p>Vi analyserar hushållets behov, operatör, surfnivå och prisbild.</p>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="quiz-vstep-num">2</span>
-                      <div>
-                        <strong>Jämför alternativen</strong>
-                        <p>Se abonnemang, familjeupplägg och bonus i ett överskådligt flöde.</p>
-                      </div>
-                    </li>
-                    <li>
-                      <span class="quiz-vstep-num">3</span>
-                      <div>
-                        <strong>Beställ direkt</strong>
-                        <p>Välj abonnemang och gå vidare — ingen ny mobil eller nummer krävs.</p>
-                      </div>
-                    </li>
-                  </ol>
+              <div class="family-offers-intro">
+                <div class="family-offers-head">
+                  <span class="section-kicker">Månadens familjeabonnemang</span>
+                  <h2 class="quiz-intro-headline">Månadens familjabonnemang</h2>
+                  <p class="quiz-intro-desc">Samla flera användare, dela surf och få lägre månadskostnad med presentkort på köpet.</p>
                 </div>
 
-                <!-- Right: CTA -->
-                <div class="quiz-intro-right">
-                  <div class="quiz-intro-badge">
-                    <i class="fa-solid fa-sparkles"></i>
-                    Analysera ditt behov
-                  </div>
-                  <h3 class="quiz-intro-cta-title">Se om du kan sänka kostnaden eller få mer för pengarna</h3>
-                  <button
-                    id="quiz-start"
-                    class="adeala-btn quiz-intro-cta-btn"
-                    type="button"
+                <div class="family-offer-grid">
+                  <article
+                    class="family-offer-card family-offer-card--featured"
+                    data-family-offer
+                    data-offer-id="family-tele2-40gb"
+                    data-operator="Tele2"
+                    data-title="Tele2 Familj 40 GB"
+                    data-logo="images/tele2.jpg"
+                    data-data-amount="40"
+                    data-price="806"
+                    data-price-per-person="202"
+                    data-reward-total="9000"
+                    data-reward-mix-label="4 nya"
                   >
-                    <span>👉</span> Se min analys
-                  </button>
-                  <p class="quiz-intro-meta">Tar under 2 minuter &nbsp;·&nbsp; Helt kostnadsfritt</p>
-                  <div class="quiz-intro-checks">
-                    <span><i class="fa-solid fa-check"></i> Transparens</span>
-                    <span><i class="fa-solid fa-check"></i> Kontroll</span>
-                    <span><i class="fa-solid fa-check"></i> Säkerhet</span>
-                  </div>
-                </div>
+                    <span class="family-offer-label">Mest valt</span>
+                    <img src="images/tele2.jpg" alt="Tele2" class="family-offer-logo" />
+                    <h3>Tele2 Familj 40 GB</h3>
+                    <p>För familjer som vill ha mycket surf och ett lågt pris per användare.</p>
+                    <div class="family-offer-price">202 kr <span>/ person</span></div>
+                    <ul>
+                      <li><i class="fa-solid fa-check"></i> 4 personer</li>
+                      <li><i class="fa-solid fa-check"></i> Dubbelsurf i 24 mån</li>
+                      <li><i class="fa-solid fa-gift"></i> 9000 kr presentkort</li>
+                    </ul>
+                    <button type="button" class="family-offer-btn">Välj erbjudande</button>
+                  </article>
 
+                  <article
+                    class="family-offer-card"
+                    data-family-offer
+                    data-offer-id="family-telia-30gb"
+                    data-operator="Telia"
+                    data-title="Telia Familj 30 GB"
+                    data-logo="images/telia.png"
+                    data-data-amount="30"
+                    data-price="969"
+                    data-price-per-person="242"
+                    data-reward-total="9000"
+                    data-reward-mix-label="4 nya"
+                  >
+                    <span class="family-offer-label">Trygg täckning</span>
+                    <img src="images/telia.png" alt="Telia" class="family-offer-logo" />
+                    <h3>Telia Familj 30 GB</h3>
+                    <p>Ett tryggt alternativ för familjer som prioriterar täckning och stabilitet.</p>
+                    <div class="family-offer-price">242 kr <span>/ person</span></div>
+                    <ul>
+                      <li><i class="fa-solid fa-check"></i> 4 personer</li>
+                      <li><i class="fa-solid fa-check"></i> Surfpotten ingår</li>
+                      <li><i class="fa-solid fa-gift"></i> 9000 kr presentkort</li>
+                    </ul>
+                    <button type="button" class="family-offer-btn">Välj erbjudande</button>
+                  </article>
+
+                  <article
+                    class="family-offer-card"
+                    data-family-offer
+                    data-offer-id="family-tre-25gb"
+                    data-operator="Tre"
+                    data-title="Tre Familj 25 GB"
+                    data-logo="images/tre.jpg"
+                    data-data-amount="25"
+                    data-price="784"
+                    data-price-per-person="196"
+                    data-reward-total="9000"
+                    data-reward-mix-label="4 nya"
+                  >
+                    <span class="family-offer-label">Prisvärt</span>
+                    <img src="images/tre.jpg" alt="Tre" class="family-offer-logo" />
+                    <h3>Tre Familj 25 GB</h3>
+                    <p>Passar familjer som vill ha ett enkelt upplägg och mycket värde tillbaka.</p>
+                    <div class="family-offer-price">196 kr <span>/ person</span></div>
+                    <ul>
+                      <li><i class="fa-solid fa-check"></i> 4 personer</li>
+                      <li><i class="fa-solid fa-check"></i> Fria samtal och sms</li>
+                      <li><i class="fa-solid fa-gift"></i> 9000 kr presentkort</li>
+                    </ul>
+                    <button type="button" class="family-offer-btn">Välj erbjudande</button>
+                  </article>
+                </div>
               </div>
             </div>
 
