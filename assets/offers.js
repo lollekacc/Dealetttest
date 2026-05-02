@@ -56,7 +56,15 @@ let forcedStepGroup = null;
 let cursorGlowEl = null;
 let heroCountAnimated = false;
 let rewardCelebrationTimeout = null;
+let catalogFiltersBound = false;
 const QUIZ_STEP_TOTAL = 3;
+
+const catalogFilters = {
+  query: "",
+  operator: "all",
+  surf: "all",
+  sort: "price-asc"
+};
 
 const JOURNEY_GROUP_LABELS = {
   1: "Hushall och surf",
@@ -533,6 +541,7 @@ async function initPage() {
   initShowMorePersons();
   bindResetQuizButton();
   await loadPlans();
+  bindCatalogFilters();
   initQuiz();
   preselectFromUrl();
   showInitialOffersIfNeeded();
@@ -969,18 +978,139 @@ function getCatalogState() {
   };
 }
 
+function bindCatalogFilters() {
+  const filterPanel = document.getElementById("catalogFilters");
+  if (!filterPanel || catalogFiltersBound) return;
+
+  catalogFiltersBound = true;
+
+  const searchInput = document.getElementById("catalogSearch");
+  const operatorSelect = document.getElementById("catalogOperatorFilter");
+  const surfSelect = document.getElementById("catalogSurfFilter");
+  const sortSelect = document.getElementById("catalogSortFilter");
+  const clearButton = document.getElementById("clearCatalogFilters");
+
+  searchInput?.addEventListener("input", () => {
+    catalogFilters.query = searchInput.value.trim();
+    applyCatalogFilterChange();
+  });
+
+  operatorSelect?.addEventListener("change", () => {
+    catalogFilters.operator = operatorSelect.value;
+    applyCatalogFilterChange();
+  });
+
+  surfSelect?.addEventListener("change", () => {
+    catalogFilters.surf = surfSelect.value;
+    applyCatalogFilterChange();
+  });
+
+  sortSelect?.addEventListener("change", () => {
+    catalogFilters.sort = sortSelect.value;
+    applyCatalogFilterChange();
+  });
+
+  clearButton?.addEventListener("click", () => {
+    catalogFilters.query = "";
+    catalogFilters.operator = "all";
+    catalogFilters.surf = "all";
+    catalogFilters.sort = "price-asc";
+
+    if (searchInput) searchInput.value = "";
+    if (operatorSelect) operatorSelect.value = "all";
+    if (surfSelect) surfSelect.value = "all";
+    if (sortSelect) sortSelect.value = "price-asc";
+
+    applyCatalogFilterChange();
+  });
+}
+
+function applyCatalogFilterChange() {
+  window.offerChosen = false;
+  window.beloningChosen = false;
+  window.selectedOfferId = null;
+  clearRewardAndNextSteps();
+  void renderCatalogOffers();
+}
+
+function planMatchesCatalogQuery(plan) {
+  const query = normalizeSearchText(catalogFilters.query);
+  if (!query) return true;
+
+  const searchable = normalizeSearchText([
+    plan.operator,
+    plan.title,
+    plan.data,
+    plan.text,
+    `${plan.dataAmount} GB`,
+    plan.dataAmount >= 999 ? "obegransad unlimited fri surf" : ""
+  ].filter(Boolean).join(" "));
+
+  return searchable.includes(query);
+}
+
+function planMatchesCatalogOperator(plan) {
+  return catalogFilters.operator === "all" || plan.operator === catalogFilters.operator;
+}
+
+function planMatchesCatalogSurf(plan) {
+  const dataAmount = Number(plan.dataAmount) || 0;
+
+  if (catalogFilters.surf === "small") return dataAmount <= 10;
+  if (catalogFilters.surf === "medium") return dataAmount > 10 && dataAmount < 40;
+  if (catalogFilters.surf === "large") return dataAmount >= 40 && dataAmount < 999;
+  if (catalogFilters.surf === "unlimited") return dataAmount >= 999;
+
+  return true;
+}
+
+function sortCatalogOffers(offers) {
+  return [...offers].sort((left, right) => {
+    if (catalogFilters.sort === "price-desc") {
+      if (right.price !== left.price) return right.price - left.price;
+    } else if (catalogFilters.sort === "data-desc") {
+      if (right.dataAmount !== left.dataAmount) return right.dataAmount - left.dataAmount;
+    } else if (catalogFilters.sort === "data-asc") {
+      if (left.dataAmount !== right.dataAmount) return left.dataAmount - right.dataAmount;
+    } else if (catalogFilters.sort === "operator") {
+      const operatorSort = left.operator.localeCompare(right.operator, "sv");
+      if (operatorSort !== 0) return operatorSort;
+    } else if (left.price !== right.price) {
+      return left.price - right.price;
+    }
+
+    if (left.price !== right.price) return left.price - right.price;
+    if (left.dataAmount !== right.dataAmount) return left.dataAmount - right.dataAmount;
+    return left.operator.localeCompare(right.operator, "sv");
+  });
+}
+
+function updateCatalogResultCount(visibleCount, totalCount) {
+  const countEl = document.getElementById("catalogResultCount");
+  if (!countEl) return;
+
+  countEl.textContent = visibleCount === totalCount
+    ? `Visar alla ${totalCount} abonnemang`
+    : `Visar ${visibleCount} av ${totalCount} abonnemang`;
+}
+
 function buildCatalogOffers() {
   const catalogState = getCatalogState();
-
-  return ALL_PLANS
+  const allOffers = ALL_PLANS
     .filter(plan => !plan.isFamilyPlan)
     .map(plan => enrichOfferForState(plan, catalogState))
-    .filter(Boolean)
-    .sort((left, right) => {
-      if (left.price !== right.price) return left.price - right.price;
-      if (left.dataAmount !== right.dataAmount) return left.dataAmount - right.dataAmount;
-      return left.operator.localeCompare(right.operator, "sv");
-    })
+    .filter(Boolean);
+
+  const filteredOffers = sortCatalogOffers(
+    allOffers
+      .filter(planMatchesCatalogQuery)
+      .filter(planMatchesCatalogOperator)
+      .filter(planMatchesCatalogSurf)
+  );
+
+  updateCatalogResultCount(filteredOffers.length, allOffers.length);
+
+  return filteredOffers
     .map((plan, index) => ({
       ...plan,
       isRecommended: false,
@@ -2031,7 +2161,7 @@ function renderOffers(offers) {
     offersContainer.innerHTML = `
       <div class="pro-card" style="width:100%;max-width:720px;margin:0 auto;text-align:center;">
         <h3>Inga träffar</h3>
-        <p>Testa att byta surfnivå eller operatör.</p>
+        <p>${isDirectCatalogPage() ? "Testa att ändra eller rensa filtret." : "Testa att byta surfnivå eller operatör."}</p>
       </div>
     `;
     offersSection?.classList.remove("is-hidden");

@@ -2753,13 +2753,13 @@ body.abon-page *::after {
 
 .shop-hero h1 {
   margin: 0;
-  max-width: 680px;
+  max-width: none;
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(3.4rem, 7vw, 6.4rem);
   font-weight: 500;
   line-height: 0.98;
   letter-spacing: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
 }
 
 .shop-hero p {
@@ -2834,6 +2834,99 @@ body.abon-page *::after {
   margin: 0;
   color: var(--shop-muted);
   line-height: 1.55;
+}
+
+.catalog-filters {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.4fr) repeat(3, minmax(160px, 0.7fr));
+  gap: 16px;
+  align-items: end;
+  margin: 0 0 22px;
+  padding: 20px;
+  border: 1px solid var(--shop-line);
+  background: #fff;
+}
+
+.catalog-filter-field {
+  display: grid;
+  gap: 8px;
+}
+
+.catalog-filter-field label {
+  color: var(--shop-ink);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.catalog-search-wrap {
+  position: relative;
+}
+
+.catalog-search-wrap i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  color: var(--shop-blue);
+  font-size: 0.9rem;
+  transform: translateY(-50%);
+}
+
+.catalog-filter-field input,
+.catalog-filter-field select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--shop-line);
+  border-radius: 0;
+  background: #fff;
+  color: var(--shop-ink);
+  font-size: 0.95rem;
+  font-weight: 650;
+}
+
+.catalog-filter-field input {
+  padding: 0 14px 0 42px;
+}
+
+.catalog-filter-field select {
+  padding: 0 36px 0 12px;
+}
+
+.catalog-filter-field input:focus,
+.catalog-filter-field select:focus {
+  outline: 2px solid var(--shop-blue);
+  outline-offset: 0;
+}
+
+.catalog-filter-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.catalog-result-count {
+  color: var(--shop-muted);
+  font-size: 0.92rem;
+  font-weight: 750;
+}
+
+.catalog-clear-btn {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--shop-ink);
+  border-radius: 0;
+  background: transparent;
+  color: var(--shop-ink);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.catalog-clear-btn:hover,
+.catalog-clear-btn:focus {
+  background: var(--shop-ink);
+  color: #fff;
 }
 
 .offers-strip {
@@ -3116,6 +3209,14 @@ body.abon-page *::after {
 }
 
 @media (max-width: 1040px) {
+  .catalog-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .catalog-filter-field--search {
+    grid-column: 1 / -1;
+  }
+
   .offers-container {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -3128,7 +3229,7 @@ body.abon-page *::after {
   }
 
   .shop-hero h1 {
-    font-size: clamp(2.35rem, 10vw, 2.85rem);
+    font-size: clamp(2.15rem, 9.4vw, 2.65rem);
     line-height: 1.04;
   }
 
@@ -3139,6 +3240,25 @@ body.abon-page *::after {
 
   .result-section {
     padding-inline: 16px;
+  }
+
+  .catalog-filters {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .catalog-filter-field--search,
+  .catalog-filter-actions {
+    grid-column: auto;
+  }
+
+  .catalog-filter-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .catalog-clear-btn {
+    width: 100%;
   }
 
   .offers-container {

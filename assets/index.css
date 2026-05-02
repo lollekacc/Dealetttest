@@ -1814,30 +1814,30 @@ a{
 .coverage-main{
   position:relative;
   z-index:2;
-  padding:76px 0 172px;
+  padding:76px 0 100px;
   margin:0;
-  background: #fafcff;
+  background:#ffffff;
+}
+
+/* Strip jamfor.css card styling — sidebar sections are borderless on the index page */
+.coverage-main .coverage-card{
+  background:transparent;
+  border:none;
+  box-shadow:none;
+  border-radius:0;
 }
 
 .coverage-main::before{
-  content:"";
-  position:absolute;
-  top:-40px;
-  right:8%;
-  width:500px;
-  height:500px;
-  border-radius:999px;
-  background:radial-gradient(circle, rgba(20,184,166,0.20) 0%, transparent 65%);
-  pointer-events:none;
-  z-index:0;
+  display:none;
 }
 
-.coverage-shell{
+.coverage-main .coverage-shell{
   padding:0;
   background:transparent;
   border:none;
-  backdrop-filter:none;
   box-shadow:none;
+  backdrop-filter:none;
+  border-radius:0;
 }
 
 .coverage-topbar{
@@ -2042,8 +2042,8 @@ a{
   overflow:hidden;
   border-radius:20px;
   background:transparent;
-  border:1px solid rgba(255,255,255,0.7);
-  box-shadow:0 16px 52px rgba(15,23,42,0.11);
+  border:none;
+  box-shadow:none;
 }
 
 .map-ui{
