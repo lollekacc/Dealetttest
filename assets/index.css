@@ -400,6 +400,7 @@ a{
 
 .hero-visual.is-quiz-active{
   align-items:stretch;
+  min-height:690px;
 }
 
 .hero-image{
@@ -420,7 +421,7 @@ a{
 
 .hero-quiz-mount{
   position:absolute;
-  inset:0;
+  inset:-18px -18px;
   z-index:3;
   display:none;
   align-items:center;
@@ -432,35 +433,62 @@ a{
 }
 
 .hero-quiz-mount #quiz-steps-wrapper{
-  width:min(100%, 620px);
+  width:min(100%, 760px);
 }
 
 .home-hero.quiz-in-hero #quiz-card-stack{
-  min-height:560px;
+  min-height:650px;
 }
 
 .home-hero.quiz-in-hero #quiz-steps-wrapper .quiz-card{
-  min-height:540px;
-  padding:26px !important;
-  border-radius:28px !important;
+  min-height:630px;
+  padding:30px !important;
+  border-radius:30px !important;
   background:rgba(255,255,255,0.96) !important;
   box-shadow:0 34px 90px rgba(0,0,0,0.30) !important;
 }
 
+.home-hero.quiz-in-hero #quiz-steps-wrapper .quiz-card > .mb-6{
+  margin-bottom:20px !important;
+}
+
+.home-hero.quiz-in-hero #quiz-steps-wrapper .quiz-card > :last-child{
+  max-width:none !important;
+}
+
+.home-hero.quiz-in-hero #quiz-steps-wrapper .quiz-card > :last-child .mt-8{
+  margin-top:22px !important;
+}
+
 .home-hero.quiz-in-hero #quiz-steps-wrapper .quiz-title{
   max-width:none;
-  font-size:clamp(1.55rem, 2.2vw, 2.25rem) !important;
+  margin-top:16px !important;
+  font-size:clamp(1.7rem, 2.4vw, 2.45rem) !important;
+  line-height:1.08 !important;
 }
 
 .home-hero.quiz-in-hero #quiz-steps-wrapper .quiz-option{
-  min-height:66px;
+  min-height:62px;
 }
 
 .home-hero.quiz-in-hero #operator-per-person{
-  grid-template-columns:1fr !important;
-  max-height:330px;
+  grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  max-height:440px;
   overflow:auto;
   padding-right:4px;
+}
+
+.home-hero.quiz-in-hero #operator-per-person > div{
+  padding:16px !important;
+}
+
+.home-hero.quiz-in-hero #operator-per-person .quiz-option{
+  min-height:54px;
+  padding:10px 12px !important;
+}
+
+.home-hero.quiz-in-hero #operator-per-person img{
+  max-height:28px;
 }
 
 .hero-photo-frame{
@@ -2470,6 +2498,16 @@ a{
 
   .home-hero.quiz-in-hero #quiz-card-stack{
     min-height:520px;
+  }
+
+  .home-hero.quiz-in-hero #quiz-steps-wrapper .quiz-card{
+    min-height:520px;
+    padding:22px !important;
+  }
+
+  .home-hero.quiz-in-hero #operator-per-person{
+    grid-template-columns:1fr !important;
+    max-height:380px;
   }
 
   .hero-analysis-card{
