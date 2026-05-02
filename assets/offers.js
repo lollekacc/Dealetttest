@@ -467,6 +467,10 @@ function initOffersParallax() {
 }
 
 function refreshPremiumUI() {
+  if (isDirectCatalogPage()) {
+    return;
+  }
+
   bindStepCardInteractions();
   updateQuizProgressUI();
   updateStageJourneyUI();
@@ -506,6 +510,10 @@ function syncPremiumExperienceAfterAnswer(sourceCardName) {
 }
 
 function initPremiumExperience() {
+  if (isDirectCatalogPage()) {
+    return;
+  }
+
   initRevealSystem();
   initCursorGlow();
   runHeroCountUps();
@@ -924,6 +932,68 @@ async function loadPlans() {
   const res = await fetch("./data/plans.json");
   ALL_PLANS = await res.json();
   return ALL_PLANS;
+}
+
+function isDirectCatalogPage() {
+  return !document.getElementById("abonnemangQuizSection");
+}
+
+function resetCatalogState() {
+  localStorage.removeItem("dealettState");
+
+  abonState.persons = 1;
+  abonState.data = null;
+  abonState.operator = null;
+  abonState.binding = null;
+  abonState.bindingEndDate = null;
+  abonState.wishes = [];
+  abonState.operatorsByPerson = [];
+  abonState.bindingsByPerson = [];
+  abonState.bindingEndDatesByPerson = [];
+
+  syncBindingSummary();
+}
+
+function getCatalogState() {
+  return {
+    ...abonState,
+    persons: 1,
+    data: null,
+    operator: null,
+    binding: null,
+    bindingEndDate: null,
+    wishes: [],
+    operatorsByPerson: [],
+    bindingsByPerson: [],
+    bindingEndDatesByPerson: []
+  };
+}
+
+function buildCatalogOffers() {
+  const catalogState = getCatalogState();
+
+  return ALL_PLANS
+    .filter(plan => !plan.isFamilyPlan)
+    .map(plan => enrichOfferForState(plan, catalogState))
+    .filter(Boolean)
+    .sort((left, right) => {
+      if (left.price !== right.price) return left.price - right.price;
+      if (left.dataAmount !== right.dataAmount) return left.dataAmount - right.dataAmount;
+      return left.operator.localeCompare(right.operator, "sv");
+    })
+    .map((plan, index) => ({
+      ...plan,
+      isRecommended: false,
+      recommendationRank: index + 1,
+      rewardDetails: getOfferRewardDetails(plan, catalogState)
+    }));
+}
+
+async function renderCatalogOffers() {
+  stopOffersScroll();
+  if (!ALL_PLANS.length) await loadPlans();
+  resetCatalogState();
+  renderOffers(buildCatalogOffers());
 }
 
 function initQuiz() {
@@ -1657,6 +1727,11 @@ function stopOffersScroll() {
 }
 
 function showInitialOffersIfNeeded() {
+  if (isDirectCatalogPage()) {
+    renderCatalogOffers();
+    return;
+  }
+
   if (isQuizComplete()) {
     updateOffers();
     return;
@@ -1668,6 +1743,11 @@ function showInitialOffersIfNeeded() {
 }
 
 async function updateOffers() {
+  if (isDirectCatalogPage()) {
+    await renderCatalogOffers();
+    return;
+  }
+
   if (!isQuizComplete()) {
     offersSection?.classList.add("is-hidden");
     refreshPremiumUI();
@@ -1858,45 +1938,45 @@ function buildOfferCard(plan, stateOverride = null) {
   const state = stateOverride || abonState;
   const rewardDetails = plan.rewardDetails || getOfferRewardDetails(plan, state);
   const isFamily = (state.persons || 1) > 1;
+  const dataLabel = plan.dataAmount >= 999 ? "Obegränsad" : `${plan.dataAmount} GB`;
+  const promoLabel = plan.dataAmount >= 999 ? "Mycket surf" : "Endast online";
 
   const card = document.createElement("div");
   card.className = `offer-choice offer-card-pro${plan.isRecommended ? " recommended" : ""}`;
 
   card.innerHTML = `
-    <div class="offer-card-top">
-      <button type="button" class="reward-pill reward-pill-blue gift-btn"
-        data-reward="${rewardDetails.totalReward}" data-offer-id="${plan.id}" data-type="mix">
-        <span class="reward-pill-label">${rewardDetails.mixLabel}</span>
-        <span class="reward-pill-value">${rewardDetails.mixText}</span>
-      </button>
-      <button type="button" class="reward-pill reward-pill-green gift-btn"
-        data-reward="${rewardDetails.totalReward}" data-offer-id="${plan.id}" data-type="total">
-        <span class="reward-pill-label">${rewardDetails.totalLabel}</span>
-        <span class="reward-pill-value">${rewardDetails.totalReward} kr</span>
-      </button>
-    </div>
-
     <div class="offer-card-body">
+      <span class="deal-promo-badge">${promoLabel}</span>
+
       <div class="offer-brand-wrap">
-        <p class="offer-operator-label">Operatör</p>
         <div class="offer-logo-wrap">
           <img src="${plan.logo}" alt="${plan.operator}" class="offer-logo-img" loading="lazy" decoding="async">
         </div>
-        <p class="offer-operator">${plan.operator}</p>
+        <div>
+          <p class="offer-operator-label">Mobilabonnemang</p>
+          <p class="offer-operator">${plan.operator}</p>
+        </div>
       </div>
 
       <div class="offer-divider"></div>
 
       <div class="offer-main">
-        <h3 class="offer-title">${plan.title}</h3>
+        <h3 class="offer-title">${dataLabel}</h3>
         <p class="offer-desc">${plan.text || "Mobilabonnemang med tydligt upplägg och konkurrenskraftigt pris."}</p>
       </div>
 
       <div class="offer-meta">
         <div class="offer-data-badge">
           <i class="fa-solid fa-wifi"></i>
-          <span>${plan.dataAmount >= 999 ? "Obegränsad surf" : `${plan.dataAmount} GB surf`}</span>
+          <span>${plan.dataAmount >= 999 ? "Obegränsad surf i Sverige" : `${plan.dataAmount} GB surf`}</span>
         </div>
+
+        <ul class="offer-benefits">
+          <li><i class="fa-solid fa-check"></i> Fria samtal och sms</li>
+          <li><i class="fa-solid fa-check"></i> 5G i operatörens nät</li>
+          <li><i class="fa-solid fa-check"></i> Presentkort ${rewardDetails.totalReward} kr</li>
+        </ul>
+
         ${isFamily
           ? `<div class="offer-price-wrap">
                <p class="offer-price-main">${plan.pricePerPerson} kr <span>/ person</span></p>
@@ -1910,10 +1990,9 @@ function buildOfferCard(plan, stateOverride = null) {
       </div>
 
       <div class="offer-card-bottom">
-        <div class="offer-select-text${plan.isRecommended ? ' offer-select-text--primary' : ''}">
-          <i class="fa-solid fa-circle-check"></i>
-          <span>${plan.isRecommended ? 'Välj rekommenderat erbjudande' : 'Välj detta erbjudande'}</span>
-        </div>
+        <button type="button" class="offer-select-text${plan.isRecommended ? ' offer-select-text--primary' : ''}">
+          <span>Beställ</span>
+        </button>
       </div>
     </div>
   `;
@@ -1925,6 +2004,11 @@ function syncOfferSelectionLabels() {
   document.querySelectorAll(".offer-choice").forEach(card => {
     const label = card.querySelector(".offer-select-text span");
     if (!label) return;
+
+    if (isDirectCatalogPage()) {
+      label.textContent = card.classList.contains("active") ? "Valt" : "Beställ";
+      return;
+    }
 
     if (card.classList.contains("active")) {
       label.textContent = "Valt erbjudande";

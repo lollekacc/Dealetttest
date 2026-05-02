@@ -381,32 +381,46 @@ function createIndexQuiz() {
 
     const topLabel = index === 0 ? "Bäst match" : `Alternativ ${index + 1}`;
     const currentOperator = state.operators.includes(plan.operator) ? "Nuvarande operatör" : "Nytt alternativ";
-    const priceText = state.persons && state.persons > 1
-      ? `${plan.pricePerPerson} kr/person · ${plan.finalPrice} kr/mån totalt`
-      : `${plan.finalPrice} kr/mån`;
+    const isMulti = state.persons && state.persons > 1;
+    const priceMain = isMulti ? `${plan.pricePerPerson} kr/p` : `${plan.finalPrice} kr/mån`;
+    const priceSub  = isMulti ? `${plan.finalPrice} kr totalt` : null;
+    const dataText  = plan.dataAmount >= 999 ? "Obegränsad" : `${plan.dataAmount} GB`;
 
     article.innerHTML = [
-      '<div class="offer-card__head">',
-      '  <div>',
+      '<div class="offer-card__accent"></div>',
+      '<div class="offer-card__inner">',
+      '  <div class="offer-card__top">',
       `    <span class="offer-card__label">${topLabel}</span>`,
-      `    <p class="offer-card__operator-type">${currentOperator}</p>`,
-      `    <h4 class="offer-card__name">${plan.operator}</h4>`,
-      `    <p class="offer-card__plan-title">${plan.title}</p>`,
-      "  </div>",
-      `  <img src="${plan.logo}" alt="${plan.operator}" class="offer-card__logo" />`,
-      "</div>",
-      `<p class="offer-card__desc">${plan.text || "Mobilabonnemang med tydlig prisbild och relevant surfmängd."}</p>`,
-      '<div class="offer-card__stats">',
-      '  <div class="offer-card__stat">',
-      '    <p class="offer-card__stat-label">Surf</p>',
-      `    <p class="offer-card__stat-value">${plan.dataAmount >= 999 ? "Obegränsad" : `${plan.dataAmount} GB`}</p>`,
-      "  </div>",
-      '  <div class="offer-card__stat">',
-      '    <p class="offer-card__stat-label">Pris</p>',
-      `    <p class="offer-card__stat-value">${priceText}</p>`,
-      "  </div>",
-      "</div>"
-    ].join("");
+      `    <span class="offer-card__type">${currentOperator}</span>`,
+      '  </div>',
+      '  <div class="offer-card__head">',
+      '    <div>',
+      `      <h4 class="offer-card__name">${plan.operator}</h4>`,
+      `      <p class="offer-card__plan-title">${plan.title}</p>`,
+      '    </div>',
+      `    <img src="${plan.logo}" alt="${plan.operator}" class="offer-card__logo" />`,
+      '  </div>',
+      plan.text ? `  <p class="offer-card__desc">${plan.text}</p>` : '',
+      '  <div class="offer-card__stats">',
+      '    <div class="offer-card__stat">',
+      '      <span class="offer-card__stat-icon"><i class="fa-solid fa-signal"></i></span>',
+      '      <div>',
+      '        <p class="offer-card__stat-label">Surf</p>',
+      `        <p class="offer-card__stat-value">${dataText}</p>`,
+      '      </div>',
+      '    </div>',
+      '    <div class="offer-card__stat">',
+      '      <span class="offer-card__stat-icon"><i class="fa-solid fa-tag"></i></span>',
+      '      <div>',
+      '        <p class="offer-card__stat-label">Pris</p>',
+      `        <p class="offer-card__stat-value">${priceMain}</p>`,
+      priceSub ? `        <p class="offer-card__stat-sub">${priceSub}</p>` : '',
+      '      </div>',
+      '    </div>',
+      '  </div>',
+      '  <a href="abonnemang.html" class="offer-card__cta">Se abonnemang <i class="fa-solid fa-arrow-right"></i></a>',
+      '</div>'
+    ].join("\n");
 
     return article;
   }

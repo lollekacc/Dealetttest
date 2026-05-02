@@ -13,240 +13,53 @@
   <script src="./assets/layout.js" defer></script>
 </head>
 
-<body class="abon-page" data-header-mode="overlay" data-header-theme="light">
+<body class="abon-page" data-header-mode="solid" data-header-theme="dark">
   <div id="header-placeholder"></div>
 
   <main class="abon-main">
-    <section class="hero-shell" data-header-anchor-target>
-      <div class="hero-slider-wrap">
-        <div class="hero-ambient hero-ambient-left" aria-hidden="true"></div>
-        <div class="hero-ambient hero-ambient-right" aria-hidden="true"></div>
-        <div class="hero-noise" aria-hidden="true"></div>
+    <section class="hero-shell shop-hero" data-header-anchor-target>
+      <img
+        src="images/hero-device.jpg"
+        alt="Streamingtjänster och mobilabonnemang"
+        class="shop-hero-image"
+        fetchpriority="high"
+        decoding="async"
+      />
 
-        <ul id="heroSlider" class="hero-slider">
-          <li class="hero-slide is-active">
-            <img
-              src="images/abo1.jpg"
-              alt="Streamingtjänster och sport"
-              class="hero-image"
-              fetchpriority="high"
-              decoding="async"
-            />
-            <div class="hero-overlay"></div>
-          </li>
+      <div class="shop-hero-content">
+        <nav class="shop-breadcrumb" aria-label="Brödsmulor">
+          <a href="index.html">Hem</a>
+          <span>/</span>
+          <span>Mobilabonnemang</span>
+        </nav>
 
-          <li class="hero-slide">
-            <img
-              src="images/abo2.jpg"
-              alt="Sportstreaming"
-              class="hero-image"
-              loading="lazy"
-              decoding="async"
-            />
-            <div class="hero-overlay"></div>
-          </li>
+        <h1>Mobilabonnemang</h1>
+        <p>
+          Jämför abonnemang från flera operatörer och välj direkt. Tydliga priser,
+          5G och presentkort samlat på ett ställe.
+        </p>
 
-          <li class="hero-slide">
-            <img
-              src="images/abo3.jpg"
-              alt="Livesänd sport"
-              class="hero-image"
-              loading="lazy"
-              decoding="async"
-            />
-            <div class="hero-overlay"></div>
-          </li>
+        <ul class="shop-hero-points" aria-label="Fördelar">
+          <li><i class="fa-solid fa-check"></i> Fria samtal och sms</li>
+          <li><i class="fa-solid fa-check"></i> 5G hos utvalda operatörer</li>
+          <li><i class="fa-solid fa-check"></i> Presentkort på abonnemang</li>
         </ul>
-
-        <button type="button" class="hero-arrow hero-arrow-left" id="heroPrevBtn" aria-label="Föregående slide">
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
-
-        <button type="button" class="hero-arrow hero-arrow-right" id="heroNextBtn" aria-label="Nästa slide">
-          <i class="fa-solid fa-chevron-right"></i>
-        </button>
-
-        <div class="hero-dots" id="heroDots">
-          <button type="button" class="hero-dot active" data-slide="0" aria-label="Slide 1"><span class="hero-dot-fill"></span></button>
-          <button type="button" class="hero-dot" data-slide="1" aria-label="Slide 2"><span class="hero-dot-fill"></span></button>
-          <button type="button" class="hero-dot" data-slide="2" aria-label="Slide 3"><span class="hero-dot-fill"></span></button>
-        </div>
       </div>
     </section>
 
-    <section id="abonnemangQuizSection" class="quiz-section">
-      <div class="quiz-shell">
-        <div class="section-head center section-head-wide reveal">
-          <span class="section-kicker">Abonnemangsguide</span>
-          <h2>Berätta vad du söker</h2>
-          <p>
-            Ett lugnt steg-för-steg-flöde som samlar hushåll, surf,
-            bindningstid, preferenser och nuvarande operatör på ett tydligt sätt.
-          </p>
-        </div>
-
-        <div class="quiz-progress-shell reveal">
-          <div class="quiz-progress-meta">
-            <div class="quiz-progress-copy">
-              <span class="quiz-progress-kicker">Progress</span>
-              <span id="quizProgressLabel" class="quiz-progress-label">Steg 1 av 3</span>
-            </div>
-
-            <button type="button" id="resetQuizBtn" class="quiz-reset-btn">
-              Börja om
-            </button>
-          </div>
-
-          <div class="quiz-progress-bar">
-            <span id="quizProgressFill" class="quiz-progress-fill"></span>
-          </div>
-        </div>
-
-        <div class="quiz-steps-grid">
-          <article class="step-card reveal" data-card="persons" data-step-group="1">
-            <div class="step-card-topline">
-              <span class="card-step">Steg 1</span>
-              <span class="card-icon"><i class="fa-solid fa-users"></i></span>
-            </div>
-
-            <div class="step-card-head">
-              <h3 class="quiz-title">Hur många personer?</h3>
-              <p class="quiz-subtitle">Vi använder detta för att visa rätt familjeupplägg.</p>
-            </div>
-
-            <div id="personsMain" class="options-grid equal-grid">
-              <button type="button" class="quiz-option abon-opt" data-persons="1">1 person</button>
-              <button type="button" class="quiz-option abon-opt" data-persons="2">2 personer</button>
-              <button type="button" class="quiz-option abon-opt" data-persons="3">3 personer</button>
-              <button type="button" class="quiz-option abon-opt" data-persons="4">4 personer</button>
-              <button type="button" class="quiz-option abon-opt" data-persons="5">5 personer</button>
-            </div>
-
-            <button id="showMorePersons" type="button" class="ghost-link">Visa fler</button>
-
-            <div id="personsExtra" class="options-grid equal-grid is-hidden extra-options">
-              <button type="button" class="quiz-option abon-opt" data-persons="6">6 personer</button>
-              <button type="button" class="quiz-option abon-opt" data-persons="7">7 personer</button>
-              <button type="button" class="quiz-option abon-opt" data-persons="8">8 personer</button>
-              <button type="button" class="quiz-option abon-opt" data-persons="9">9 personer</button>
-              <button type="button" class="quiz-option abon-opt" data-persons="10">10 personer</button>
-            </div>
-          </article>
-
-          <article class="step-card reveal" data-card="data" data-step-group="1">
-            <div class="step-card-topline">
-              <span class="card-step">Steg 2</span>
-              <span class="card-icon"><i class="fa-solid fa-signal"></i></span>
-            </div>
-
-            <div class="step-card-head">
-              <h3 class="quiz-title">Hur mycket surf behövs?</h3>
-              <p class="quiz-subtitle">Välj ungefärlig nivå per person.</p>
-            </div>
-
-            <div class="stack-options">
-              <button type="button" class="quiz-option abon-opt" data-data="low">
-                <strong>Lite</strong>
-                <span>Runt 10 GB</span>
-              </button>
-
-              <button type="button" class="quiz-option abon-opt" data-data="medium">
-                <strong>Lagom</strong>
-                <span>Runt 30-50 GB</span>
-              </button>
-
-              <button type="button" class="quiz-option abon-opt" data-data="high">
-                <strong>Mycket</strong>
-                <span>Obegränsat eller nära obegränsat</span>
-              </button>
-            </div>
-          </article>
-
-          <article class="step-card reveal" data-card="binding" data-step-group="2">
-            <div class="step-card-topline">
-              <span class="card-step">Steg 3</span>
-              <span class="card-icon"><i class="fa-regular fa-calendar"></i></span>
-            </div>
-
-            <div class="step-card-head">
-              <h3 class="quiz-title">Har du bindningstid idag?</h3>
-              <p class="quiz-subtitle">Det hjälper oss att bedöma när ett byte passar bäst.</p>
-            </div>
-
-            <div class="inline-options equal-buttons">
-              <button type="button" class="quiz-option abon-opt" data-binding="no">Nej</button>
-              <button type="button" class="quiz-option abon-opt" data-binding="yes">Ja</button>
-            </div>
-
-            <div id="bindingDateWrapper" class="binding-date is-hidden">
-              <label for="bindingEndDate">När slutar den?</label>
-              <input type="date" id="bindingEndDate" />
-            </div>
-          </article>
-
-          <article class="step-card reveal" data-card="wishes" data-step-group="3" data-optional="true">
-            <div class="step-card-topline">
-              <span class="card-step">Steg 4</span>
-              <span class="card-icon"><i class="fa-regular fa-star"></i></span>
-            </div>
-
-            <div class="step-card-head">
-              <h3 class="quiz-title">Beskriv vad du söker</h3>
-              <p class="quiz-subtitle">Skriv önskemål eller välj smarta förslag.</p>
-            </div>
-
-            <div class="wish-input-wrap">
-              <input
-                id="operatorFreeInput"
-                type="text"
-                placeholder="Skriv operatör, budget, täckning eller önskemål..."
-                class="wish-input"
-              />
-              <button type="button" id="wishAddBtn" class="wish-add-btn">
-                Lägg till
-              </button>
-            </div>
-
-            <div class="suggestion-row">
-              <button type="button" class="suggestion-chip" data-suggest="Billigast möjligt">Billigast möjligt</button>
-              <button type="button" class="suggestion-chip" data-suggest="Bäst täckning">Bäst täckning</button>
-              <button type="button" class="suggestion-chip" data-suggest="Mycket surf till låg kostnad">Mycket surf</button>
-              <button type="button" class="suggestion-chip" data-suggest="Familjeabonnemang">Familjeabonnemang</button>
-            </div>
-
-            <div id="operatorFreeList" class="wish-list"></div>
-          </article>
-
-          <article class="step-card step-card-wide reveal" data-card="operators" data-step-group="2">
-            <div class="step-card-topline">
-              <span class="card-step">Steg 5</span>
-              <span class="card-icon"><i class="fa-solid fa-tower-cell"></i></span>
-            </div>
-
-            <div class="step-card-head">
-              <h3 class="quiz-title">Vad har ni för operatör idag?</h3>
-              <p class="quiz-subtitle">En sektion skapas automatiskt för varje person.</p>
-            </div>
-
-            <div id="operatorWrapper" class="operator-wrapper"></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="offersSection" class="result-section is-hidden">
+    <section id="offersSection" class="result-section">
       <div class="result-shell">
-        <div class="section-head center reveal">
-          <span class="section-kicker">Erbjudanden</span>
-          <h2>Aktuella förslag</h2>
-          <p>Relevanta alternativ baserat på dina val.</p>
+        <div class="section-head shop-list-head reveal">
+          <span class="section-kicker">Alla mobilabonnemang</span>
+          <h2>Välj surfmängd och operatör</h2>
+          <p>En enkel översikt med alla abonnemang direkt i listan.</p>
         </div>
 
         <div id="offersStrip" class="offers-strip reveal">
           <div class="offers-strip-top">
             <div class="offers-strip-badge">
-              <i class="fa-solid fa-sparkles"></i>
-              Handplockade förslag
+              <i class="fa-solid fa-sim-card"></i>
+              Alla abonnemang
             </div>
           </div>
 

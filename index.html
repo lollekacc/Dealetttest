@@ -465,7 +465,7 @@
 
                   <!-- STEP 5 -->
                   <div id="step5" class="quiz-step-card upcoming-card">
-                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col text-center">
+                    <div class="quiz-card rounded-[2rem] border border-slate-200 bg-gradient-to-b from-white to-slate-50 p-6 shadow-card sm:p-8 lg:p-10 flex flex-col">
                       <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <button
                           type="button"
@@ -476,24 +476,18 @@
                         </button>
                       </div>
 
-                      <div class="mx-auto max-w-3xl">
-                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
+                      <div class="result-header">
+                        <span class="result-badge">
                           <i class="fa-solid fa-circle-check"></i>
                           Analys klar
                         </span>
-
-                        <h3 class="mt-5 text-3xl font-extrabold tracking-tight text-slate-950 sm:text-4xl">
-                          Din analys är klar
-                        </h3>
-
-                        <p class="mt-4 text-base leading-7 text-slate-600 sm:text-lg">
-                          Baserat på dina svar har vi hittat abonnemang som passar ditt behov bättre.
-                        </p>
+                        <h3 class="result-title">Vi hittade dina bästa alternativ</h3>
+                        <p class="result-desc">Baserat på dina svar har vi matchat de abonnemang som passar ditt hushålls behov och budget bäst.</p>
                       </div>
 
                       <div
                         id="offers-container"
-                        class="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
+                        class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
                       ></div>
                     </div>
                   </div>
