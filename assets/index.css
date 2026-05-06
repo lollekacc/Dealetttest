@@ -98,20 +98,35 @@ a{
 
 .section-promo-bonus{
   position:relative;
-  background: #ffffff;
+  overflow:hidden;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,0.76) 0%, rgba(0,0,0,0.54) 42%, rgba(0,0,0,0.12) 100%),
+    url("../images/alan.png") center / cover no-repeat,
+    url("../images/index.jpg") center / cover no-repeat;
 }
 
 .section-promo-bonus::before{
-  content:"";
-  position:absolute;
-  bottom:-40px;
-  left:-40px;
-  width:520px;
-  height:520px;
-  border-radius:999px;
-  background:radial-gradient(circle, rgba(244, 245, 244, 0.18) 0%, transparent 65%);
-  pointer-events:none;
-  z-index:0;
+  display:none;
+}
+
+.section-promo-bonus .promo-card{
+  grid-template-columns:minmax(0, 560px);
+  min-height:520px;
+  align-items:center;
+}
+
+.section-promo-bonus .promo-card > div:first-child::before{
+  background:#ffffff;
+}
+
+.section-promo-bonus .section-kicker,
+.section-promo-bonus .promo-card h3,
+.section-promo-bonus .promo-card p{
+  color:#ffffff;
+}
+
+.section-promo-bonus .promo-card p{
+  color:rgba(255,255,255,0.82);
 }
 
 .section-head{
