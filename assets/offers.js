@@ -2069,7 +2069,7 @@ function buildOfferCard(plan, stateOverride = null) {
   const rewardDetails = plan.rewardDetails || getOfferRewardDetails(plan, state);
   const isFamily = (state.persons || 1) > 1;
   const dataLabel = plan.dataAmount >= 999 ? "Obegränsad" : `${plan.dataAmount} GB`;
-  const promoLabel = plan.dataAmount >= 999 ? "Mycket surf" : "Endast online";
+  const promoLabel = `<i class="fa-solid fa-check"></i> Presentkort ${rewardDetails.totalReward} kr`;
 
   const card = document.createElement("div");
   card.className = `offer-choice offer-card-pro${plan.isRecommended ? " recommended" : ""}`;
@@ -2104,7 +2104,6 @@ function buildOfferCard(plan, stateOverride = null) {
         <ul class="offer-benefits">
           <li><i class="fa-solid fa-check"></i> Fria samtal och sms</li>
           <li><i class="fa-solid fa-check"></i> 5G i operatörens nät</li>
-          <li><i class="fa-solid fa-check"></i> Presentkort ${rewardDetails.totalReward} kr</li>
         </ul>
 
         ${isFamily
