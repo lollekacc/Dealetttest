@@ -2082,16 +2082,12 @@ function buildOfferCard(plan, stateOverride = null) {
         <div class="offer-logo-wrap">
           <img src="${plan.logo}" alt="${plan.operator}" class="offer-logo-img" loading="lazy" decoding="async">
         </div>
-        <div>
-          <p class="offer-operator">${plan.operator}</p>
-        </div>
       </div>
 
       <div class="offer-divider"></div>
 
       <div class="offer-main">
         <h3 class="offer-title">${dataLabel}</h3>
-        <p class="offer-desc">${plan.text || "Mobilabonnemang med tydligt upplägg och konkurrenskraftigt pris."}</p>
       </div>
 
       <div class="offer-meta">
