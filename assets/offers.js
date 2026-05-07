@@ -2114,7 +2114,6 @@ function buildOfferCard(plan, stateOverride = null) {
              </div>`
           : `<div class="offer-price-wrap">
                <p class="offer-price-main">${plan.finalPrice} kr <span>/ mån</span></p>
-               <p class="offer-price-sub">Tydlig månadskostnad och enkel överblick</p>
              </div>`
         }
       </div>
