@@ -2083,7 +2083,6 @@ function buildOfferCard(plan, stateOverride = null) {
           <img src="${plan.logo}" alt="${plan.operator}" class="offer-logo-img" loading="lazy" decoding="async">
         </div>
         <div>
-          <p class="offer-operator-label">Mobilabonnemang</p>
           <p class="offer-operator">${plan.operator}</p>
         </div>
       </div>
@@ -2096,11 +2095,6 @@ function buildOfferCard(plan, stateOverride = null) {
       </div>
 
       <div class="offer-meta">
-        <div class="offer-data-badge">
-          <i class="fa-solid fa-wifi"></i>
-          <span>${plan.dataAmount >= 999 ? "Obegränsad surf i Sverige" : `${plan.dataAmount} GB surf`}</span>
-        </div>
-
         <ul class="offer-benefits">
           <li><i class="fa-solid fa-check"></i> Fria samtal och sms</li>
           <li><i class="fa-solid fa-check"></i> 5G i operatörens nät</li>
