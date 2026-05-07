@@ -244,7 +244,7 @@ a{
 }
 
 .hero-copy h1 span{
-  display:block;
+  display:inline;
   color:#34d399;
 }
 
