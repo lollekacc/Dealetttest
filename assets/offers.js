@@ -2069,49 +2069,65 @@ function buildOfferCard(plan, stateOverride = null) {
   const rewardDetails = plan.rewardDetails || getOfferRewardDetails(plan, state);
   const isFamily = (state.persons || 1) > 1;
   const dataLabel = plan.dataAmount >= 999 ? "Obegränsad" : `${plan.dataAmount} GB`;
-  const promoLabel = `<i class="fa-solid fa-check"></i> Presentkort ${rewardDetails.totalReward} kr`;
+  const priceLabel = isFamily
+    ? `${plan.pricePerPerson} kr/person`
+    : `${plan.finalPrice} kr/mån`;
+  const bindingLabel = isFamily
+    ? `${plan.finalPrice} kr/mån totalt · ${state.persons} personer`
+    : "Mobilabonnemang";
 
   const card = document.createElement("div");
-  card.className = `offer-choice offer-card-pro${plan.isRecommended ? " recommended" : ""}`;
+  card.className = `offer-choice offer-card-pro bb-offer-card${plan.isRecommended ? " recommended" : ""}`;
 
   card.innerHTML = `
-    <div class="offer-card-body">
-      <span class="deal-promo-badge">${promoLabel}</span>
+    ${plan.isRecommended ? `<div class="bb-badge-best"><i class="fa-solid fa-star"></i> Bäst värde</div>` : ""}
 
-      <div class="offer-brand-wrap">
-        <div class="offer-logo-wrap">
-          <img src="${plan.logo}" alt="${plan.operator}" class="offer-logo-img" loading="lazy" decoding="async">
+    <div class="bb-offer-select-indicator">
+      <i class="fa-solid fa-check"></i>
+    </div>
+
+    <div class="bb-offer-top">
+      <div class="bb-offer-brand">
+        <img src="${plan.logo}" alt="${plan.operator}" class="bb-operator-logo offer-logo-img" loading="lazy" decoding="async">
+        <div>
+          <p class="bb-operator-name">${plan.operator}</p>
+          <p class="bb-operator-speed">${dataLabel}</p>
         </div>
       </div>
 
-      <div class="offer-divider"></div>
+      <button
+        class="bb-reward-btn gift-btn"
+        data-reward="${rewardDetails.totalReward}"
+        type="button"
+      >
+        <span>Presentkort</span>
+        <strong>${rewardDetails.totalReward} kr</strong>
+      </button>
+    </div>
 
-      <div class="offer-main">
-        <h3 class="offer-title">${dataLabel}</h3>
+    <div class="bb-offer-price-row">
+      <div>
+        <p class="bb-price">${priceLabel}</p>
+        <p class="bb-binding">${bindingLabel}</p>
       </div>
 
-      <div class="offer-meta">
-        <ul class="offer-benefits">
-          <li><i class="fa-solid fa-check"></i> Fria samtal och sms</li>
-          <li><i class="fa-solid fa-check"></i> 5G i operatörens nät</li>
-        </ul>
-
-        ${isFamily
-          ? `<div class="offer-price-wrap">
-               <p class="offer-price-main">${plan.pricePerPerson} kr <span>/ person</span></p>
-               <p class="offer-price-sub">${plan.finalPrice} kr/mån totalt · ${state.persons} personer</p>
-             </div>`
-          : `<div class="offer-price-wrap">
-               <p class="offer-price-main">${plan.finalPrice} kr <span>/ mån</span></p>
-             </div>`
-        }
+      <div class="bb-speed-chip">
+        ${dataLabel}
       </div>
+    </div>
 
-      <div class="offer-card-bottom">
-        <button type="button" class="offer-select-text${plan.isRecommended ? ' offer-select-text--primary' : ''}">
-          <span>Beställ</span>
-        </button>
-      </div>
+    <ul class="bb-feature-list">
+      <li><i class="fa-solid fa-check"></i><span>Fria samtal och sms</span></li>
+      <li><i class="fa-solid fa-check"></i><span>5G i operatörens nät</span></li>
+      <li><i class="fa-solid fa-check"></i><span>Presentkort ${rewardDetails.totalReward} kr</span></li>
+    </ul>
+
+    <div class="bb-offer-footer">
+      <div class="bb-footer-note">${plan.title || dataLabel}</div>
+
+      <button type="button" class="bb-choose-btn offer-select-text${plan.isRecommended ? ' offer-select-text--primary' : ''}">
+        <span>Beställ</span>
+      </button>
     </div>
   `;
 
