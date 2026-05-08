@@ -352,8 +352,8 @@ a{
   height:30px;
   max-width:108px;
   object-fit:contain;
-  filter:grayscale(1) brightness(1.85) contrast(.82);
-  opacity:.74;
+  filter:none;
+  opacity:1;
 }
 
 .hero-stats{
